@@ -1,0 +1,24 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_keps_assistant
+    ports:
+      - "3306:3306"
+  nodejs:
+    build: ./process_unit
+    ports:
+      - "2001:2001"
+    depends_on:
+      - mysql
+    environment:
+      - PORT:2001
+      - JWT_SECRET:e67453f721877d9d41b611601338046cbf7dedcf137b92d2f596eedfe82be87c
+      - REFRESH_SECRET:96552387ade2fbb615bf522b2a5601d636759b008b60bf658c89341f8ecf6cd1
+      - DB_HOST:mysql
+      - DB_PORT:3306
+      - DB_USER:root
+      - DB_PASSWORD:root
+      - DB_NAME:db_keps_assistant
