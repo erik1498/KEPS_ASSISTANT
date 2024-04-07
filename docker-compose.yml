@@ -19,6 +19,8 @@ services:
       - "2001:2001"
     depends_on:
       - resources
+    volumes:
+      - ./backup:/usr/process_unit/workdir/keps_backup
 
   interaction:
     build: 
