@@ -1,10 +1,23 @@
-FROM node:20.11.1-slim
+FROM node:20.11.1-alpine
 
 WORKDIR /usr/process_unit/workdir
 
 COPY . .
 
 RUN npm install
+
+ARG DB_HOST
+
+ENV PORT=2001
+ENV JWT_SECRET=e67453f721877d9d41b611601338046cbf7dedcf137b92d2f596eedfe82be87c
+ENV REFRESH_SECRET=96552387ade2fbb615bf522b2a5601d636759b008b60bf658c89341f8ecf6cd1
+ENV DB_HOST=${DB_HOST}
+ENV DB_PORT=3306
+ENV DB_USER=root
+ENV DB_PASSWORD=root
+ENV DB_NAME=db_keps_assistant
+
+RUN mkdir /keps_backup
 
 EXPOSE 2001
 

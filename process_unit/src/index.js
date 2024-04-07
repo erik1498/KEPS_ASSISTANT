@@ -3,7 +3,7 @@ import cors from "cors"
 import { routerList } from './routes/route.js'
 import { LOGGER, logType } from './utils/loggerUtil.js'
 import { v4 } from 'uuid'
-import db from './config/Database.js'
+import db, { waitForDBConnection } from './config/Database.js'
 import { getEnv } from './utils/envUtils.js'
 
 const app = express()
@@ -15,6 +15,8 @@ app.use(cors({
 }))
 
 const PORT = getEnv("PORT")
+
+await waitForDBConnection()
 
 db.sync()
 
