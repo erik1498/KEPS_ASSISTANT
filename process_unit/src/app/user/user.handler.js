@@ -1,9 +1,8 @@
 import { getEnv } from "../../utils/envUtils.js"
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
-import { createUserService, getUserByUsername, getUserByUuid } from "./user.services.js"
+import { getUserByUsername, getUserByUuid } from "./user.services.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { userValidation } from "./user.validation.js"
 import { getExpiredTimeFromToken } from "../../utils/jwtUtils.js"
 
 export const loginUser = async (req, res) => {
@@ -45,37 +44,7 @@ export const loginUser = async (req, res) => {
             tokenExpired
         });
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack)
-        res.status(401).json({
-            message: error.message
-        })
-    }
-}
-
-
-
-export const postCreateUser = async (req, res) => {
-    LOGGER(logType.INFO, "Start postCreateUser", req.body, req.id)
-    try {
-        const userData = req.body
-        const { error, value } = userValidation(userData)
-        if (error) {
-            return res.status(400).json({
-                type: "validationError",
-                message: generateValidationMessage(error)
-            })
-        }
-
-        const hashedPassword = await bcrypt.hash(value.password, 10);
-        value.password = hashedPassword
-
-        const user = await createUserService(value, req.id)
-        res.json({
-            data: user,
-            message: "Create data Success"
-        })
-    } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -111,10 +80,10 @@ export const refreshToken = async (req, res) => {
             tokenExpired
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
         res.status(500).json({
             type: "internalServerError",
-            message: 'Authentication failed'
+            message: error.message
         })
     }
 }

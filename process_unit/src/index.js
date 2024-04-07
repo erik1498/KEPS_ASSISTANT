@@ -7,15 +7,18 @@ import db, { waitForDBConnection } from './config/Database.js'
 import { getEnv } from './utils/envUtils.js'
 
 const app = express()
+
+
 app.use(express.json())
 app.use(cors({
     credentials: true,
-    // origin:"http://localhost:5173"
-    origin: "*"
+    origin: `http://${getEnv("CLIENT_HOST")}:${getEnv("CLIENT_PORT")}`
+}, (e) => {
+    console.log(e)
 }))
 
-const PORT = getEnv("PORT")
 
+const PORT = getEnv("PORT")
 await waitForDBConnection()
 
 db.sync()
@@ -23,7 +26,7 @@ db.sync()
 app.use((req, res, next) => {
     let genUUID = v4()
     req.identity = JSON.stringify({
-        "id" : genUUID,
+        "id": genUUID,
         "userId": null
     })
     res.setHeader("request-id", genUUID)

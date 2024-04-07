@@ -1,2 +1,11 @@
 docker-compose up
-docker-compose down -v --rmi all
+
+dockec exec -it keps_assistant_resources bash
+
+mysql -u root -p
+
+root
+
+INSERT INTO db_keps_assistant.user_tab (uuid,username,password,name,`role`,createdAt,updatedAt) VALUES ('edb377b9-9a1f-40e0-8a92-8f8b14a9f02a','username','$2b$10$dYta1q5QgHYAuSp24foFVeuFVNP6Q09BhIgy6WHXLotwvI4Ea4Wwi','USER','Admin','2024-03-23 15:52:51','2024-03-23 15:52:51');
+
+docker-compose down

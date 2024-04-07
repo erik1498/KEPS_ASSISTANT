@@ -1,5 +1,5 @@
 import express from "express"
-import { loginUser, postCreateUser, refreshToken } from "./user.handler.js"
+import { loginUser, refreshToken } from "./user.handler.js"
 
 const router = express.Router()
 

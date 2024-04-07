@@ -8,28 +8,43 @@ services:
       MYSQL_DATABASE: db_keps_assistant
     ports:
       - "2000:3306"
+    volumes:
+      - ./resources_unit:/var/lib/mysql
+    networks:
+      keps_network:
+        ipv4_address: 172.30.0.2
 
   process:
-    build: 
+    build:
       context: ./process_unit
       args:
-        - DB_HOST=resources
+        - DB_HOST=172.30.0.2
+        - CLIENT_HOST=172.30.0.4
+        - CLIENT_PORT=5173
     container_name: keps_assistant_process
-    ports:
-      - "2001:2001"
-    depends_on:
-      - resources
+    expose:
+      - "2001"
     volumes:
       - ./backup:/usr/process_unit/workdir/keps_backup
+    networks:
+      keps_network:
+        ipv4_address: 172.30.0.3
 
   interaction:
-    build: 
+    build:
       context: ./interaction_unit
-      args:
-        - PROCESS_HOST=127.0.0.1
-        - PROCESS_PORT=2001
     container_name: keps_assistant_interaction
     ports:
-      - "2002:5173"
-    depends_on:
-      - process
+      - "5173:5173"
+    environment:
+      - VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT=http://172.30.0.3:2001
+    networks:
+      keps_network:
+        ipv4_address: 172.30.0.4
+
+networks:
+  keps_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/16
