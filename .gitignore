@@ -3,3 +3,4 @@
 .vscode
 backup
 resources_unit
+execute_unit/node_modules

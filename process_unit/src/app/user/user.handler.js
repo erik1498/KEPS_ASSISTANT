@@ -44,7 +44,10 @@ export const loginUser = async (req, res) => {
             tokenExpired
         });
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, JSON.stringify({
+            "id": "NULL",
+            "userId": "NULL"
+        }), req.originalUrl, req.method)
         res.status(500).json({
             type: "internalServerError",
             message: error.message

@@ -1,7 +1,7 @@
 version: '3'
 services:
   resources:
-    image: mysql
+    image: mariadb:10.3.16
     container_name: keps_assistant_resources
     environment:
       MYSQL_ROOT_PASSWORD: root
