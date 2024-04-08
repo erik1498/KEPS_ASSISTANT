@@ -2,11 +2,10 @@ const { app, BrowserWindow } = require("electron")
 
 const createWindow = () => {
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
-        fullscreen: true
+        autoHideMenuBar: true,
     })
 
+    win.maximize()
     win.loadURL("http://172.30.0.4:5173/")
 }
 

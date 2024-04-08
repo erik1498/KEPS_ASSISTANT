@@ -3,6 +3,6 @@
 # Menampilkan pesan sambutan
 echo "Selamat datang di KEPS ASSISTANT!"
 
-docker compose start && pnpm run start
+docker compose start
 
 read -p "Aplikasi KEPS ASSISTANT anda sudah siap"
