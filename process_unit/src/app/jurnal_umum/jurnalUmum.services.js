@@ -1,6 +1,6 @@
 import { convertNeracaToJurnalUmum } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
-import { getNeracaSaldoBulanSebelumnya } from "../neraca/neraca.services.js"
+import { getNeracaSaldoBulanSebelumnya, getNeracaSaldoByBulanAndTahunServices } from "../neraca/neraca.services.js"
 import { createJurnalUmumRepo, deleteJurnalUmumByBuktiTransaksiRepo, deleteJurnalUmumByUuidRepo, getJurnalUmumByBuktiTransaksiRepo, getJurnalUmumByBulanRepo, getJurnalUmumByUuidRepo, getJurnalUmumLabaRugiByBulanRepo, getJurnalUmumNeracaByBulanRepo, updateJurnalUmumByUuidRepo } from "./jurnalUmum.repository.js"
 
 export const getJurnalUmumByUuidService = async (uuid, req_identity) => {
@@ -62,6 +62,15 @@ export const createJurnalUmumService = async (jurnalUmumData, req_identity) => {
     jurnalUmumData.bulan = parseFloat(jurnalUmumData.bulan) < 10 ? "0" + jurnalUmumData.bulan : jurnalUmumData.bulan
     jurnalUmumData.enabled = true
 
+    const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(jurnalUmumData.bulan, jurnalUmumData.tahun);
+
+    if (getDataValidasi.length) {
+        throw Error(JSON.stringify({
+            message: "Neraca bulan ini sudah di validasi",
+            field: "buktiTransaksi"
+        }))
+    }
+
     const jurnalUmumWithSameBuktiTransaksi = await getJurnalUmumByBuktiTransaksiRepo(jurnalUmumData.bukti_transaksi, jurnalUmumData.uuidList)
 
     LOGGER(logType.INFO, "JURNAL UMUM BUKTI TRANSAKSI", jurnalUmumWithSameBuktiTransaksi, req_identity)
@@ -81,13 +90,37 @@ export const createJurnalUmumService = async (jurnalUmumData, req_identity) => {
 
 export const deleteJurnalUmumByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteJurnalUmumByUuidService [${uuid}]`, null, req_identity)
-    await getJurnalUmumByUuidService(uuid, req_identity)
+    const jurnalUmumData = await getJurnalUmumByUuidService(uuid, req_identity)
+
+    const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(jurnalUmumData.bulan, jurnalUmumData.tahun);
+
+    if (getDataValidasi.length) {
+        throw Error(JSON.stringify({
+            message: "Neraca bulan ini sudah di validasi",
+            field: "buktiTransaksi"
+        }))
+    }
+
     await deleteJurnalUmumByUuidRepo(uuid)
     return true
 }
 
 export const deleteJurnalUmumByBuktiTransaksiService = async (bukti_transaksi, req_identity) => {
     LOGGER(logType.INFO, `Start deleteJurnalUmumByBuktiTransaksiService [${bukti_transaksi}]`, null, req_identity)
+
+    const jurnalUmumData = await getJurnalUmumByBuktiTransaksiRepo(bukti_transaksi);
+
+    if (jurnalUmumData.length > 0) {
+        const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(jurnalUmumData[0].bulan, jurnalUmumData[0].tahun);
+
+        if (getDataValidasi.length) {
+            throw Error(JSON.stringify({
+                message: "Neraca bulan ini sudah di validasi",
+                field: "buktiTransaksi"
+            }))
+        }
+    }
+
     await deleteJurnalUmumByBuktiTransaksiRepo(bukti_transaksi)
     return true
 }
@@ -97,6 +130,15 @@ export const updateJurnalUmumByUuidService = async (uuid, jurnalUmumData, req_id
     let beforeData = await getJurnalUmumByUuidService(uuid, req_identity)
     jurnalUmumData.tanggal = parseFloat(jurnalUmumData.tanggal) < 10 ? "0" + jurnalUmumData.tanggal : jurnalUmumData.tanggal
     jurnalUmumData.bulan = parseFloat(jurnalUmumData.bulan) < 10 ? "0" + jurnalUmumData.bulan : jurnalUmumData.bulan
+
+    const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(jurnalUmumData.bulan, jurnalUmumData.tahun);
+
+    if (getDataValidasi.length) {
+        throw Error(JSON.stringify({
+            message: "Neraca bulan ini sudah di validasi",
+            field: "buktiTransaksi"
+        }))
+    }
 
     const jurnalUmumWithSameBuktiTransaksi = await getJurnalUmumByBuktiTransaksiRepo(jurnalUmumData.bukti_transaksi, jurnalUmumData.uuidList)
 
