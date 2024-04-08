@@ -1,6 +1,6 @@
 /process_unit/node_modules
 /process_unit/keps_backup/
+/execute_unit/node_modules
 .vscode
 backup
 resources_unit
-execute_unit/node_modules
