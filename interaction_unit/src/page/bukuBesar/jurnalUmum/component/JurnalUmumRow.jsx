@@ -66,7 +66,9 @@ const JurnalUmumRow = ({
                                         j <= item2.length ?
                                             <div className="grid grid-cols-12 items-start py-1">
                                                 <div className="col-span-1 px-2 text-black">
-                                                    {convertTo12HoursFormat(item3.waktu)}
+                                                    {
+                                                        item3.uuid != "NERACA" ? convertTo12HoursFormat(item3.waktu) : " - - "
+                                                    }
                                                 </div>
                                                 <div className={`col-span-2 text-gray-900 flex flex-col px-2 ${j > 0 && item3.uuid != "NERACA" ? "text-right" : ""}`}>
                                                     <p>{item3.kode_akun} - {item3.nama_akun}</p>

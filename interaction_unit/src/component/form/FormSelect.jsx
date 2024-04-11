@@ -15,8 +15,8 @@ const FormSelect = ({
         border: 'none',
         boxShadow: 'none',
         fontSize: '14px',
-        minHeight: '20px',
-        height: '32px'
+        minHeight: '18px',
+        height: '30px'
     }
 }) => {
     return <>

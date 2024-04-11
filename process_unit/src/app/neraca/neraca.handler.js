@@ -22,7 +22,7 @@ export const getAllNeracaByBulanController = async (req, res) => {
             message: "Get Data Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -40,9 +40,10 @@ export const validasiNeracaController = async (req, res) => {
             message: "Validasi Neraca Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
+            errorData: error.message
         })
     }
 }
@@ -56,7 +57,7 @@ export const deleteValidasiNeracaByBulanAndTahunController = async (req, res) =>
             message: "Batal Validasi Neraca Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -75,7 +76,7 @@ export const checkValidasiNeracaController = async (req, res) => {
             message: "Validasi Neraca Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message

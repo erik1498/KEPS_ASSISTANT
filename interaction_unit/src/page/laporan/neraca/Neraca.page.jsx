@@ -8,11 +8,12 @@ import BulanSelectedListCard from "../../../component/card/BulanSelectedListCard
 import { useEffect } from "react"
 import RowCard from "../../../component/card/RowCard"
 import AktivaPasivaStatusCard from "../../../component/card/AktivaPasivaStatusCard"
+import { showError } from "../../../helper/form.helper"
 
 const NeracaPage = () => {
 
     const dataContext = useDataContext()
-    const { data } = dataContext
+    const { data, setData } = dataContext
 
     const [isLoading, setIsLoading] = useState(false)
     const [bulan, setBulan] = useState(new Date().getMonth())
@@ -24,10 +25,16 @@ const NeracaPage = () => {
         apiNeracaCRUD
             .custom(`/${bulan + 1}/${data.tahun}`, "GET")
             .then((resData) => {
+
+                let dataCopy = data
+                dataCopy.dashboard.overview[bulan].neraca = resData?.data
+                dataCopy.dashboard.overview[bulan].perubahanModal = null
+                setData(dataCopy)
+
                 setNeraca(resData?.data)
                 setIsLoading(false)
             }).catch(err => {
-                console.log(err)
+                showError(err)
             })
     }
 
@@ -38,8 +45,13 @@ const NeracaPage = () => {
             .then((resData) => {
                 setValidasiStatus(resData)
                 setIsLoading(false)
+
+                let dataCopy = data
+                dataCopy.dashboard.overview[bulan].perubahanModal = null
+                setData(dataCopy)
+
             }).catch(err => {
-                console.log(err)
+                showError(err)
             })
     }
 
@@ -52,11 +64,15 @@ const NeracaPage = () => {
                     tahun: data.tahun
                 }
             })
-            .then((data) => {
-                console.log(data)
+            .then((resData) => {
+                
+                let dataCopy = data
+                dataCopy.dashboard.overview[bulan].perubahanModal = null
+                setData(dataCopy)
+
                 _getValidasiStatus()
             }).catch(err => {
-                console.log(err)
+                showError(err)
             })
     }
 

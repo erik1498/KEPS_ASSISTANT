@@ -13,15 +13,24 @@ export const getNeracaReportService = async (bulan, tahun, whereIN, req_identity
 }
 
 export const validasiNeracaServices = async (bulan, tahun, req_identity) => {
-    const neraca = await getNeracaReportService(bulan, tahun, null, req_identity)
-    bulan = bulan < 10 ? "0" + bulan : bulan
-    const neracaData = {
-        bulan: bulan,
-        tahun: tahun,
-        json: JSON.stringify(neraca)
+    const validasi = await getNeracaSaldoByBulanAndTahunServices(bulan - 1, tahun, req_identity)
+
+    if (validasi.length > 0) {
+        const neraca = await getNeracaReportService(bulan, tahun, null, req_identity)
+        bulan = bulan < 10 ? "0" + bulan : bulan
+        const neracaData = {
+            bulan: bulan,
+            tahun: tahun,
+            json: JSON.stringify(neraca)
+        }
+        await createNeracaRepo(neracaData)
+        return neraca
+    }else{
+        throw Error(JSON.stringify({
+            message: "Neraca bulan sebelumnya belum divalidasi",
+            field: "error"
+        }))
     }
-    await createNeracaRepo(neracaData)
-    return neraca
 }
 
 export const deleteValidasiNeracaByBulanAndTahunServices = async (bulan, tahun, req_identity) => {
@@ -40,6 +49,15 @@ export const getNeracaSaldoBulanSebelumnya = async (bulan, tahun, req_identity) 
 }
 
 export const getNeracaSaldoByBulanAndTahunServices = async (bulan, tahun, req_identity) => {
+    if (bulan == 0) {
+        bulan = 12
+        tahun = tahun - 1
+    }
+    if (tahun == 2023) {
+        return Array(1)
+    }
     bulan = bulan < 10 ? "0" + bulan : bulan
-    return await getNeracaByBulanAndTahun(bulan, tahun)
+    const returnData = await getNeracaByBulanAndTahun(bulan, tahun)
+    console.log("RETURN DATA", returnData)
+    return returnData
 }

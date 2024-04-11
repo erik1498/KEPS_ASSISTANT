@@ -5,7 +5,7 @@ import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
 export const getJurnalUmumByUuidRepo = async (uuid) => {
     const jurnalUmum = await JurnalUmumModel.findOne({
-        where:{
+        where: {
             uuid
         }
     })
@@ -43,15 +43,15 @@ export const getJurnalUmumLabaRugiByBulanRepo = async (bulan) => {
                 WHERE jurnal_umum_tab.bulan = ${bulan} AND jurnal_umum_tab.tahun = ${new Date().getFullYear()}
                 AND kode_akun_perkiraan_tab.type IN ("Pendapatan", "Beban")
             `,
-            { type: Sequelize.QueryTypes.SELECT }
-        )
-        return jurnalUmums
-    }
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return jurnalUmums
+}
 
-    export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting) => {
-        bulan = bulan < 10 ? "0" + bulan : bulan
-        const jurnalUmums = await db.query(
-            `
+export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting) => {
+    bulan = bulan < 10 ? "0" + bulan : bulan
+    const jurnalUmums = await db.query(
+        `
                 SELECT 
                     res.*
                 FROM
@@ -86,7 +86,7 @@ export const getJurnalUmumLabaRugiByBulanRepo = async (bulan) => {
                     )
                 ) AS res
                 WHERE res.bulan = "${bulan}" AND res.tahun = "${tahun}"
-            ${ sorting == "bukti_transaksi" ? 'ORDER BY res.tanggal ASC, res.waktu ASC, res.bukti_transaksi ASC' : 'ORDER BY res.tanggal ASC' }
+            ${sorting == "bukti_transaksi" ? 'ORDER BY res.tanggal ASC, res.waktu ASC, res.bukti_transaksi ASC' : 'ORDER BY res.tanggal ASC'}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -117,8 +117,8 @@ export const deleteJurnalUmumByUuidRepo = async (uuid) => {
     await getJurnalUmumByUuidRepo(uuid);
     await JurnalUmumModel.update({
         enabled: false
-    },{
-        where:{
+    }, {
+        where: {
             uuid
         }
     })
@@ -130,7 +130,22 @@ export const getJurnalUmumByBuktiTransaksiRepo = async (bukti_transaksi, uuidLis
             SELECT 
                 COUNT(0) AS count
             FROM jurnal_umum_tab jut
-            WHERE jut.bukti_transaksi = "${bukti_transaksi}" AND jut.enabled = true
+            WHERE jut.bukti_transaksi = "${bukti_transaksi}" AND jut.enabled = 1
+            ${uuidList != "EMPTY" ? `AND jut.uuid NOT IN(${uuidList})` : ''}
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return jurnalUmums
+}
+
+export const getJurnalUmumByBuktiTransaksiAllDataRepo = async (bukti_transaksi, uuidList) => {
+    const jurnalUmums = await db.query(
+        `
+            SELECT 
+                jut.bulan,
+                jut.tahun
+            FROM jurnal_umum_tab jut
+            WHERE jut.bukti_transaksi = "${bukti_transaksi}" AND jut.enabled = 1
             ${uuidList != "EMPTY" ? `AND jut.uuid NOT IN(${uuidList})` : ''}
         `,
         { type: Sequelize.QueryTypes.SELECT }
@@ -141,7 +156,7 @@ export const getJurnalUmumByBuktiTransaksiRepo = async (bukti_transaksi, uuidLis
 export const deleteJurnalUmumByBuktiTransaksiRepo = async (bukti_transaksi) => {
     await JurnalUmumModel.update({
         enabled: false
-    },{
+    }, {
         where: {
             bukti_transaksi
         }

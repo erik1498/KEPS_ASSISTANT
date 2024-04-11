@@ -142,7 +142,18 @@ export const normalizeDataJurnalUmumSubmit = (data, buktiTransaksiEdit, transaks
             })
         })
 
-        res(transaksiList)
+        let transaksiListFix = []
+        let uuidList = []
+        transaksiList.map((i) => {
+            if (i.status != "POST" && uuidList.indexOf(i.uuid) < 0) {
+                transaksiListFix.push(i)
+                uuidList.push(i.uuid)
+            }
+        })
+
+        transaksiListFix = transaksiListFix.concat(transaksiList.filter(i => i.status == "POST"))
+
+        res(transaksiListFix)
     })
 }
 

@@ -11,7 +11,7 @@ const FormInput = ({
       <input
         name={name}
         type={type}
-        className={` ${border ? `border-b-2 border-gray-800` : `border-none `} bg-transparent px-3 py-1 text-[16px] w-full outline-none`}
+        className={` ${border ? `border-b-2 border-gray-800` : `border-none `} bg-transparent px-3 py-1 input-sm w-full outline-none`}
         value={value}
         onChange={onchange}
         {...other}

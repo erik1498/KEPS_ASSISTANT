@@ -12,7 +12,7 @@ export const getAllKodeAkunPerkiraans = async (req, res) => {
             message: "Get Data Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -29,7 +29,7 @@ export const getKodeAkunPerkiraansByCodeList = async (req, res) => {
             message: "Get Data Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -47,7 +47,7 @@ export const getAllKodeAkunPerkiraanKas = async (req, res) => {
             message: "Get Data Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -65,7 +65,7 @@ export const getAllKodeAkunPerkiraanNoKas = async (req, res) => {
             message: "Get Data Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -83,7 +83,7 @@ export const getAllKodeAkunPerkiraanBank = async (req, res) => {
             message: "Get Data Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -101,7 +101,7 @@ export const getAllKodeAkunPerkiraanNoBank = async (req, res) => {
             message: "Get Data Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -119,7 +119,7 @@ export const getAllKodeAkunPerkiraanByType = async (req, res) => {
             message: "Get Data Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -137,7 +137,7 @@ export const getAllKodeAkunPerkiraanExceptType = async (req, res) => {
             message: "Get Data Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -155,7 +155,7 @@ export const getKodeAkunPerkiraanByUUID = async (req, res) => {
             message: "Get Data By UUID Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -181,7 +181,7 @@ export const postCreateKodeAkunPerkiraan = async (req, res) => {
             message: "Create data Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -199,7 +199,7 @@ export const deleteKodeAkunPerkiraanByUUID = async (req, res) => {
             message: "Delete Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message
@@ -223,7 +223,7 @@ export const updateKodeAkunPerkiraanByUUID = async (req, res) => {
             message: "Update Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message

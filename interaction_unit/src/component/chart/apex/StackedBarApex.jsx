@@ -1,22 +1,34 @@
 import Chart from "react-apexcharts";
-import { getBulanList, getTanggal } from "../../../helper/date.helper";
 import { getRandom, parseToRupiahText } from "../../../helper/number.helper";
-import { KodeAkunType } from "../../../config/objectList.config";
 
 const StackedBarApex = ({
     series,
+    categories,
     height,
     seriesValueLabel,
-    colors = ['#15803d', '#dc2626']
+    valueUseRp = true,
+    colors = ['#15803d', '#dc2626'],
+    stacked = false,
+    seriesRupiah = true
 }) => {
     const options = {
         chart: {
+            type: "bar",
             id: "basic-bar",
             toolbar: {
-                show: false
+                show: true,
+                tools: {
+                    download: false,
+                    selection: false,
+                    zoom: true,
+                    zoomin: true,
+                    zoomout: true,
+                    pan: true,
+                },
             },
+            stacked: stacked,
             zoom: {
-                enabled: false
+                enabled: true
             }
         },
         stroke: {
@@ -29,31 +41,37 @@ const StackedBarApex = ({
         legend: {
             position: 'top',
             horizontalAlign: 'center',
-            fontWeight: 800,
-            formatter: (seriesName, opt) => {
-                if (seriesValueLabel && seriesValueLabel[opt.seriesIndex]) {
-                    return `Rp. ${seriesValueLabel[opt.seriesIndex]}`
-                }else{
-                    return seriesName
-                }
-            }
+            fontWeight: 600,
         },
         xaxis: {
+            categories: categories,
             labels: {
-                // show: false
-                style:{
-                    fontWeight: 800
+                style: {
+                    fontWeight: 600
                 }
-            },
+            }
         },
         yaxis: {
             show: false,
             labels: {
-                formatter: (value) => { return `Rp. ${parseToRupiahText(value)}` },
+                formatter: (value) => { return `${valueUseRp ? `Rp. ` : ``}${parseToRupiahText(value)}` },
             }
         },
     }
-
-    return <Chart options={options} series={series} height={height} type="bar" />
+    return <>
+        <div className="flex w-full justify-center gap-x-2 my-3">
+            {
+                seriesValueLabel.map((i, idx) => {
+                    return <>
+                        <div className={`p-2 rounded-md`} style={{
+                            backgroundColor: colors[idx]
+                        }}></div>
+                        <p className="text-xs font-bold">{seriesRupiah ? `Rp. ` : ``}{i}</p>
+                    </>
+                })
+            }
+        </div>
+        <Chart options={options} series={series} height={height} type="bar" />
+    </>
 }
 export default StackedBarApex;

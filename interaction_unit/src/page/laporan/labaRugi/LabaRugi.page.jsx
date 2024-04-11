@@ -12,7 +12,7 @@ import RowCard from "../../../component/card/RowCard";
 const LabaRugiPage = () => {
 
     const dataContext = useDataContext()
-    const { data } = dataContext
+    const { data, setData } = dataContext
 
     const [isLoading, setIsLoading] = useState(false)
     const [bulan, setBulan] = useState(new Date().getMonth())
@@ -23,6 +23,11 @@ const LabaRugiPage = () => {
         apiLabaRugiR
             .custom(`/${bulan + 1}/${data.tahun}`, "GET")
             .then((resData) => {
+
+                let dataCopy = data
+                dataCopy.dashboard.overview[bulan].labaRugi = resData?.data
+                setData(dataCopy)
+
                 setLabaRugi(resData?.data)
                 setIsLoading(false)
             }).catch(err => {

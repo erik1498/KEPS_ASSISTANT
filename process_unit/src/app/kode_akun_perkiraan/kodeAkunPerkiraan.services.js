@@ -107,7 +107,7 @@ export const getKodeAkunPerkiraanByUuidService = async (uuid, req_identity) => {
 
 export const createKodeAkunPerkiraanService = async (kodeAkunPerkiraanData, req_identity) => {
     LOGGER(logType.INFO, `Start createKodeAkunPerkiraanService`, kodeAkunPerkiraanData, req_identity)
-    kodeAkunPerkiraanData.enabled = true
+    kodeAkunPerkiraanData.enabled = 1
 
     const kodeAkunPerkiraanWithSameCode = await getKodeAkunPerkiraanByCodeRepo(kodeAkunPerkiraanData.code)
 

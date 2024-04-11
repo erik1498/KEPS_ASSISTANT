@@ -9,7 +9,7 @@ import { inputOnlyRupiah } from "../../../../helper/actionEvent.helper";
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../helper/number.helper";
 import FormInput from "../../../../component/form/FormInput";
 import { apiJurnalUmumCRUD } from "../../../../service/endPointList.api";
-import { formShowMessage, formValidation } from "../../../../helper/form.helper";
+import { formShowMessage, formValidation, showAlert, showError } from "../../../../helper/form.helper";
 import { normalizeDataJurnalUmumSubmit } from "../../../../helper/jurnalUmum.helper";
 import { axiosJWT } from "../../../../helper/api.helper";
 
@@ -98,27 +98,22 @@ const JurnalUmumForm = ({
   const _saveTransaksi = async (transaksiList) => {
     if (await formValidation()) {
       let transaksiListNormalized = await normalizeDataJurnalUmumSubmit(transaksiList, buktiTransaksiEdit, transaksiListDeleted)
-      postTransaksiFromArray(0, transaksiListNormalized)
       let transaksiUpdateDelete = transaksiListNormalized.filter(j => j.status != "POST")
-      if (transaksiUpdateDelete.length == 0) {
-        getData()
-        setAddJurnalEvent()
-      }
       transaksiUpdateDelete.map((item) => {
         let { status, ...itemCopy } = item
         let uuidList = transaksiUpdateDelete.filter(i => i.uuid != undefined).map(i => `'${i.uuid}'`)
         itemCopy.uuidList = uuidList.length > 0 ? uuidList.join(",") : "EMPTY"
         apiJurnalUmumCRUD
-          .custom(`${status == "PUT" || status == "DELETE" ? `/${itemCopy.uuid}` : ""}`, status, null, {
+          .custom(`/${itemCopy.uuid}`, status, null, status == "PUT" ? {
             data: itemCopy
-          })
+          } : null)
           .then(() => {
             getData()
-            setAddJurnalEvent()
           }).catch((err) => {
-            formShowMessage(JSON.parse(err.response.data.errorData))
+            showError(err)
           })
       })
+      postTransaksiFromArray(0, transaksiListNormalized)
     }
   }
 
@@ -135,9 +130,19 @@ const JurnalUmumForm = ({
             postTransaksiFromArray(index + 1, transaksiListNormalized, postResponse)
           } else {
             getData()
+            setAddJurnalEvent()
+            showAlert("Berhasil", "Transaksi Berhasil Disimpan")
           }
         } catch (error) {
-          formShowMessage(JSON.parse(error.response.data.errorData))
+          showError(error)
+        }
+      } else {
+        if (index + 1 < transaksiListNormalized.length) {
+          postTransaksiFromArray(index + 1, transaksiListNormalized, postResponse)
+        } else {
+          getData()
+          setAddJurnalEvent()
+          showAlert("Berhasil", "Transaksi Berhasil Disimpan")
         }
       }
     }
@@ -271,7 +276,7 @@ const JurnalUmumForm = ({
                     </label>
                   </div>
                 </div>
-                <div className="grid w-full grid-cols-12 gap-x-2">
+                <div className="grid w-full items-end grid-cols-12 gap-x-2">
                   {
                     transaksi.map((item, j) => {
                       return <>

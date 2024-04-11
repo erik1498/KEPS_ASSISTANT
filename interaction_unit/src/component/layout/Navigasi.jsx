@@ -9,8 +9,7 @@ import FormSelect from "../form/FormSelect";
 import { useDataContext } from "../../context/dataContext.context";
 import { yearList } from "../../config/objectList.config";
 
-const Navigasi = () => {
-
+const Navigasi = ({setLoadingOpen}) => {
     const navigate = useNavigate()
 
     const { data, setData } = useDataContext()
@@ -27,14 +26,9 @@ const Navigasi = () => {
     }, [])
 
     return <>
-        {/* {
-            sideBars[0] != "Dashboard" ? */}
         <div className="top-36 left-0 right-0 fixed -z-0 shadow-inner">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#1e3a8a" fill-opacity="1" d="M0,192L48,192C96,192,192,192,288,170.7C384,149,480,107,576,128C672,149,768,235,864,229.3C960,224,1056,128,1152,101.3C1248,75,1344,117,1392,138.7L1440,160L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>
         </div>
-        {/* // : */}
-        {/* <div className="top-0 left-0 right-0 fixed -z-0 shadow-inner h-screen  bg-[url('/wave.svg')] bg-center bg-cover"></div> */}
-        {/* } */}
         <div className="sticky top-0 z-50">
             <div className="bg-white px-8 py-5 grid grid-cols-2">
                 <div className="uppercase text-blue-900">
@@ -44,10 +38,12 @@ const Navigasi = () => {
                 <div className="col-span-1 flex justify-end align-middle">
                     <div
                         onClick={() => {
+                            setLoadingOpen(true)
                             eraseCookie("token")
                             eraseCookie("refreshToken")
                             eraseCookie("tokenExpired")
                             eraseCookie("login")
+                            eraseCookie("loadedKodeAkun")
                             navigate("/")
                         }}
                         className="flex items-center bg-red-800 p-4 text-white rounded-full shadow-2xl cursor-pointer"

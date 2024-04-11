@@ -80,8 +80,7 @@ export const _shapeMethodDel = (url, tokenCancel = '', isMsgSuccess = true) => {
       return res.data;
     })
     .catch((err) => {
-      // notify.error(err.message)
-      console.log(err);
+      return err
     });
 };
 

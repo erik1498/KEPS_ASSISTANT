@@ -3,18 +3,16 @@ import { useDataContext } from "../../../context/dataContext.context"
 import Wrap from "../../../component/layout/Wrap"
 import PageTitle from "../../../component/general/PageTitle"
 import { useEffect } from "react"
-import { FaSearch } from "react-icons/fa"
 import BulanSelectedListCard from "../../../component/card/BulanSelectedListCard"
 import { apiNeracaSaldoR } from "../../../service/endPointList.api"
 import DebetKreditStatusCard from "../../../component/card/DebetKreditStatusCard"
 import { normalizeDataNeracaSaldo } from "../../../helper/neracaSaldo.helper"
 import NeracaSaldoRow from "./component/NeracaSaldoRow"
-import NeracaSaldoChart from "./component/NeracaSaldoChart"
 
 const NeracaSaldoPage = () => {
 
     const dataContext = useDataContext()
-    const { data } = dataContext
+    const { data, setData } = dataContext
 
     const [bulan, setBulan] = useState(new Date().getMonth())
     const [neracaSaldo, setNeracaSaldo] = useState([])
@@ -30,6 +28,11 @@ const NeracaSaldoPage = () => {
         apiNeracaSaldoR
             .custom(`/${bulan + 1}/${data.tahun}`, "GET")
             .then(async (resData) => {
+
+                let dataCopy = data
+                dataCopy.dashboard.overview[bulan].neracaSaldo = resData?.data
+                setData(dataCopy)
+
                 let normalizeData = await normalizeDataNeracaSaldo(resData.data)
                 setNeracaSaldo(normalizeData.data)
                 setDebet(normalizeData.totalDebet)

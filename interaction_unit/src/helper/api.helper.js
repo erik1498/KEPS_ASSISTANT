@@ -11,10 +11,6 @@ axiosJWT.interceptors.request.use(async (config) => {
         import.meta.env.VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT + "/user/refresh",
         {
           refreshToken: getCookie("refreshToken")
-        }, {
-          headers:{
-            Authorization: `Bearer ${getCookie("token")}`
-          }
         }
       )
       config.headers.Authorization = `Bearer ${response.data.token}`

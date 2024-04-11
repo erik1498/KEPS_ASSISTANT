@@ -27,7 +27,7 @@ const RadarApex = ({
             categories: categories,
             labels: {
                 style: {
-                    colors: categories.map(i => "#000"),
+                    colors: categories?.map(i => "#000"),
                     fontWeight: 500,
                 },
             }

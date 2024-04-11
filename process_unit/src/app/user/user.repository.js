@@ -17,3 +17,14 @@ export const getUserByUuidRepo = async (uuid) => {
     })
     return user
 }
+
+
+export const createUserRepo = async (userData) => {
+    const user = await UserModel.create({
+        username: userData.username,
+        password: userData.password,
+        name: userData.name,
+        role: userData.role,
+    })
+    return user
+}

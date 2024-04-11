@@ -7,6 +7,7 @@ import { apiKodeAkunCRUD } from "../../../service/endPointList.api"
 import { useEffect } from "react"
 import Pagination from "../../../component/general/Pagination"
 import KodeAkunForm from "./component/KodeAkunForm"
+import { showAlert, showDialog, showError } from "../../../helper/form.helper"
 
 const KodeAkunPage = () => {
 
@@ -41,7 +42,7 @@ const KodeAkunPage = () => {
         apiKodeAkunCRUD
             .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
             .then(resData => {
-                
+
                 setSearchStatus(searchParam.length < 1)
                 setKodeAkun(resData?.data?.entry)
                 setPagination(resData?.data?.pagination)
@@ -58,15 +59,18 @@ const KodeAkunPage = () => {
         setAddKodeAkun(!addKodeAkun)
     }
 
-    const _deleteKodeAkun = (i) => {
-        let kodeAkunSelected = kodeAkun[i]
-        apiKodeAkunCRUD
-            .custom(`/${kodeAkunSelected.uuid}`, "DELETE")
-            .then(() => {
-                _getData()
-            }).catch(err => {
-                console.log(err)
-            })
+    const _deleteKodeAkun = async (i) => {
+        if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
+            let kodeAkunSelected = kodeAkun[i]
+            apiKodeAkunCRUD
+                .custom(`/${kodeAkunSelected.uuid}`, "DELETE")
+                .then(() => {
+                    showAlert("Berhasil", "Data berhasil dihapus")
+                    _getData()
+                }).catch(err => {
+                    showError(err)
+                })
+        }
     }
 
     const paginateUpdatePage = ({ selected }) => {

@@ -4,6 +4,7 @@ import { useState } from "react"
 import { apiKodeAkunCRUD } from "../service/endPointList.api"
 import { useContext } from "react"
 import { getCookie } from "../helper/cookies.helper"
+import { getBulanList } from "../helper/date.helper"
 
 export const DataContext = createContext()
 
@@ -15,7 +16,19 @@ export const DataProvider = ({ children }) => {
 
     const [data, setData] = useState({
         kodeAkun: [],
-        tahun: new Date().getFullYear()
+        tahun: new Date().getFullYear(),
+        dashboard: {
+            overview: getBulanList().map(i => i = {
+                jurnal: null,
+                neracaSaldo: null,
+                labaRugi: null,
+                neraca: null,
+                perubahanModal: null,
+            }),
+            penjualan: [],
+            pembelian: [],
+            biaya: []
+        }
     })
 
     const _getDataKodeAkun = () => {

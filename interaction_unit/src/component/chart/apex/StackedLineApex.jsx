@@ -1,12 +1,13 @@
 import Chart from "react-apexcharts";
-import { getTanggal } from "../../../helper/date.helper";
 import { getRandom, parseToRupiahText } from "../../../helper/number.helper";
 
 const StackedLineApex = ({
     series,
+    categories,
     height,
     seriesValueLabel,
-    valueUseRp = true
+    valueUseRp = true,
+    valueAddString = ""
 }) => {
     const options = {
         chart: {
@@ -43,7 +44,7 @@ const StackedLineApex = ({
             }
         },
         xaxis: {
-            categories: getTanggal(true),
+            categories: categories,
             // axisBorder: {
             //     show: false
             // },
@@ -63,7 +64,7 @@ const StackedLineApex = ({
             // },
             show: false,
             labels: {
-                formatter: (value) => { return `${valueUseRp ? `Rp. ` : ``}${parseToRupiahText(value)}` },
+                formatter: (value) => { return `${valueUseRp ? `Rp. ` : ``}${parseToRupiahText(value)}${valueAddString}` },
             }
         },
     }

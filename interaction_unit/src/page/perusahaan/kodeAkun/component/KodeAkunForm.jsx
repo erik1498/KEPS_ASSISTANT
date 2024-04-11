@@ -5,7 +5,7 @@ import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
 import FormSelect from "../../../../component/form/FormSelect"
 import { KodeAkunType } from "../../../../config/objectList.config"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
-import { formShowMessage, formValidation } from "../../../../helper/form.helper"
+import { formShowMessage, formValidation, showAlert } from "../../../../helper/form.helper"
 import { apiKodeAkunCRUD } from "../../../../service/endPointList.api"
 
 const KodeAkunForm = ({
@@ -33,6 +33,11 @@ const KodeAkunForm = ({
                         code: kodeAkun
                     }
                 }).then(() => {
+                    if (kodeAkunEdit) {                
+                        showAlert("Berhasil", "Data berhasil diupdate")
+                    }else{
+                        showAlert("Berhasil", "Data berhasil disimpan")
+                    }
                     setAddKodeAkunEvent()
                     getData()
                 }).catch(err => {

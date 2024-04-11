@@ -27,11 +27,11 @@ const StackedBar = ({ data = {
     datasets: [
         {
             label: 'Data',
-            data: [10, 12, 45],
+            data: [10, -12, 45],
             backgroundColor: 'rgba(30, 49, 199, 1)',
         },
     ]
-}, indexAxis, legendDisplay = true, yAxisLabelDisplay = true }) => {
+}, indexAxis, legendDisplay = true, yAxisLabelDisplay = true, height = "100%" }) => {
 
     const options = {
         animation: {
@@ -63,6 +63,6 @@ const StackedBar = ({ data = {
         },
     };
 
-    return <Bar data={data} options={options} />
+    return <Bar data={data} options={options} height={height} />
 }
 export default StackedBar

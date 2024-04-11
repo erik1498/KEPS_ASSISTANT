@@ -2,11 +2,14 @@ import { useNavigate } from "react-router-dom";
 import Navigasi from "./Navigasi";
 import { getCookie } from "../../helper/cookies.helper";
 import { useEffect } from "react";
+import LoadingPage from "./LoadingPage";
+import { useState } from "react";
 
 const Wrap = ({
   children,
   isLoading = false,
 }) => {
+  const [loadingOpen, setLoadingOpen] = useState(isLoading)
   const navigate = useNavigate()
   useEffect(() => {
     if (!getCookie("login")) {
@@ -19,13 +22,8 @@ const Wrap = ({
       <div className="page-container-wp">
         <div>
           {
-            isLoading ? <>
-              <div className="w-full h-screen flex flex-col items-center text-white justify-center bg-blue-900">
-                <span className="loading loading-bars loading-lg"></span>
-                <h1 className="mt-2">Harap Menunggu</h1>
-              </div>
-            </> : <>
-              <Navigasi />
+            loadingOpen ? <LoadingPage /> : <>
+              <Navigasi setLoadingOpen={setLoadingOpen} />
               <div className="content px-8 relative">{children}</div>
             </>
           }

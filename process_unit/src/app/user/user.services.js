@@ -1,5 +1,5 @@
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
-import { getUserByUsernameRepo, getUserByUuidRepo } from "./user.repository.js"
+import { createUserRepo, getUserByUsernameRepo, getUserByUuidRepo } from "./user.repository.js"
 
 export const getUserByUsername = async(data, req_id) => {
     LOGGER(logType.INFO, `Start getUserByUsername`, data, req_id)
@@ -21,5 +21,12 @@ export const getUserByUuid = async(data, req_id) => {
     if (!user) {
         throw Error("Authentication Failed")
     }
+    return user
+}
+
+
+export const createUserService = async (userData, req_id) => {
+    LOGGER(logType.INFO, `Start createUserService`, userData, req_id)
+    const user = await createUserRepo(userData)
     return user
 }

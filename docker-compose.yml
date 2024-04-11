@@ -19,8 +19,7 @@ services:
       context: ./process_unit
       args:
         - DB_HOST=172.30.0.2
-        - CLIENT_HOST=172.30.0.4
-        - CLIENT_PORT=5173
+        - CLIENT_HOST=172.30.0.4:5173
     container_name: keps_assistant_process
     expose:
       - "2001"

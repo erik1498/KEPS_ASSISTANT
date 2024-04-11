@@ -34,7 +34,7 @@ export const getAllLabaRugiByBulanController = async (req, res) => {
             message: "Get Data Success"
         })
     } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method)
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
             message: error.message

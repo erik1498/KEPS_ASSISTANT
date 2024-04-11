@@ -3,17 +3,19 @@ import { apiLogin } from "../service/endPointList.api"
 import { eraseCookie, setCookie } from "../helper/cookies.helper"
 import { useState } from "react"
 import { formShowMessage, formValidation } from "../helper/form.helper"
-import FormInputWithLabel from "../component/form/FormInputWithLabel"
+import LoadingPage from "../component/layout/LoadingPage"
 
 const LoginPage = () => {
 
     const navigate = useNavigate()
 
+    const [isLoading, setIsLoading] = useState(false)
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
     const Auth = async () => {
         if (await formValidation()) {
+            // setIsLoading(true)
             eraseCookie("token")
             eraseCookie("refreshToken")
             eraseCookie("tokenExpired")
@@ -34,13 +36,14 @@ const LoginPage = () => {
                     navigate("/dashboard")
                 }).catch(err => {
                     formShowMessage(JSON.parse(err.response.data.message))
+                    // setIsLoading(false)
                 })
         }
     }
 
-    return <>
+    return isLoading ? <LoadingPage /> : <>
         <div className="h-screen w-screen relative flex flex-col justify-center items-center text-white bg-[url('/wave.svg')] bg-end bg-cover">
-            <img 
+            <img
                 src="/keps.png"
                 className="absolute top-0 right-0 h-[30vh] opacity-70"
             />

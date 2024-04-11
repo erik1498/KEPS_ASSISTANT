@@ -1,7 +1,7 @@
 import { convertNeracaToJurnalUmum } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { getNeracaSaldoBulanSebelumnya, getNeracaSaldoByBulanAndTahunServices } from "../neraca/neraca.services.js"
-import { createJurnalUmumRepo, deleteJurnalUmumByBuktiTransaksiRepo, deleteJurnalUmumByUuidRepo, getJurnalUmumByBuktiTransaksiRepo, getJurnalUmumByBulanRepo, getJurnalUmumByUuidRepo, getJurnalUmumLabaRugiByBulanRepo, getJurnalUmumNeracaByBulanRepo, updateJurnalUmumByUuidRepo } from "./jurnalUmum.repository.js"
+import { createJurnalUmumRepo, deleteJurnalUmumByBuktiTransaksiRepo, deleteJurnalUmumByUuidRepo, getJurnalUmumByBuktiTransaksiAllDataRepo, getJurnalUmumByBuktiTransaksiRepo, getJurnalUmumByBulanRepo, getJurnalUmumByUuidRepo, getJurnalUmumLabaRugiByBulanRepo, getJurnalUmumNeracaByBulanRepo, updateJurnalUmumByUuidRepo } from "./jurnalUmum.repository.js"
 
 export const getJurnalUmumByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getJurnalUmumByUuidService [${uuid}]`, null, req_identity)
@@ -59,15 +59,15 @@ export const getJurnalUmumByBulanService = async (bulan, tahun, sorting, search,
 export const createJurnalUmumService = async (jurnalUmumData, req_identity) => {
     LOGGER(logType.INFO, `Start createJurnalUmumService`, jurnalUmumData, req_identity)
     jurnalUmumData.tanggal = parseFloat(jurnalUmumData.tanggal) < 10 ? "0" + jurnalUmumData.tanggal : jurnalUmumData.tanggal
-    jurnalUmumData.bulan = parseFloat(jurnalUmumData.bulan) < 10 ? "0" + jurnalUmumData.bulan : jurnalUmumData.bulan
-    jurnalUmumData.enabled = true
-
+    jurnalUmumData.enabled = 1
+    
     const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(jurnalUmumData.bulan, jurnalUmumData.tahun);
-
+    jurnalUmumData.bulan = parseFloat(jurnalUmumData.bulan) < 10 ? "0" + jurnalUmumData.bulan : jurnalUmumData.bulan
+    
     if (getDataValidasi.length) {
         throw Error(JSON.stringify({
             message: "Neraca bulan ini sudah di validasi",
-            field: "buktiTransaksi"
+            field: "errorMessage"
         }))
     }
 
@@ -92,7 +92,7 @@ export const deleteJurnalUmumByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteJurnalUmumByUuidService [${uuid}]`, null, req_identity)
     const jurnalUmumData = await getJurnalUmumByUuidService(uuid, req_identity)
 
-    const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(jurnalUmumData.bulan, jurnalUmumData.tahun);
+    const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(parseFloat(jurnalUmumData.bulan), jurnalUmumData.tahun);
 
     if (getDataValidasi.length) {
         throw Error(JSON.stringify({
@@ -108,10 +108,10 @@ export const deleteJurnalUmumByUuidService = async (uuid, req_identity) => {
 export const deleteJurnalUmumByBuktiTransaksiService = async (bukti_transaksi, req_identity) => {
     LOGGER(logType.INFO, `Start deleteJurnalUmumByBuktiTransaksiService [${bukti_transaksi}]`, null, req_identity)
 
-    const jurnalUmumData = await getJurnalUmumByBuktiTransaksiRepo(bukti_transaksi);
+    const jurnalUmumData = await getJurnalUmumByBuktiTransaksiAllDataRepo(bukti_transaksi, "EMPTY");
 
     if (jurnalUmumData.length > 0) {
-        const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(jurnalUmumData[0].bulan, jurnalUmumData[0].tahun);
+        const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(parseFloat(jurnalUmumData[0].bulan), jurnalUmumData[0].tahun);
 
         if (getDataValidasi.length) {
             throw Error(JSON.stringify({
@@ -129,14 +129,14 @@ export const updateJurnalUmumByUuidService = async (uuid, jurnalUmumData, req_id
     LOGGER(logType.INFO, `Start updateJurnalUmumByUuidService [${uuid}]`, jurnalUmumData, req_identity)
     let beforeData = await getJurnalUmumByUuidService(uuid, req_identity)
     jurnalUmumData.tanggal = parseFloat(jurnalUmumData.tanggal) < 10 ? "0" + jurnalUmumData.tanggal : jurnalUmumData.tanggal
-    jurnalUmumData.bulan = parseFloat(jurnalUmumData.bulan) < 10 ? "0" + jurnalUmumData.bulan : jurnalUmumData.bulan
 
     const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(jurnalUmumData.bulan, jurnalUmumData.tahun);
-
+    jurnalUmumData.bulan = parseFloat(jurnalUmumData.bulan) < 10 ? "0" + jurnalUmumData.bulan : jurnalUmumData.bulan
+    
     if (getDataValidasi.length) {
         throw Error(JSON.stringify({
             message: "Neraca bulan ini sudah di validasi",
-            field: "buktiTransaksi"
+            field: "errorMessage"
         }))
     }
 

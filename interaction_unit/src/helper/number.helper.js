@@ -15,7 +15,11 @@ export const parseToRupiahText = (value) => {
 }
 
 export const parseRupiahToFloat = (e) => {
-    return parseFloat(e.toString().replaceAll(",", "").replaceAll("(", "").replaceAll(")", ""))
+    try {
+        return parseFloat(e.toString().replaceAll(",", "").replaceAll("(", "").replaceAll(")", ""))
+    } catch (error) {
+        return 0
+    }
 }
 
 export const getRandom = (length) => {
@@ -24,4 +28,12 @@ export const getRandom = (length) => {
 
 export const getArray = (length) => {
     return Array(length).fill(null);
+}
+
+export const sumArray = (array) => {
+    let sum = 0
+    if (array) {
+        array.map(i => sum += i)
+    }
+    return sum
 }

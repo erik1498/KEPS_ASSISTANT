@@ -1,13 +1,24 @@
-import { FaArrowDown, FaCheck } from "react-icons/fa";
-import { getRandom, parseToRupiahText } from "../../../helper/number.helper";
+import { FaArrowDown, FaArrowUp, FaCheck, FaTimes } from "react-icons/fa";
+import { getRandom, parseRupiahToFloat, parseToRupiahText } from "../../../helper/number.helper";
 import StackedLineApex from "../../../component/chart/apex/StackedLineApex";
 import { KodeAkunType } from "../../../config/objectList.config";
 import { useState } from "react";
 import RadarApex from "../../../component/chart/apex/RadarApex";
 import StackedBarApex from "../../../component/chart/apex/StackedBarApex";
 import { getBulanByIndex, getBulanList, getTanggal } from "../../../helper/date.helper";
+import { useDataContext } from "../../../context/dataContext.context";
+import { useEffect } from "react";
+import { apiJurnalUmumCRUD, apiLabaRugiR, apiNeracaCRUD, apiNeracaSaldoR, apiPerubahanModal } from "../../../service/endPointList.api";
+import CandlestickApex from "../../../component/chart/apex/CandlestickApex";
 
 const Overview = () => {
+
+    const { data, setData } = useDataContext()
+    const bulanListMap = getBulanList()
+
+    const [loadNormalized, setLoadNormalized] = useState(false)
+    const [dataOverview, setDataOverview] = useState({})
+
     const [bulanSelectedSet, setBulanSelectedSet] = useState([getBulanByIndex(new Date().getMonth())])
 
     const addAndRemoveToBulanSelectedSet = (name) => {
@@ -25,6 +36,188 @@ const Overview = () => {
         kodeAkunTypeSetCopy.length == 0 ? kodeAkunTypeSetCopy.push(name) : null
         setKodeAkunTypeSet(kodeAkunTypeSetCopy)
     }
+
+    const normalizedDataOverview = () => {
+        let dataTransaksi = []
+        let buktiTransaksi = {
+            total: [],
+            gagal: []
+        }
+        let dataPerTanggal = {
+            tanggal: [],
+            debet: [],
+            kredit: []
+        }
+        let typeAkunTransaksi = {
+            daftar: [],
+            jumlah: []
+        }
+        let neracaSaldo = {
+            label: [],
+            debet: [],
+            kredit: [],
+        }
+        let totalSaldoDebet = 0
+        let totalSaldoKredit = 0
+        let totalDebet = 0;
+        let totalKredit = 0;
+        urutkanBulanSelectedSet().forEach(bulan => {
+            const bulanIdx = bulanListMap.indexOf(bulan)
+            if (data.dashboard.overview[bulanIdx].jurnal) {
+                let dataTransaksiBulan = data.dashboard.overview[bulanIdx].jurnal.filter(i => kodeAkunTypeSet.indexOf(i.type_akun) > -1 && i.uuid != "NERACA")
+                dataTransaksiBulan.forEach(j => {
+
+                    if (buktiTransaksi.total.indexOf(j.bukti_transaksi) < 0) {
+                        buktiTransaksi.total.push(j.bukti_transaksi)
+
+                        let totalDebetBuktiTransaksi = 0;
+                        let totalKreditBuktiTransaksi = 0;
+                        dataTransaksiBulan
+                            .filter(k => k.bukti_transaksi == j.bukti_transaksi)
+                            .map(i => { totalDebetBuktiTransaksi += parseFloat(i.debet), totalKreditBuktiTransaksi += parseFloat(i.kredit) });
+
+                        if (totalDebetBuktiTransaksi != totalKreditBuktiTransaksi) {
+                            buktiTransaksi.gagal.push(j.buktiTransaksi)
+                        }
+
+                    }
+
+                    const indexOfTanggal = dataPerTanggal.tanggal.indexOf(`${j.tanggal} ${getBulanByIndex(parseFloat(j.bulan) - 1)} ${j.tahun}`)
+                    if (indexOfTanggal < 0) {
+                        dataPerTanggal.tanggal.push(`${j.tanggal} ${getBulanByIndex(parseFloat(j.bulan) - 1)} ${j.tahun}`)
+
+                        dataPerTanggal.debet[dataPerTanggal.tanggal.length - 1] = parseFloat(j.debet)
+                        dataPerTanggal.kredit[dataPerTanggal.tanggal.length - 1] = parseFloat(j.kredit)
+                    }
+                    else {
+                        dataPerTanggal.debet[indexOfTanggal] += parseFloat(j.debet)
+                        dataPerTanggal.kredit[indexOfTanggal] += parseFloat(j.kredit)
+                    }
+
+                    totalDebet += parseFloat(j.debet)
+                    totalKredit += parseFloat(j.kredit)
+                })
+
+                dataTransaksi = dataTransaksi.concat(dataTransaksiBulan)
+
+                let byTypeAkun = data.dashboard.overview[bulanIdx].jurnal.filter(i => i.uuid != "NERACA")
+                byTypeAkun.forEach(i => {
+                    const indexOfTypeAkun = typeAkunTransaksi.daftar.indexOf(i.type_akun)
+                    if (indexOfTypeAkun < 0) {
+                        typeAkunTransaksi.daftar.push(i.type_akun)
+                        typeAkunTransaksi.jumlah.push(1)
+                    } else {
+                        typeAkunTransaksi.jumlah[indexOfTypeAkun] += 1
+                    }
+                })
+            } else {
+                apiJurnalUmumCRUD
+                    .custom(`/bulan/${bulanIdx + 1}/${data.tahun}/bukti_transaksi`, "GET")
+                    .then(async (resData) => {
+                        let dataCopy = data
+                        dataCopy.dashboard.overview[getBulanList().indexOf(bulan)].jurnal = resData?.data
+                        setData(dataCopy)
+                        setLoadNormalized(!loadNormalized)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+
+            if (data.dashboard.overview[bulanIdx].neracaSaldo != null) {
+                data.dashboard.overview[bulanIdx].neracaSaldo.forEach(i => {
+                    const idxOfNeracaSaldo = neracaSaldo.label.indexOf(i.kode_akun_perkiraan_type)
+                    if (idxOfNeracaSaldo < 0) {
+                        neracaSaldo.debet.push(i.debet)
+                        neracaSaldo.kredit.push(i.kredit)
+                        neracaSaldo.label.push(i.kode_akun_perkiraan_type)
+                    } else {
+                        neracaSaldo.debet[idxOfNeracaSaldo] += i.debet
+                        neracaSaldo.kredit[idxOfNeracaSaldo] += i.kredit
+                    }
+                    totalSaldoDebet += i.debet
+                    totalSaldoKredit += i.kredit
+                })
+            } else {
+                apiNeracaSaldoR
+                    .custom(`/${bulanIdx + 1}/${data.tahun}`, "GET")
+                    .then(async (resData) => {
+                        let dataCopy = data
+                        dataCopy.dashboard.overview[getBulanList().indexOf(bulan)].neracaSaldo = resData?.data
+                        setData(dataCopy)
+                        setLoadNormalized(!loadNormalized)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+
+            if (data.dashboard.overview[bulanIdx].labaRugi == null) {
+                apiLabaRugiR
+                    .custom(`/${bulanIdx + 1}/${data.tahun}`, "GET")
+                    .then((resData) => {
+                        let dataCopy = data
+                        dataCopy.dashboard.overview[bulanIdx].labaRugi = resData.data
+                        setData(dataCopy)
+                        setLoadNormalized(!loadNormalized)
+                    }).catch(err => {
+                        console.log(err)
+                    })
+            }
+
+            if (data.dashboard.overview[bulanIdx].neraca == null) {
+                apiNeracaCRUD
+                    .custom(`/${bulanIdx + 1}/${data.tahun}`, "GET")
+                    .then((resData) => {
+                        let dataCopy = data
+                        dataCopy.dashboard.overview[getBulanList().indexOf(bulan)].neraca = resData.data
+                        setData(dataCopy)
+                        setLoadNormalized(!loadNormalized)
+                    }).catch(err => {
+                        console.log(err)
+                    })
+            }
+
+            if (data.dashboard.overview[bulanIdx].perubahanModal == null) {
+                apiPerubahanModal
+                    .custom(`/${data.tahun}`, "GET")
+                    .then((resData) => {
+                        let dataCopy = data
+                        dataCopy.dashboard.overview[getBulanList().indexOf(bulan)].perubahanModal = resData.data
+                        setData(dataCopy)
+                        setLoadNormalized(!loadNormalized)
+                    }).catch(err => {
+                        console.log(err)
+                    })
+            }
+        })
+        return {
+            buktiTransaksi,
+            typeAkunTransaksi,
+            dataPerTanggal,
+            neracaSaldo,
+            totalDebet,
+            totalKredit,
+            totalSaldoDebet,
+            totalSaldoKredit,
+            dataTransaksi,
+        }
+    }
+
+    const urutkanBulanSelectedSet = () => {
+        let bulanList = []
+        getBulanList().forEach(b => {
+            if (bulanSelectedSet.indexOf(b) > -1) {
+                bulanList.push(b)
+            }
+        });
+        return bulanList
+    }
+
+    useEffect(() => {
+        let normalizedOverview = normalizedDataOverview()
+        setDataOverview(normalizedOverview)
+    }, [bulanSelectedSet, kodeAkunTypeSet, loadNormalized])
 
     return <div className="flex flex-col gap-y-3">
         <div className="grid grid-cols-12 gap-x-2">
@@ -44,12 +237,12 @@ const Overview = () => {
                     <div className="flex items-end">
                         <div className="flex-1">
                             <div className="py-3 px-2">
-                                <h1 className="text-6xl font-bold">{parseToRupiahText(getRandom(1).at(0) * 34)} Transaksi</h1>
+                                <h1 className="text-6xl font-bold">{parseToRupiahText(dataOverview?.dataTransaksi?.length)} Transaksi</h1>
                                 <div className="mt-3 flex items-end">
                                     <p className="bg-blue-300 text-blue-900 text-sm font-bold px-6 py-1 rounded-md w-max">
-                                        {parseToRupiahText(getRandom(1).at(0) * 10)} Bukti Transaksi
+                                        {parseToRupiahText(dataOverview?.buktiTransaksi?.total?.length)} Bukti Transaksi
                                     </p>
-                                    <p className="ml-3 text-xs text-red-600 font-bold">{parseToRupiahText(getRandom(1).at(0))} Tidak Seimbang.</p>
+                                    <p className="ml-3 text-xs text-red-600 font-bold">{parseToRupiahText(dataOverview?.buktiTransaksi?.gagal?.length)} Tidak Seimbang.</p>
                                 </div>
                             </div>
                         </div>
@@ -67,32 +260,39 @@ const Overview = () => {
                             }
                         </div>
                     </div>
-                    <div className="px-3 pb-5 pt-3 flex items-end gap-x-2">
-                        <p className="text-md font-bold">{getRandom(1).at(0)} Bukti Transaksi</p>
-                        <p className="text-xs text-red-600 font-bold">{getRandom(1).at(0)} Tidak Seimbang</p>
-                    </div>
                     <div className="flex px-3">
-                        <div className="flex items-center w-max bg-green-400 text-green-900 px-2 py-1 gap-x-2 rounded-md">
-                            <FaCheck size={14} />
-                            <p className="text-xs font-bold">Debet dan Kredit Seimbang</p>
+                        <div className={`flex items-center w-max ${dataOverview?.totalDebet == dataOverview?.totalKredit ? `bg-green-400 text-green-900` : `bg-red-400 text-red-900`} px-2 py-1 gap-x-2 rounded-md`}>
+                            {
+                                dataOverview?.totalDebet == dataOverview?.totalKredit ?
+                                    <FaCheck size={14} />
+                                    :
+                                    <FaTimes size={14} />
+                            }
+                            {
+                                dataOverview?.totalDebet == dataOverview?.totalKredit ?
+                                    <p className="text-xs font-bold">Debet dan Kredit Seimbang</p>
+                                    :
+                                    <p className="text-xs font-bold">Debet dan Kredit Tidak Seimbang</p>
+                            }
                         </div>
                     </div>
                     <StackedLineApex
                         seriesValueLabel={
                             [
-                                parseToRupiahText(getRandom(1).at(0) * 413265543),
-                                parseToRupiahText(getRandom(1).at(0) * 413265543)
+                                parseToRupiahText(dataOverview?.totalDebet),
+                                parseToRupiahText(dataOverview?.totalKredit)
                             ]
                         }
-                        height={"280"}
+                        categories={dataOverview?.dataPerTanggal?.tanggal}
+                        height={"340"}
                         series={[
                             {
                                 name: "Debet",
-                                data: getTanggal().map(i => getRandom(1).at(0) * 1289023),
+                                data: dataOverview?.dataPerTanggal?.debet ? dataOverview?.dataPerTanggal?.debet : [],
                             },
                             {
                                 name: "Kredit",
-                                data: getTanggal().map(i => getRandom(1).at(0) * 1289023)
+                                data: dataOverview?.dataPerTanggal?.kredit ? dataOverview?.dataPerTanggal?.kredit : []
                             }
                         ]}
                     />
@@ -103,16 +303,12 @@ const Overview = () => {
                     <div className="flex-1 flex flex-col gap-y-2">
                         <div className="flex-1 p-4 bg-white rounded-box shadow-2xl">
                             <RadarApex
-                                height={"550"}
-                                categories={KodeAkunType().reverse().map(i => i.name)}
+                                height={"450"}
+                                categories={dataOverview?.typeAkunTransaksi?.daftar}
                                 series={[
                                     {
-                                        name: 'Seimbang',
-                                        data: KodeAkunType().reverse().map(i => getRandom(1).at(0) * 10),
-                                    },
-                                    {
-                                        name: 'Tidak Seimbang',
-                                        data: KodeAkunType().reverse().map(i => getRandom(1).at(0) * 10),
+                                        name: 'Jumlah Transaksi',
+                                        data: dataOverview?.typeAkunTransaksi?.jumlah,
                                     },
                                 ]}
                             />
@@ -124,135 +320,162 @@ const Overview = () => {
         <div className="grid grid-cols-12 gap-x-2">
             <div className="col-span-12">
                 <div className="p-4 bg-white rounded-box shadow-2xl">
-                    <div className="px-3 py-2 flex justify-center">
-                        <div className="flex items-center w-max bg-green-400 text-green-900 px-2 py-1 gap-x-2 rounded-md">
-                            <FaCheck size={14} />
-                            <p className="text-xs font-bold">Saldo Debet dan Saldo Kredit Seimbang</p>
+                    <div className="flex justify-center px-3">
+                        <div className={`flex items-center w-max ${dataOverview?.totalSaldoDebet == dataOverview?.totalSaldoKredit ? `bg-green-400 text-green-900` : `bg-red-400 text-red-900`} px-2 py-1 gap-x-2 rounded-md`}>
+                            {
+                                dataOverview?.totalSaldoDebet == dataOverview?.totalSaldoKredit ?
+                                    <FaCheck size={14} />
+                                    :
+                                    <FaTimes size={14} />
+                            }
+                            {
+                                dataOverview?.totalSaldoDebet == dataOverview?.totalSaldoKredit ?
+                                    <p className="text-xs font-bold">Debet dan Kredit Seimbang</p>
+                                    :
+                                    <p className="text-xs font-bold">Debet dan Kredit Tidak Seimbang</p>
+                            }
                         </div>
                     </div>
                     <StackedBarApex
                         seriesValueLabel={
                             [
-                                parseToRupiahText(getRandom(1).at(0) * 413265543),
-                                parseToRupiahText(getRandom(1).at(0) * 413265543)
+                                parseToRupiahText(dataOverview?.totalSaldoDebet ? dataOverview?.totalSaldoDebet : 0),
+                                parseToRupiahText(dataOverview?.totalSaldoKredit ? dataOverview?.totalSaldoKredit : 0)
                             ]
                         }
-                        height={"220"}
+                        categories={dataOverview?.neracaSaldo?.label}
+                        height={"340"}
                         series={[
                             {
-                                name: 'Debet',
-                                data: KodeAkunType().map(i => {
-                                    return {
-                                        x: i.name,
-                                        y: getRandom(1).at(0) * 4135432
-                                    }
-                                })
+                                name: "Debet",
+                                data: dataOverview?.neracaSaldo?.debet ? dataOverview?.neracaSaldo?.debet : [],
                             },
                             {
-                                name: 'Kredit',
-                                data: KodeAkunType().map(i => {
-                                    return {
-                                        x: i.name,
-                                        y: getRandom(1).at(0) * 4135432
-                                    }
-                                })
+                                name: "Kredit",
+                                data: dataOverview?.neracaSaldo?.kredit ? dataOverview?.neracaSaldo?.kredit : []
                             }
-                        ]} />
+                        ]}
+                    />
                 </div>
             </div>
         </div>
-        <div className="flex gap-x-2">
-            <div className="py-4 px-4 bg-green-900 rounded-box shadow-2xl">
-                <div className="flex items-end">
-                    <div className="py-3 px-2 flex gap-x-4 items-center">
-                        <div className="flex items-center justify-center gap-x-2 bg-green-300 text-green-900 text-sm font-bold p-6 rounded-full">
-                            <FaArrowDown size={40} />
+        {
+            urutkanBulanSelectedSet().map(bulan => {
+                return <>
+                    <div className="grid grid-cols-12 gap-x-2 bg-white rounded-box shadow-2xl p-5">
+                        <h1 className="col-span-12 text-center uppercase text-2xl font-bold border-b-4 pb-2">{bulan}</h1>
+                        <div className={`col-span-4 py-4 px-4`}>
+                            <div className="flex justify-center items-end">
+                                <div className="py-3 px-2 flex gap-x-4 items-center">
+                                    <div className={`flex items-center justify-center gap-x-2 ${data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.laba_rugi?.gain ? `bg-green-300 text-green-900` : `bg-red-300 text-red-900`} text-sm font-bold p-6 rounded-full`}>
+                                        {
+                                            data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.laba_rugi?.gain ? <FaArrowDown size={40} /> : <FaArrowUp size={40} />
+                                        }
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <p className={`text-sm font-bold ${data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.laba_rugi?.gain ? `text-green-700` : `text-red-800`}`}>{data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.laba_rugi?.gain ? "Gain" : "Loss"}</p>
+                                        <h1 className={`text-4xl font-bold ${data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.laba_rugi?.gain ? `text-green-700` : `text-red-800`} mb-0`}>{parseToRupiahText(data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.laba_rugi?.gain ? data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.laba_rugi?.gain : data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.laba_rugi?.loss * -1)}</h1>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex flex-col">
-                            <p className="text-sm font-bold text-white">Gain</p>
-                            <h1 className="text-4xl font-bold text-white mb-0">{parseToRupiahText(getRandom(1).at(0) * 10820593)}</h1>
+                        <div className="col-span-8 p-4 flex-1 flex">
+                            <table className="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <td>Harga Pokok Penjualan</td>
+                                        <td className="text-right font-bold">{data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.harga_pokok_penjualan?.count}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Beban Operasional</td>
+                                        <td className="text-right font-bold">{data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.beban_operasional?.count}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Beban Lainnya</td>
+                                        <td className="text-right font-bold">{data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.beban_lainnya?.count}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table className="table table-sm">
+                                <tr className="border-b-2">
+                                    <td>Pendapatan</td>
+                                    <td className="text-right font-bold">{data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.pendapatan?.count}</td>
+                                </tr>
+                                <tr className="border-b-2">
+                                    <td>Pendapatan Lain - Lain</td>
+                                    <td className="text-right font-bold">{data.dashboard.overview[getBulanList().indexOf(bulan)]?.labaRugi?.pendapatanLainLain?.count}</td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td className="text-right font-bold">&nbsp;</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div className="col-span-12">
+                            <div className="flex justify-center px-3">
+                                <div className={`flex items-center w-max ${parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva) == parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.pasiva) ? `bg-green-400 text-green-900` : `bg-red-400 text-red-900`} px-2 py-1 gap-x-2 rounded-md`}>
+                                    {
+                                        parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva) == parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.pasiva) ?
+                                            <FaCheck size={14} />
+                                            :
+                                            <FaTimes size={14} />
+                                    }
+                                    {
+                                        parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva) == parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.pasiva) ?
+                                            <p className="text-xs font-bold">Aktiva dan Pasiva Seimbang</p>
+                                            :
+                                            <p className="text-xs font-bold">Aktiva dan Pasiva Tidak Seimbang</p>
+                                    }
+                                </div>
+                            </div>
+                            <StackedBarApex
+                                seriesValueLabel={
+                                    [
+                                        data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva ? data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva : 0,
+                                        parseToRupiahText(parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.pasiva)) ? parseToRupiahText(parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.pasiva)) : 0
+                                    ]
+                                }
+                                categories={["Neraca"]}
+                                height={"240"}
+                                series={[
+                                    {
+                                        name: "Aktiva",
+                                        data: [parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva)],
+                                    },
+                                    {
+                                        name: "Pasiva",
+                                        data: [parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.pasiva)],
+                                    }
+                                ]}
+                            />
+                            <div className="flex justify-around">
+                                <div className="text-center">
+                                    <p className="text-sm">Aset</p>
+                                    <p className="text-md font-bold">Rp. {parseToRupiahText(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.harta?.count)}</p>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-sm">Kewajiban</p>
+                                    <p className="text-md font-bold">Rp. {parseToRupiahText(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.utang?.count)}</p>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-sm">Ekuitas</p>
+                                    <p className="text-md font-bold">Rp. {parseToRupiahText(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.modal?.count)}</p>
+                                </div>
+                            </div>
+                            <div className="text-center mt-10">
+                                <p className="text-xl uppercase font-bold">Perubahan Modal</p>
+                                <p className="text-md font-bold">Rp. {
+                                    data?.dashboard?.overview[getBulanList().indexOf(bulan)]?.perubahanModal ?
+                                        data?.dashboard?.overview[getBulanList().indexOf(bulan)]?.perubahanModal[getBulanList().indexOf(bulan)] ? data?.dashboard?.overview[getBulanList().indexOf(bulan)]?.perubahanModal[getBulanList().indexOf(bulan)] : 0
+                                        :
+                                        0
+                                }</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div className="p-4 flex-1 bg-white rounded-box shadow-2xl flex">
-                <table className="table table-sm">
-                    <tbody>
-                        <tr>
-                            <td>Harga Pokok Penjualan</td>
-                            <td className="text-right font-bold">Rp. {parseToRupiahText(getRandom(1).at(0) * 354132646)}</td>
-                        </tr>
-                        <tr>
-                            <td>Beban Operasional</td>
-                            <td className="text-right font-bold">Rp. {parseToRupiahText(getRandom(1).at(0) * 354132646)}</td>
-                        </tr>
-                        <tr>
-                            <td>Beban Lainnya</td>
-                            <td className="text-right font-bold">Rp. {parseToRupiahText(getRandom(1).at(0) * 354132646)}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table className="table table-sm">
-                    <tr className="border-b-2">
-                        <td>Pendapatan</td>
-                        <td className="text-right font-bold">Rp. {parseToRupiahText(getRandom(1).at(0) * 354132646)}</td>
-                    </tr>
-                    <tr className="border-b-2">
-                        <td>Pendapatan Lain - Lain</td>
-                        <td className="text-right font-bold">Rp. {parseToRupiahText(getRandom(1).at(0) * 354132646)}</td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td className="text-right font-bold">&nbsp;</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div className="p-4 bg-white rounded-box shadow-2xl">
-            <div className="px-3 py-2 flex justify-center">
-                <div className="flex items-center w-max bg-green-400 text-green-900 px-2 py-1 gap-x-2 rounded-md">
-                    <FaCheck size={14} />
-                    <p className="text-xs font-bold">Aktiva dan Pasiva Seimbang</p>
-                </div>
-            </div>
-            <StackedBarApex
-                height={"200"}
-                seriesValueLabel={
-                    [
-                        parseToRupiahText(getRandom(1).at(0) * 413265543),
-                        parseToRupiahText(getRandom(1).at(0) * 413265543)
-                    ]
-                }
-                series={[
-                    {
-                        name: 'Aktiva',
-                        data: [{
-                            x: 'Saldo Neraca',
-                            y: getRandom(1).at(0) * 4135432
-                        }]
-                    }, {
-                        name: 'Pasiva',
-                        data: [{
-                            x: 'Saldo Neraca',
-                            y: getRandom(1).at(0) * 4135432
-                        }]
-                    },
-                ]} />
-            <div className="flex justify-around">
-                <div className="text-center">
-                    <p className="text-sm">Aset</p>
-                    <p className="text-md font-bold">Rp. {parseToRupiahText(getRandom(1).at(0) * 31351345)}</p>
-                </div>
-                <div className="text-center">
-                    <p className="text-sm">Kewajiban</p>
-                    <p className="text-md font-bold">Rp. {parseToRupiahText(getRandom(1).at(0) * 31351345)}</p>
-                </div>
-                <div className="text-center">
-                    <p className="text-sm">Ekuitas</p>
-                    <p className="text-md font-bold">Rp. {parseToRupiahText(getRandom(1).at(0) * 31351345)}</p>
-                </div>
-            </div>
-        </div>
+                </>
+            })
+        }
     </div>
 }
 export default Overview;

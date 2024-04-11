@@ -12,11 +12,12 @@ import { useDataContext } from "../../../context/dataContext.context";
 import DebetKreditStatusCard from "../../../component/card/DebetKreditStatusCard";
 import BulanSelectedListCard from "../../../component/card/BulanSelectedListCard";
 import PageTitle from "../../../component/general/PageTitle";
+import { showAlert, showDialog, showError } from "../../../helper/form.helper";
 
 const JurnalUmumPage = () => {
 
   const dataContext = useDataContext()
-  const { data } = dataContext
+  const { data, setData } = dataContext
 
   const [search, setSearch] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -41,7 +42,19 @@ const JurnalUmumPage = () => {
     apiJurnalUmumCRUD
       .custom(`/bulan/${bulan + 1}/${data.tahun}/bukti_transaksi?search=${searchParam}`, "GET")
       .then(async (resData) => {
+        let dataCopy = data
+        dataCopy.dashboard.overview[bulan].jurnal = null
+        dataCopy.dashboard.overview[bulan].neracaSaldo = null
+        dataCopy.dashboard.overview[bulan].labaRugi = null
+        dataCopy.dashboard.overview[bulan].neraca = null
+        dataCopy.dashboard.overview[bulan].perubahanModal = null
+        dataCopy.dashboard.penjualan[bulan] = null
+        dataCopy.dashboard.pembelian[bulan] = null
+        dataCopy.dashboard.biaya[bulan] = null
+        setData(dataCopy)
+
         let normalizedData = await normalizeDataJurnalUmum(resData?.data)
+
 
         setBalanceStatus(searchParam.length < 1)
 
@@ -58,34 +71,40 @@ const JurnalUmumPage = () => {
   };
 
   const _deleteTransaksi = async (uuid) => {
-    apiJurnalUmumCRUD
-      .delete(uuid)
-      .then((data) => {
-        _getData()
-      }).catch(err => {
-        console.log(err)
-      })
+    if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
+      apiJurnalUmumCRUD
+        .custom(`/${uuid}`, "DELETE")
+        .then((data) => {
+          showAlert("Berhasil", "Transaksi berhasil dihapus")
+          _getData()
+        }).catch(err => {
+          showError(err)
+        })
+    }
   }
 
   const _deleteByBuktiTransaksi = async (buktiTransaksi) => {
-    setIsLoading(true)
-    apiJurnalUmumCRUD
-      .custom(`/by_bukti_transaksi`, "DELETE", null, {
-        data: {
-          bukti_transaksi: buktiTransaksi
-        }
-      })
-      .then(() => {
-        _getData()
-      }).catch(err => {
-        console.log(err)
-      })
+    if (await showDialog("Hapus", "Yakin ingin hapus data di bukti transaksi ini ?")) {
+      setIsLoading(true)
+      apiJurnalUmumCRUD
+        .custom(`/by_bukti_transaksi`, "DELETE", null, {
+          data: {
+            bukti_transaksi: buktiTransaksi
+          }
+        })
+        .then(() => {
+          showAlert("Berhasil", "Transaksi berhasil dihapus")
+          _getData()
+        }).catch(err => {
+          showError(err)
+        })
+    }
   }
 
   const backupJurnal = () => {
     setIsLoading(true)
     apiJurnalUmumCRUD
-    .custom(`/bulan/${bulan + 1}/${data.tahun}/bukti_transaksi?print=true`, "GET")
+      .custom(`/bulan/${bulan + 1}/${data.tahun}/bukti_transaksi?print=true`, "GET")
       .then(() => {
         setIsLoading(false)
       }).catch(err => {
@@ -157,12 +176,6 @@ const JurnalUmumPage = () => {
                         kredit={kredit}
                       /> : <></>
                   }
-                  <button className="btn btn-sm hover:bg-yellow-500 bg-yellow-500 border-yellow-500 text-black my-2 shadow-xl"
-                    onClick={() => backupJurnal()}
-                  >
-                    <FaDownload size={10} />
-                    <p className="font-bold text-md">Backup Jurnal</p>
-                  </button>
                 </div>
                 <div className="col-span-5">
                   <div className="h-[65vh] pl-2">

@@ -20,7 +20,7 @@ export const LOGGER_MONITOR = async (service, method, data, req_identity, error)
     })
 }
 
-export const LOGGER = (logType, message, object, req_identity, req_original_url, req_method) => {
+export const LOGGER = (logType, message, object, req_identity, req_original_url, req_method, error_monitor) => {
     message = "[ ID:" + req_identity + " ] = " + message
     message = object ? message + " [ " + JSON.stringify(object, null, 4) + " ]" : message
 
@@ -29,7 +29,7 @@ export const LOGGER = (logType, message, object, req_identity, req_original_url,
     }
     if (logType == "error") {
         pinoLogConfig.error(message)
-        LOGGER_MONITOR(req_original_url, req_method, object, req_identity, true)
+        if (error_monitor) { LOGGER_MONITOR(req_original_url, req_method, object, req_identity, true) }
     }
     if (logType == "debug") {
         pinoLogConfig.debug(message)
