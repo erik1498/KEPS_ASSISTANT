@@ -19,6 +19,12 @@ const limiter = rateLimit({
 const app = express()
 app.use(limiter)
 app.use(express.json())
+
+console.log({
+    credentials: true,
+    origin:`${getEnv("CLIENT_HOST")}`
+})
+
 app.use(cors({
     credentials: true,
     origin:`${getEnv("CLIENT_HOST")}`
