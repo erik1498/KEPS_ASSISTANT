@@ -25,6 +25,7 @@ app.use(cors({
 }))
 
 const PORT = getEnv("PORT")
+await waitForDBConnection()
 
 db.sync()
 

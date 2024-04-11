@@ -8,4 +8,18 @@ const db = new Sequelize(getEnv("DB_NAME"), getEnv("DB_USER"), getEnv("DB_PASSWO
     logging: true
 })
 
+export const waitForDBConnection = async () => {
+    while (true) {
+        try {
+            await db.authenticate();
+            console.log('Connected to database!');
+            break;
+        } catch (error) {
+            console.error('Error connecting to database:', error);
+            console.log('Retrying in 2 seconds...');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+    }
+}
+
 export default db;
