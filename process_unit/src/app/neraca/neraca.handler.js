@@ -9,14 +9,13 @@ export const getAllNeracaByBulanController = async (req, res) => {
 
         const { print } = req.query
         const { bulan, tahun } = req.params
-
+        
+        const neracas = await getNeracaReportService(bulan, tahun, false, null, req.identity)
         if (print) {
-            const neracas = await getNeracaReportService(bulan, tahun, null, req.identity)
             neracas.bulan = getBulanText(bulan - 1)
             return await generatePDF(NERACA_PATH, neracas, res, req.identity)
         }
 
-        const neracas = await getNeracaReportService(bulan, tahun, null, req.identity)
         res.json({
             data: neracas,
             message: "Get Data Success"

@@ -4,11 +4,11 @@ import { getNeracaReport } from "../../utils/neracaUtils.js"
 import { getAllNeracaSaldoByBulanService } from "../neraca_saldo/neracaSaldo.services.js"
 import { createNeracaRepo, deleteNeracaByBulanAndTahun, getNeracaByBulanAndTahun } from "./neraca.repository.js"
 
-export const getNeracaReportService = async (bulan, tahun, whereIN, req_identity) => {
+export const getNeracaReportService = async (bulan, tahun, validate, whereIN, req_identity) => {
     const data = await getAllNeracaSaldoByBulanService(bulan, tahun, whereIN, req_identity)
     const neracaSaldos = await getNeracaSaldoReport(data)
     const laba_rugi = await getLabaRugiReport(neracaSaldos)
-    const neracas = await getNeracaReport(neracaSaldos, laba_rugi, bulan, tahun)
+    const neracas = await getNeracaReport(neracaSaldos, laba_rugi, bulan, tahun, validate)
     return neracas
 }
 
@@ -16,7 +16,7 @@ export const validasiNeracaServices = async (bulan, tahun, req_identity) => {
     const validasi = await getNeracaSaldoByBulanAndTahunServices(bulan - 1, tahun, req_identity)
 
     if (validasi.length > 0) {
-        const neraca = await getNeracaReportService(bulan, tahun, null, req_identity)
+        const neraca = await getNeracaReportService(bulan, tahun, true, null, req_identity)
         bulan = bulan < 10 ? "0" + bulan : bulan
         const neracaData = {
             bulan: bulan,
@@ -58,6 +58,5 @@ export const getNeracaSaldoByBulanAndTahunServices = async (bulan, tahun, req_id
     }
     bulan = bulan < 10 ? "0" + bulan : bulan
     const returnData = await getNeracaByBulanAndTahun(bulan, tahun)
-    console.log("RETURN DATA", returnData)
     return returnData
 }

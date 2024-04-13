@@ -1,5 +1,5 @@
 import { FaPen, FaTrash } from "react-icons/fa";
-import { parseToRupiahText } from "../../../../helper/number.helper";
+import { parseRupiahToFloat, parseToRupiahText } from "../../../../helper/number.helper";
 import { convertTo12HoursFormat } from "../../../../helper/date.helper";
 
 const JurnalUmumRow = ({
@@ -70,7 +70,7 @@ const JurnalUmumRow = ({
                                                         item3.uuid != "NERACA" ? convertTo12HoursFormat(item3.waktu) : " - - "
                                                     }
                                                 </div>
-                                                <div className={`col-span-2 text-gray-900 flex flex-col px-2 ${j > 0 && item3.uuid != "NERACA" ? "text-right" : ""}`}>
+                                                <div className={`col-span-2 text-gray-900 flex flex-col px-2 ${parseRupiahToFloat(item3.kredit) > 0 && item3.uuid != "NERACA" ? "text-right" : ""}`}>
                                                     <p>{item3.kode_akun} - {item3.nama_akun}</p>
                                                 </div>
                                                 <div className="col-span-4 text-gray-900 flex flex-col px-2">

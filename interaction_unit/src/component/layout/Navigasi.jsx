@@ -8,8 +8,9 @@ import { useNavigate } from "react-router-dom";
 import FormSelect from "../form/FormSelect";
 import { useDataContext } from "../../context/dataContext.context";
 import { yearList } from "../../config/objectList.config";
+import { getBulanList } from "../../helper/date.helper";
 
-const Navigasi = ({setLoadingOpen}) => {
+const Navigasi = () => {
     const navigate = useNavigate()
 
     const { data, setData } = useDataContext()
@@ -38,7 +39,6 @@ const Navigasi = ({setLoadingOpen}) => {
                 <div className="col-span-1 flex justify-end align-middle">
                     <div
                         onClick={() => {
-                            setLoadingOpen(true)
                             eraseCookie("token")
                             eraseCookie("refreshToken")
                             eraseCookie("tokenExpired")
@@ -134,6 +134,18 @@ const Navigasi = ({setLoadingOpen}) => {
                     onchange={(e) => {
                         let dataCopy = data
                         dataCopy.tahun = e.value
+                        dataCopy.dashboard = {
+                            overview: getBulanList().map(i => i = {
+                                jurnal: null,
+                                neracaSaldo: null,
+                                labaRugi: null,
+                                neraca: null,
+                                perubahanModal: null,
+                            }),
+                            penjualan: [],
+                            pembelian: [],
+                            biaya: []
+                        }
                         setData(dataCopy)
                         setTahun(e.value)
                     }}

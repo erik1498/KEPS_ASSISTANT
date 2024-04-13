@@ -1,6 +1,6 @@
 import { getEnv } from "../../utils/envUtils.js"
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
-import { createUserService, getUserByUsername, getUserByUuid } from "./user.services.js"
+import { createUserService, getUserByUsername, getUserByUuid, updateUserActiveService } from "./user.services.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { userValidation } from "./user.validation.js"
@@ -12,9 +12,7 @@ export const loginUser = async (req, res) => {
     try {
         let { username, password } = req.body
 
-        let user = await getUserByUsername({
-            username
-        }, req.id)
+        let user = await getUserByUsername(username, false, req.id)
 
         const passwordMatch = await bcrypt.compare(password, user.password);
 
@@ -24,6 +22,8 @@ export const loginUser = async (req, res) => {
                 field: "password"
             }))
         }
+
+        await updateUserActiveService(user.uuid)
 
         const token = jwt.sign({
             userId: user.uuid,

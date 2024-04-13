@@ -305,7 +305,7 @@ const JurnalUmumForm = ({
                             onchange={(e) => {
                               setTransaksiListItem(e, i, j, 'kodeAkun')
                             }}
-                            addClass={j > 0 ? "text-right" : ""}
+                            addClass={parseRupiahToFloat(item.kredit) > 0 ? "text-right" : ""}
                             selectName={`kodeAkun_${j}`}
                           />
                         </div>
@@ -329,6 +329,7 @@ const JurnalUmumForm = ({
                             value={parseToRupiahText(item.debet)}
                             onchange={(e) => {
                               inputOnlyRupiah(e)
+                              setTransaksiListItem(0, i, j, `kredit`)
                               setTransaksiListItem(e.target.value, i, j, `debet`)
                             }}
                             other={
@@ -347,6 +348,7 @@ const JurnalUmumForm = ({
                               value={parseToRupiahText(item.kredit)}
                               onchange={(e) => {
                                 inputOnlyRupiah(e)
+                                setTransaksiListItem(0, i, j, `debet`)
                                 setTransaksiListItem(e.target.value, i, j, `kredit`)
                               }}
                               other={

@@ -65,7 +65,7 @@ const NeracaPage = () => {
                 }
             })
             .then((resData) => {
-                
+
                 let dataCopy = data
                 dataCopy.dashboard.overview[bulan].perubahanModal = null
                 setData(dataCopy)
@@ -73,6 +73,7 @@ const NeracaPage = () => {
                 _getValidasiStatus()
             }).catch(err => {
                 showError(err)
+                setIsLoading(false)
             })
     }
 

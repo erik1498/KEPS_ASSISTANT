@@ -1,17 +1,28 @@
 import UserModel from "./user.model.js";
 
-export const getUserByUsernameRepo = async (username) => {
+export const getUserByUsernameRepo = async (username, active) => {
     const user = await UserModel.findOne({
-        where:{
-            username
+        where: {
+            username,
+            // active
         }
     })
     return user
 }
 
+export const updateUserByUUIDLoginStatus = async (uuid) => {
+    const user = await UserModel.update({
+        active: true
+    }, {
+        where: {
+            uuid
+        }
+    })
+}
+
 export const getUserByUuidRepo = async (uuid) => {
     const user = await UserModel.findOne({
-        where:{
+        where: {
             uuid
         }
     })

@@ -1,5 +1,5 @@
 import { parseToRupiahText } from "./numberParsingUtil.js"
-import { BEBAN_LAINNYA_MINUS_KODE_AKUN, BEBAN_OPERASIONAL_MINUS_KODE_AKUN, DEBET_POSITIF_TYPE, HARGA_POKOK_PENJUALAN_MINUS_KODE_AKUN, KREDIT_POSITIF_TYPE, PENDAPATAN_LAIN_LAIN_MINUS_KODE_AKUN, PENDAPATAN_MINUS_KODE_AKUN, generateCountValue, generateCountValueByPositifType, generateReportValue, generateReportValueByMinusValue, generateReportValueByPositifType } from "./validateKreditDebetTypeUtil.js"
+import { BEBAN_LAINNYA_MINUS_KODE_AKUN, BEBAN_OPERASIONAL_MINUS_KODE_AKUN, HARGA_POKOK_PENJUALAN_MINUS_KODE_AKUN, PENDAPATAN_LAIN_LAIN_MINUS_KODE_AKUN, PENDAPATAN_MINUS_KODE_AKUN, generateCountValue, generateReportValue, generateReportValueByMinusValue} from "./validateKreditDebetTypeUtil.js"
 
 export const PENDAPATAN_TYPE = "Pendapatan"
 export const HARGA_POKOK_PENJUALAN_TYPE = "Harga Pokok Penjualan"

@@ -9,36 +9,30 @@ import { rateLimit } from 'express-rate-limit'
 
 
 const limiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 15000, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-	standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-	// store: ... , // Redis, Memcached, etc. See below.
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 15000, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+    standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+    // store: ... , // Redis, Memcached, etc. See below.
 })
 
 const app = express()
-app.use(limiter)
+// app.use(limiter)
 app.use(express.json())
-
-console.log({
-    credentials: true,
-    origin:`${getEnv("CLIENT_HOST")}`
-})
-
 app.use(cors({
     credentials: true,
-    origin:`${getEnv("CLIENT_HOST")}`
+    // origin:`${getEnv("CLIENT_HOST")}`
+    origin: "*"
 }))
 
 const PORT = getEnv("PORT")
-await waitForDBConnection()
 
 db.sync()
 
 app.use((req, res, next) => {
     let genUUID = v4()
     req.identity = JSON.stringify({
-        "id" : genUUID,
+        "id": genUUID,
         "userId": null
     })
     res.setHeader("request-id", genUUID)

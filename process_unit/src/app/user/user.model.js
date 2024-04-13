@@ -41,6 +41,13 @@ const UserModel = db.define("user_tab",
                 notEmpty:true,
             }
         },
+        active: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        }
     }, {
         freezeTableName: true
     }
