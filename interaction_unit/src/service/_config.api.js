@@ -1,4 +1,5 @@
 import * as api from '../helper/api.helper';
+import { showError } from '../helper/form.helper';
 
 export const _shapeMethodGet = (url, tokenCancel, isMsgCatch = true) => {
   return api
@@ -8,7 +9,7 @@ export const _shapeMethodGet = (url, tokenCancel, isMsgCatch = true) => {
     })
     .catch((err) => {
       // notify.error(err.message)
-      console.log(err);
+      showError(err);
     });
 };
 
@@ -38,7 +39,7 @@ export const _shapeMethodPost = (
     })
     .catch((err) => {
       // notify.error(err.message)
-      console.log(err);
+      showError(err);
     });
 };
 
@@ -68,7 +69,7 @@ export const _shapeMethodPut = (
     })
     .catch((err) => {
       // notify.error(err.message)
-      console.log(err);
+      showError(err);
     });
 };
 

@@ -48,7 +48,7 @@ export const DataProvider = ({ children }) => {
 
                     setData(dataCopy)
                 }).catch(err => {
-                    console.log(err)
+                    showError(err)
                 })
         }
     }

@@ -3,7 +3,7 @@ import cors from "cors"
 import { routerList } from './routes/route.js'
 import { LOGGER, logType } from './utils/loggerUtil.js'
 import { v4 } from 'uuid'
-import db from './config/Database.js'
+import { connectDatabase } from './config/Database.js'
 import { getEnv } from './utils/envUtils.js'
 import { rateLimit } from 'express-rate-limit'
 
@@ -17,17 +17,16 @@ const limiter = rateLimit({
 })
 
 const app = express()
-// app.use(limiter)
+app.use(limiter)
 app.use(express.json())
 app.use(cors({
     credentials: true,
-    // origin:`${getEnv("CLIENT_HOST")}`
-    origin: "*"
+    origin:`${getEnv("CLIENT_HOST")}`
 }))
 
 const PORT = getEnv("PORT")
 
-db.sync()
+await connectDatabase()
 
 app.use((req, res, next) => {
     let genUUID = v4()

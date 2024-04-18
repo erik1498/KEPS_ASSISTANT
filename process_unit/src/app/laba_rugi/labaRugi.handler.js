@@ -1,4 +1,5 @@
-import { BEBAN_LAINNYA_TYPE, BEBAN_OPERASIONAL_TYPE, HARGA_POKOK_PENJUALAN_TYPE, PENDAPATAN_LAIN_LAIN_TYPE, PENDAPATAN_TYPE, getLabaRugiReport } from "../../utils/labaRugiUtil.js"
+import { BEBAN_LAINNYA_TYPE, BEBAN_OPERASIONAL_TYPE, HARGA_POKOK_PENJUALAN_TYPE, PENDAPATAN_LAIN_LAIN_TYPE, PENDAPATAN_TYPE } from "../../constant/labaRugiConstant.js"
+import { getLabaRugiReport } from "../../utils/labaRugiUtil.js"
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
 import { getBulanText } from "../../utils/mathUtil.js"
 import { getNeracaSaldoReport } from "../../utils/neracaSaldoUtil.js"

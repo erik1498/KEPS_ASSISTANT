@@ -1,4 +1,5 @@
 version: '3'
+
 services:
   resources:
     image: mariadb:10.3.16
@@ -19,10 +20,10 @@ services:
       context: ./process_unit
       args:
         - DB_HOST=172.30.0.2
-        - CLIENT_HOST=172.30.0.4:5173
+        - CLIENT_HOST=http://127.0.0.1:5173
     container_name: keps_assistant_process
-    expose:
-      - "2001"
+    ports:
+      - "2001:2001"
     volumes:
       - ./backup:/usr/process_unit/workdir/keps_backup
     networks:
@@ -33,10 +34,10 @@ services:
     build:
       context: ./interaction_unit
     container_name: keps_assistant_interaction
-    expose:
-      - "5173"
+    ports:
+      - "5173:5173"
     environment:
-      - VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT=http://172.30.0.3:2001
+      - VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT=http://127.0.0.1:2001
     networks:
       keps_network:
         ipv4_address: 172.30.0.4

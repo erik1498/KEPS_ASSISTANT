@@ -111,7 +111,7 @@ const Pembelian = () => {
                 <div className="flex-1 p-4 bg-white rounded-box shadow-2xl">
                     <div className="py-3 px-2">
                         <p className="text-md font-bold mb-3">Total Pembelian</p>
-                        <h1 className="text-6xl mt-2 font-bold">Rp. {parseToRupiahText(sumArray(dataPembelian?.pembelianFlow?.debet) - sumArray(dataPembelian?.pembelianFlow?.kredit))}</h1>
+                        <h1 className="text-6xl mt-2 font-bold">Rp. {parseToRupiahText(sumArray(dataPembelian?.pembelianFlow?.debet) + sumArray(dataPembelian?.pembelianFlow?.kredit))}</h1>
                     </div>
                     <StackedLineApex
                         seriesValueLabel={

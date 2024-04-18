@@ -43,6 +43,9 @@ const RadarApex = ({
             opacity: .1
         }
     }
-    return <Chart options={options} series={series} type="radar" height={height} />
+    return <Chart options={options} series={series} type="radar" height={height}
+        style={{ width: "100%", height: "100%", display:"flex", alignItems:"center", justifyContent:"center", marginLeft:"5%" }
+        }
+    />
 }
 export default RadarApex

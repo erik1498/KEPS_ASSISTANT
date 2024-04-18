@@ -10,7 +10,7 @@ export const createLoggerRepo = async (loggerData) => {
         data: JSON.stringify(loggerData.data),
         req_time: loggerData.req_time,
         req_id: loggerData.req_identity.id,
-        req_user_id: loggerData.req_identity.userId
+        req_user_id: loggerData.req_identity.userId ? loggerData.req_identity.userId : "NULL"
     })
     return logger
 }

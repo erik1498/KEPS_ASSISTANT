@@ -42,7 +42,7 @@ const HistoryAkunPage = () => {
 
             })
             .catch(err => {
-                console.log(err)
+                showError(err)
             })
     };
 

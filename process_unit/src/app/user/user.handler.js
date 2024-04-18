@@ -12,6 +12,22 @@ export const loginUser = async (req, res) => {
     try {
         let { username, password } = req.body
 
+        // if (!req.header("User-Permission") && !req.header("User-Parameters")) {
+        //     throw Error(JSON.stringify({
+        //         message: "Akun Tidak Terdaftar",
+        //         field: "password"
+        //     }))
+        // }
+
+        // let userParameter = JSON.parse(decryptString(req.header("User-Parameters"), getEnv("USER_PARAMETER_KEY")))
+
+        // if (userParameter.payload != JSON.stringify(req.body)) {
+        //     throw Error(JSON.stringify({
+        //         message: "Akun Tidak Terdaftar",
+        //         field: "password"
+        //     }))
+        // }
+
         let user = await getUserByUsername(username, false, req.id)
 
         const passwordMatch = await bcrypt.compare(password, user.password);
@@ -23,11 +39,21 @@ export const loginUser = async (req, res) => {
             }))
         }
 
-        await updateUserActiveService(user.uuid)
+        // const reqKey = decryptString(req.header("User-Permission"), user.serialKey)
+
+        // if (reqKey != getEnv("LICENSE_KEY")) {
+        //     throw Error(JSON.stringify({
+        //         message: "Akun Tidak Terdaftar",
+        //         field: "password"
+        //     }))
+        // }
+
+        await updateUserActiveService(user.uuid, true)
 
         const token = jwt.sign({
             userId: user.uuid,
-            userRole: user.role
+            userRole: user.role,
+            userKey: user.serialKey
         }, getEnv("JWT_SECRET"), {
             expiresIn: '1h',
         });
@@ -35,13 +61,13 @@ export const loginUser = async (req, res) => {
         const refreshToken = jwt.sign({
             userId: user.uuid
         }, getEnv("REFRESH_SECRET"), {
-            expiresIn: '1d'
+            expiresIn: '1w'
         });
 
         const tokenExpired = getExpiredTimeFromToken(token)
 
         const tokenEncrypt = encryptString(token, getEnv("JWT_ENCRYPT_KEY"))
-        const refreshTokenEncrypt =encryptString(refreshToken, getEnv("REFRESH_ENCRYPT_KEY"))
+        const refreshTokenEncrypt = encryptString(refreshToken, getEnv("REFRESH_ENCRYPT_KEY"))
 
         res.status(200).json({
             token: tokenEncrypt,
@@ -83,10 +109,10 @@ export const postCreateUser = async (req, res) => {
         })
     } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
-        res.status(500).json({
-            type: "internalServerError",
-            message: error.message
-        })
+        res.status(401).json({
+            type: "unauthorizedError",
+            message: new Error('Invalid request!')
+        });
     }
 }
 
@@ -99,7 +125,8 @@ export const refreshToken = async (req, res) => {
 
         const token = jwt.sign({
             userId: user.uuid,
-            userRole: user.role
+            userRole: user.role,
+            userKey: user.serialKey
         }, getEnv("JWT_SECRET"), {
             expiresIn: '1h',
         });
@@ -107,14 +134,13 @@ export const refreshToken = async (req, res) => {
         const refreshToken = jwt.sign({
             userId: user.uuid
         }, getEnv("REFRESH_SECRET"), {
-            expiresIn: '1d'
+            expiresIn: '1w'
         });
 
         const tokenExpired = getExpiredTimeFromToken(token)
 
-
         const tokenEncrypt = encryptString(token, getEnv("JWT_ENCRYPT_KEY"))
-        const refreshTokenEncrypt =encryptString(refreshToken, getEnv("REFRESH_ENCRYPT_KEY"))
+        const refreshTokenEncrypt = encryptString(refreshToken, getEnv("REFRESH_ENCRYPT_KEY"))
 
         res.status(200).json({
             token: tokenEncrypt,
@@ -123,9 +149,43 @@ export const refreshToken = async (req, res) => {
         })
     } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
-        res.status(500).json({
-            type: "internalServerError",
-            message: error.message
+        res.status(401).json({
+            type: "unauthorizedError",
+            message: new Error('Invalid request!')
+        });
+    }
+}
+
+
+export const logoutUser = async (req, res) => {
+    try {
+        let user = await getUserByUuid({ uuid: JSON.parse(req.identity).userId }, req.id)
+
+        if (!user) {
+            throw Error(JSON.stringify({
+                message: "User Not Found",
+                field: "error"
+            }))
+        }
+
+        user = await getUserByUsername(user.username, true)
+
+        if (!user) {
+            throw Error(JSON.stringify({
+                message: "User Not Found",
+                field: "error"
+            }))
+        }
+
+        await updateUserActiveService(user.uuid, false)
+        res.status(200).json({
+            message: "Logout Success"
         })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(401).json({
+            type: "unauthorizedError",
+            message: new Error('Invalid request!')
+        });
     }
 }

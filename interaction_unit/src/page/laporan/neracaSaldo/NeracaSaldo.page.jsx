@@ -40,7 +40,7 @@ const NeracaSaldoPage = () => {
                 setIsLoading(false)
             })
             .catch(err => {
-                console.log(err)
+                showError(err)
             })
     };
 

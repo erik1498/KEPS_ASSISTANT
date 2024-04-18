@@ -220,13 +220,13 @@ const Overview = () => {
     }, [bulanSelectedSet, kodeAkunTypeSet, loadNormalized])
 
     return <div className="flex flex-col gap-y-3">
-        <div className="grid grid-cols-12 gap-x-2">
-            <div className="col-span-8 flex gap-x-2">
-                <div className="flex flex-col justify-around gap-y-1">
+        <div className="grid grid-cols-12 gap-2">
+            <div className="xl:col-span-8 col-span-12 flex xl:flex-row flex-col gap-x-2">
+                <div className="xl:w-max flex xl:flex-col flex-wrap xl:justify-around justify-start gap-y-1 mb-2 xl:mb-0">
                     {
                         getBulanList().map((item, i) => {
                             return <>
-                                <div onClick={() => { addAndRemoveToBulanSelectedSet(item) }} key={i} className={`flex-1 rounded-box text-md badge border-none w-full cursor-pointer font-bold ${bulanSelectedSet.indexOf(item) >= 0 ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
+                                <div onClick={() => { addAndRemoveToBulanSelectedSet(item) }} key={i} className={`rounded-box text-md badge border-none w-max xl:w-full xl:flex-1 cursor-pointer font-bold ${bulanSelectedSet.indexOf(item) >= 0 ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
                                     {item}
                                 </div>
                             </>
@@ -298,8 +298,8 @@ const Overview = () => {
                     />
                 </div>
             </div>
-            <div className="col-span-4">
-                <div className="flex gap-x-2">
+            <div className="xl:col-span-4 col-span-12">
+                <div className="flex gap-x-2 h-full">
                     <div className="flex-1 flex flex-col gap-y-2">
                         <div className="flex-1 p-4 bg-white rounded-box shadow-2xl">
                             <RadarApex
@@ -431,7 +431,7 @@ const Overview = () => {
                             <StackedBarApex
                                 seriesValueLabel={
                                     [
-                                        data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva ? data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva : 0,
+                                        parseToRupiahText(parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva)) ? parseToRupiahText(parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva)) : 0,
                                         parseToRupiahText(parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.pasiva)) ? parseToRupiahText(parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.pasiva)) : 0
                                     ]
                                 }

@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom"
 import { apiLogin } from "../service/endPointList.api"
-import { eraseCookie, setCookie } from "../helper/cookies.helper"
+import { eraseCookie, getCookie, setCookie } from "../helper/cookies.helper"
 import { useState } from "react"
 import { formShowMessage, formValidation } from "../helper/form.helper"
 import LoadingPage from "../component/layout/LoadingPage"
+import { useEffect } from "react"
 
 const LoginPage = () => {
 
@@ -40,6 +41,13 @@ const LoginPage = () => {
                 })
         }
     }
+
+    useEffect(() => {
+        console.log(getCookie("token"))
+        if (getCookie("token")) {
+            navigate("/dashboard")
+        }
+    }, [])
 
     return isLoading ? <LoadingPage /> : <>
         <div className="h-screen w-screen relative flex flex-col justify-center items-center text-white bg-[url('/wave.svg')] bg-end bg-cover">

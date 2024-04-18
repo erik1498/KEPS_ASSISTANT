@@ -49,7 +49,7 @@ const KodeAkunPage = () => {
                 setIsLoading(false)
                 _getDataKodeAkun()
             }).catch(err => {
-                console.log(err)
+                showError(err)
             })
     }
 

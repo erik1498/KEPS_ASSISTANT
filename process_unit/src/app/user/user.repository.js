@@ -10,9 +10,9 @@ export const getUserByUsernameRepo = async (username, active) => {
     return user
 }
 
-export const updateUserByUUIDLoginStatus = async (uuid) => {
+export const updateUserByUUIDLoginStatus = async (uuid, active) => {
     const user = await UserModel.update({
-        active: true
+        active
     }, {
         where: {
             uuid

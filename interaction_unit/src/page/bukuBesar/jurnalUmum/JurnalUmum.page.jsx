@@ -66,7 +66,7 @@ const JurnalUmumPage = () => {
 
       })
       .catch(err => {
-        console.log(err)
+        showError(err)
       })
   };
 
@@ -108,7 +108,7 @@ const JurnalUmumPage = () => {
       .then(() => {
         setIsLoading(false)
       }).catch(err => {
-        console.log(err)
+        showError(err)
       })
   }
 

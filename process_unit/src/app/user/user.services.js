@@ -8,7 +8,7 @@ export const getUserByUsername = async (username, active, req_id) => {
     if (!user) {
         throw Error(JSON.stringify({
             message: "Akun Tidak Terdaftar",
-            field: "username"
+            field: "password"
         }))
     }
     return user
@@ -31,7 +31,7 @@ export const createUserService = async (userData, req_id) => {
     return user
 }
 
-export const updateUserActiveService = async (uuid, req_id) => {
+export const updateUserActiveService = async (uuid, active, req_id) => {
     LOGGER(logType.INFO, `Start updateUserActiveService`, uuid, req_id)
-    await updateUserByUUIDLoginStatus(uuid);
+    await updateUserByUUIDLoginStatus(uuid, active);
 }

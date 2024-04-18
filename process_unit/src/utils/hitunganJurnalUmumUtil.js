@@ -1,9 +1,6 @@
-import { LOGGER, logType } from "./loggerUtil.js"
+import { HARTA_TYPE, MODAL_TYPE, UTANG_TYPE } from "../constant/labaRugiConstant.js"
 
 
-const MODAL_TYPE = "Modal"
-const HARTA_TYPE = "Harta"
-const UTANG_TYPE = "Utang"
 export const getJurnalUmumNeracaReport = (data, laba_rugi_data) => {
     let resultAset = []
     let resultAsetCount = 0.0

@@ -1,56 +1,63 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 
-const {DataTypes} = Sequelize;
+const { DataTypes } = Sequelize;
 
-const UserModel = db.define("user_tab", 
+const UserModel = db.define("user_tab",
     {
         uuid: {
             type: DataTypes.STRING,
             defaultValue: DataTypes.UUIDV4,
             allowNull: false,
-            validate:{
-                notEmpty:true
+            validate: {
+                notEmpty: true
             }
         },
         username: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         password: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         name: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         role: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         active: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
-        }
+        },
+        // serialKey: {
+        //     type: DataTypes.STRING,
+        //     allowNull: false,
+        //     validate: {
+        //         notEmpty: true,
+        //     }
+        // }
     }, {
-        freezeTableName: true
-    }
+    freezeTableName: true
+}
 )
 
 export default UserModel

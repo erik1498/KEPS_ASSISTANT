@@ -4,7 +4,9 @@ WORKDIR /usr/interaction_unit/workdir
 
 COPY . .
 
-RUN npm install
+RUN npm install -g pnpm
+
+RUN pnpm install
 
 EXPOSE 5173
 

@@ -42,11 +42,11 @@ const Biaya = () => {
             if (data.dashboard.biaya[bulanIdx]) {
                 daftarTransaksi = daftarTransaksi.concat(data.dashboard.biaya[bulanIdx].filter(i => i.uuid != "NERACA"))
                 daftarTransaksi.forEach(i => {
-                    let indexOfTanggal = biayaFlow.tanggal.indexOf(`${i.tanggal} ${getBulanByIndex(parseFloat(i.bulan) - 1)} ${i.tahun}`)
+                    let indexOfTanggal = biayaFlow.tanggal.indexOf(`${i.tanggal} ${getBulanByIndex(parseFloat(i.bulan) + 1)} ${i.tahun}`)
                     if (indexOfTanggal < 0) {
 
-                        biayaFlow.tanggal.push(`${i.tanggal} ${getBulanByIndex(parseFloat(i.bulan) - 1)} ${i.tahun}`)
-                        dataPerTanggal.tanggal.push(`${i.tanggal} ${getBulanByIndex(parseFloat(i.bulan) - 1)} ${i.tahun}`)
+                        biayaFlow.tanggal.push(`${i.tanggal} ${getBulanByIndex(parseFloat(i.bulan) + 1)} ${i.tahun}`)
+                        dataPerTanggal.tanggal.push(`${i.tanggal} ${getBulanByIndex(parseFloat(i.bulan) + 1)} ${i.tahun}`)
 
                         let listData = daftarTransaksi.filter(j => j.tanggal == i.tanggal && j.bulan == i.bulan && i.tahun == j.tahun)
                         dataPerTanggal.listData.push(listData)
@@ -119,7 +119,7 @@ const Biaya = () => {
                 <div className="flex-1 p-4 bg-white rounded-box shadow-2xl">
                     <div className="py-3 px-2">
                         <p className="text-md font-bold mb-3">Total Biaya</p>
-                        <h1 className="text-6xl mt-2 font-bold">Rp. {parseToRupiahText(sumArray(dataBiaya?.biayaFlow?.debet) - sumArray(dataBiaya?.biayaFlow?.kredit))}</h1>
+                        <h1 className="text-6xl mt-2 font-bold">Rp. {parseToRupiahText(sumArray(dataBiaya?.biayaFlow?.debet) + sumArray(dataBiaya?.biayaFlow?.kredit))}</h1>
                     </div>
                     <StackedLineApex
                         seriesValueLabel={
@@ -193,11 +193,11 @@ const Biaya = () => {
                 dataBiaya?.listNamaAkun?.map(nama_akun => {
                     return <>
                         <div className="col-span-1 justify-center my-2 flex gap-x-2 bg-white rounded-box shadow-2xl p-4">
-                            <div className="radial-progress text-blue-700" style={{ "--value": Math.round(((sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.debet))) - sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.kredit)))) * 100) / sumArray(dataBiaya?.biayaFlow?.debet) - sumArray(dataBiaya?.biayaFlow?.kredit)) ? Math.round(((sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.debet))) - sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.kredit)))) * 100) / sumArray(dataBiaya?.biayaFlow?.debet) - sumArray(dataBiaya?.biayaFlow?.kredit)) : 0 }} role="progressbar">{ ((sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.debet))) - sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.kredit)))) * 100) / sumArray(dataBiaya?.biayaFlow?.debet) - sumArray(dataBiaya?.biayaFlow?.kredit) ? (((sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.debet))) - sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.kredit)))) * 100) / sumArray(dataBiaya?.biayaFlow?.debet) - sumArray(dataBiaya?.biayaFlow?.kredit)).toString().substring(0, 4) : 0}%</div>
+                            <div className="radial-progress text-blue-700" style={{ "--value": Math.round(((sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.debet))) + sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.kredit)))) * 100) / sumArray(dataBiaya?.biayaFlow?.debet) + sumArray(dataBiaya?.biayaFlow?.kredit)) ? Math.round(((sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.debet))) + sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.kredit)))) * 100) / sumArray(dataBiaya?.biayaFlow?.debet) + sumArray(dataBiaya?.biayaFlow?.kredit)) : 0 }} role="progressbar">{ ((sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.debet))) + sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.kredit)))) * 100) / (sumArray(dataBiaya?.biayaFlow?.debet) + sumArray(dataBiaya?.biayaFlow?.kredit)) ? (((sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.debet))) + sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.kredit)))) * 100) / (sumArray(dataBiaya?.biayaFlow?.debet) + sumArray(dataBiaya?.biayaFlow?.kredit))).toString().substring(0, 4) : 0}%</div>
                             <div className="flex flex-col justify-around">
                                 <h1 className="text-sm font-bold text-blue-900">{nama_akun}</h1>
-                                <p className="text-sm font-bold text-gray-500">{dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).length} Transaksi</p>
-                                <p className="text-xl font-bold text-blue-900">Rp. {parseToRupiahText(sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.debet))) - sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.kredit))))}</p>
+                                <p className="text-sm font-bold text-gray-500">{dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).length} Transaksi ( {((sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.debet))) + sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.kredit)))) * 100) / (sumArray(dataBiaya?.biayaFlow?.debet) + sumArray(dataBiaya?.biayaFlow?.kredit))} % ) </p>
+                                <p className="text-xl font-bold text-blue-900">Rp. {parseToRupiahText(sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.debet))) + sumArray(dataBiaya?.daftarTransaksi?.filter(i => i.nama_akun == nama_akun).map(i => parseFloat(i.kredit))))}</p>
                             </div>
                         </div>
                     </>

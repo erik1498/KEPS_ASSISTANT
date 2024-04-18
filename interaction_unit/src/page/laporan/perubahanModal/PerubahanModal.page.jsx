@@ -27,7 +27,7 @@ const PerubahanModalPage = () => {
                 // let generatedChartData = generatePerubahanModalDataChart(resData?.data)
                 setPerubahanModal(resData.data)
             }).catch(err => {
-                console.log(err)
+                showError(err)
             })
     }
 
