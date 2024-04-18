@@ -35,8 +35,5 @@ export const convertByPlusMinusValue = (data) => {
         data.kredit = data.debet
         data.debet = kredit
     }
-    if (data.kode_akun_perkiraan_code == "301") {
-        console.log(data, AKUN_DEBET_PLUS.indexOf(data.kode_akun_perkiraan_type))
-    }
     return data
 }
