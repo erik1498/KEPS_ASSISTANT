@@ -39,7 +39,7 @@ export const convertNeracaToJurnalUmum = (data, bulan, tahun) => {
     return new Promise((res, rej) => {
         let jurnalUmum = []
         for (let i = 0; i < data.length; i++) {
-            // LOGIC SEARCH JURNAL UMUM DAN HISTORY AKUN DISINI
+            data[i] = convertByPlusMinusValue(data[i])
             let dataPush = {
                 uuid: "NERACA",
                 bukti_transaksi: "NRC" + (parseFloat(bulan) - 1) + "" + tahun,
@@ -59,14 +59,6 @@ export const convertNeracaToJurnalUmum = (data, bulan, tahun) => {
             if (dataPush.type_akun == "Modal") {
                 if (dataPush.kode_akun == "304") {
                     dataPush.kode_akun = "303"
-                    // if (dataPush.debet > 0) {
-                    //     dataPush.kredit = dataPush.debet
-                    //     dataPush.debet = 0
-                    // }
-                    // if (dataPush.kredit > 0) {
-                    //     dataPush.kredit = 0
-                    //     dataPush.debet = dataPush.kredit
-                    // }
                     dataPush.nama_akun = "Laba/Rugi Periode Sebelumnya"
                 }
                 jurnalUmum.push(dataPush)
