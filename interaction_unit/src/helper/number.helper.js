@@ -22,6 +22,13 @@ export const parseRupiahToFloat = (e) => {
     }
 }
 
+
+export const getSumOfStringValue = (data) => {
+    let totalBeforeTitik = data.map(i => parseFloat(i.toString().split(".")[0])).reduce((prev, curr) => curr + prev)
+    let totalAfterTitik = data.map(i => i.toString().split(".")[1] ? parseFloat(i.toString().split(".")[1]) : 0).reduce((prev, curr) => curr + prev)
+    return `${totalBeforeTitik}.${totalAfterTitik}`
+}
+
 export const getRandom = (length) => {
     return Array(length).fill(0).map(() => Math.floor(Math.random() * 100))
 }

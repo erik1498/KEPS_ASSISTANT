@@ -1,4 +1,5 @@
 import { myDays } from "./date.helper";
+import { getSumOfStringValue } from "./number.helper";
 
 
 const getDiffByTransaksi = (data) => {
@@ -14,6 +15,14 @@ export const normalizeDataJurnalUmum = (data) => {
     return new Promise((res, rej) => {
         let totalDebet = 0;
         let totalKredit = 0;
+        try {
+            totalDebet = getSumOfStringValue(data.map(i => i.kredit));
+            totalKredit = getSumOfStringValue(data.map(i => i.kredit));
+        } catch (error) {
+            totalDebet = 0;
+            totalKredit = 0;
+        }
+
         let returnData = []
 
         let tanggal = "00";
