@@ -1,6 +1,6 @@
 export const getNormalizedLabaKotorRugiKotor = (data) => {
     try {
-        if (data.toString().indexOf("(") >= 0) return "Rugi Kotor"
+        data.toString().indexOf("(") >= 0 ? "Rugi Kotor" : "Laba Kotor"
     } catch (error) {
         console.log(error)
     } finally {
