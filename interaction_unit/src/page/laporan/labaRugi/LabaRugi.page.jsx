@@ -8,6 +8,8 @@ import { useDataContext } from "../../../context/dataContext.context";
 import { useEffect } from "react";
 import LabaRugiGain from "./component/LabaRugiGain";
 import RowCard from "../../../component/card/RowCard";
+import { parseRupiahToFloat, parseToRupiahText } from "../../../helper/number.helper";
+import { getNormalizedLabaKotorRugiKotor } from "../../../helper/labaRugi.helper";
 
 const LabaRugiPage = () => {
 
@@ -69,8 +71,8 @@ const LabaRugiPage = () => {
                                             title={"Harga Pokok Penjualan"}
                                             totalTitle={"Total Harga Pokok Penjualan"}
                                             addingContent={{
-                                                title: "Laba Kotor",
-                                                value: labaRugi.laba_rugi.laba_kotor
+                                                title: getNormalizedLabaKotorRugiKotor(labaRugi.laba_rugi.laba_kotor),
+                                                value: parseToRupiahText(parseRupiahToFloat(labaRugi.laba_rugi.laba_kotor))
                                             }}
                                         />
                                         <RowCard
