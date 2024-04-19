@@ -33,7 +33,7 @@ const LabaRugiPage = () => {
                 setLabaRugi(resData?.data)
                 setIsLoading(false)
             }).catch(err => {
-                showError(err)
+                console.log(err)
             })
     }
 
