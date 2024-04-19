@@ -1,6 +1,6 @@
 import { BEBAN_LAINNYA_TYPE, BEBAN_OPERASIONAL_TYPE, HARGA_POKOK_PENJUALAN_TYPE, PENDAPATAN_LAIN_LAIN_TYPE, PENDAPATAN_TYPE } from "../constant/labaRugiConstant.js"
 import { parseToRupiahText } from "./numberParsingUtil.js"
-import { BEBAN_LAINNYA_MINUS_KODE_AKUN, BEBAN_OPERASIONAL_MINUS_KODE_AKUN, PENDAPATAN_LAIN_LAIN_MINUS_KODE_AKUN, convertByPlusMinusValue, generateCountValue, generateReportValue, generateReportValueByMinusValue} from "./validateKreditDebetTypeUtil.js"
+import { BEBAN_LAINNYA_MINUS_KODE_AKUN, BEBAN_OPERASIONAL_MINUS_KODE_AKUN, PENDAPATAN_LAIN_LAIN_MINUS_KODE_AKUN, convertByPlusMinusValue, generateCountValue, generateReportValue, generateReportValueByMinusValue } from "./validateKreditDebetTypeUtil.js"
 
 export const getLabaRugiReport = (data) => {
     return new Promise((res, rej) => {
@@ -86,7 +86,7 @@ export const getLabaRugiReport = (data) => {
                 count: generateReportValueByMinusValue(resultBebanLainnyaCount)
             },
             laba_rugi: {
-                laba_kotor: resultPendapatanCount - resultHargaPokokPenjualanCount < 0 ? "( " + parseToRupiahText(Math.abs(resultPendapatanCount - resultHargaPokokPenjualanCount)) + " )" : parseToRupiahText(resultPendapatanCount - resultHargaPokokPenjualanCount),
+                laba_kotor: resultPendapatanCount + resultHargaPokokPenjualanCount < 0 ? "( " + parseToRupiahText(Math.abs(resultPendapatanCount + resultHargaPokokPenjualanCount)) + " )" : parseToRupiahText(resultPendapatanCount + resultHargaPokokPenjualanCount),
                 beban: resultBebanOperasionalCount,
                 loss: lossResult > 0 ? null : lossResult,
                 gain: lossResult > 0 ? lossResult : null
