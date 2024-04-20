@@ -66,8 +66,8 @@ const Overview = () => {
             if (data.dashboard.overview[bulanIdx].jurnal) {
                 let dataTransaksiBulan = data.dashboard.overview[bulanIdx].jurnal.filter(i => kodeAkunTypeSet.indexOf(i.type_akun) > -1 && i.uuid != "NERACA")
 
-                totalDebet = getSumOfStringValue(dataTransaksiBulan.map(i => i.debet))
-                totalKredit = getSumOfStringValue(dataTransaksiBulan.map(i => i.kredit))
+                totalDebet = getSumOfStringValue([totalDebet, getSumOfStringValue(dataTransaksiBulan.map(i => i.debet))])
+                totalKredit = getSumOfStringValue([totalKredit, getSumOfStringValue(dataTransaksiBulan.map(i => i.kredit))])
                 dataTransaksiBulan.forEach(j => {
 
                     if (buktiTransaksi.total.indexOf(j.bukti_transaksi) < 0) {
@@ -126,8 +126,8 @@ const Overview = () => {
 
             if (data.dashboard.overview[bulanIdx].neracaSaldo != null) {
 
-                totalSaldoDebet = getSumOfStringValue(data.dashboard.overview[bulanIdx].neracaSaldo.map(i => i.debet))
-                totalSaldoKredit = getSumOfStringValue(data.dashboard.overview[bulanIdx].neracaSaldo.map(i => i.kredit))
+                totalSaldoDebet = getSumOfStringValue([totalSaldoDebet, getSumOfStringValue(data.dashboard.overview[bulanIdx].neracaSaldo.map(i => i.debet))])
+                totalSaldoKredit = getSumOfStringValue([totalSaldoKredit, getSumOfStringValue(data.dashboard.overview[bulanIdx].neracaSaldo.map(i => i.kredit))])
 
                 data.dashboard.overview[bulanIdx].neracaSaldo.forEach(i => {
                     const idxOfNeracaSaldo = neracaSaldo.label.indexOf(i.kode_akun_perkiraan_type)
@@ -442,11 +442,11 @@ const Overview = () => {
                                 series={[
                                     {
                                         name: "Aktiva",
-                                        data: [parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva)],
+                                        data: [parseRupiahToFloat(Math.abs(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.aktiva))],
                                     },
                                     {
                                         name: "Pasiva",
-                                        data: [parseRupiahToFloat(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.pasiva)],
+                                        data: [parseRupiahToFloat(Math.abs(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.neraca?.pasiva))],
                                     }
                                 ]}
                             />

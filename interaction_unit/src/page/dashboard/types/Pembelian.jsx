@@ -1,6 +1,6 @@
 import { FaArrowDown, FaArrowUp, FaCheck } from "react-icons/fa"
 import { convertTo12HoursFormat, getBulanByIndex, getBulanList, getTanggal } from "../../../helper/date.helper"
-import { getArray, getRandom, parseToRupiahText, sumArray } from "../../../helper/number.helper"
+import { getArray, getRandom, getSumOfStringValue, parseToRupiahText, sumArray } from "../../../helper/number.helper"
 import StackedLineApex from "../../../component/chart/apex/StackedLineApex"
 import { useState } from "react"
 import { apiJurnalUmumCRUD } from "../../../service/endPointList.api"
@@ -49,13 +49,8 @@ const Pembelian = () => {
 
                         let listData = daftarTransaksi.filter(j => j.tanggal == i.tanggal && j.bulan == i.bulan && i.tahun == j.tahun)
                         dataPerTanggal.listData.push(listData)
-                        let total = {debet:0, kredit:0}
-                        listData.forEach((j => {
-                            total.debet += parseFloat(j.debet)
-                            total.kredit += parseFloat(j.kredit)
-                        }))
-                        pembelianFlow.debet.push(total.debet)
-                        pembelianFlow.kredit.push(total.kredit)
+                        pembelianFlow.debet.push(getSumOfStringValue(listData.map(i => i.debet)))
+                        pembelianFlow.kredit.push(getSumOfStringValue(listData.map(i => i.kredit)))
                     }
                 })
             } else {
@@ -111,13 +106,13 @@ const Pembelian = () => {
                 <div className="flex-1 p-4 bg-white rounded-box shadow-2xl">
                     <div className="py-3 px-2">
                         <p className="text-md font-bold mb-3">Total Pembelian</p>
-                        <h1 className="text-6xl mt-2 font-bold">Rp. {parseToRupiahText(sumArray(dataPembelian?.pembelianFlow?.debet) + sumArray(dataPembelian?.pembelianFlow?.kredit))}</h1>
+                        <h1 className="text-6xl mt-2 font-bold">Rp. {parseToRupiahText(getSumOfStringValue([getSumOfStringValue(dataPembelian?.pembelianFlow?.debet), getSumOfStringValue(dataPembelian?.pembelianFlow?.kredit)]))}</h1>
                     </div>
                     <StackedLineApex
                         seriesValueLabel={
                             [
-                                sumArray(dataPembelian?.pembelianFlow?.debet),
-                                sumArray(dataPembelian?.pembelianFlow?.kredit)
+                                getSumOfStringValue(dataPembelian?.pembelianFlow?.debet),
+                                getSumOfStringValue(dataPembelian?.pembelianFlow?.kredit)
                             ]
                         }
                         categories={dataPembelian?.pembelianFlow?.tanggal}
