@@ -1,12 +1,17 @@
+import { getSumOfStringValue } from "./number.helper";
+
 export const normalizeDataNeracaSaldo = (data) => {
     return new Promise((res, rej) => {
-        let totalDebet = 0
-        let totalKredit = 0
 
-        data.forEach(item => {
-            totalDebet += item.debet;
-            totalKredit += item.kredit;
-        });
+        let totalDebet = 0;
+        let totalKredit = 0;
+        try {
+            totalDebet = getSumOfStringValue(data.map(i => i.debet));
+            totalKredit = getSumOfStringValue(data.map(i => i.kredit));
+        } catch (error) {
+            totalDebet = 0;
+            totalKredit = 0;
+        }
 
         res({
             totalDebet,

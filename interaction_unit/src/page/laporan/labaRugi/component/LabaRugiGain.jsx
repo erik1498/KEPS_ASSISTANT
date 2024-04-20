@@ -17,7 +17,7 @@ const LabaRugiGain = ({
                             </div>
                             <div className="stat-value text-sm text-white">
                                 {
-                                    labaRugi.laba_rugi.gain != null ? `Rp. ${parseToRupiahText(labaRugi.laba_rugi.gain)}` : `Rp. ${parseToRupiahText(Math.abs(labaRugi.laba_rugi.loss))}`
+                                    labaRugi.laba_rugi.gain != null ? `Rp. ${parseToRupiahText(labaRugi.laba_rugi.gain)}` : `Rp. ${parseToRupiahText(labaRugi.laba_rugi.loss.toString().replace("-", ""))}`
                                 }
                             </div>
                         </div>

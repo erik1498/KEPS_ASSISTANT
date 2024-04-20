@@ -1,5 +1,5 @@
 import { FaArrowDown, FaArrowUp, FaCheck, FaTimes } from "react-icons/fa";
-import { getRandom, parseRupiahToFloat, parseToRupiahText } from "../../../helper/number.helper";
+import { getRandom, getSumOfStringValue, parseRupiahToFloat, parseToRupiahText } from "../../../helper/number.helper";
 import StackedLineApex from "../../../component/chart/apex/StackedLineApex";
 import { KodeAkunType } from "../../../config/objectList.config";
 import { useState } from "react";
@@ -65,6 +65,9 @@ const Overview = () => {
             const bulanIdx = bulanListMap.indexOf(bulan)
             if (data.dashboard.overview[bulanIdx].jurnal) {
                 let dataTransaksiBulan = data.dashboard.overview[bulanIdx].jurnal.filter(i => kodeAkunTypeSet.indexOf(i.type_akun) > -1 && i.uuid != "NERACA")
+
+                totalDebet = getSumOfStringValue(dataTransaksiBulan.map(i => i.debet))
+                totalKredit = getSumOfStringValue(dataTransaksiBulan.map(i => i.kredit))
                 dataTransaksiBulan.forEach(j => {
 
                     if (buktiTransaksi.total.indexOf(j.bukti_transaksi) < 0) {
@@ -93,9 +96,6 @@ const Overview = () => {
                         dataPerTanggal.debet[indexOfTanggal] += parseFloat(j.debet)
                         dataPerTanggal.kredit[indexOfTanggal] += parseFloat(j.kredit)
                     }
-
-                    totalDebet += parseFloat(j.debet)
-                    totalKredit += parseFloat(j.kredit)
                 })
 
                 dataTransaksi = dataTransaksi.concat(dataTransaksiBulan)
@@ -125,6 +125,10 @@ const Overview = () => {
             }
 
             if (data.dashboard.overview[bulanIdx].neracaSaldo != null) {
+
+                totalSaldoDebet = getSumOfStringValue(data.dashboard.overview[bulanIdx].neracaSaldo.map(i => i.debet))
+                totalSaldoKredit = getSumOfStringValue(data.dashboard.overview[bulanIdx].neracaSaldo.map(i => i.kredit))
+
                 data.dashboard.overview[bulanIdx].neracaSaldo.forEach(i => {
                     const idxOfNeracaSaldo = neracaSaldo.label.indexOf(i.kode_akun_perkiraan_type)
                     if (idxOfNeracaSaldo < 0) {
@@ -132,11 +136,9 @@ const Overview = () => {
                         neracaSaldo.kredit.push(i.kredit)
                         neracaSaldo.label.push(i.kode_akun_perkiraan_type)
                     } else {
-                        neracaSaldo.debet[idxOfNeracaSaldo] += i.debet
-                        neracaSaldo.kredit[idxOfNeracaSaldo] += i.kredit
+                        neracaSaldo.debet[idxOfNeracaSaldo] = getSumOfStringValue([neracaSaldo.debet[idxOfNeracaSaldo], i.debet])
+                        neracaSaldo.kredit[idxOfNeracaSaldo] = getSumOfStringValue([neracaSaldo.kredit[idxOfNeracaSaldo], i.kredit])
                     }
-                    totalSaldoDebet += i.debet
-                    totalSaldoKredit += i.kredit
                 })
             } else {
                 apiNeracaSaldoR

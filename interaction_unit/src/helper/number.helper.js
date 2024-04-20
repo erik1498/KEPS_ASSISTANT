@@ -23,13 +23,16 @@ export const parseRupiahToFloat = (e) => {
 }
 
 export const getSumOfStringValue = (data) => {
-    let totalBeforeTitik = data.map(i => parseFloat(i.toString().split(".")[0])).reduce((prev, curr) => curr + prev)
-    let totalAfterTitik = data.map(i => i.toString().split(".")[1] ? parseFloat(i.toString().split(".")[1]) : 0).reduce((prev, curr) => curr + prev)
+    try {
+        const total = data.reduce((accumulator, currentValue) => {
+            const angka = parseFloat(currentValue);
+            return accumulator + angka
+        }, 0); // Nilai awal akumulator adalah 0
 
-    totalBeforeTitik += totalAfterTitik > 99 ? parseFloat(totalAfterTitik.toString().at(0)) : 0;
-    totalAfterTitik = totalAfterTitik % 100
-
-    return totalAfterTitik > 0 ? `${totalBeforeTitik}.${totalAfterTitik}` : `${totalBeforeTitik}`
+        return total.toFixed(2).toString().split(".")[1] == "00" ? total : total.toFixed(2)
+    } catch (error) {
+        return 0
+    }
 }
 
 export const getRandom = (length) => {

@@ -16,13 +16,12 @@ export const normalizeDataJurnalUmum = (data) => {
         let totalDebet = 0;
         let totalKredit = 0;
         try {
-            totalDebet = getSumOfStringValue(data.map(i => i.kredit));
+            totalDebet = getSumOfStringValue(data.map(i => i.debet));
             totalKredit = getSumOfStringValue(data.map(i => i.kredit));
         } catch (error) {
             totalDebet = 0;
             totalKredit = 0;
         }
-
         let returnData = []
 
         let tanggal = "00";
@@ -31,9 +30,6 @@ export const normalizeDataJurnalUmum = (data) => {
         let totalKreditTanggal = 0;
 
         data.map(i => {
-
-            totalDebet += parseFloat(i.debet)
-            totalKredit += parseFloat(i.kredit)
 
             if (i.tanggal != tanggal) {
                 tanggal = i.tanggal
@@ -71,14 +67,12 @@ export const normalizeDataJurnalUmum = (data) => {
                     listBuktiTransaksiDanDaftarData.push({
                         bukti_transaksi: item.bukti_transaksi,
                         data: getDiffByTransaksi(dataPadaTanggal.filter((k) => k.bukti_transaksi == item.bukti_transaksi)),
-                        debet: dataPadaTanggal
+                        debet: getSumOfStringValue(dataPadaTanggal
                             .filter((k) => k.bukti_transaksi == item.bukti_transaksi)
-                            .map(k => parseFloat(k.debet))
-                            .reduce((sum, k) => sum + k),
-                        kredit: dataPadaTanggal
+                            .map(k => k.debet)),
+                        kredit: getSumOfStringValue(dataPadaTanggal
                             .filter((k) => k.bukti_transaksi == item.bukti_transaksi)
-                            .map(k => parseFloat(k.kredit))
-                            .reduce((sum, k) => sum + k),
+                            .map(k => k.kredit)),
                         tanggal: item.tanggal,
                         bulan: item.bulan,
                         tahun: item.tahun,

@@ -8,8 +8,8 @@ import { useDataContext } from "../../../context/dataContext.context";
 import { useEffect } from "react";
 import LabaRugiGain from "./component/LabaRugiGain";
 import RowCard from "../../../component/card/RowCard";
-import { parseRupiahToFloat, parseToRupiahText } from "../../../helper/number.helper";
 import { getNormalizedLabaKotorRugiKotor } from "../../../helper/labaRugi.helper";
+import { parseRupiahToFloat, parseToRupiahText } from "../../../helper/number.helper";
 
 const LabaRugiPage = () => {
 
@@ -33,7 +33,7 @@ const LabaRugiPage = () => {
                 setLabaRugi(resData?.data)
                 setIsLoading(false)
             }).catch(err => {
-                console.log(err)
+                showError(err)
             })
     }
 
