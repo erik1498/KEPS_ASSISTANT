@@ -1,4 +1,5 @@
 import { BEBAN_LAINNYA_TYPE, BEBAN_OPERASIONAL_TYPE, HARGA_POKOK_PENJUALAN_TYPE, PENDAPATAN_LAIN_LAIN_TYPE, PENDAPATAN_TYPE } from "../constant/labaRugiConstant.js"
+import { getSumMinusOfStringValue, getSumOfStringValue } from "./mathUtil.js"
 import { parseToRupiahText } from "./numberParsingUtil.js"
 import { BEBAN_LAINNYA_MINUS_KODE_AKUN, BEBAN_OPERASIONAL_MINUS_KODE_AKUN, PENDAPATAN_LAIN_LAIN_MINUS_KODE_AKUN, convertByPlusMinusValue, generateCountValue, generateReportValue, generateReportValueByMinusValue } from "./validateKreditDebetTypeUtil.js"
 
@@ -26,7 +27,6 @@ export const getLabaRugiReport = (data) => {
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
-                resultPendapatanCount += generateCountValue(data[i])
             }
             if (data[i].kode_akun_perkiraan_type == HARGA_POKOK_PENJUALAN_TYPE) {
                 data[i] = convertByPlusMinusValue(data[i])
@@ -34,7 +34,6 @@ export const getLabaRugiReport = (data) => {
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
-                resultHargaPokokPenjualanCount += generateCountValue(data[i])
             }
             if (data[i].kode_akun_perkiraan_type == BEBAN_OPERASIONAL_TYPE) {
                 data[i] = convertByPlusMinusValue(data[i])
@@ -42,7 +41,6 @@ export const getLabaRugiReport = (data) => {
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
-                resultBebanOperasionalCount += generateCountValue(data[i])
             }
             if (data[i].kode_akun_perkiraan_type == PENDAPATAN_LAIN_LAIN_TYPE) {
                 data[i] = convertByPlusMinusValue(data[i])
@@ -50,7 +48,6 @@ export const getLabaRugiReport = (data) => {
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
-                resultPendapatanLainLainCount += generateCountValue(data[i])
             }
             if (data[i].kode_akun_perkiraan_type == BEBAN_LAINNYA_TYPE) {
                 data[i] = convertByPlusMinusValue(data[i])
@@ -58,16 +55,24 @@ export const getLabaRugiReport = (data) => {
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
-                resultBebanLainnyaCount += generateCountValue(data[i])
             }
         }
-        // let lossResult = resultPendapatanCount + resultHargaPokokPenjualanCount + resultBebanOperasionalCount + resultBebanLainnyaCount + resultPendapatanLainLainCount
-        let lossResult = (resultHargaPokokPenjualanCount + resultPendapatanCount + resultPendapatanLainLainCount) - (resultBebanOperasionalCount + resultBebanLainnyaCount)
-        // let lossResult = Math.abs(resultPendapatanCount) - Math.abs(resultHargaPokokPenjualanCount) - resultBebanOperasionalCount - resultBebanLainnyaCount + Math.abs(resultPendapatanLainLainCount)
+
+        resultPendapatanCount = getSumMinusOfStringValue([getSumOfStringValue(resultPendapatan.map(i => i.debet)), getSumOfStringValue(resultPendapatan.map(i => i.kredit))])
+        resultHargaPokokPenjualanCount = getSumMinusOfStringValue([getSumOfStringValue(resultHargaPokokPenjualan.map(i => i.debet)), getSumOfStringValue(resultHargaPokokPenjualan.map(i => i.kredit))])
+        resultPendapatanLainLainCount = getSumMinusOfStringValue([getSumOfStringValue(resultPendapatanLainLain.map(i => i.debet)), getSumOfStringValue(resultPendapatanLainLain.map(i => i.kredit))])
+
+        resultBebanOperasionalCount = getSumMinusOfStringValue([getSumOfStringValue(resultBebanOperasional.map(i => i.debet)), getSumOfStringValue(resultBebanOperasional.map(i => i.kredit))])
+        resultBebanLainnyaCount = getSumMinusOfStringValue([getSumOfStringValue(resultBebanLainnya.map(i => i.debet)), getSumOfStringValue(resultBebanLainnya.map(i => i.kredit))])
+
+        let lossResult = getSumMinusOfStringValue([getSumOfStringValue([resultHargaPokokPenjualanCount, resultPendapatanCount, resultPendapatanLainLainCount]), getSumOfStringValue([resultBebanOperasionalCount, resultBebanLainnyaCount])])
+
+        // let lossResult = (resultHargaPokokPenjualanCount + resultPendapatanCount + resultPendapatanLainLainCount) - (resultBebanOperasionalCount + resultBebanLainnyaCount)
+
         res({
             pendapatanLainLain: {
                 data: resultPendapatanLainLain,
-                count: resultPendapatanLainLainCount > 0 ? parseToRupiahText(Math.abs(resultPendapatanLainLainCount)) : "( " + parseToRupiahText(Math.abs(resultPendapatanLainLainCount)) + " )"
+                count: generateReportValueByMinusValue(resultPendapatanLainLainCount)
             },
             pendapatan: {
                 data: resultPendapatan,
@@ -86,7 +91,7 @@ export const getLabaRugiReport = (data) => {
                 count: generateReportValueByMinusValue(resultBebanLainnyaCount)
             },
             laba_rugi: {
-                laba_kotor: resultPendapatanCount + resultHargaPokokPenjualanCount < 0 ? "( " + parseToRupiahText(Math.abs(resultPendapatanCount + resultHargaPokokPenjualanCount)) + " )" : parseToRupiahText(resultPendapatanCount + resultHargaPokokPenjualanCount),
+                // laba_kotor: getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]) < 0 ? "( " + parseToRupiahText(Math.abs(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]))) + " )" : parseToRupiahText(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount])),
                 beban: resultBebanOperasionalCount,
                 loss: lossResult > 0 ? null : lossResult,
                 gain: lossResult > 0 ? lossResult : null

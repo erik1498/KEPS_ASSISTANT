@@ -13,11 +13,11 @@ export const connectDatabase = () => {
     return new Promise(async (res) => {
         try {
             await db.authenticate()
-            LOGGER(logType.INFO, "BERHASIL KONEKSI DATABASE !!!")
+            LOGGER(logType.INFO, "DATABASE TERKONEKSI !!!")
             db.sync()
             res(true)
         } catch (error) {
-            LOGGER(logType.INFO, "GAGAL KONEKSI DATABASE, 5 DETIK KEMUDIAN AKAN DI KONEKSI LAGI !!!")
+            LOGGER(logType.INFO, "KONEKSI DATABASE GAGAL, AKAN DICOBA 5 DETIK LAGI !!!")
             setTimeout(connectDatabase, 5000)
         }
     })

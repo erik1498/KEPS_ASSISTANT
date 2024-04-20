@@ -22,11 +22,11 @@ export const generateReportValue = (data) => {
 }
 
 export const generateCountValue = (data) => {
-        return data.kredit > 0 ? data.kredit * -1 : data.debet
+    return data.kredit > 0 ? data.kredit * -1 : data.debet
 }
 
 export const generateReportValueByMinusValue = (value) => {
-    return value < 0 ? "( " + parseToRupiahText(Math.abs(value)) + " )" : parseToRupiahText(value)
+    return value < 0 ? "( " + parseToRupiahText(value.toString().replaceAll("-", "")) + " )" : parseToRupiahText(value)
 }
 
 export const convertByPlusMinusValue = (data) => {

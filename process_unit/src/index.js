@@ -26,7 +26,7 @@ app.use(cors({
 
 const PORT = getEnv("PORT")
 
-await connectDatabase()
+await connectDatabase();
 
 app.use((req, res, next) => {
     let genUUID = v4()
