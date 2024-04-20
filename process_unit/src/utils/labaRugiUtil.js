@@ -67,8 +67,6 @@ export const getLabaRugiReport = (data) => {
 
         let lossResult = getSumMinusOfStringValue([getSumOfStringValue([resultHargaPokokPenjualanCount, resultPendapatanCount, resultPendapatanLainLainCount]), getSumOfStringValue([resultBebanOperasionalCount, resultBebanLainnyaCount])])
 
-        // let lossResult = (resultHargaPokokPenjualanCount + resultPendapatanCount + resultPendapatanLainLainCount) - (resultBebanOperasionalCount + resultBebanLainnyaCount)
-
         res({
             pendapatanLainLain: {
                 data: resultPendapatanLainLain,
@@ -91,7 +89,7 @@ export const getLabaRugiReport = (data) => {
                 count: generateReportValueByMinusValue(resultBebanLainnyaCount)
             },
             laba_rugi: {
-                // laba_kotor: getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]) < 0 ? "( " + parseToRupiahText(Math.abs(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]))) + " )" : parseToRupiahText(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount])),
+                laba_kotor: getSumOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]) < 0 ? "( " + parseToRupiahText(Math.abs(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]))) + " )" : parseToRupiahText(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount])),
                 beban: resultBebanOperasionalCount,
                 loss: lossResult > 0 ? null : lossResult,
                 gain: lossResult > 0 ? lossResult : null
