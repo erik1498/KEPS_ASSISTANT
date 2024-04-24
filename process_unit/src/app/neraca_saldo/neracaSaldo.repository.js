@@ -4,74 +4,21 @@ import db from "../../config/Database.js";
 export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN) => {
     const neracaSaldo = await db.query(
         `   
-            SELECT 
-                CASE
-                    WHEN LENGTH(res.debet - res.kredit) - LENGTH(REPLACE(res.debet - res.kredit, '.', '')) > 0
-                    THEN
-                        CASE
-                            WHEN LENGTH(SUBSTRING_INDEX(res.debet - res.kredit, ".", -1)) = 1
-                            THEN CONCAT(SUBSTRING_INDEX(res.debet - res.kredit, ".", 1), ".", SUBSTRING_INDEX(res.debet - res.kredit, ".", -1), "0")
-                            ELSE res.debet - res.kredit
-                        END
-                    ELSE res.debet - res.kredit
-                END AS sum_result,
-                res.kode_akun_perkiraan_name,
-                res.kode_akun_perkiraan_code,
-                res.kode_akun_perkiraan_type
-            FROM
-            (
-                SELECT 
-                    CASE
-                        WHEN SUM(res.debet_after_titik) > 0
-                        THEN CONCAT(SUM(res.debet), (
-                            CASE 
-                                WHEN SUM(res.debet_after_titik) < 10
-                                THEN CONCAT(".0", SUM(res.debet_after_titik))
-                                ELSE CONCAT(".", SUM(res.debet_after_titik))
-                            END
-                        ))
-                        ELSE SUM(res.debet)
-                    END AS debet,
-                    CASE
-                        WHEN SUM(res.kredit_after_titik) > 0
-                        THEN CONCAT(SUM(res.kredit), (
-                            CASE 
-                                WHEN SUM(res.kredit_after_titik) < 10
-                                THEN CONCAT(".0", SUM(res.kredit_after_titik))
-                                ELSE CONCAT(".", SUM(res.kredit_after_titik))
-                            END
-                        ))
-                        ELSE SUM(res.kredit)
-                    END AS kredit,
-                    kapt.name AS kode_akun_perkiraan_name, 
-                    kapt.code AS kode_akun_perkiraan_code, 
-                    kapt.type AS kode_akun_perkiraan_type
-                FROM
-                (
-                    SELECT 
-                        SUBSTRING_INDEX(jut.debet, ".", 1) AS debet,
-                        SUBSTRING_INDEX(jut.kredit, ".", 1) AS kredit,
-                        CASE 
-                            WHEN LENGTH(jut.debet) - LENGTH(REPLACE(jut.debet, '.', '')) > 0
-                            THEN SUBSTRING_INDEX(jut.debet, ".", -1)
-                            ELSE "0"
-                        END AS debet_after_titik,
-                        CASE 
-                            WHEN LENGTH(jut.kredit) - LENGTH(REPLACE(jut.kredit, '.', '')) > 0
-                            THEN SUBSTRING_INDEX(jut.kredit, ".", -1)
-                            ELSE "0"
-                        END AS kredit_after_titik,
-                        jut.kode_akun_uuid,
-                        jut.bulan AS bulan,
-                        jut.tahun AS tahun
-                    FROM jurnal_umum_tab jut 
-                    WHERE jut.enabled = 1
-                ) AS res
-                JOIN kode_akun_perkiraan_tab kapt ON kapt.uuid = res.kode_akun_uuid
-                WHERE res.bulan = "${bulan}" AND res.tahun = "${tahun}"
-                ${whereIN != null && whereIN.length > 0 ? `AND kapt.type IN ( "` + whereIN.join(`","`) + `" )` : ""}
-                GROUP BY kapt.code
-            ) AS res
+            SELECT
+                jut.kode_akun_uuid,
+                jut.bulan,
+                jut.tahun,
+                SUM(jut.debet) - SUM(jut.kredit) AS sum_result,
+                kapt.name AS kode_akun_perkiraan_name,
+                kapt.code AS kode_akun_perkiraan_code,
+                kapt.type AS kode_akun_perkiraan_type
+            FROM jurnal_umum_tab jut 
+            JOIN kode_akun_perkiraan_tab kapt ON kapt.uuid = jut.kode_akun_uuid 
+            WHERE jut.enabled = 1
+            AND jut.bulan = "${bulan}" 
+            AND jut.tahun = "${tahun}"
+            ${whereIN != null && whereIN.length > 0 ? `AND kapt.type IN ( "` + whereIN.join(`","`) + `" )` : ""}
+            GROUP BY jut.kode_akun_uuid 
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

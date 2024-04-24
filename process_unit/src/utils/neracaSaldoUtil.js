@@ -47,7 +47,7 @@ export const getNeracaSaldoReport = (data) => {
                 kode_akun_perkiraan_code: data[i].kode_akun_perkiraan_code,
                 kode_akun_perkiraan_type: data[i].kode_akun_perkiraan_type,
                 debet: parseFloat(data[i].sum_result) >= 0 ? data[i].sum_result : 0,
-                kredit: parseFloat(data[i].sum_result) < 0 ? data[i].sum_result.toString().replaceAll("-", "") : 0,
+                kredit: parseFloat(data[i].sum_result) < 0 ? Math.abs(data[i].sum_result) : 0,
             })
         }
         res(result)
