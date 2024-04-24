@@ -19,6 +19,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN) => {
             AND jut.tahun = "${tahun}"
             ${whereIN != null && whereIN.length > 0 ? `AND kapt.type IN ( "` + whereIN.join(`","`) + `" )` : ""}
             GROUP BY jut.kode_akun_uuid 
+            ORDER BY kapt.code ASC
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

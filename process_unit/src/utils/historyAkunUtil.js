@@ -1,9 +1,11 @@
+import { getSumMinusOfStringValue, getSumOfStringValue } from "./mathUtil.js";
+
 export const getHistoryAkunReport = async (data) => {
     return new Promise(async (resolve) => {
         let saldoDebet = 0.0
         let result = []
         for (let i = 0; i < data.length; i++) {
-            saldoDebet += parseFloat(data[i].debet) - parseFloat(data[i].kredit)
+            saldoDebet = getSumOfStringValue([saldoDebet, getSumMinusOfStringValue([data[i].debet, data[i].kredit])])
             result.push({
                 ...data[i],
                 saldoDebet
