@@ -92,7 +92,7 @@ export const getLabaRugiReport = (data) => {
                 count: generateReportValueByMinusValue(resultBebanLainnyaCount)
             },
             laba_rugi: {
-                laba_kotor: getSumOfStringValue([resultHargaPokokPenjualanCount, resultPendapatanCount]) < 0 ? "( " + parseToRupiahText(Math.abs(getSumMinusOfStringValue([resultHargaPokokPenjualanCount, resultPendapatanCount]))) + " )" : parseToRupiahText(getSumMinusOfStringValue([resultHargaPokokPenjualanCount, resultPendapatanCount])),
+                laba_kotor: getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]) < 0 ? "( " + parseToRupiahText(Math.abs(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]))) + " )" : parseToRupiahText(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount])),
                 beban: resultBebanOperasionalCount,
                 loss: lossResult > 0 ? null : lossResult,
                 gain: lossResult > 0 ? lossResult : null
