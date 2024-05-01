@@ -4,7 +4,7 @@ WORKDIR /usr/process_unit/workdir
 
 COPY . .
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@latest
 RUN pnpm install
 
 ARG DB_HOST
