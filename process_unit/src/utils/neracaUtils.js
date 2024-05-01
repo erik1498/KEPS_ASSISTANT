@@ -1,13 +1,11 @@
 import { HARTA_TYPE, MODAL_TYPE, UTANG_TYPE } from "../constant/labaRugiConstant.js"
 import { getBulanText, getSumMinusOfStringValue, getSumOfStringValue } from "./mathUtil.js"
-import { parseToRupiahText } from "./numberParsingUtil.js"
-import { generateCountValue, generateReportValue, generateReportValueByMinusValue, MODAL_MINUS_KODE_AKUN, convertByPlusMinusValue } from "./validateKreditDebetTypeUtil.js"
+import { generateReportValue, generateReportValueByMinusValue, convertByPlusMinusValue } from "./validateKreditDebetTypeUtil.js"
 
 export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, validate) => {
     return new Promise(async (res, rej) => {
 
         let labaTahunBerjalan = null
-        let modalMinusKodeAkun = MODAL_MINUS_KODE_AKUN
 
         if (laba_rugi_data_berjalan.laba_rugi.gain) {
             labaTahunBerjalan = {
@@ -16,8 +14,6 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
                 kode_akun_perkiraan_type: MODAL_TYPE,
                 debet: 0,
                 kredit: laba_rugi_data_berjalan.laba_rugi.gain
-                // debet: !validate ? 0 : laba_rugi_data_berjalan.laba_rugi.gain,
-                // kredit: !validate ? laba_rugi_data_berjalan.laba_rugi.gain : 0,
             }
             labaTahunBerjalan.uraian = getBulanText(bulan - 1).toUpperCase() + " " + tahun
             data.push(labaTahunBerjalan)
@@ -29,8 +25,6 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
                 kode_akun_perkiraan_type: MODAL_TYPE,
                 debet: Math.abs(laba_rugi_data_berjalan.laba_rugi.loss),
                 kredit: 0
-                // debet: !validate ? 0 : Math.abs(laba_rugi_data_berjalan.laba_rugi.loss),
-                // kredit: !validate ? Math.abs(laba_rugi_data_berjalan.laba_rugi.loss) : 0,
             }
             data.push(labaTahunBerjalan)
         }
@@ -51,7 +45,6 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
-                // resultAsetCount += generateCountValue(data[i])
             }
             if (data[i].kode_akun_perkiraan_type == UTANG_TYPE) {
                 data[i] = convertByPlusMinusValue(data[i])
@@ -59,7 +52,6 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
-                // resultUtangCount += Math.abs(generateCountValue(data[i]))
             }
             if (data[i].kode_akun_perkiraan_type == MODAL_TYPE) {
                 data[i] = convertByPlusMinusValue(data[i])
@@ -67,7 +59,6 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
-                // resultModalCount += generateCountValue(data[i])
             }
         }
 
@@ -93,8 +84,7 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
             neraca: {
                 aktiva: resultAsetCount,
                 pasiva: getSumOfStringValue([resultUtangCount, resultModalCount]),
-                // difference: Math.abs(resultAsetCount) - Math.abs(resultUtangCount + resultModalCount)
-                difference: 0
+                difference: Math.abs(resultAsetCount) - Math.abs(getSumOfStringValue([resultUtangCount, resultModalCount]))
             }
         })
     })

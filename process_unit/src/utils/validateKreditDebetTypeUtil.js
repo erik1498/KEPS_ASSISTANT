@@ -1,21 +1,25 @@
-import { AKUN_DEBET_PLUS } from "../constant/akuntansiConstant.js";
+import { AKUN_DEBET_PLUS, ASSET_MINUS_KODE_AKUN, BEBAN_LAINNYA_MINUS_KODE_AKUN, BEBAN_OPERASIONAL_MINUS_KODE_AKUN, HARGA_POKOK_PENJUALAN_MINUS_KODE_AKUN, MODAL_MINUS_KODE_AKUN, PENDAPATAN_LAIN_LAIN_MINUS_KODE_AKUN, PENDAPATAN_MINUS_KODE_AKUN, UTANG_MINUS_KODE_AKUN } from "../constant/akuntansiConstant.js";
 import { parseToRupiahText } from "./numberParsingUtil.js"
 
-export const PENDAPATAN_MINUS_KODE_AKUN = [];
-
-export const HARGA_POKOK_PENJUALAN_MINUS_KODE_AKUN = [];
-
-export const BEBAN_OPERASIONAL_MINUS_KODE_AKUN = [];
-
-export const PENDAPATAN_LAIN_LAIN_MINUS_KODE_AKUN = [];
-
-export const BEBAN_LAINNYA_MINUS_KODE_AKUN = []
-
-export const ASSET_MINUS_KODE_AKUN = []
-
-export const UTANG_MINUS_KODE_AKUN = []
-
-export const MODAL_MINUS_KODE_AKUN = ["302"]
+export const minusTypeCode = (data) => {
+    if (
+        PENDAPATAN_MINUS_KODE_AKUN
+        .concat(
+            HARGA_POKOK_PENJUALAN_MINUS_KODE_AKUN,
+            BEBAN_OPERASIONAL_MINUS_KODE_AKUN,
+            PENDAPATAN_LAIN_LAIN_MINUS_KODE_AKUN,
+            BEBAN_LAINNYA_MINUS_KODE_AKUN,
+            ASSET_MINUS_KODE_AKUN,
+            UTANG_MINUS_KODE_AKUN,
+            MODAL_MINUS_KODE_AKUN
+        )
+        .indexOf(data.kode_akun_perkiraan_code) >= 0) {
+        let debet = data.debet
+        data.debet = data.kredit
+        data.kredit = debet
+    }
+    return data
+}
 
 export const generateReportValue = (data) => {
     return data.kredit > 0 ? "( " + parseToRupiahText(data.kredit) + " )" : parseToRupiahText(data.debet)
