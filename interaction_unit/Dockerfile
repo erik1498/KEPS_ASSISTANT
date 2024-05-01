@@ -4,7 +4,7 @@ WORKDIR /usr/interaction_unit/workdir
 
 COPY . .
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@latest
 
 RUN pnpm install
 
