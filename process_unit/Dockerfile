@@ -4,6 +4,7 @@ WORKDIR /usr/process_unit/workdir
 
 COPY . .
 
+RUN npm install -g npm@latest
 RUN npm install -g pnpm@latest
 RUN pnpm install
 
