@@ -6,7 +6,7 @@ export const AKUN_DEBET_PLUS = [
 
 export const PENDAPATAN_MINUS_KODE_AKUN = [];
 
-export const HARGA_POKOK_PENJUALAN_MINUS_KODE_AKUN = ["706"];
+export const HARGA_POKOK_PENJUALAN_MINUS_KODE_AKUN = [];
 
 export const BEBAN_OPERASIONAL_MINUS_KODE_AKUN = [];
 
