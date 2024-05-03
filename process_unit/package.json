@@ -27,7 +27,6 @@
     "pdf-creator-node": "^2.3.5",
     "pino": "^8.20.0",
     "pino-pretty": "^11.0.0",
-    "puppeteer": "^22.6.3",
     "sequelize": "^6.33.0",
     "uuid": "^9.0.1"
   },
