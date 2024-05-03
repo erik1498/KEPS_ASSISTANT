@@ -4,7 +4,6 @@ import { LOGGER, logType } from "../../utils/loggerUtil.js"
 import { getBulanText } from "../../utils/mathUtil.js"
 import { getNeracaSaldoReport } from "../../utils/neracaSaldoUtil.js"
 import { parseToRupiahText } from "../../utils/numberParsingUtil.js"
-import { LABA_RUGI_PATH, generatePDF } from "../../utils/pdfUtil.js"
 import { getAllNeracaSaldoByBulanService } from "../neraca_saldo/neracaSaldo.services.js"
 
 export const getAllLabaRugiByBulanController = async (req, res) => {
@@ -27,7 +26,6 @@ export const getAllLabaRugiByBulanController = async (req, res) => {
             labaRugis.bulan = getBulanText(req.params.bulan - 1)
             labaRugis.laba_rugi.loss = parseToRupiahText(labaRugis.laba_rugi.loss)
             labaRugis.laba_rugi.gain = parseToRupiahText(labaRugis.laba_rugi.gain)
-            return await generatePDF(LABA_RUGI_PATH, labaRugis, res, req.identity)
         }
 
         res.json({

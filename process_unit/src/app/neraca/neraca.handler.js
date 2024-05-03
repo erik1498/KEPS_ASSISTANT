@@ -1,6 +1,5 @@
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
 import { getBulanText } from "../../utils/mathUtil.js"
-import { NERACA_PATH, generatePDF } from "../../utils/pdfUtil.js"
 import { deleteValidasiNeracaByBulanAndTahunServices, getNeracaSaldoByBulanAndTahunServices, getNeracaReportService, validasiNeracaServices } from "./neraca.services.js"
 
 export const getAllNeracaByBulanController = async (req, res) => {
@@ -13,7 +12,6 @@ export const getAllNeracaByBulanController = async (req, res) => {
         const neracas = await getNeracaReportService(bulan, tahun, false, null, req.identity)
         if (print) {
             neracas.bulan = getBulanText(bulan - 1)
-            return await generatePDF(NERACA_PATH, neracas, res, req.identity)
         }
 
         res.json({

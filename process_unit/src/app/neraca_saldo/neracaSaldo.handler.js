@@ -1,7 +1,6 @@
 import { getAllNeracaSaldoByBulanService } from "./neracaSaldo.services.js"
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
 import { getBulanText } from "../../utils/mathUtil.js"
-import { NERACA_SALDO_PATH, generatePDF } from "../../utils/pdfUtil.js"
 import { getNeracaSaldoReport, renderDataNeracaSaldo } from "../../utils/neracaSaldoUtil.js"
 
 export const getAllNeracaSaldoByBulanController = async (req, res) => {
@@ -15,7 +14,6 @@ export const getAllNeracaSaldoByBulanController = async (req, res) => {
         if (print) {
             const neracaSaldos = await renderDataNeracaSaldo(await getNeracaSaldoReport(data))
             neracaSaldos.bulan = getBulanText(bulan - 1)
-            return await generatePDF(NERACA_SALDO_PATH, neracaSaldos, res, req.identity)
         }
 
         const neracaSaldos = await getNeracaSaldoReport(data)
