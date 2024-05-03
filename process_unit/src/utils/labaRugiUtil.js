@@ -66,9 +66,13 @@ export const getLabaRugiReport = (data) => {
         resultBebanOperasionalCount = getSumMinusOfStringValue([getSumOfStringValue(resultBebanOperasional.map(i => i.debet)), getSumOfStringValue(resultBebanOperasional.map(i => i.kredit))])
         resultBebanLainnyaCount = getSumMinusOfStringValue([getSumOfStringValue(resultBebanLainnya.map(i => i.debet)), getSumOfStringValue(resultBebanLainnya.map(i => i.kredit))])
 
-        let lossResult = getSumMinusOfStringValue([getSumOfStringValue([resultHargaPokokPenjualanCount, resultPendapatanCount, resultPendapatanLainLainCount]), getSumOfStringValue([resultBebanOperasionalCount, resultBebanLainnyaCount])])
-
-        // let lossResult = (resultHargaPokokPenjualanCount + resultPendapatanCount + resultPendapatanLainLainCount) - (resultBebanOperasionalCount + resultBebanLainnyaCount)
+        let lossResult = getSumOfStringValue([
+            getSumMinusOfStringValue([
+                getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]),
+                getSumOfStringValue([resultBebanOperasionalCount, resultBebanLainnyaCount])
+            ]),
+            resultPendapatanLainLainCount
+        ])
 
         res({
             pendapatanLainLain: {
