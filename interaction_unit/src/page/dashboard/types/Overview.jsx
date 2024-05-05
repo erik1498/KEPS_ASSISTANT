@@ -464,15 +464,15 @@ const Overview = () => {
                                     <p className="text-md font-bold">Rp. {parseToRupiahText(data.dashboard.overview[getBulanList().indexOf(bulan)]?.neraca?.modal?.count)}</p>
                                 </div>
                             </div>
-                            <div className="text-center mt-10">
+                            {/* <div className="text-center mt-10">
                                 <p className="text-xl uppercase font-bold">Perubahan Modal</p>
                                 <p className="text-md font-bold">Rp. {
                                     data?.dashboard?.overview[getBulanList().indexOf(bulan)]?.perubahanModal ?
-                                        data?.dashboard?.overview[getBulanList().indexOf(bulan)]?.perubahanModal[getBulanList().indexOf(bulan)] ? data?.dashboard?.overview[getBulanList().indexOf(bulan)]?.perubahanModal[getBulanList().indexOf(bulan)] : 0
+                                        data?.dashboard?.overview[getBulanList().indexOf(bulan)]?.perubahanModal[getBulanList().indexOf(bulan)] ? data?.dashboard?.overview[getBulanList().indexOf(bulan)]?.perubahanModal[getBulanList().indexOf(bulan)].all_count : 0
                                         :
                                         0
                                 }</p>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </>

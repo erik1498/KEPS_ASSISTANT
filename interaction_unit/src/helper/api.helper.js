@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { eraseCookie, getCookie, setCookie } from './cookies.helper';
+import { apiLogin } from '../service/endPointList.api';
 
 export const axiosJWT = axios.create()
 
@@ -12,7 +13,16 @@ axiosJWT.interceptors.request.use(async (config) => {
         {
           refreshToken: getCookie("refreshToken")
         }
-      )
+      ).catch(e => {
+        if (e.response.status == 401) {
+          eraseCookie("token")
+          eraseCookie("refreshToken")
+          eraseCookie("tokenExpired")
+          eraseCookie("loadedKodeAkun")
+          setCookie("login", "false")
+          document.location.href = "/"
+        }
+      })
       config.headers.Authorization = `Bearer ${response.data.token}`
       setCookie("token", response.data.token)
       setCookie("refreshToken", response.data.refreshToken)
@@ -22,16 +32,19 @@ axiosJWT.interceptors.request.use(async (config) => {
       config.headers.Authorization = `Bearer ${getCookie("token")}`
     }
   } else {
-    eraseCookie("token")
-    eraseCookie("refreshToken")
-    eraseCookie("tokenExpired")
-    if (!getCookie("login") && getCookie("login") == "true") {
-      setCookie("login", "false")
-      document.location.href = "/"
+    if (config.url != apiLogin.getUrlCRUD()) {
+      eraseCookie("token")
+      eraseCookie("refreshToken")
+      eraseCookie("tokenExpired")
+      eraseCookie("loadedKodeAkun")
+      if (!getCookie("login") && getCookie("login") == "true") {
+        setCookie("login", "false")
+        document.location.href = "/"
+      }
     }
   }
 
-  return config
+  return Promise.resolve(config)
 }, (error) => {
   return Promise.reject(error)
 })

@@ -62,19 +62,9 @@ const NeracaSaldoPage = () => {
                         debet={debet}
                         kredit={kredit}
                     />
-                    {/* <div className="form-control">
-                        <label className="label cursor-pointer">
-                            <span className="label-text">Chart Mode</span>
-                            <input type="checkbox" className="toggle" checked={showChart} onChange={e => setShowChart(e.target.checked)} />
-                        </label>
-                    </div> */}
                 </div>
                 <div className="col-span-5">
                     <div className="h-[65vh] pl-2">
-                        {/* {
-                            showChart ? <>
-                                <NeracaSaldoChart data={neracaSaldo} />
-                            </> : <> */}
                         <div className="flex flex-col h-full overflow-y-scroll no-scrollbar w-full rounded-md">
                             {
                                 neracaSaldo.length > 0 ? <div className="flex flex-col w-full bg-white text-[13px] px-3 pb-3 shadow-md">
@@ -99,8 +89,6 @@ const NeracaSaldoPage = () => {
                                 </div> : <></>
                             }
                         </div>
-                        {/* </>
-                        } */}
                     </div>
                 </div>
             </div>

@@ -6,7 +6,7 @@ export const objectListDetail = (title,
 
 export const yearList = () => {
     let arrayYear = []
-    for (let index = 2024; index <= new Date().getFullYear() + 4; index++) {
+    for (let index = 2024; index <= new Date().getFullYear(); index++) {
         arrayYear.push({
             value: index
         })
