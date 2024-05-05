@@ -35,6 +35,7 @@ app.use((req, res, next) => {
         "userId": null
     })
     res.setHeader("request-id", genUUID)
+    res.setHeader("X-Powered-By", "KEPS-ASSISTANT")
     next()
 })
 
