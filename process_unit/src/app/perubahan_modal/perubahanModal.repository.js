@@ -7,6 +7,7 @@ export const getPerubahanModalByTahunRepo = async (tahun) => {
             SELECT 
                 nt.*
             FROM neraca_tab nt WHERE nt.tahun = '${tahun}'
+            ORDER BY nt.bulan ASC
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

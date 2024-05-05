@@ -1,6 +1,6 @@
 import { HARTA_TYPE, MODAL_TYPE, UTANG_TYPE } from "../constant/labaRugiConstant.js"
 import { getBulanText, getSumMinusOfStringValue, getSumOfStringValue } from "./mathUtil.js"
-import { generateReportValue, generateReportValueByMinusValue, convertByPlusMinusValue } from "./validateKreditDebetTypeUtil.js"
+import { generateReportValue, generateReportValueByMinusValue, convertByPlusMinusValue, minusTypeCode } from "./validateKreditDebetTypeUtil.js"
 
 export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, validate) => {
     return new Promise(async (res, rej) => {
@@ -39,6 +39,7 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
         let resultModalCount = 0.0
 
         for (let i = 0; i < data.length; i++) {
+            data[i] = minusTypeCode(data[i])
             if (data[i].kode_akun_perkiraan_type == HARTA_TYPE) {
                 data[i] = convertByPlusMinusValue(data[i])
                 resultAset.push({
@@ -64,7 +65,7 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
 
         resultAsetCount = getSumMinusOfStringValue([getSumOfStringValue(resultAset.map(i => i.debet)), getSumOfStringValue(resultAset.map(i => i.kredit))])
         resultUtangCount = getSumMinusOfStringValue([getSumOfStringValue(resultUtang.map(i => i.debet)), getSumOfStringValue(resultUtang.map(i => i.kredit))])
-        resultModalCount = getSumMinusOfStringValue([getSumOfStringValue(resultModal.map(i => i.debet)), getSumOfStringValue(resultModal.map(i => i.kredit))], true)
+        resultModalCount = getSumMinusOfStringValue([getSumOfStringValue(resultModal.map(i => i.debet)), getSumOfStringValue(resultModal.map(i => i.kredit))])
 
 
 
