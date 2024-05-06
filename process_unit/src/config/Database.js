@@ -17,7 +17,7 @@ export const connectDatabase = () => {
             db.sync()
             res(true)
         } catch (error) {
-            LOGGER(logType.INFO, "KONEKSI DATABASE GAGAL, AKAN DICOBA 5 DETIK LAGI !!!")
+            LOGGER(logType.INFO, "KONEKSI DATABASE GAGAL, AKAN DICOBA 5 DETIK LAGI !!! " + getEnv("DB_HOST") + " - " + getEnv("DB_PORT") )
             setTimeout(connectDatabase, 5000)
         }
     })

@@ -28,4 +28,4 @@ ENV USER_PARAMETER_KEY=dBSAjoiahsoaihsOOJoSNAOsnsadoqe
 
 EXPOSE 2001
 
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "run", "start"]
