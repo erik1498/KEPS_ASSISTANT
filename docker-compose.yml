@@ -11,6 +11,7 @@ services:
       - "3306"
     volumes:
       - ./resources_unit:/var/lib/mysql
+      - ./backup:/home
     networks:
       keps_network:
         ipv4_address: 172.30.0.2
