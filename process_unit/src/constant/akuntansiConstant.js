@@ -19,3 +19,5 @@ export const ASSET_MINUS_KODE_AKUN = []
 export const UTANG_MINUS_KODE_AKUN = []
 
 export const MODAL_MINUS_KODE_AKUN = ["302"]
+
+export const AKUN_TIDAK_BOLEH_DIUPDATE = ["101", "102", "301", "302", "303", "304"]

@@ -11,6 +11,8 @@ import { showAlert, showDialog, showError } from "../../../helper/form.helper"
 
 const KodeAkunPage = () => {
 
+    const AKUN_TIDAK_BOLEH_DIUPDATE = ["101", "102", "301", "302", "303", "304"]
+
     const dataContext = useDataContext()
     const { _getDataKodeAkun } = dataContext
 
@@ -146,15 +148,19 @@ const KodeAkunPage = () => {
                                                     <td>{item.type}</td>
                                                     <td>{item.name}</td>
                                                     <td className="flex gap-x-2">
-                                                        <FaPen size={12} className="text-yellow-500 cursor-pointer"
-                                                            onClick={() => {
-                                                                _editKodeAkun(i)
-                                                            }} />
-                                                        <FaTrash size={12} className="text-red-500 cursor-pointer"
-                                                            onClick={() => {
-                                                                _deleteKodeAkun(i)
-                                                            }}
-                                                        />
+                                                        {
+                                                            AKUN_TIDAK_BOLEH_DIUPDATE.indexOf(item.code) == -1 && <>
+                                                                <FaPen size={12} className="text-yellow-500 cursor-pointer"
+                                                                    onClick={() => {
+                                                                        _editKodeAkun(i)
+                                                                    }} />
+                                                                <FaTrash size={12} className="text-red-500 cursor-pointer"
+                                                                    onClick={() => {
+                                                                        _deleteKodeAkun(i)
+                                                                    }}
+                                                                />
+                                                            </>
+                                                        }
                                                     </td>
                                                 </tr>
                                             </>

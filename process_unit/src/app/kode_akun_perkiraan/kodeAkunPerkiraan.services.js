@@ -1,3 +1,4 @@
+import { AKUN_TIDAK_BOLEH_DIUPDATE } from "../../constant/akuntansiConstant.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createKodeAkunPerkiraanRepo, deleteKodeAkunPerkiraanByUuidRepo, getAllKodeAkunPerkiraanBankRepo, getAllKodeAkunPerkiraanByCodeListRepo, getAllKodeAkunPerkiraanKasRepo, getAllKodeAkunPerkiraanNoBankRepo, getAllKodeAkunPerkiraanNoKasRepo, getAllKodeAkunPerkiraanRepo, getKodeAkunPerkiraanByCodeRepo, getKodeAkunPerkiraanByTypeRepo, getKodeAkunPerkiraanByUuidRepo, getKodeAkunPerkiraanExceptTypeRepo, updateKodeAkunPerkiraanByUuidRepo } from "./kodeAkunPerkiraan.repository.js"
@@ -126,8 +127,18 @@ export const createKodeAkunPerkiraanService = async (kodeAkunPerkiraanData, req_
 
 export const deleteKodeAkunPerkiraanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteKodeAkunPerkiraanByUuidService [${uuid}]`, null, req_identity)
-    await getKodeAkunPerkiraanByUuidService(uuid, req_identity)
+
+    const beforeData = await getKodeAkunPerkiraanByUuidService(uuid, req_identity)
+
+    if (AKUN_TIDAK_BOLEH_DIUPDATE.indexOf(beforeData.code) > -1) {
+        throw Error(JSON.stringify({
+            message: "Kode Akun Tidak Diijinkan Dieksekusi",
+            field: "kodeAkun"
+        }))
+    }
+
     await deleteKodeAkunPerkiraanByUuidRepo(uuid)
+    
     return true
 }
 
@@ -135,6 +146,13 @@ export const updateKodeAkunPerkiraanByUuidService = async (uuid, kodeAkunPerkira
     LOGGER(logType.INFO, `Start updateKodeAkunPerkiraanByUuidService [${uuid}]`, kodeAkunPerkiraanData, req_identity)
 
     const beforeData = await getKodeAkunPerkiraanByUuidService(uuid, req_identity)
+
+    if (AKUN_TIDAK_BOLEH_DIUPDATE.indexOf(beforeData.code) > -1) {
+        throw Error(JSON.stringify({
+            message: "Kode Akun Tidak Diijinkan Dieksekusi",
+            field: "kodeAkun"
+        }))
+    }
 
     const kodeAkunPerkiraanWithSameCode = await getKodeAkunPerkiraanByCodeRepo(kodeAkunPerkiraanData.code, uuid)
 
