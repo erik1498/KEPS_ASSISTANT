@@ -19,9 +19,18 @@ const limiter = rateLimit({
 const app = express()
 app.use(limiter)
 app.use(express.json())
+
+const whitelist = JSON.parse(getEnv("CLIENT_HOST"))
+
 app.use(cors({
     credentials: true,
-    origin:`${getEnv("CLIENT_HOST")}`
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+      }
 }))
 
 const PORT = getEnv("PORT")
@@ -32,7 +41,8 @@ app.use((req, res, next) => {
     let genUUID = v4()
     req.identity = JSON.stringify({
         "id": genUUID,
-        "userId": null
+        "userId": null,
+        "client_id": req.header("Client_id")
     })
     res.setHeader("request-id", genUUID)
     res.setHeader("X-Powered-By", "KEPS-ASSISTANT")
