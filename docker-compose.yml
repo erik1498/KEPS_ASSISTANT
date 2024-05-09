@@ -21,7 +21,7 @@ services:
       context: ./process_unit
       args:
         - DB_HOST=172.30.0.2
-        - CLIENT_HOST=http://127.0.0.1:5173
+        - CLIENT_HOST=["http://127.0.0.1:5173"]
     container_name: keps_assistant_process
     ports:
       - "2001:2001"
