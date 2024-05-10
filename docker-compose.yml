@@ -36,7 +36,7 @@ services:
       context: ./interaction_unit
     container_name: keps_assistant_interaction
     ports:
-      - "5173:5173"
+      - "2002:5173"
     environment:
       - VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT=http://127.0.0.1:2001
     networks:

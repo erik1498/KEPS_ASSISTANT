@@ -26,11 +26,11 @@ app.use(cors({
     credentials: true,
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1) {
-          callback(null, true)
+            callback(null, true)
         } else {
-          callback(new Error('Not allowed by CORS'))
+            callback(new Error('Not allowed by CORS'))
         }
-      }
+    }
 }))
 
 const PORT = getEnv("PORT")

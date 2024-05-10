@@ -9,7 +9,7 @@ export const getAllNeracaSaldoByBulanService = async (bulan, tahun, whereIN, req
     tahun = parseFloat(tahun) < 10 ? "0" + tahun : tahun
     LOGGER(logType.INFO, `Start getAllNeracaSaldoByBulanService [${bulan} ${tahun}]`, whereIN, req_identity)
     let jurnalUmumBulanSebelum = await convertJurnalUmumToNeracaSaldo(await getJurnalUmumByBulanSebelumService(bulan, tahun, req_identity))
-    let historyAkuns = await getNeracaSaldoByBulanRepo(bulan, tahun, whereIN)
+    let historyAkuns = await getNeracaSaldoByBulanRepo(bulan, tahun, whereIN, req_identity)
 
     jurnalUmumBulanSebelum.map((item) => {
         const getHistory = historyAkuns.filter((history) => history.kode_akun_perkiraan_code == item.kode_akun_perkiraan_code)

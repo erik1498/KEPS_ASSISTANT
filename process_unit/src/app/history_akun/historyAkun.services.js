@@ -9,8 +9,8 @@ export const getAllHistoryAkunByUUIDAndBulanService = async (uuid, bulan, tahun,
     search = search ? search.trim() : ""
     LOGGER(logType.INFO, `Start getAllHistoryAkunByUUIDService [${uuid} ${bulan} ${tahun} ${search}]`, null, req_identity)
     const historyAkunsBulanSebelumnya = await getJurnalUmumByBulanSebelumService(bulan, tahun, req_identity)
-    const kodeAkunPerkiraan = await getKodeAkunPerkiraanByUuidService(uuid);
+    const kodeAkunPerkiraan = await getKodeAkunPerkiraanByUuidService(uuid, req_identity);
     const historyAkunTerpilih = await selectedJurnalUmumByKodeAkunCode(historyAkunsBulanSebelumnya, kodeAkunPerkiraan?.code)
-    const historyAkuns = historyAkunTerpilih.concat(...await getHistoryAkunByUuidAndBulanRepo(uuid, bulan, tahun, search))
+    const historyAkuns = historyAkunTerpilih.concat(...await getHistoryAkunByUuidAndBulanRepo(uuid, bulan, tahun, search, req_identity))
     return historyAkuns
 }

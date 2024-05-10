@@ -8,7 +8,7 @@ import { getExpiredTimeFromToken } from "../../utils/jwtUtils.js"
 import { decryptString, encryptString } from "../../utils/encryptUtil.js"
 
 export const loginUser = async (req, res) => {
-    LOGGER(logType.INFO, "Start loginUser", req.body, req.id)
+    LOGGER(logType.INFO, "Start loginUser", req.body, req.identity)
     try {
         let { username, password } = req.body
 
@@ -28,7 +28,14 @@ export const loginUser = async (req, res) => {
         //     }))
         // }
 
-        let user = await getUserByUsername(username, false, req.id)
+        let user = await getUserByUsername(username, false, req.identity)
+
+        // if (decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")) != user.mac_address) {
+        //     throw Error(JSON.stringify({
+        //         message: "Akun Tidak Terdaftar",
+        //         field: "password"
+        //     }))
+        // }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
 
@@ -39,7 +46,7 @@ export const loginUser = async (req, res) => {
             }))
         }
 
-        // const reqKey = decryptString(req.header("User-Permission"), user.serialKey)
+        // const reqKey = decryptString(req.header("User-Permission"), user.serial_key)
 
         // if (reqKey != getEnv("LICENSE_KEY")) {
         //     throw Error(JSON.stringify({
@@ -48,18 +55,20 @@ export const loginUser = async (req, res) => {
         //     }))
         // }
 
-        await updateUserActiveService(user.uuid, true)
+        await updateUserActiveService(user.uuid, true, req.identity)
 
         const token = jwt.sign({
             userId: user.uuid,
             userRole: user.role,
-            userKey: user.serialKey
+            userKey: user.serial_key,
+            macAddr: user.mac_address
         }, getEnv("JWT_SECRET"), {
-            expiresIn: '1h',
+            expiresIn: '30s',
         });
 
         const refreshToken = jwt.sign({
-            userId: user.uuid
+            userId: user.uuid,
+            userKey: user.serial_key
         }, getEnv("REFRESH_SECRET"), {
             expiresIn: '1w'
         });
@@ -88,7 +97,7 @@ export const loginUser = async (req, res) => {
 
 
 export const postCreateUser = async (req, res) => {
-    LOGGER(logType.INFO, "Start postCreateUser", req.body, req.id)
+    LOGGER(logType.INFO, "Start postCreateUser", req.body, req.identity)
     try {
         const userData = req.body
         const { error, value } = userValidation(userData)
@@ -102,7 +111,7 @@ export const postCreateUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(value.password, 10);
         value.password = hashedPassword
 
-        const user = await createUserService(value, req.id)
+        const user = await createUserService(value, req.identity)
         res.json({
             data: user,
             message: "Create data Success"
@@ -118,21 +127,22 @@ export const postCreateUser = async (req, res) => {
 
 export const refreshToken = async (req, res) => {
     try {
-        let decode = jwt.decode(decryptString(req.body.refreshToken, getEnv("REFRESH_ENCRYPT_KEY")), getEnv("JWT_SECRET"))
         let user = await getUserByUuid({
-            uuid: decode.userId
-        }, req.id)
+            uuid: req.body.userId
+        }, req.identity)
 
         const token = jwt.sign({
             userId: user.uuid,
             userRole: user.role,
-            userKey: user.serialKey
+            userKey: user.serial_key,
+            macAddr: user.mac_address
         }, getEnv("JWT_SECRET"), {
-            expiresIn: '1h',
+            expiresIn: '30s',
         });
 
         const refreshToken = jwt.sign({
-            userId: user.uuid
+            userId: user.uuid,
+            userKey: user.serial_key
         }, getEnv("REFRESH_SECRET"), {
             expiresIn: '1w'
         });
@@ -159,7 +169,7 @@ export const refreshToken = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
     try {
-        let user = await getUserByUuid({ uuid: JSON.parse(req.identity).userId }, req.id)
+        let user = await getUserByUuid({ uuid: JSON.parse(req.identity).userId }, req.identity)
 
         if (!user) {
             throw Error(JSON.stringify({
@@ -168,7 +178,7 @@ export const logoutUser = async (req, res) => {
             }))
         }
 
-        user = await getUserByUsername(user.username, true)
+        user = await getUserByUsername(user.username, true, req.identity)
 
         if (!user) {
             throw Error(JSON.stringify({
@@ -177,7 +187,7 @@ export const logoutUser = async (req, res) => {
             }))
         }
 
-        await updateUserActiveService(user.uuid, false)
+        await updateUserActiveService(user.uuid, false, req.identity)
         res.status(200).json({
             message: "Logout Success"
         })

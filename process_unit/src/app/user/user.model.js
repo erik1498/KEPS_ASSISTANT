@@ -48,27 +48,27 @@ const UserModel = db.define("user_tab",
                 notEmpty: true,
             }
         },
-        // serial_key: {
-        //     type: DataTypes.STRING,
-        //     allowNull: false,
-        //     validate: {
-        //         notEmpty: true,
-        //     }
-        // },
-        // mac_address: {
-        //     type: DataTypes.STRING,
-        //     allowNull: false,
-        //     validate: {
-        //         notEmpty: true,
-        //     }
-        // },
-        // last_login: {
-        //     type: DataTypes.STRING,
-        //     allowNull: false,
-        //     validate: {
-        //         notEmpty: true,
-        //     }
-        // }
+        serial_key: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
+        mac_address: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
+        client_id:{
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        }
     }, {
     freezeTableName: true
 }

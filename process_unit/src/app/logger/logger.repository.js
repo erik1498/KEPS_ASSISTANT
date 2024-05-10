@@ -10,12 +10,13 @@ export const createLoggerRepo = async (loggerData) => {
         data: JSON.stringify(loggerData.data),
         req_time: loggerData.req_time,
         req_id: loggerData.req_identity.id,
-        req_user_id: loggerData.req_identity.userId ? loggerData.req_identity.userId : "NULL"
+        req_user_id: loggerData.req_identity.userId ? loggerData.req_identity.userId : "NULL",
+        client_id: loggerData.client_id
     })
     return logger
 }
 
-export const getLoggerDataRepo = async (bulan, tahun) => {
+export const getLoggerDataRepo = async (bulan, tahun, req_id) => {
     
     const maxTanggal = bulan < 12 ? `${tahun}-${parseInt(bulan) + 1}-01` : `${parseInt(tahun) + 1}-01-01`
     
@@ -27,6 +28,7 @@ export const getLoggerDataRepo = async (bulan, tahun) => {
                 lt.* 
             FROM logger_tab lt 
             WHERE lt.createdAt >= "${tahun}-${bulan}-01" AND lt.createdAt < "${maxTanggal}"
+            AND lt.client_id = '${JSON.parse(req_id).client_id}'
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

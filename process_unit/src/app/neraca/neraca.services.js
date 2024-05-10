@@ -23,7 +23,7 @@ export const validasiNeracaServices = async (bulan, tahun, req_identity) => {
             tahun: tahun,
             json: JSON.stringify(neraca)
         }
-        await createNeracaRepo(neracaData)
+        await createNeracaRepo(neracaData, req_identity)
         return neraca
     }else{
         throw Error(JSON.stringify({
@@ -35,7 +35,7 @@ export const validasiNeracaServices = async (bulan, tahun, req_identity) => {
 
 export const deleteValidasiNeracaByBulanAndTahunServices = async (bulan, tahun, req_identity) => {
     bulan = bulan < 10 ? "0" + bulan : bulan
-    await deleteNeracaByBulanAndTahun(bulan, tahun)
+    await deleteNeracaByBulanAndTahun(bulan, tahun, req_identity)
 }
 
 export const getNeracaSaldoBulanSebelumnya = async (bulan, tahun, req_identity) => {
@@ -45,7 +45,7 @@ export const getNeracaSaldoBulanSebelumnya = async (bulan, tahun, req_identity) 
         tahun = tahun - 1
     }
     bulan = bulan < 10 ? "0" + bulan : bulan
-    return await getNeracaByBulanAndTahun(bulan, tahun)
+    return await getNeracaByBulanAndTahun(bulan, tahun, req_identity)
 }
 
 export const getNeracaSaldoByBulanAndTahunServices = async (bulan, tahun, req_identity) => {
@@ -57,6 +57,6 @@ export const getNeracaSaldoByBulanAndTahunServices = async (bulan, tahun, req_id
         return Array(1)
     }
     bulan = bulan < 10 ? "0" + bulan : bulan
-    const returnData = await getNeracaByBulanAndTahun(bulan, tahun)
+    const returnData = await getNeracaByBulanAndTahun(bulan, tahun, req_identity)
     return returnData
 }

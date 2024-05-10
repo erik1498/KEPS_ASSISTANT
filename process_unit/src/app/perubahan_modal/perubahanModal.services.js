@@ -6,7 +6,7 @@ import { getPerubahanModalByTahunRepo } from "./perubahanModal.repository.js"
 
 export const getAllPerubahanModalService = async (tahun, req_identity) => {
     LOGGER(logType.INFO, `Start getAllPerubahanModalService [${tahun}]`, null, req_identity)
-    const perubahanModal = await getPerubahanModalByTahunRepo(tahun)
+    const perubahanModal = await getPerubahanModalByTahunRepo(tahun, req_identity)
     let returnData = []
     perubahanModal.map((item, idx) => {
         const modalData = JSON.parse(item.json).modal.data

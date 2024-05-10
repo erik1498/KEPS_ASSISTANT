@@ -21,7 +21,7 @@ export const getAllKodeAkunPerkiraanService = async (query, req_identity) => {
         pageNumber, size, search
     }, req_identity)
 
-    const kodeAkunPerkiraans = await getAllKodeAkunPerkiraanRepo(pageNumber, size, search)
+    const kodeAkunPerkiraans = await getAllKodeAkunPerkiraanRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(kodeAkunPerkiraans.entry, kodeAkunPerkiraans.count, kodeAkunPerkiraans.pageNumber, kodeAkunPerkiraans.size)
 }
 
@@ -32,7 +32,7 @@ export const getAllKodeAkunPerkiraanByCodeListService = async (data, req_identit
         data
     }, req_identity)
 
-    const kodeAkunPerkiraans = await getAllKodeAkunPerkiraanByCodeListRepo(data.code)
+    const kodeAkunPerkiraans = await getAllKodeAkunPerkiraanByCodeListRepo(data.code, req_identity)
     return kodeAkunPerkiraans
 }
 
@@ -98,7 +98,7 @@ export const getAllKodeAkunPerkiraanExceptTypeService = async (type, req_identit
 
 export const getKodeAkunPerkiraanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getKodeAkunPerkiraanByUuidService [${uuid}]`, null, req_identity)
-    const kodeAkunPerkiraan = await getKodeAkunPerkiraanByUuidRepo(uuid)
+    const kodeAkunPerkiraan = await getKodeAkunPerkiraanByUuidRepo(uuid, req_identity)
 
     if (!kodeAkunPerkiraan) {
         throw Error("data not found")
@@ -110,7 +110,7 @@ export const createKodeAkunPerkiraanService = async (kodeAkunPerkiraanData, req_
     LOGGER(logType.INFO, `Start createKodeAkunPerkiraanService`, kodeAkunPerkiraanData, req_identity)
     kodeAkunPerkiraanData.enabled = 1
 
-    const kodeAkunPerkiraanWithSameCode = await getKodeAkunPerkiraanByCodeRepo(kodeAkunPerkiraanData.code)
+    const kodeAkunPerkiraanWithSameCode = await getKodeAkunPerkiraanByCodeRepo(kodeAkunPerkiraanData.code, null, req_identity)
 
     LOGGER(logType.INFO, "KODE AKUN CODE", kodeAkunPerkiraanWithSameCode, req_identity)
 
@@ -121,7 +121,7 @@ export const createKodeAkunPerkiraanService = async (kodeAkunPerkiraanData, req_
         }))
     }
 
-    const kodeAkunPerkiraan = await createKodeAkunPerkiraanRepo(kodeAkunPerkiraanData)
+    const kodeAkunPerkiraan = await createKodeAkunPerkiraanRepo(kodeAkunPerkiraanData, req_identity)
     return kodeAkunPerkiraan
 }
 
@@ -137,7 +137,7 @@ export const deleteKodeAkunPerkiraanByUuidService = async (uuid, req_identity) =
         }))
     }
 
-    await deleteKodeAkunPerkiraanByUuidRepo(uuid)
+    await deleteKodeAkunPerkiraanByUuidRepo(uuid, req_identity)
     
     return true
 }
@@ -154,7 +154,7 @@ export const updateKodeAkunPerkiraanByUuidService = async (uuid, kodeAkunPerkira
         }))
     }
 
-    const kodeAkunPerkiraanWithSameCode = await getKodeAkunPerkiraanByCodeRepo(kodeAkunPerkiraanData.code, uuid)
+    const kodeAkunPerkiraanWithSameCode = await getKodeAkunPerkiraanByCodeRepo(kodeAkunPerkiraanData.code, uuid, req_identity)
 
     LOGGER(logType.INFO, "KODE AKUN CODE", kodeAkunPerkiraanWithSameCode, req_identity)
 
@@ -165,7 +165,7 @@ export const updateKodeAkunPerkiraanByUuidService = async (uuid, kodeAkunPerkira
         }))
     }
 
-    const kodeAkunPerkiraan = await updateKodeAkunPerkiraanByUuidRepo(uuid, kodeAkunPerkiraanData)
+    const kodeAkunPerkiraan = await updateKodeAkunPerkiraanByUuidRepo(uuid, kodeAkunPerkiraanData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
         beforeData,
