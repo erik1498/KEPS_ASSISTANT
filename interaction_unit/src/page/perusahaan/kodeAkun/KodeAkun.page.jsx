@@ -11,7 +11,7 @@ import { showAlert, showDialog, showError } from "../../../helper/form.helper"
 
 const KodeAkunPage = () => {
 
-    const AKUN_TIDAK_BOLEH_DIUPDATE = ["101", "102", "301", "302", "303", "304"]
+    const AKUN_TIDAK_BOLEH_DIUPDATE = ["101", "102", "301", "302", "303", "304", "305"]
 
     const dataContext = useDataContext()
     const { _getDataKodeAkun } = dataContext
