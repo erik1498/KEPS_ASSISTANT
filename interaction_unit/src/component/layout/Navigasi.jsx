@@ -20,21 +20,6 @@ const Navigasi = () => {
     const [tahun, setTahun] = useState(data.tahun)
     const [sideBars, setSideBars] = useState([])
 
-    const LogOut = () => {
-        apiLogin
-            .custom(`/logout`, "POST")
-            .then(() => {
-                eraseCookie("token")
-                eraseCookie("refreshToken")
-                eraseCookie("tokenExpired")
-                eraseCookie("login")
-                eraseCookie("loadedKodeAkun")
-                navigate("/")
-            }).catch(err => {
-                showError(err)
-            })
-    }
-
     useEffect(() => {
         let sidebarArr = window.location.pathname.split("/").slice(1)
         sidebarArr = sidebarArr.map(item => {
@@ -51,14 +36,6 @@ const Navigasi = () => {
                 <div className="uppercase text-blue-900">
                     <h1 className="text-xl font-bold">Keps Assistant</h1>
                     <p className="text-[9px] bg-blue-900 w-max text-white font-bold px-3 py-1 rounded-md">Friend of Your Business Progress</p>
-                </div>
-                <div className="col-span-1 flex justify-end align-middle">
-                    <div
-                        onClick={() => LogOut()}
-                        className="flex items-center bg-red-800 p-4 text-white rounded-full shadow-2xl cursor-pointer"
-                    >
-                        <FaSignOutAlt size={20} />
-                    </div>
                 </div>
             </div>
             <ul className="menu menu-horizontal bg-white text-blue-900 px-2 w-full border-t-2 border-blue-900 shadow-2xl">

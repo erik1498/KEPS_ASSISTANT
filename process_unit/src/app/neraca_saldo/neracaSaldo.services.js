@@ -22,9 +22,5 @@ export const getAllNeracaSaldoByBulanService = async (bulan, tahun, whereIN, req
         }
     })
 
-    return historyAkuns.sort((a, b) => {
-        const x = a["kode_akun_perkiraan_code"]; 
-        const y = b["kode_akun_perkiraan_code"];
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-    })
+    return historyAkuns
 }

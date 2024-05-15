@@ -41,13 +41,6 @@ const UserModel = db.define("user_tab",
                 notEmpty: true,
             }
         },
-        active: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            }
-        },
         serial_key: {
             type: DataTypes.STRING,
             allowNull: false,

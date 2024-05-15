@@ -1,6 +1,6 @@
 import { getEnv } from "../../utils/envUtils.js"
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
-import { createUserService, getUserByUsername, getUserByUuid, updateUserActiveService } from "./user.services.js"
+import { createUserService, getUserByUsername, getUserByUuid } from "./user.services.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { userValidation } from "./user.validation.js"
@@ -12,30 +12,30 @@ export const loginUser = async (req, res) => {
     try {
         let { username, password } = req.body
 
-        // if (!req.header("User-Permission") && !req.header("User-Parameters")) {
-        //     throw Error(JSON.stringify({
-        //         message: "Akun Tidak Terdaftar",
-        //         field: "password"
-        //     }))
-        // }
+        if (!req.header("User-Permission") && !req.header("User-Parameters")) {
+            throw Error(JSON.stringify({
+                message: "Akun Tidak Terdaftar",
+                field: "password"
+            }))
+        }
 
-        // let userParameter = JSON.parse(decryptString(req.header("User-Parameters"), getEnv("USER_PARAMETER_KEY")))
+        let userParameter = JSON.parse(decryptString(req.header("User-Parameters"), getEnv("USER_PARAMETER_KEY")))
 
-        // if (userParameter.payload != JSON.stringify(req.body)) {
-        //     throw Error(JSON.stringify({
-        //         message: "Akun Tidak Terdaftar",
-        //         field: "password"
-        //     }))
-        // }
+        if (userParameter.payload != JSON.stringify(req.body)) {
+            throw Error(JSON.stringify({
+                message: "Akun Tidak Terdaftar",
+                field: "password"
+            }))
+        }
 
-        let user = await getUserByUsername(username, false, req.identity)
+        let user = await getUserByUsername(username, req.identity)
 
-        // if (decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")) != user.mac_address) {
-        //     throw Error(JSON.stringify({
-        //         message: "Akun Tidak Terdaftar",
-        //         field: "password"
-        //     }))
-        // }
+        if (decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")) != user.mac_address) {
+            throw Error(JSON.stringify({
+                message: "Akun Tidak Terdaftar",
+                field: "password"
+            }))
+        }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
 
@@ -46,16 +46,14 @@ export const loginUser = async (req, res) => {
             }))
         }
 
-        // const reqKey = decryptString(req.header("User-Permission"), user.serial_key)
+        const reqKey = decryptString(req.header("User-Permission"), user.serial_key)
 
-        // if (reqKey != getEnv("LICENSE_KEY")) {
-        //     throw Error(JSON.stringify({
-        //         message: "Akun Tidak Terdaftar",
-        //         field: "password"
-        //     }))
-        // }
-
-        await updateUserActiveService(user.uuid, true, req.identity)
+        if (reqKey != getEnv("LICENSE_KEY")) {
+            throw Error(JSON.stringify({
+                message: "Akun Tidak Terdaftar",
+                field: "password"
+            }))
+        }
 
         const token = jwt.sign({
             userId: user.uuid,
@@ -156,40 +154,6 @@ export const refreshToken = async (req, res) => {
             token: tokenEncrypt,
             refreshToken: refreshTokenEncrypt,
             tokenExpired
-        })
-    } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
-        res.status(401).json({
-            type: "unauthorizedError",
-            message: new Error('Invalid request!')
-        });
-    }
-}
-
-
-export const logoutUser = async (req, res) => {
-    try {
-        let user = await getUserByUuid({ uuid: JSON.parse(req.identity).userId }, req.identity)
-
-        if (!user) {
-            throw Error(JSON.stringify({
-                message: "User Not Found",
-                field: "error"
-            }))
-        }
-
-        user = await getUserByUsername(user.username, true, req.identity)
-
-        if (!user) {
-            throw Error(JSON.stringify({
-                message: "User Not Found",
-                field: "error"
-            }))
-        }
-
-        await updateUserActiveService(user.uuid, false, req.identity)
-        res.status(200).json({
-            message: "Logout Success"
         })
     } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
