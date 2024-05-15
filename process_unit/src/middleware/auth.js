@@ -27,7 +27,7 @@ export const authTokenMiddleware = (roles) => {
 
         jwt.verify(decryptString(req.header("Authorization").split("Bearer ")[1], getEnv("JWT_ENCRYPT_KEY")), getEnv("JWT_SECRET"), (err, decode) => {
             if (err) {
-                console.log("Token Verify Error")
+                console.log("Token Verify Error", jwt.decode(decryptString(req.header("Authorization").split("Bearer ")[1], getEnv("JWT_ENCRYPT_KEY"))))
                 return res.status(401).json({
                     type: "unauthorizedError",
                     message: "Akun Tidak Terdaftar"
