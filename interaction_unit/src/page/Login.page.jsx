@@ -42,13 +42,6 @@ const LoginPage = () => {
         }
     }
 
-    useEffect(() => {
-        console.log(getCookie("token"))
-        if (getCookie("token")) {
-            navigate("/dashboard")
-        }
-    }, [])
-
     return isLoading ? <LoadingPage /> : <>
         <div className="h-screen w-screen relative flex flex-col justify-center items-center text-white bg-[url('/wave.svg')] bg-end bg-cover">
             <img
