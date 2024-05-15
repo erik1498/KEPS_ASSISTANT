@@ -11,6 +11,8 @@ const getDiffByTransaksi = (data) => {
     return arrData
 }
 
+export const AKUN_TIDAK_BOLEH_DIUPDATE = ["101", "102", "301", "302", "303", "304", "305", "401", "405", "701", "799"]
+
 export const normalizeDataJurnalUmum = (data) => {
     return new Promise((res, rej) => {
         let totalDebet = 0;
@@ -48,8 +50,8 @@ export const normalizeDataJurnalUmum = (data) => {
                 totalKreditTanggal = 0
             }
 
-            totalDebetTanggal = getSumOfStringValue([totalDebetTanggal, parseFloat(i.debet)])
-            totalKreditTanggal = getSumOfStringValue([totalKreditTanggal, parseFloat(i.kredit)])
+            totalDebetTanggal += parseFloat(i.debet)
+            totalKreditTanggal += parseFloat(i.kredit)
 
             returnData[`${parseInt(tanggal)}`].total = {
                 debet: totalDebetTanggal,

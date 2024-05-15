@@ -22,8 +22,13 @@ export const LOGGER_MONITOR = async (service, method, data, req_identity, error)
 }
 
 export const LOGGER = (logType, message, object, req_identity, req_original_url, req_method, error_monitor) => {
-    message = "[ ID:" + req_identity + " ] = " + message
-    message = object ? message + " [ " + JSON.stringify(object, null, 4) + " ]" : message
+    const logger_message = {
+        message: message,
+        object: object,
+        request_detail: req_identity ? JSON.parse(req_identity) : null
+    }
+
+    message = JSON.stringify(logger_message, null, 4);
 
     if (logType == "info") {
         pinoLogConfig.info(message)
@@ -43,17 +48,17 @@ export const pinoLogConfig = pino(
         timestamp: () => `, "time":"${moment().format()}"`,
         transport: {
             targets: [
-                {
-                    target: "pino-pretty"
-                },
                 // {
-                //     // target:"pino/file",
-                //     target:"pino-pretty",
-                //     options: {
-                //         destination: `./log/${(date_ob.getDate() < 10 ? "0" + date_ob.getDate() : date_ob.getDate()) + "" + ((date_ob.getMonth() + 1) < 10 ? "0" + (date_ob.getMonth() + 1) : (date_ob.getMonth() + 1)) + "" + date_ob.getFullYear()}.pinoLogConfig`,
-                //         mkdir:true,
-                //     }
-                // }
+                //     target: "pino-pretty"
+                // },
+                {
+                    // target:"pino/file",
+                    target:"pino-pretty",
+                    options: {
+                        destination: `./log/${(date_ob.getDate() < 10 ? "0" + date_ob.getDate() : date_ob.getDate()) + "" + ((date_ob.getMonth() + 1) < 10 ? "0" + (date_ob.getMonth() + 1) : (date_ob.getMonth() + 1)) + "" + date_ob.getFullYear()}.pinoLogConfig`,
+                        mkdir:true,
+                    }
+                }
             ]
         },
     },

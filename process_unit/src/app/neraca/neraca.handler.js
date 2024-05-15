@@ -1,4 +1,4 @@
-import { LOGGER, logType } from "../../utils/loggerUtil.js"
+import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { getBulanText } from "../../utils/mathUtil.js"
 import { deleteValidasiNeracaByBulanAndTahunServices, getNeracaSaldoByBulanAndTahunServices, getNeracaReportService, validasiNeracaServices } from "./neraca.services.js"
 
@@ -8,7 +8,7 @@ export const getAllNeracaByBulanController = async (req, res) => {
 
         const { print } = req.query
         const { bulan, tahun } = req.params
-        
+
         const neracas = await getNeracaReportService(bulan, tahun, false, null, req.identity)
         if (print) {
             neracas.bulan = getBulanText(bulan - 1)
@@ -32,6 +32,7 @@ export const validasiNeracaController = async (req, res) => {
     try {
         const { bulan, tahun } = req.body
         const validasi = await validasiNeracaServices(bulan, tahun, req.identity)
+        LOGGER_MONITOR(req.originalUrl, req.method, validasi, req.identity)
         res.json({
             data: validasi,
             message: "Validasi Neraca Success"
@@ -50,6 +51,7 @@ export const deleteValidasiNeracaByBulanAndTahunController = async (req, res) =>
     try {
         const { bulan, tahun } = req.body
         deleteValidasiNeracaByBulanAndTahunServices(bulan, tahun, req.identity)
+        LOGGER_MONITOR(req.originalUrl, req.method, { bulan, tahun }, req.identity)
         res.json({
             message: "Batal Validasi Neraca Success"
         })

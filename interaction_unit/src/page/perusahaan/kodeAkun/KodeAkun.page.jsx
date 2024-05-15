@@ -8,10 +8,9 @@ import { useEffect } from "react"
 import Pagination from "../../../component/general/Pagination"
 import KodeAkunForm from "./component/KodeAkunForm"
 import { showAlert, showDialog, showError } from "../../../helper/form.helper"
+import { AKUN_TIDAK_BOLEH_DIUPDATE } from "../../../helper/jurnalUmum.helper"
 
 const KodeAkunPage = () => {
-
-    const AKUN_TIDAK_BOLEH_DIUPDATE = ["101", "102", "301", "302", "303", "304", "305"]
 
     const dataContext = useDataContext()
     const { _getDataKodeAkun } = dataContext

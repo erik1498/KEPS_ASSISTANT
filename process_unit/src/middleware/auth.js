@@ -48,12 +48,13 @@ export const authTokenMiddleware = (roles) => {
                     message: "Akun Tidak Terdaftar"
                 });
             }
-
+            
             let uuid = JSON.parse(req.identity).id
             req.identity = JSON.stringify({
                 "id": uuid,
                 "userId": decode.userId,
-                "client_id": JSON.parse(req.identity).client_id
+                "client_id": JSON.parse(req.identity).client_id,
+                "user_request": userParameter.osInfo
             })
             next();
         })

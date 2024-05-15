@@ -9,7 +9,7 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
 
         if (laba_rugi_data_berjalan.laba_rugi.gain) {
             labaTahunBerjalan = {
-                kode_akun_perkiraan_code: "304",
+                kode_akun_perkiraan_code: "399",
                 kode_akun_perkiraan_name: "Laba/Rugi Periode Berjalan",
                 kode_akun_perkiraan_type: MODAL_TYPE,
                 debet: 0,
@@ -20,7 +20,7 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
         }
         if (laba_rugi_data_berjalan.laba_rugi.loss != null) {
             labaTahunBerjalan = {
-                kode_akun_perkiraan_code: "304",
+                kode_akun_perkiraan_code: "398",
                 kode_akun_perkiraan_name: "Laba/Rugi Periode Berjalan",
                 kode_akun_perkiraan_type: MODAL_TYPE,
                 debet: Math.abs(laba_rugi_data_berjalan.laba_rugi.loss),

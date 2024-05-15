@@ -58,8 +58,8 @@ export const convertNeracaToJurnalUmum = (data, bulan, tahun) => {
                 sumber: "NERACA BULAN SEBELUMNYA"
             }
             if (dataPush.type_akun == "Modal") {
-                if (dataPush.kode_akun == "304") {
-                    dataPush.kode_akun = "303"
+                if (dataPush.kode_akun == "399") {
+                    dataPush.kode_akun = "398"
                     dataPush.nama_akun = "Laba/Rugi Periode Sebelumnya"
                 }
                 jurnalUmum.push(dataPush)

@@ -29,8 +29,8 @@ export const getNeracaByBulanAndTahun = async (bulan, tahun, req_id) => {
 export const deleteNeracaByBulanAndTahun = async (bulan, tahun, req_id) => {
     await db.query(
         `
-            DELETE FROM neraca_tab nt WHERE nt.bulan >= "${bulan}" AND nt.tahun >= "${tahun}"
-            AND nt.client_id = '${JSON.parse(req_id).client_id}'
+            DELETE FROM neraca_tab WHERE bulan >= "${bulan}" AND tahun >= "${tahun}"
+            AND client_id = '${JSON.parse(req_id).client_id}'
         `,
         { type: Sequelize.QueryTypes.DELETE }
     )

@@ -4,49 +4,47 @@ import { apiLogin } from '../service/endPointList.api';
 
 export const axiosJWT = axios.create()
 
-axiosJWT.interceptors.request.use((config) => {
-  return new Promise(async (res, rej) => {
-    const currentDate = new Date()
-    if (getCookie("tokenExpired") && getCookie("refreshToken") != null) {
-      if (currentDate.getTime() >= parseFloat(getCookie("tokenExpired")) * 1000) {
-        const response = await axios.post(
-          import.meta.env.VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT + "/user/refresh",
-          {
-            refreshToken: getCookie("refreshToken")
-          }
-        ).catch(e => {
-          if (e.response.status == 401 || e.response.status == 500) {
-            eraseCookie("token")
-            eraseCookie("refreshToken")
-            eraseCookie("tokenExpired")
-            eraseCookie("loadedKodeAkun")
-            setCookie("login", "false")
-            document.location.href = "/"
-          }
-        })
-        config.headers.Authorization = `Bearer ${response.data.token}`
-        setCookie("token", response.data.token)
-        setCookie("refreshToken", response.data.refreshToken)
-        setCookie("tokenExpired", response.data.tokenExpired)
-        setCookie("login", "true")
-      } else {
-        config.headers.Authorization = `Bearer ${getCookie("token")}`
-      }
-    } else {
-      if (config.url != apiLogin.getUrlCRUD()) {
-        eraseCookie("token")
-        eraseCookie("refreshToken")
-        eraseCookie("tokenExpired")
-        eraseCookie("loadedKodeAkun")
-        if (!getCookie("login") && getCookie("login") == "true") {
+axiosJWT.interceptors.request.use(async (config) => {
+  const currentDate = new Date()
+  if (getCookie("tokenExpired") && getCookie("refreshToken") != null) {
+    if (currentDate.getTime() >= parseFloat(getCookie("tokenExpired")) * 1000) {
+      const response = await axios.post(
+        import.meta.env.VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT + "/user/refresh",
+        {
+          refreshToken: getCookie("refreshToken")
+        }
+      ).catch(e => {
+        if (e.response.status == 401) {
+          eraseCookie("token")
+          eraseCookie("refreshToken")
+          eraseCookie("tokenExpired")
+          eraseCookie("loadedKodeAkun")
           setCookie("login", "false")
           document.location.href = "/"
         }
+      })
+      config.headers.Authorization = `Bearer ${response.data.token}`
+      setCookie("token", response.data.token)
+      setCookie("refreshToken", response.data.refreshToken)
+      setCookie("tokenExpired", response.data.tokenExpired)
+      setCookie("login", "true")
+    } else {
+      config.headers.Authorization = `Bearer ${getCookie("token")}`
+    }
+  } else {
+    if (config.url != apiLogin.getUrlCRUD()) {
+      eraseCookie("token")
+      eraseCookie("refreshToken")
+      eraseCookie("tokenExpired")
+      eraseCookie("loadedKodeAkun")
+      if (!getCookie("login") && getCookie("login") == "true") {
+        setCookie("login", "false")
+        document.location.href = "/"
       }
     }
+  }
 
-    return res(config)
-  })
+  return Promise.resolve(config)
 }, (error) => {
   return Promise.reject(error)
 })
