@@ -4,7 +4,7 @@ export const getUserByUsernameRepo = async (username, active, req_id) => {
     const user = await UserModel.findOne({
         where: {
             username,
-            active,
+            // active,
             client_id: JSON.parse(req_id).client_id
         }
     })
@@ -26,7 +26,7 @@ export const getUserByUuidRepo = async (uuid, req_id) => {
     const user = await UserModel.findOne({
         where: {
             uuid,
-            active: true,
+            // active: true,
             client_id: JSON.parse(req_id).client_id
         }
     })
