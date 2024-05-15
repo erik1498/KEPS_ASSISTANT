@@ -6,7 +6,7 @@ export const axiosJWT = axios.create()
 
 axiosJWT.interceptors.request.use(async (config) => {
   const currentDate = new Date()
-  if (getCookie("tokenExpired")) {
+  if (getCookie("tokenExpired") && getCookie("refreshToken") != null) {
     if (currentDate.getTime() >= parseFloat(getCookie("tokenExpired")) * 1000) {
       const response = await axios.post(
         import.meta.env.VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT + "/user/refresh",
@@ -14,7 +14,7 @@ axiosJWT.interceptors.request.use(async (config) => {
           refreshToken: getCookie("refreshToken")
         }
       ).catch(e => {
-        if (e.response.status == 401) {
+        if (e.response.status == 401 || e.response.status == 500) {
           eraseCookie("token")
           eraseCookie("refreshToken")
           eraseCookie("tokenExpired")
