@@ -21,14 +21,14 @@ services:
       context: ./process_unit
       args:
         - DB_HOST=172.30.0.2
-        - CLIENT_HOST=["http://127.0.0.1:5173"]
-        - USER_PERMISSION_SECURITY_ENABLED=true
-        - USER_PARAMETER_SECURITY_ENABLED=true
+        - CLIENT_HOST=["http://127.0.0.1:2002"]
+        - USER_PERMISSION_SECURITY_ENABLED="false"
+        - USER_PARAMETER_SECURITY_ENABLED="false"
     container_name: keps_assistant_process
     ports:
       - "2001:2001"
     volumes:
-      - ./backup:/usr/process_unit/workdir/keps_backup
+      - ./logging:/usr/process_unit/workdir/log
     networks:
       keps_network:
         ipv4_address: 172.30.0.3

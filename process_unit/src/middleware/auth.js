@@ -5,7 +5,7 @@ import { LOGGER, logType } from "../utils/loggerUtil.js";
 
 export const authTokenMiddleware = (roles) => {
     return (req, res, next) => {
-        if (getEnv("USER_PERMISSION_SECURITY_ENABLED") && !req.header("User-Permission")) {
+        if (getEnv("USER_PERMISSION_SECURITY_ENABLED") == "true" && !req.header("User-Permission")) {
             LOGGER(logType.ERROR, "User-Permission Is Null", {
                 message: "User-Permission Is Null"
             }, req.identity, req.originalUrl, req.method, false)
@@ -17,7 +17,7 @@ export const authTokenMiddleware = (roles) => {
 
         let userParameter;
 
-        if (getEnv("USER_PARAMETER_SECURITY_ENABLED")) {
+        if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true") {
             userParameter = JSON.parse(decryptString(req.header("User-Parameters"), getEnv("USER_PARAMETER_KEY")))
 
             if (Object.keys(req.body).length > 0) {
@@ -43,7 +43,7 @@ export const authTokenMiddleware = (roles) => {
                 });
             }
 
-            if (getEnv("USER_PARAMETER_SECURITY_ENABLED") && decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")) != decode.macAddr) {
+            if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true" && decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")) != decode.macAddr) {
                 LOGGER(logType.ERROR, "Mac Address Tidak Sesuai", {
                     userReqMacAddr: decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")),
                     userRealMacAddr: decode.macAddr
@@ -54,7 +54,7 @@ export const authTokenMiddleware = (roles) => {
                 });
             }
 
-            if (getEnv("USER_PERMISSION_SECURITY_ENABLED")) {
+            if (getEnv("USER_PERMISSION_SECURITY_ENABLED") == "true") {
                 let reqKey = decryptString(req.header("User-Permission"), decode.userKey)
                 if (reqKey != getEnv("LICENSE_KEY")) {
                     LOGGER(logType.ERROR, "User-Permission Tidak Sesuai Dengan Licence Key", null, req.identity, req.originalUrl, req.method, false)
@@ -70,7 +70,7 @@ export const authTokenMiddleware = (roles) => {
                 "id": uuid,
                 "userId": decode.userId,
                 "client_id": JSON.parse(req.identity).client_id,
-                "user_request": userParameter.osInfo
+                "user_request": userParameter?.osInfo
             })
             next();
         })
@@ -80,7 +80,7 @@ export const authTokenMiddleware = (roles) => {
 // Fungsi middleware atau handler untuk verifikasi JWT
 export const verifyRefreshToken = (req, res, next) => {
 
-    if (getEnv("USER_PERMISSION_SECURITY_ENABLED") && !req.header("User-Permission")) {
+    if (getEnv("USER_PERMISSION_SECURITY_ENABLED") == "true" && !req.header("User-Permission")) {
         LOGGER(logType.ERROR, "User-Permission Is Null", null, req.identity, req.originalUrl, req.method, false)
         return res.status(401).json({
             type: "unauthorizedError",
@@ -90,7 +90,7 @@ export const verifyRefreshToken = (req, res, next) => {
 
     let userParameter;
 
-    if (getEnv("USER_PARAMETER_SECURITY_ENABLED")) {
+    if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true") {
         userParameter = JSON.parse(decryptString(req.header("User-Parameters"), getEnv("USER_PARAMETER_KEY")))
 
         if (Object.keys(req.body).length > 0) {
@@ -117,7 +117,7 @@ export const verifyRefreshToken = (req, res, next) => {
             });
         }
 
-        if (getEnv("USER_PERMISSION_SECURITY_ENABLED")) {
+        if (getEnv("USER_PERMISSION_SECURITY_ENABLED") == "true") {
             let reqKey = decryptString(req.header("User-Permission"), decoded.userKey)
             if (reqKey != getEnv("LICENSE_KEY")) {
                 LOGGER(logType.ERROR, "User-Permission Tidak Sesuai Dengan Licence Key", null, req.identity, req.originalUrl, req.method, false)

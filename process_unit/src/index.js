@@ -44,7 +44,8 @@ app.use((req, res, next) => {
     req.identity = JSON.stringify({
         "id": genUUID,
         "userId": null,
-        "client_id": req.header("Client_id")
+        // "client_id": req.header("Client_id")
+        "client_id": "alor"
     })
     res.setHeader("request-id", genUUID)
     res.setHeader("X-Powered-By", "KEPS-ASSISTANT")

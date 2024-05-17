@@ -7,3 +7,4 @@
 backup
 resources_unit
 docker-compose.yml
+/logging

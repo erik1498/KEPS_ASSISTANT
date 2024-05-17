@@ -12,7 +12,7 @@ export const loginUser = async (req, res) => {
     try {
         let { username, password } = req.body
 
-        if (getEnv("USER_PERMISSION_SECURITY_ENABLED") && !req.header("User-Permission")) {
+        if (getEnv("USER_PERMISSION_SECURITY_ENABLED") == "true" && !req.header("User-Permission")) {
             LOGGER(logType.ERROR, "User-Permission Is Null", {
                 message: "User-Permission Is Null",
             }, req.identity, req.originalUrl, req.method, false)
@@ -24,7 +24,7 @@ export const loginUser = async (req, res) => {
 
         let userParameter;
 
-        if (getEnv("USER_PARAMETER_SECURITY_ENABLED")) {
+        if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true") {
             userParameter = JSON.parse(decryptString(req.header("User-Parameters"), getEnv("USER_PARAMETER_KEY")))
             if (userParameter.payload != JSON.stringify(req.body)) {
                 LOGGER(logType.ERROR, "User-Parameters Tidak Sesuai", {
@@ -40,7 +40,7 @@ export const loginUser = async (req, res) => {
 
         let user = await getUserByUsername(username, req.identity)
 
-        if (getEnv("USER_PARAMETER_SECURITY_ENABLED") && decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")) != user.mac_address) {
+        if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true" && decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")) != user.mac_address) {
             LOGGER(logType.ERROR, "Mac Address Tidak Sesuai", {
                 userReqMacAddr: decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")),
                 userRealMacAddr: decode.macAddr
@@ -61,7 +61,7 @@ export const loginUser = async (req, res) => {
             }))
         }
 
-        if (getEnv("USER_PERMISSION_SECURITY_ENABLED")) {
+        if (getEnv("USER_PERMISSION_SECURITY_ENABLED") == "true") {
             const reqKey = decryptString(req.header("User-Permission"), user.serial_key)
             if (reqKey != getEnv("LICENSE_KEY")) {
                 LOGGER(logType.ERROR, "User-Permission Tidak Sesuai Dengan Licence Key", null, req.identity, req.originalUrl, req.method, false)
