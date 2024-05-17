@@ -5,6 +5,10 @@ import { useEffect } from "react"
 import { apiPerubahanModal } from "../../../service/endPointList.api"
 import { useDataContext } from "../../../context/dataContext.context"
 import PerubahanModalRow from "./component/PerubahanModalRow"
+import { useRef } from "react"
+import { useReactToPrint } from "react-to-print"
+import { PerubahanModalPrint } from "./component/PerubahanModalPrint"
+import { FaPrint } from "react-icons/fa"
 
 const PerubahanModalPage = () => {
     const dataContext = useDataContext()
@@ -12,6 +16,11 @@ const PerubahanModalPage = () => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [perubahanModal, setPerubahanModal] = useState([])
+
+    const perubahanModalRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => perubahanModalRef.current,
+    });
 
     const _getData = () => {
         setIsLoading(true)
@@ -34,8 +43,22 @@ const PerubahanModalPage = () => {
         isLoading={isLoading}
     >
         <div>
-            <PageTitle title="Perubahan Modal" />
-            <div className="h-[65vh] pl-2">
+            <div className="flex justify-between items-center">
+                <PageTitle title="Perubahan Modal" />
+                <div className="hidden">
+                    <PerubahanModalPrint
+                        data={perubahanModal}
+                        ref={perubahanModalRef}
+                    />
+                </div>
+                <button
+                    onClick={handlePrint}
+                    className="btn btn-sm bg-red-600 hover:bg-red-600 mt-2 text-white border-red-600"
+                >
+                    <FaPrint /> Cetak Perubahan Modal
+                </button>
+            </div>
+            <div className="h-[65vh]">
                 <div className="flex flex-col h-full overflow-y-scroll no-scrollbar w-full rounded-md">
                     {
                         perubahanModal.map((item) => {

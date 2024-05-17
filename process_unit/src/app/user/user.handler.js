@@ -12,25 +12,39 @@ export const loginUser = async (req, res) => {
     try {
         let { username, password } = req.body
 
-        if (!req.header("User-Permission") && !req.header("User-Parameters")) {
+        if (getEnv("USER_PERMISSION_SECURITY_ENABLED") && !req.header("User-Permission")) {
+            LOGGER(logType.ERROR, "User-Permission Is Null", {
+                message: "User-Permission Is Null",
+            }, req.identity, req.originalUrl, req.method, false)
             throw Error(JSON.stringify({
                 message: "Akun Tidak Terdaftar",
                 field: "password"
             }))
         }
 
-        let userParameter = JSON.parse(decryptString(req.header("User-Parameters"), getEnv("USER_PARAMETER_KEY")))
+        let userParameter;
 
-        if (userParameter.payload != JSON.stringify(req.body)) {
-            throw Error(JSON.stringify({
-                message: "Akun Tidak Terdaftar",
-                field: "password"
-            }))
+        if (getEnv("USER_PARAMETER_SECURITY_ENABLED")) {
+            userParameter = JSON.parse(decryptString(req.header("User-Parameters"), getEnv("USER_PARAMETER_KEY")))
+            if (userParameter.payload != JSON.stringify(req.body)) {
+                LOGGER(logType.ERROR, "User-Parameters Tidak Sesuai", {
+                    parameterPayload: userParameter.payload,
+                    body: JSON.stringify(req.body)
+                }, req.identity, req.originalUrl, req.method, false)
+                throw Error(JSON.stringify({
+                    message: "Akun Tidak Terdaftar",
+                    field: "password"
+                }))
+            }
         }
 
         let user = await getUserByUsername(username, req.identity)
 
-        if (decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")) != user.mac_address) {
+        if (getEnv("USER_PARAMETER_SECURITY_ENABLED") && decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")) != user.mac_address) {
+            LOGGER(logType.ERROR, "Mac Address Tidak Sesuai", {
+                userReqMacAddr: decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")),
+                userRealMacAddr: decode.macAddr
+            }, req.identity, req.originalUrl, req.method, false)
             throw Error(JSON.stringify({
                 message: "Akun Tidak Terdaftar",
                 field: "password"
@@ -40,19 +54,22 @@ export const loginUser = async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
+            LOGGER(logType.ERROR, "Password Tidak Sesuai", null, req.identity, req.originalUrl, req.method, false)
             throw Error(JSON.stringify({
                 message: "Akun Tidak Terdaftar",
                 field: "password"
             }))
         }
 
-        const reqKey = decryptString(req.header("User-Permission"), user.serial_key)
-
-        if (reqKey != getEnv("LICENSE_KEY")) {
-            throw Error(JSON.stringify({
-                message: "Akun Tidak Terdaftar",
-                field: "password"
-            }))
+        if (getEnv("USER_PERMISSION_SECURITY_ENABLED")) {
+            const reqKey = decryptString(req.header("User-Permission"), user.serial_key)
+            if (reqKey != getEnv("LICENSE_KEY")) {
+                LOGGER(logType.ERROR, "User-Permission Tidak Sesuai Dengan Licence Key", null, req.identity, req.originalUrl, req.method, false)
+                throw Error(JSON.stringify({
+                    message: "Akun Tidak Terdaftar",
+                    field: "password"
+                }))
+            }
         }
 
         const token = jwt.sign({
@@ -87,7 +104,7 @@ export const loginUser = async (req, res) => {
             "userId": "NULL"
         }), req.originalUrl, req.method, false)
         res.status(401).json({
-            message: error.message
+            errorData: error.message
         })
     }
 }

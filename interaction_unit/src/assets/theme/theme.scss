@@ -46,4 +46,16 @@ body {
     scrollbar-width: none;
     /* Firefox */
   }
+
+  @media print {
+    @page {
+      size: landscape;
+      margin-top: 60px;
+    }
+
+    body {
+      background-color: white !important;
+      zoom: .7;
+    }
+  }
 }

@@ -2,7 +2,7 @@ import Wrap from "../../../component/layout/Wrap";
 import { getBulanList, getHariTanggal, statusBulanNow } from "../../../helper/date.helper";
 import JurnalUmumRow from "./component/JurnalUmumRow";
 import { parseToRupiahText } from "../../../helper/number.helper";
-import { FaCheck, FaDownload, FaPlus, FaSearch, FaTimes } from "react-icons/fa";
+import { FaCheck, FaDownload, FaPlus, FaPrint, FaSearch, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import { useEffect } from "react";
 import { apiJurnalUmumCRUD } from "../../../service/endPointList.api";
@@ -13,6 +13,9 @@ import DebetKreditStatusCard from "../../../component/card/DebetKreditStatusCard
 import BulanSelectedListCard from "../../../component/card/BulanSelectedListCard";
 import PageTitle from "../../../component/general/PageTitle";
 import { showAlert, showDialog, showError } from "../../../helper/form.helper";
+import { JurnalUmumPrint } from "./component/JurnalUmumPrint";
+import { useReactToPrint } from "react-to-print"
+import { useRef } from "react";
 
 const JurnalUmumPage = () => {
 
@@ -33,6 +36,10 @@ const JurnalUmumPage = () => {
   })
 
   const [addJurnal, setAddJurnal] = useState(false)
+  const jurnalUmumPrintRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => jurnalUmumPrintRef.current,
+  });
 
   const _getData = (searchParam = "") => {
     setIsLoading(true)
@@ -101,17 +108,6 @@ const JurnalUmumPage = () => {
     }
   }
 
-  const backupJurnal = () => {
-    setIsLoading(true)
-    apiJurnalUmumCRUD
-      .custom(`/bulan/${bulan + 1}/${data.tahun}/bukti_transaksi?print=true`, "GET")
-      .then(() => {
-        setIsLoading(false)
-      }).catch(err => {
-        showError(err)
-      })
-  }
-
   const _editTransaksi = async (buktiTransaksi) => {
     setIsLoading(true)
     setBuktiTransaksiEdit({
@@ -176,6 +172,18 @@ const JurnalUmumPage = () => {
                         kredit={kredit}
                       /> : <></>
                   }
+                  <div className="hidden">
+                    <JurnalUmumPrint
+                      data={jurnalUmum}
+                      ref={jurnalUmumPrintRef}
+                    />
+                  </div>
+                  <button
+                    onClick={handlePrint}
+                    className="btn btn-sm bg-red-600 hover:bg-red-600 text-white mt-2 border-red-600"
+                  >
+                    <FaPrint /> Cetak Jurnal Umum
+                  </button>
                 </div>
                 <div className="col-span-5">
                   <div className="h-[65vh] pl-2">

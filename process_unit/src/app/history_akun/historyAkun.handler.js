@@ -18,7 +18,7 @@ export const getAllHistoryAkunByUUIDAndBulanController = async (req, res) => {
         }
 
         const { bulan, tahun } = value
-        
+
         let { search } = req.query
         search = search ? search.trim() : ""
         const data = await getAllHistoryAkunByUUIDAndBulanService(uuid, bulan, tahun, search, req.identity)
@@ -31,7 +31,7 @@ export const getAllHistoryAkunByUUIDAndBulanController = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }

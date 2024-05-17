@@ -131,6 +131,23 @@ export const getKodeAkunPerkiraanByUuidRepo = async (uuid, req_id) => {
     return kodeAkunPerkiraan
 }
 
+export const getKodeAkunPerkiraanByUuidSudahDigunakanRepo = async (uuid, req_id) => {
+    const jurnalUmumWithKodeAkunByUuid = await db.query(
+        `
+            SELECT 
+                jut.*
+            FROM jurnal_umum_tab jut 
+            WHERE jut.kode_akun_uuid = "${uuid}" 
+            AND jut.enabled = 1 
+            AND jut.client_id = "${JSON.parse(req_id).client_id}"
+            ORDER BY jut.tanggal ASC, jut.bulan ASC, jut.tahun 
+            ASC LIMIT 1
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return jurnalUmumWithKodeAkunByUuid
+}
+
 export const createKodeAkunPerkiraanRepo = async (kodeAkunPerkiraanData, req_id) => {
     const kodeAkunPerkiraan = await KodeAkunPerkiraanModel.create({
         type: kodeAkunPerkiraanData.type,

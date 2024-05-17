@@ -3,12 +3,15 @@ import { useDataContext } from "../../../context/dataContext.context"
 import { apiNeracaCRUD } from "../../../service/endPointList.api"
 import Wrap from "../../../component/layout/Wrap"
 import PageTitle from "../../../component/general/PageTitle"
-import { FaSearch } from "react-icons/fa"
+import { FaPrint, FaSearch } from "react-icons/fa"
 import BulanSelectedListCard from "../../../component/card/BulanSelectedListCard"
 import { useEffect } from "react"
 import RowCard from "../../../component/card/RowCard"
 import AktivaPasivaStatusCard from "../../../component/card/AktivaPasivaStatusCard"
 import { showError } from "../../../helper/form.helper"
+import { NeracaPrint } from "./component/NeracaPrint"
+import { useRef } from "react"
+import { useReactToPrint } from "react-to-print"
 
 const NeracaPage = () => {
 
@@ -19,6 +22,11 @@ const NeracaPage = () => {
     const [bulan, setBulan] = useState(new Date().getMonth())
     const [neraca, setNeraca] = useState([])
     const [validasiStatus, setValidasiStatus] = useState(false)
+
+    const labaRugiPrintRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => labaRugiPrintRef.current,
+    });
 
     const _getData = () => {
         setIsLoading(true)
@@ -99,10 +107,24 @@ const NeracaPage = () => {
                                 pasiva={neraca.neraca.pasiva}
                             /> : <></>
                     }
+
                     <div className={`${validasiStatus.validasi ? "bg-blue-900" : "bg-red-900"} text-white mt-4 rounded-md p-5 shadow-2xl`}>
                         <h1 className="text-md font-bold">Neraca {validasiStatus.validasi ? `Telah Di Validasi` : `Belum Di Validasi`}</h1>
                         <button onClick={_validasiOrUnvalidasiNeraca} className="btn btn-sm mt-2">{validasiStatus.validasi ? `Batalkan Validasi` : `Validasi`}</button>
                     </div>
+
+                    <div className="hidden">
+                        <NeracaPrint
+                            data={neraca}
+                            ref={labaRugiPrintRef}
+                        />
+                    </div>
+                    <button
+                        onClick={handlePrint}
+                        className="btn btn-sm bg-red-600 hover:bg-red-600 mt-2 text-white border-red-600"
+                    >
+                        <FaPrint /> Cetak Neraca
+                    </button>
                 </div>
                 <div className="col-span-5">
                     <div className="h-[65vh] pl-2">

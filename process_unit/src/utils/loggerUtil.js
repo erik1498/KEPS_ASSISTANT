@@ -28,7 +28,7 @@ export const LOGGER = (logType, message, object, req_identity, req_original_url,
         request_detail: req_identity ? JSON.parse(req_identity) : null
     }
 
-    message = JSON.stringify(logger_message, null, 4);
+    message = logType == "error" ? JSON.stringify(logger_message) : JSON.stringify(logger_message, null, 4);
 
     if (logType == "info") {
         pinoLogConfig.info(message)
@@ -52,10 +52,10 @@ export const pinoLogConfig = pino(
                 //     target: "pino-pretty"
                 // },
                 {
-                    // target:"pino/file",
-                    target:"pino-pretty",
+                    target:"pino/file",
+                    // target:"pino-pretty",
                     options: {
-                        destination: `./log/${(date_ob.getDate() < 10 ? "0" + date_ob.getDate() : date_ob.getDate()) + "" + ((date_ob.getMonth() + 1) < 10 ? "0" + (date_ob.getMonth() + 1) : (date_ob.getMonth() + 1)) + "" + date_ob.getFullYear()}.pinoLogConfig`,
+                        destination: `./log/${(date_ob.getDate() < 10 ? "0" + date_ob.getDate() : date_ob.getDate()) + "" + ((date_ob.getMonth() + 1) < 10 ? "0" + (date_ob.getMonth() + 1) : (date_ob.getMonth() + 1)) + "" + date_ob.getFullYear()}.log`,
                         mkdir:true,
                     }
                 }

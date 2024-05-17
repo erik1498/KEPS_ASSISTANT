@@ -8,6 +8,10 @@ import { apiNeracaSaldoR } from "../../../service/endPointList.api"
 import DebetKreditStatusCard from "../../../component/card/DebetKreditStatusCard"
 import { normalizeDataNeracaSaldo } from "../../../helper/neracaSaldo.helper"
 import NeracaSaldoRow from "./component/NeracaSaldoRow"
+import { NeracaSaldoPrint } from "./component/NeracaSaldoPrint"
+import { useReactToPrint } from "react-to-print"
+import { useRef } from "react"
+import { FaPrint } from "react-icons/fa"
 
 const NeracaSaldoPage = () => {
 
@@ -21,7 +25,10 @@ const NeracaSaldoPage = () => {
 
     const [isLoading, setIsLoading] = useState(false)
 
-    const [showChart, setShowChart] = useState(false)
+    const neracaSaldoPrintRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => neracaSaldoPrintRef.current,
+    });
 
     const _getData = () => {
         setIsLoading(true)
@@ -62,6 +69,18 @@ const NeracaSaldoPage = () => {
                         debet={debet}
                         kredit={kredit}
                     />
+                    <div className="hidden">
+                        <NeracaSaldoPrint
+                            data={neracaSaldo}
+                            ref={neracaSaldoPrintRef}
+                        />
+                    </div>
+                    <button
+                        onClick={handlePrint}
+                        className="btn btn-sm bg-red-600 hover:bg-red-600 mt-2 text-white border-red-600"
+                    >
+                        <FaPrint /> Cetak Neraca Saldo
+                    </button>
                 </div>
                 <div className="col-span-5">
                     <div className="h-[65vh] pl-2">

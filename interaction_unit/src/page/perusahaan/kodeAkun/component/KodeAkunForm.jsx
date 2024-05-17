@@ -41,7 +41,7 @@ const KodeAkunForm = ({
                     setAddKodeAkunEvent()
                     getData()
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.message))
+                    formShowMessage(JSON.parse(err.response.data.errorData))
                 })
         }
     }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Wrap from "../../../component/layout/Wrap";
 import PageTitle from "../../../component/general/PageTitle";
-import { FaSearch } from "react-icons/fa";
+import { FaPrint, FaSearch } from "react-icons/fa";
 import BulanSelectedListCard from "../../../component/card/BulanSelectedListCard";
 import { apiLabaRugiR } from "../../../service/endPointList.api";
 import { useDataContext } from "../../../context/dataContext.context";
@@ -10,6 +10,9 @@ import LabaRugiGain from "./component/LabaRugiGain";
 import RowCard from "../../../component/card/RowCard";
 import { getNormalizedLabaKotorRugiKotor } from "../../../helper/labaRugi.helper";
 import { parseRupiahToFloat, parseToRupiahText } from "../../../helper/number.helper";
+import { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
+import { LabaRugiPrint } from "./component/LabaRugiPrint";
 
 const LabaRugiPage = () => {
 
@@ -19,6 +22,11 @@ const LabaRugiPage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [bulan, setBulan] = useState(new Date().getMonth())
     const [labaRugi, setLabaRugi] = useState([])
+
+    const labaRugiPrintRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => labaRugiPrintRef.current,
+    });
 
     const _getData = () => {
         setIsLoading(true)
@@ -54,6 +62,18 @@ const LabaRugiPage = () => {
                     <LabaRugiGain
                         labaRugi={labaRugi}
                     />
+                    <div className="hidden">
+                        <LabaRugiPrint
+                            data={labaRugi}
+                            ref={labaRugiPrintRef}
+                        />
+                    </div>
+                    <button
+                        onClick={handlePrint}
+                        className="btn btn-sm bg-red-600 hover:bg-red-600 mt-2 text-white border-red-600"
+                    >
+                        <FaPrint /> Cetak Laba Rugi
+                    </button>
                 </div>
                 <div className="col-span-5">
                     <div className="h-[65vh] pl-2">

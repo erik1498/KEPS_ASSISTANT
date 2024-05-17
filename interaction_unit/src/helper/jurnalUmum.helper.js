@@ -50,8 +50,8 @@ export const normalizeDataJurnalUmum = (data) => {
                 totalKreditTanggal = 0
             }
 
-            totalDebetTanggal += parseFloat(i.debet)
-            totalKreditTanggal += parseFloat(i.kredit)
+            totalDebetTanggal = getSumOfStringValue([totalDebetTanggal, parseFloat(i.debet)])
+            totalKreditTanggal = getSumOfStringValue([totalKreditTanggal, parseFloat(i.kredit)])
 
             returnData[`${parseInt(tanggal)}`].total = {
                 debet: totalDebetTanggal,

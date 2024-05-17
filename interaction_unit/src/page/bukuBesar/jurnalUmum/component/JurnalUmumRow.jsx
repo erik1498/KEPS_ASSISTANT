@@ -7,9 +7,10 @@ const JurnalUmumRow = ({
     deleteItem = () => { },
     editItem = () => { },
     deleteByBuktiTransaksi = () => { },
-    balanceStatus = true
+    balanceStatus = true,
+    forPrint = false
 }) => {
-    return <div className="flex flex-col w-full bg-white text-[13px] px-3 shadow-md">
+    return <div className={`flex flex-col w-full bg-white text-[13px] px-3 ${forPrint ? '' : 'shadow-md'}`}>
         <div className="grid grid-cols-12 sticky top-0 bg-white py-2 border-b-2">
             <div className="p-2 col-span-9 text-black flex items-end">
                 <div className="text-[28px] font-bold">
@@ -73,7 +74,7 @@ const JurnalUmumRow = ({
                                                 <div className={`col-span-2 text-gray-900 flex flex-col px-2 ${parseRupiahToFloat(item3.kredit) > 0 && item3.uuid != "NERACA" ? "text-right" : ""}`}>
                                                     <p>{item3.kode_akun} - {item3.nama_akun}</p>
                                                 </div>
-                                                <div className="col-span-4 text-gray-900 flex flex-col px-2">
+                                                <div className={`${forPrint ? `col-span-5` : `col-span-4`} text-gray-900 flex flex-col px-2`}>
                                                     <p>{item3.uraian}</p>
                                                 </div>
                                                 <div className="text-right px-2 col-span-2 text-gray-900">
@@ -86,14 +87,21 @@ const JurnalUmumRow = ({
                                                         item3.kredit != "0" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(item3.kredit)}</h1> : <></>
                                                     }
                                                 </div>
-                                                <div className="text-black text-center col-span-1 flex justify-center gap-x-3">
-                                                    {
-                                                        item3.sumber == "JURNAL UMUM" && balanceStatus ?
-                                                            <FaTrash size={9} onClick={() => deleteItem(item3.uuid)} className="w-max mt-1 text-red-500 cursor-pointer" />
-                                                            :
-                                                            <></>
-                                                    }
-                                                </div>
+                                                {
+                                                    !forPrint ? <>
+                                                        <div className="text-black text-center col-span-1 flex justify-center gap-x-3">
+                                                            {
+                                                                item3.sumber == "JURNAL UMUM" && balanceStatus ?
+                                                                    <FaTrash size={9} onClick={() => deleteItem(item3.uuid)} className="w-max mt-1 text-red-500 cursor-pointer" />
+                                                                    :
+                                                                    <></>
+                                                            }
+                                                        </div>
+                                                    </>
+                                                        :
+                                                        <>
+                                                        </>
+                                                }
                                             </div> : <></>
                                     }
                                     {
@@ -104,18 +112,24 @@ const JurnalUmumRow = ({
                                                     <div className="col-span-1 px-2 text-black text-center font-bold flex justify-center items-center gap-x-5">
                                                         {
                                                             item1.sumber == "JURNAL UMUM" && balanceStatus ? <>
-                                                                <div className="flex justify-center items-center gap-x-2 pl-3 cursor-pointer" onClick={() => editItem(item1)} >
-                                                                    <FaPen size={9} className="w-max h-full text-yellow-500" />
-                                                                    <h1 className="font-bold text-yellow-500">Edit</h1>
-                                                                </div>
-                                                                <div className="flex justify-center items-center gap-x-2 cursor-pointer" onClick={() => deleteByBuktiTransaksi(item1.bukti_transaksi)}>
-                                                                    <FaTrash size={9} className="w-max h-full text-red-500" />
-                                                                    <h1 className="font-bold text-red-500">Hapus</h1>
-                                                                </div>
+                                                                {
+                                                                    forPrint ? <></>
+                                                                        :
+                                                                        <>
+                                                                            <div className="flex justify-center items-center gap-x-2 pl-3 cursor-pointer" onClick={() => editItem(item1)} >
+                                                                                <FaPen size={9} className="w-max h-full text-yellow-500" />
+                                                                                <h1 className="font-bold text-yellow-500">Edit</h1>
+                                                                            </div>
+                                                                            <div className="flex justify-center items-center gap-x-2 cursor-pointer" onClick={() => deleteByBuktiTransaksi(item1.bukti_transaksi)}>
+                                                                                <FaTrash size={9} className="w-max h-full text-red-500" />
+                                                                                <h1 className="font-bold text-red-500">Hapus</h1>
+                                                                            </div>
+                                                                        </>
+                                                                }
                                                             </> : <></>
                                                         }
                                                     </div>
-                                                    <div className="col-span-6"></div>
+                                                    <div className={`${forPrint ? 'col-span-7' : 'col-span-6'}`}></div>
                                                     <div className="text-right px-2 col-span-2 text-gray-900">
                                                         <h1 className=" text-green-900 font-bold">{parseToRupiahText(item1.debet)}</h1>
                                                     </div>

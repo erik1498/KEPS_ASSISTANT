@@ -50,7 +50,11 @@ export const getNeracaSaldoReport = (data) => {
                 kredit: parseFloat(data[i].sum_result) < 0 ? Math.abs(data[i].sum_result) : 0,
             })
         }
-        res(result)
+        res(result.sort((a, b) => {
+            const key = "kode_akun_perkiraan_code";
+            const x = a[key]; const y = b[key];
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        }))
     })
 }
 

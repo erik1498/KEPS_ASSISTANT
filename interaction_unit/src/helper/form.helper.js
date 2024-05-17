@@ -63,11 +63,11 @@ export const showError = (error) => {
 
 
     const titleH1 = document.createElement("h1")
-    titleH1.className = "text-8xl font-bold"
-    titleH1.innerHTML = `Oppss..!!!`
+    titleH1.className = "text-4xl font-bold text-red-800"
+    titleH1.innerHTML = `Peringatan...!!!`
 
     const messageError = document.createElement("p")
-    messageError.className = "text-2xl ml-2"
+    messageError.className = "text-2xl"
     messageError.innerHTML = errorMessage.message
 
     const buttonClose = document.createElement("button")

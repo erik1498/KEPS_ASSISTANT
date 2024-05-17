@@ -1,7 +1,8 @@
 import { AKUN_TIDAK_BOLEH_DIUPDATE } from "../../constant/akuntansiConstant.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getBulanText } from "../../utils/mathUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createKodeAkunPerkiraanRepo, deleteKodeAkunPerkiraanByUuidRepo, getAllKodeAkunPerkiraanBankRepo, getAllKodeAkunPerkiraanByCodeListRepo, getAllKodeAkunPerkiraanKasRepo, getAllKodeAkunPerkiraanNoBankRepo, getAllKodeAkunPerkiraanNoKasRepo, getAllKodeAkunPerkiraanRepo, getKodeAkunPerkiraanByCodeRepo, getKodeAkunPerkiraanByTypeRepo, getKodeAkunPerkiraanByUuidRepo, getKodeAkunPerkiraanExceptTypeRepo, updateKodeAkunPerkiraanByUuidRepo } from "./kodeAkunPerkiraan.repository.js"
+import { createKodeAkunPerkiraanRepo, deleteKodeAkunPerkiraanByUuidRepo, getAllKodeAkunPerkiraanBankRepo, getAllKodeAkunPerkiraanByCodeListRepo, getAllKodeAkunPerkiraanKasRepo, getAllKodeAkunPerkiraanNoBankRepo, getAllKodeAkunPerkiraanNoKasRepo, getAllKodeAkunPerkiraanRepo, getKodeAkunPerkiraanByCodeRepo, getKodeAkunPerkiraanByTypeRepo, getKodeAkunPerkiraanByUuidRepo, getKodeAkunPerkiraanByUuidSudahDigunakanRepo, getKodeAkunPerkiraanExceptTypeRepo, updateKodeAkunPerkiraanByUuidRepo } from "./kodeAkunPerkiraan.repository.js"
 
 export const getAllKodeAkunPerkiraanService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllKodeAkunPerkiraanService", null, req_identity)
@@ -125,8 +126,27 @@ export const createKodeAkunPerkiraanService = async (kodeAkunPerkiraanData, req_
     return kodeAkunPerkiraan
 }
 
+export const getKodeAkunPerkiraanByUuidSudahDigunakanService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getKodeAkunPerkiraanByUuidSudahDigunakanService [${uuid}]`, null, req_identity)
+    const kodeAkunPerkiraan = await getKodeAkunPerkiraanByUuidSudahDigunakanRepo(uuid, req_identity)
+
+    if (!kodeAkunPerkiraan) {
+        throw Error("data not found")
+    }
+    return kodeAkunPerkiraan
+}
+
 export const deleteKodeAkunPerkiraanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteKodeAkunPerkiraanByUuidService [${uuid}]`, null, req_identity)
+
+    const kodeAkunSudahDigunakan = await getKodeAkunPerkiraanByUuidSudahDigunakanService(uuid, req_identity);
+
+    if (kodeAkunSudahDigunakan.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Kode Akun Sudah Digunakan pada ${kodeAkunSudahDigunakan[0].tanggal} ${getBulanText(parseInt(kodeAkunSudahDigunakan[0].bulan) - 1)} ${kodeAkunSudahDigunakan[0].tahun} dengan bukti transaksi ${kodeAkunSudahDigunakan[0].bukti_transaksi}`,
+            field: "kodeAkun"
+        }))
+    }
 
     const beforeData = await getKodeAkunPerkiraanByUuidService(uuid, req_identity)
 
@@ -138,7 +158,7 @@ export const deleteKodeAkunPerkiraanByUuidService = async (uuid, req_identity) =
     }
 
     await deleteKodeAkunPerkiraanByUuidRepo(uuid, req_identity)
-    
+
     return true
 }
 

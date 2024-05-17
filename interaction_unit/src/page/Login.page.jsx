@@ -36,8 +36,8 @@ const LoginPage = () => {
                     setCookie("login", "true")
                     navigate("/dashboard")
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.message))
-                    // setIsLoading(false)
+                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    setIsLoading(false)
                 })
         }
     }

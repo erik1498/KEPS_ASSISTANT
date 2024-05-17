@@ -22,6 +22,8 @@ app.use(express.json())
 
 const whitelist = JSON.parse(getEnv("CLIENT_HOST"))
 
+LOGGER(logType.INFO, "ALLOWED CLIENT", whitelist);
+
 app.use(cors({
     credentials: true,
     origin: function (origin, callback) {

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import Wrap from "../../../component/layout/Wrap"
 import { getBulanList } from "../../../helper/date.helper"
-import { FaSearch, FaTimes } from "react-icons/fa"
+import { FaPrint, FaSearch, FaTimes } from "react-icons/fa"
 import { useDataContext } from "../../../context/dataContext.context"
 import FormSelect from "../../../component/form/FormSelect"
 import { apiHistoryAkunR } from "../../../service/endPointList.api"
@@ -11,6 +11,9 @@ import BulanSelectedListCard from "../../../component/card/BulanSelectedListCard
 import HistoryAkunRow from "./component/HistoryAkunRow"
 import { initialKodeAkunValue } from "../../../helper/select.helper"
 import PageTitle from "../../../component/general/PageTitle"
+import { HistoryAkunPrint } from "./component/HistoryAkunPrint"
+import { useRef } from "react"
+import { useReactToPrint } from "react-to-print"
 
 const HistoryAkunPage = () => {
 
@@ -22,6 +25,11 @@ const HistoryAkunPage = () => {
     const [balanceStatus, setBalanceStatus] = useState(true)
     const [historyAkun, setHistoryAkun] = useState([])
     const [kodeAkun, setKodeAkun] = useState(initialKodeAkunValue())
+
+    const historyAkunPrintRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => historyAkunPrintRef.current,
+    });
 
     const [isLoading, setIsLoading] = useState(false)
 
@@ -88,6 +96,19 @@ const HistoryAkunPage = () => {
                             bulan={bulan}
                             setBulan={setBulan}
                         />
+                        <div className="hidden">
+                            <HistoryAkunPrint
+                                data={historyAkun}
+                                balanceStatus={balanceStatus}
+                                ref={historyAkunPrintRef}
+                            />
+                        </div>
+                        <button
+                            onClick={handlePrint}
+                            className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
+                        >
+                            <FaPrint /> Cetak History Akun
+                        </button>
                     </div>
                     <div className="col-span-5">
                         <div className="h-[65vh] pl-2">

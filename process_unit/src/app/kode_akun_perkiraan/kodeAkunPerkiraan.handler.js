@@ -15,7 +15,7 @@ export const getAllKodeAkunPerkiraans = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -32,7 +32,7 @@ export const getKodeAkunPerkiraansByCodeList = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -50,7 +50,7 @@ export const getAllKodeAkunPerkiraanKas = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -68,7 +68,7 @@ export const getAllKodeAkunPerkiraanNoKas = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -86,7 +86,7 @@ export const getAllKodeAkunPerkiraanBank = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -104,7 +104,7 @@ export const getAllKodeAkunPerkiraanNoBank = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -122,7 +122,7 @@ export const getAllKodeAkunPerkiraanByType = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -140,7 +140,7 @@ export const getAllKodeAkunPerkiraanExceptType = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -158,7 +158,7 @@ export const getKodeAkunPerkiraanByUUID = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -184,7 +184,7 @@ export const postCreateKodeAkunPerkiraan = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -202,7 +202,7 @@ export const deleteKodeAkunPerkiraanByUUID = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -226,7 +226,7 @@ export const updateKodeAkunPerkiraanByUUID = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
