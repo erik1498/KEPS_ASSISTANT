@@ -139,6 +139,8 @@ export const getKodeAkunPerkiraanByUuidSudahDigunakanRepo = async (uuid, req_id)
             FROM jurnal_umum_tab jut 
             WHERE jut.kode_akun_uuid = "${uuid}" 
             AND jut.enabled = 1 
+            AND jut.bulan < "${new Date().getMonth()}"
+            AND jut.tahun <= "${new Date().getFullYear()}"
             AND jut.client_id = "${JSON.parse(req_id).client_id}"
             ORDER BY jut.tanggal ASC, jut.bulan ASC, jut.tahun 
             ASC LIMIT 1

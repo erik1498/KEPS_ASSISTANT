@@ -48,12 +48,11 @@ export const pinoLogConfig = pino(
         timestamp: () => `, "time":"${moment().format()}"`,
         transport: {
             targets: [
-                // {
-                //     target: "pino-pretty"
-                // },
+                {
+                    target: "pino-pretty"
+                },
                 {
                     target:"pino/file",
-                    // target:"pino-pretty",
                     options: {
                         destination: `./log/${(date_ob.getDate() < 10 ? "0" + date_ob.getDate() : date_ob.getDate()) + "" + ((date_ob.getMonth() + 1) < 10 ? "0" + (date_ob.getMonth() + 1) : (date_ob.getMonth() + 1)) + "" + date_ob.getFullYear()}.log`,
                         mkdir:true,

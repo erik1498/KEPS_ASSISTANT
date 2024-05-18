@@ -130,6 +130,7 @@ export const getKodeAkunPerkiraanByUuidSudahDigunakanService = async (uuid, req_
     LOGGER(logType.INFO, `Start getKodeAkunPerkiraanByUuidSudahDigunakanService [${uuid}]`, null, req_identity)
     const kodeAkunPerkiraan = await getKodeAkunPerkiraanByUuidSudahDigunakanRepo(uuid, req_identity)
 
+    LOGGER(logType.INFO, `getKodeAkunPerkiraanByUuidSudahDigunakanRepo [${uuid}]`, kodeAkunPerkiraan, req_identity)
     if (!kodeAkunPerkiraan) {
         throw Error("data not found")
     }
@@ -164,6 +165,15 @@ export const deleteKodeAkunPerkiraanByUuidService = async (uuid, req_identity) =
 
 export const updateKodeAkunPerkiraanByUuidService = async (uuid, kodeAkunPerkiraanData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateKodeAkunPerkiraanByUuidService [${uuid}]`, kodeAkunPerkiraanData, req_identity)
+
+    const kodeAkunSudahDigunakan = await getKodeAkunPerkiraanByUuidSudahDigunakanService(uuid, req_identity);
+
+    if (kodeAkunSudahDigunakan.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Kode Akun Sudah Digunakan pada ${kodeAkunSudahDigunakan[0].tanggal} ${getBulanText(parseInt(kodeAkunSudahDigunakan[0].bulan) - 1)} ${kodeAkunSudahDigunakan[0].tahun} dengan bukti transaksi ${kodeAkunSudahDigunakan[0].bukti_transaksi}`,
+            field: "kodeAkun"
+        }))
+    }
 
     const beforeData = await getKodeAkunPerkiraanByUuidService(uuid, req_identity)
 
