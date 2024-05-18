@@ -78,14 +78,14 @@ export const loginUser = async (req, res) => {
             userKey: user.serial_key,
             macAddr: user.mac_address
         }, getEnv("JWT_SECRET"), {
-            expiresIn: '30s',
+            expiresIn: '1m',
         });
 
         const refreshToken = jwt.sign({
             userId: user.uuid,
             userKey: user.serial_key
         }, getEnv("REFRESH_SECRET"), {
-            expiresIn: '1w'
+            expiresIn: '1d'
         });
 
         const tokenExpired = getExpiredTimeFromToken(token)
@@ -152,14 +152,14 @@ export const refreshToken = async (req, res) => {
             userKey: user.serial_key,
             macAddr: user.mac_address
         }, getEnv("JWT_SECRET"), {
-            expiresIn: '30s',
+            expiresIn: '1m',
         });
 
         const refreshToken = jwt.sign({
             userId: user.uuid,
             userKey: user.serial_key
         }, getEnv("REFRESH_SECRET"), {
-            expiresIn: '1w'
+            expiresIn: '1d'
         });
 
         const tokenExpired = getExpiredTimeFromToken(token)
