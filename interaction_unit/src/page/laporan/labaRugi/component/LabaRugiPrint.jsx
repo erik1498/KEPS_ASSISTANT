@@ -10,8 +10,8 @@ export const LabaRugiPrint = React.forwardRef((props, ref) => {
             ref={ref}
         >
             <div className="px-3 mb-4">
-                <h1 className="text-6xl font-bold">Laba Rugi</h1>
                 <h1 className="text-2xl font-bold">{props.bulan} {props.tahun}</h1>
+                <h1 className="text-6xl font-bold">Laba Rugi</h1>
             </div>
             <LabaRugiGain
                 labaRugi={props.labaRugi}

@@ -7,8 +7,8 @@ export const PerubahanModalPrint = React.forwardRef((props, ref) => {
             ref={ref}
         >
             <div className="px-3 mb-10">
-                <h1 className="text-6xl font-bold">Perubahan Modal</h1>
                 <h1 className="text-2xl font-bold">{props.tahun}</h1>
+                <h1 className="text-6xl font-bold">Perubahan Modal</h1>
             </div>
             {
                 props.data.map((item) => {

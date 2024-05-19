@@ -8,8 +8,8 @@ export const NeracaSaldoPrint = React.forwardRef((props, ref) => {
             ref={ref}
         >
             <div className="px-3 mb-10">
-                <h1 className="text-6xl font-bold">Neraca Saldo</h1>
                 <h1 className="text-2xl font-bold">{props.bulan} {props.tahun}</h1>
+                <h1 className="text-6xl font-bold">Neraca Saldo</h1>
             </div>
 
             <DebetKreditStatusCard
