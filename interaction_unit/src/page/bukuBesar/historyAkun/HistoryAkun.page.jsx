@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Wrap from "../../../component/layout/Wrap"
-import { getBulanList } from "../../../helper/date.helper"
+import { getBulanByIndex, getBulanList } from "../../../helper/date.helper"
 import { FaPrint, FaSearch, FaTimes } from "react-icons/fa"
 import { useDataContext } from "../../../context/dataContext.context"
 import FormSelect from "../../../component/form/FormSelect"
@@ -101,6 +101,9 @@ const HistoryAkunPage = () => {
                                 data={historyAkun}
                                 balanceStatus={balanceStatus}
                                 ref={historyAkunPrintRef}
+                                tahun={data.tahun}
+                                bulan={getBulanByIndex(bulan)}
+                                kode_akun_perkiraan={kodeAkun.label}
                             />
                         </div>
                         <button

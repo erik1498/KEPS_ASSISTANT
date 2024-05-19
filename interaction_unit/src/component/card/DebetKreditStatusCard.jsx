@@ -3,11 +3,12 @@ import { parseToRupiahText } from "../../helper/number.helper"
 
 const DebetKreditStatusCard = ({
     debet,
-    kredit
+    kredit,
+    forPrint
 }) => {
     return <>
         <div>
-            <div className="stats py-4 stats-vertical rounded-md rounded-b-none shadow-2xl bg-white text-gray-900 w-full">
+            <div className={`stats py-4 ${forPrint ? 'stats-horizontal' : 'stats-vertical shadow-2xl'} rounded-md rounded-b-none bg-white text-gray-900 w-full`}>
 
                 <div className="stat py-3">
                     <div className="stat-title text-gray-900 font-bold">Debet</div>
@@ -26,14 +27,16 @@ const DebetKreditStatusCard = ({
 
             </div>
 
-            <div className="mt-3">
-                {
-                    debet == kredit ?
-                        <div className="text-sm text-white font-bold bg-green-900 py-2 -mt-3 flex items-center justify-center rounded-md rounded-t-none"><FaCheck className="mr-2" /> Seimbang</div>
-                        :
-                        <div className="text-sm text-white font-bold bg-red-900 py-2 -mt-3 flex items-center justify-center rounded-md rounded-t-none"><FaTimes className="mr-2" /> Tidak Seimbang</div>
-                }
-            </div>
+            {
+                !forPrint && <div className="mt-3">
+                    {
+                        debet == kredit ?
+                            <div className="text-sm text-white font-bold bg-green-900 py-2 -mt-3 flex items-center justify-center rounded-md rounded-t-none"><FaCheck className="mr-2" /> Seimbang</div>
+                            :
+                            <div className="text-sm text-white font-bold bg-red-900 py-2 -mt-3 flex items-center justify-center rounded-md rounded-t-none"><FaTimes className="mr-2" /> Tidak Seimbang</div>
+                    }
+                </div>
+            }
         </div>
     </>
 

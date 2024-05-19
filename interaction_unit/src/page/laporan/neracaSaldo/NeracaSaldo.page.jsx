@@ -12,6 +12,7 @@ import { NeracaSaldoPrint } from "./component/NeracaSaldoPrint"
 import { useReactToPrint } from "react-to-print"
 import { useRef } from "react"
 import { FaPrint } from "react-icons/fa"
+import { getBulanByIndex } from "../../../helper/date.helper"
 
 const NeracaSaldoPage = () => {
 
@@ -73,6 +74,10 @@ const NeracaSaldoPage = () => {
                         <NeracaSaldoPrint
                             data={neracaSaldo}
                             ref={neracaSaldoPrintRef}
+                            bulan={getBulanByIndex(bulan)}
+                            tahun={data.tahun}
+                            debet={debet}
+                            kredit={kredit}
                         />
                     </div>
                     <button

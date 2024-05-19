@@ -3,11 +3,12 @@ import { parseRupiahToFloat, parseToRupiahText } from "../../helper/number.helpe
 
 const AktivaPasivaStatusCard = ({
     aktiva,
-    pasiva
+    pasiva,
+    forPrint
 }) => {
     return <>
         <div>
-            <div className="stats py-4 stats-vertical rounded-md rounded-b-none shadow-2xl bg-white text-gray-900 w-full">
+            <div className={`stats py-4 rounded-md rounded-b-none ${forPrint ? 'stats-horizontal' : 'shadow-2xl stats-vertical'} bg-white text-gray-900 w-full`}>
 
                 <div className="stat">
                     <div className="stat-title text-gray-900 font-bold">Aktiva</div>
@@ -26,14 +27,16 @@ const AktivaPasivaStatusCard = ({
 
             </div>
 
-            <div className="mt-3">
-                {
-                    parseRupiahToFloat(aktiva) == parseRupiahToFloat(pasiva) ?
-                        <div className="text-sm text-white font-bold bg-green-900 py-2 -mt-3 flex items-center justify-center rounded-md rounded-t-none"><FaCheck className="mr-2" /> Seimbang</div>
-                        :
-                        <div className="text-sm text-white font-bold bg-red-900 py-2 -mt-3 flex items-center justify-center rounded-md rounded-t-none"><FaTimes className="mr-2" /> Tidak Seimbang</div>
-                }
-            </div>
+            {
+                !forPrint && <div className="mt-3">
+                    {
+                        parseRupiahToFloat(aktiva) == parseRupiahToFloat(pasiva) ?
+                            <div className="text-sm text-white font-bold bg-green-900 py-2 -mt-3 flex items-center justify-center rounded-md rounded-t-none"><FaCheck className="mr-2" /> Seimbang</div>
+                            :
+                            <div className="text-sm text-white font-bold bg-red-900 py-2 -mt-3 flex items-center justify-center rounded-md rounded-t-none"><FaTimes className="mr-2" /> Tidak Seimbang</div>
+                    }
+                </div>
+            }
         </div>
     </>
 

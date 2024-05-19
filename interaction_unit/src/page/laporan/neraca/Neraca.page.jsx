@@ -12,6 +12,7 @@ import { showError } from "../../../helper/form.helper"
 import { NeracaPrint } from "./component/NeracaPrint"
 import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
+import { getBulanByIndex } from "../../../helper/date.helper"
 
 const NeracaPage = () => {
 
@@ -117,6 +118,8 @@ const NeracaPage = () => {
                         <NeracaPrint
                             data={neraca}
                             ref={labaRugiPrintRef}
+                            bulan={getBulanByIndex(bulan)}
+                            tahun={data.tahun}
                         />
                     </div>
                     <button

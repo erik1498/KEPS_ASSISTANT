@@ -49,6 +49,7 @@ const PerubahanModalPage = () => {
                     <PerubahanModalPrint
                         data={perubahanModal}
                         ref={perubahanModalRef}
+                        tahun={data.tahun}
                     />
                 </div>
                 <button

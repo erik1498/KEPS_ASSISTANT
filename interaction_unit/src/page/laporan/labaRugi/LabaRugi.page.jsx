@@ -13,6 +13,7 @@ import { parseRupiahToFloat, parseToRupiahText } from "../../../helper/number.he
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { LabaRugiPrint } from "./component/LabaRugiPrint";
+import { getBulanByIndex } from "../../../helper/date.helper";
 
 const LabaRugiPage = () => {
 
@@ -66,6 +67,9 @@ const LabaRugiPage = () => {
                         <LabaRugiPrint
                             data={labaRugi}
                             ref={labaRugiPrintRef}
+                            bulan={getBulanByIndex(bulan)}
+                            tahun={data.tahun}
+                            labaRugi={labaRugi}
                         />
                     </div>
                     <button

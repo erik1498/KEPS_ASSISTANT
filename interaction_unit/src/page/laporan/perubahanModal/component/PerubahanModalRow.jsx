@@ -2,10 +2,11 @@ const PerubahanModalRow = ({
     dataList,
     title,
     totalTitle,
-    addingContent
+    addingContent,
+    forPrint
 }) => {
     return <>
-        <div className="flex flex-col w-full bg-white text-sm px-3 shadow-md">
+        <div className={`flex flex-col w-full bg-white text-sm px-3 ${forPrint ? '' : 'shadow-md'}`}>
             {
                 dataList.data.plus.length > 0 ? <div className="grid grid-cols-12 sticky top-0 bg-white py-2 border-b-2">
                     <div className="p-2 col-span-9 text-black flex items-end">

@@ -1,5 +1,5 @@
 import Wrap from "../../../component/layout/Wrap";
-import { getBulanList, getHariTanggal, statusBulanNow } from "../../../helper/date.helper";
+import { getBulanByIndex, getBulanList, getHariTanggal, statusBulanNow } from "../../../helper/date.helper";
 import JurnalUmumRow from "./component/JurnalUmumRow";
 import { parseToRupiahText } from "../../../helper/number.helper";
 import { FaCheck, FaDownload, FaPlus, FaPrint, FaSearch, FaTimes } from "react-icons/fa";
@@ -175,6 +175,10 @@ const JurnalUmumPage = () => {
                   <div className="hidden">
                     <JurnalUmumPrint
                       data={jurnalUmum}
+                      debet={debet}
+                      kredit={kredit}
+                      tahun={data.tahun}
+                      bulan={getBulanByIndex(bulan)}
                       ref={jurnalUmumPrintRef}
                     />
                   </div>
