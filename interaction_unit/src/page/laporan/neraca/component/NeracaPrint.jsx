@@ -12,8 +12,8 @@ export const NeracaPrint = React.forwardRef((props, ref) => {
                 <h1 className="text-6xl font-bold">Neraca</h1>
             </div>
             <AktivaPasivaStatusCard
-                aktiva={props.data.neraca.aktiva}
-                pasiva={props.data.neraca.pasiva}
+                aktiva={props?.data?.neraca?.aktiva}
+                pasiva={props?.data?.neraca?.pasiva}
                 forPrint={true}
             />
             {
