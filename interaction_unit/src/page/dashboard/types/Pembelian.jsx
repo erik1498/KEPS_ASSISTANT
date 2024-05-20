@@ -58,7 +58,7 @@ const Pembelian = () => {
                     .custom(`/bulan/${bulanIdx + 1}/${data.tahun}/bukti_transaksi`, "GET")
                     .then(async (resData) => {
                         let dataCopy = data
-                        dataCopy.dashboard.pembelian[bulanIdx] = resData?.data?.filter(i => i.kode_akun == "701")
+                        dataCopy.dashboard.pembelian[bulanIdx] = resData?.data?.filter(i => i.kode_akun == "702")
                         setData(dataCopy)
                         setLoadNormalized(!loadNormalized)
                     })
