@@ -43,9 +43,9 @@ export const authTokenMiddleware = (roles) => {
                 });
             }
 
-            if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true" && decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")) != decode.macAddr) {
+            if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true" && userParameter.macAddr != decode.macAddr) {
                 LOGGER(logType.ERROR, "Mac Address Tidak Sesuai", {
-                    userReqMacAddr: decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")),
+                    userReqMacAddr: userParameter.macAddr,
                     userRealMacAddr: decode.macAddr
                 }, req.identity, req.originalUrl, req.method, false)
                 return res.status(401).json({

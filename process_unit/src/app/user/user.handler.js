@@ -40,10 +40,25 @@ export const loginUser = async (req, res) => {
 
         let user = await getUserByUsername(username, req.identity)
 
-        if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true" && decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")) != user.mac_address) {
+        if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true" && userParameter.macAddr != user.mac_address) {
             LOGGER(logType.ERROR, "Mac Address Tidak Sesuai", {
-                userReqMacAddr: decryptString(userParameter.macAddr, getEnv("MAC_PARAMETER_KEY")),
-                userRealMacAddr: decode.macAddr
+                userReqMacAddr: userParameter.macAddr,
+                userRealMacAddr: user.mac_address
+            }, req.identity, req.originalUrl, req.method, false)
+            throw Error(JSON.stringify({
+                message: "Akun Tidak Terdaftar",
+                field: "password"
+            }))
+        }
+
+        if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true" && JSON.stringify(userParameter.osInfo) != user.os_info) {
+            console.log({
+                req: JSON.stringify(userParameter.osInfo),
+                usr: user.os_info
+            })
+            LOGGER(logType.ERROR, "User OS Info Tidak Sesuai", {
+                osInfoUser: JSON.stringify(userParameter.osInfo),
+                osInfoReal: user.os_info
             }, req.identity, req.originalUrl, req.method, false)
             throw Error(JSON.stringify({
                 message: "Akun Tidak Terdaftar",
@@ -78,14 +93,14 @@ export const loginUser = async (req, res) => {
             userKey: user.serial_key,
             macAddr: user.mac_address
         }, getEnv("JWT_SECRET"), {
-            expiresIn: '1m',
+            expiresIn: '30s',
         });
 
         const refreshToken = jwt.sign({
             userId: user.uuid,
             userKey: user.serial_key
         }, getEnv("REFRESH_SECRET"), {
-            expiresIn: '1d'
+            expiresIn: '1w'
         });
 
         const tokenExpired = getExpiredTimeFromToken(token)
@@ -152,14 +167,14 @@ export const refreshToken = async (req, res) => {
             userKey: user.serial_key,
             macAddr: user.mac_address
         }, getEnv("JWT_SECRET"), {
-            expiresIn: '1m',
+            expiresIn: '30s',
         });
 
         const refreshToken = jwt.sign({
             userId: user.uuid,
             userKey: user.serial_key
         }, getEnv("REFRESH_SECRET"), {
-            expiresIn: '1d'
+            expiresIn: '1w'
         });
 
         const tokenExpired = getExpiredTimeFromToken(token)

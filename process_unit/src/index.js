@@ -40,6 +40,14 @@ const PORT = getEnv("PORT")
 await connectDatabase();
 
 app.use((req, res, next) => {
+    if (!req.header("Client_id")) {
+        return res.status(401).json({
+            errorData: JSON.stringify({
+                message: "Akun Tidak Terdaftar",
+                field: "password"
+            })
+        })
+    }
     let genUUID = v4()
     req.identity = JSON.stringify({
         "id": genUUID,

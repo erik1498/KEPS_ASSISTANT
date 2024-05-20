@@ -28,7 +28,7 @@ export const LOGGER = (logType, message, object, req_identity, req_original_url,
         request_detail: req_identity ? JSON.parse(req_identity) : null
     }
 
-    message = logType == "error" ? JSON.stringify(logger_message) : JSON.stringify(logger_message, null, 4);
+    message = JSON.stringify(logger_message, null, 4);
 
     if (logType == "info") {
         pinoLogConfig.info(message)

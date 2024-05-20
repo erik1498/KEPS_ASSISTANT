@@ -55,6 +55,13 @@ const UserModel = db.define("user_tab",
                 notEmpty: true,
             }
         },
+        os_info: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
         client_id:{
             type: DataTypes.STRING,
             allowNull: false,
