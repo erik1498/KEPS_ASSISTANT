@@ -21,10 +21,12 @@ services:
       context: ./process_unit
       args:
         - DB_HOST=172.30.0.2
-        - CLIENT_HOST=["http://127.0.0.1:2002"]
-        - USER_PERMISSION_SECURITY_ENABLED="false"
-        - USER_PARAMETER_SECURITY_ENABLED="false"
+        - CLIENT_HOST=["http://localhost:5173"]
+        - USER_PERMISSION_SECURITY_ENABLED="true"
+        - USER_PARAMETER_SECURITY_ENABLED="true"
     container_name: keps_assistant_process
+    environment:
+      - TZ=Asia/Makassar
     ports:
       - "2001:2001"
     volumes:
@@ -38,9 +40,10 @@ services:
       context: ./interaction_unit
     container_name: keps_assistant_interaction
     ports:
-      - "2002:5173"
+      - "5173:5173"
     environment:
-      - VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT=http://127.0.0.1:2001
+      - VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT=http://localhost:2001
+      - TZ=Asia/Makassar
     networks:
       keps_network:
         ipv4_address: 172.30.0.4

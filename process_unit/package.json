@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/index.js"
+    "start": "pm2-runtime start ./src/index.js -i max -n keps_api",
+    "stop": "pm2 stop keps_api",
+    "restart": "pm2 restart keps_api",
+    "delete": "pm2 delete keps_api"
   },
   "keywords": [],
   "author": "",
