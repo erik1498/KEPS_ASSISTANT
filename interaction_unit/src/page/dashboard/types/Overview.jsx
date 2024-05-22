@@ -93,8 +93,8 @@ const Overview = () => {
                         dataPerTanggal.kredit[dataPerTanggal.tanggal.length - 1] = parseFloat(j.kredit)
                     }
                     else {
-                        dataPerTanggal.debet[indexOfTanggal] += parseFloat(j.debet)
-                        dataPerTanggal.kredit[indexOfTanggal] += parseFloat(j.kredit)
+                        dataPerTanggal.debet[indexOfTanggal] = getSumOfStringValue([dataPerTanggal.debet[indexOfTanggal], parseFloat(j.debet)])
+                        dataPerTanggal.kredit[indexOfTanggal] = getSumOfStringValue([dataPerTanggal.kredit[indexOfTanggal], parseFloat(j.kredit)])
                     }
                 })
 
