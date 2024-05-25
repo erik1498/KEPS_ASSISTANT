@@ -52,10 +52,6 @@ export const loginUser = async (req, res) => {
         }
 
         if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true" && JSON.stringify(userParameter.osInfo) != user.os_info) {
-            console.log({
-                req: JSON.stringify(userParameter.osInfo),
-                usr: user.os_info
-            })
             LOGGER(logType.ERROR, "User OS Info Tidak Sesuai", {
                 osInfoUser: JSON.stringify(userParameter.osInfo),
                 osInfoReal: user.os_info
