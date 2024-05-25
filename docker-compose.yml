@@ -22,8 +22,8 @@ services:
       args:
         - DB_HOST=172.30.0.2
         - CLIENT_HOST=["http://localhost:5173"]
-        - USER_PERMISSION_SECURITY_ENABLED="true"
-        - USER_PARAMETER_SECURITY_ENABLED="true"
+        - USER_PERMISSION_SECURITY_ENABLED=true
+        - USER_PARAMETER_SECURITY_ENABLED=true
     container_name: keps_assistant_process
     environment:
       - TZ=Asia/Makassar

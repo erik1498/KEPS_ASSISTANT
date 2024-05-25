@@ -96,7 +96,7 @@ export const loginUser = async (req, res) => {
             userId: user.uuid,
             userKey: user.serial_key
         }, getEnv("REFRESH_SECRET"), {
-            expiresIn: '1w'
+            expiresIn: '1h'
         });
 
         const tokenExpired = getExpiredTimeFromToken(token)
@@ -170,7 +170,7 @@ export const refreshToken = async (req, res) => {
             userId: user.uuid,
             userKey: user.serial_key
         }, getEnv("REFRESH_SECRET"), {
-            expiresIn: '1w'
+            expiresIn: '1h'
         });
 
         const tokenExpired = getExpiredTimeFromToken(token)
