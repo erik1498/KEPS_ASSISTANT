@@ -1,5 +1,5 @@
 import { getEnv } from "../../utils/envUtils.js"
-import { LOGGER, logType } from "../../utils/loggerUtil.js"
+import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { createUserService, getUserByUsername, getUserByUuid } from "./user.services.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
@@ -96,13 +96,15 @@ export const loginUser = async (req, res) => {
             userId: user.uuid,
             userKey: user.serial_key
         }, getEnv("REFRESH_SECRET"), {
-            expiresIn: '1h'
+            expiresIn: '1w'
         });
 
         const tokenExpired = getExpiredTimeFromToken(token)
 
         const tokenEncrypt = encryptString(token, getEnv("JWT_ENCRYPT_KEY"))
         const refreshTokenEncrypt = encryptString(refreshToken, getEnv("REFRESH_ENCRYPT_KEY"))
+
+        LOGGER_MONITOR(req.originalUrl, req.method, user, req.identity, false)
 
         res.status(200).json({
             token: tokenEncrypt,
@@ -170,7 +172,7 @@ export const refreshToken = async (req, res) => {
             userId: user.uuid,
             userKey: user.serial_key
         }, getEnv("REFRESH_SECRET"), {
-            expiresIn: '1h'
+            expiresIn: '1w'
         });
 
         const tokenExpired = getExpiredTimeFromToken(token)
