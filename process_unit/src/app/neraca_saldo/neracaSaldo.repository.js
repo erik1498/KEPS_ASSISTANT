@@ -18,7 +18,6 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
             AND jut.bulan = "${bulan}" 
             AND jut.tahun = "${tahun}"
             ${whereIN != null && whereIN.length > 0 ? `AND kapt.type IN ( "` + whereIN.join(`","`) + `" )` : ""}
-            AND jut.client_id = '${JSON.parse(req_id).client_id}'
             GROUP BY jut.kode_akun_uuid 
             ORDER BY kapt.code ASC
         `,
@@ -40,7 +39,6 @@ export const getPembatalanPenjualanJasaByBulanRepo = async (tahun, bulan, req_id
             FROM pembatalan_penjualan_jasa_tab ppjt 
             JOIN faktur_penjualan_jasa_tab fpjt ON fpjt.uuid = ppjt.faktur_penjualan_jasa 
             WHERE fpjt.tanggal <= "${tahun}-${bulan}-31" AND fpjt.tanggal >= "${tahun}-${bulan}-01"
-            AND fpjt.client_id = '${JSON.parse(req_id).client_id}'
         `,
         {
             type: Sequelize.QueryTypes.SELECT
@@ -59,7 +57,6 @@ export const getFakturPenjualanJasaByBulanRepo = async (tahun, bulan, req_id) =>
             ) AS hutang, fpjt.uuid 
             FROM faktur_penjualan_jasa_tab fpjt 
             WHERE fpjt.tanggal <= "${tahun}-${bulan}-31" AND fpjt.tanggal >= "${tahun}-${bulan}-01"
-            AND fpjt.client_id = '${JSON.parse(req_id).client_id}'
         `,
         {
             type: Sequelize.QueryTypes.SELECT
@@ -90,7 +87,6 @@ export const getFakturPenjualanBarangByBulanRepo = async (tahun, bulan, req_id) 
             JOIN pesanan_penjualan_tab ppt ON ppt.uuid = fpt.pesanan_penjualan 
             JOIN tipe_pembayaran_tab tpt ON tpt.uuid = fpt.tipe_pembayaran 
             WHERE fpt.tanggal <= "${tahun}-${bulan}-31" AND fpt.tanggal >= "${tahun}-${bulan}-01"
-            AND fpt.client_id = '${JSON.parse(req_id).client_id}'
         `,
         {
             type: Sequelize.QueryTypes.SELECT
@@ -119,7 +115,6 @@ export const getPelunasanPenjualanBarangByBulanRepo = async (tahun, bulan) => {
                 JOIN pesanan_penjualan_tab ppt2 ON ppt2.uuid = fpt.pesanan_penjualan 
                 JOIN tipe_pembayaran_tab tpt ON tpt.uuid = fpt.tipe_pembayaran
                 WHERE ppt.tanggal <= "${tahun}-${bulan}-31" AND ppt.tanggal >= "${tahun}-${bulan}-01"
-                AND ppt.client_id = '${JSON.parse(req_id).client_id}'
             ) AS res WHERE res.sudah_dibayar > 0
         `,
         {
@@ -148,7 +143,6 @@ export const getReturPenjualanBarangByBulanRepo = async (tahun, bulan) => {
             JOIN pelunasan_penjualan_tab ON pelunasan_penjualan_tab.faktur_penjualan = faktur_penjualan_tab.uuid
             JOIN kode_akun_perkiraan_tab ON kode_akun_perkiraan_tab.uuid = pelunasan_penjualan_tab.kode_akun 
             WHERE rincian_retur_penjualan_tab.tanggal <= "${tahun}-${bulan}-31" AND rincian_retur_penjualan_tab.tanggal >= "${tahun}-${bulan}-01"
-            AND rincian_retur_penjualan_tab.client_id = '${JSON.parse(req_id).client_id}'
         `,
         {
             type: Sequelize.QueryTypes.SELECT

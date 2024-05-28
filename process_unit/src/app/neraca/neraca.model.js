@@ -33,13 +33,6 @@ const NeracaModel = db.define("neraca_tab",
             validate:{
                 notEmpty:true
             }
-        },
-        client_id:{
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            }
         }
     }, {
         freezeTableName: true

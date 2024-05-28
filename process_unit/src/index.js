@@ -3,9 +3,10 @@ import cors from "cors"
 import { routerList } from './routes/route.js'
 import { LOGGER, logType } from './utils/loggerUtil.js'
 import { v4 } from 'uuid'
-import { connectDatabase } from './config/Database.js'
+import db, { connectDatabase } from './config/Database.js'
 import { getEnv } from './utils/envUtils.js'
 import { rateLimit } from 'express-rate-limit'
+import { Sequelize } from 'sequelize'
 
 
 const limiter = rateLimit({
@@ -39,7 +40,7 @@ const PORT = getEnv("PORT")
 
 await connectDatabase();
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     if (!req.header("Client_id")) {
         return res.status(401).json({
             errorData: JSON.stringify({
@@ -56,7 +57,31 @@ app.use((req, res, next) => {
     })
     res.setHeader("request-id", genUUID)
     res.setHeader("X-Powered-By", "KEPS-ASSISTANT")
-    next()
+
+    let databaseConnectInCorrect = true
+    do {
+        await db.query(
+            `USE db_keps_assistant_${req.header("Client_id")}`
+            ,
+            { type: Sequelize.QueryTypes.RAW }
+        );
+
+        const [results] = await db.query('SELECT DATABASE()', { type: Sequelize.QueryTypes.SELECT });
+
+        LOGGER(logType.INFO, "DATABASE USE CHECK", {
+            dbConnect: results["DATABASE()"],
+            dbExpectation: `db_keps_assistant_${req.header("Client_id")}`,
+            checkResult: results["DATABASE()"] == `db_keps_assistant_${req.header("Client_id")}` && results["DATABASE()"] != null
+        })
+        LOGGER(logType.INFO, "RECONNECT DATABASE")
+
+        console.log("CONSOLE DATABASES USE ", results["DATABASE()"], `db_keps_assistant_${req.header("Client_id")}`, results["DATABASE()"] == `db_keps_assistant_${req.header("Client_id")}`)
+
+        if (results["DATABASE()"] == `db_keps_assistant_${req.header("Client_id")}` && results["DATABASE()"] != null) {
+            databaseConnectInCorrect = false;
+            next();
+        }
+    } while (databaseConnectInCorrect)
 })
 
 routerList.map(route => {

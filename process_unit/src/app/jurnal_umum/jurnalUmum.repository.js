@@ -7,7 +7,6 @@ export const getJurnalUmumByUuidRepo = async (uuid, req_id) => {
     const jurnalUmum = await JurnalUmumModel.findOne({
         where: {
             uuid,
-            client_id: JSON.parse(req_id).client_id
         }
     })
     return jurnalUmum
@@ -25,7 +24,6 @@ export const getJurnalUmumNeracaByBulanRepo = async (bulan, req_id) => {
             FROM jurnal_umum_tab JOIN kode_akun_perkiraan_tab ON jurnal_umum_tab.kode_akun_uuid = kode_akun_perkiraan_tab.uuid
             WHERE jurnal_umum_tab.bulan = ${bulan} AND jurnal_umum_tab.tahun = ${new Date().getFullYear()}
             AND kode_akun_perkiraan_tab.type IN ("Harta", "Utang", "Modal")
-            AND jurnal_umum_tab.client_id = '${JSON.parse(req_id).client_id}'
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -44,7 +42,6 @@ export const getJurnalUmumLabaRugiByBulanRepo = async (bulan, req_id) => {
                 FROM jurnal_umum_tab JOIN kode_akun_perkiraan_tab ON jurnal_umum_tab.kode_akun_uuid = kode_akun_perkiraan_tab.uuid
                 WHERE jurnal_umum_tab.bulan = ${bulan} AND jurnal_umum_tab.tahun = ${new Date().getFullYear()}
                 AND kode_akun_perkiraan_tab.type IN ("Pendapatan", "Beban")
-                AND jurnal_umum_tab.client_id = '${JSON.parse(req_id).client_id}'
             `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -87,7 +84,6 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         OR jut.debet LIKE '%${search}%'
                         OR jut.kredit LIKE '%${search}%'
                     )
-                    AND jut.client_id = '${JSON.parse(req_id).client_id}'
                 ) AS res
                 WHERE res.bulan = "${bulan}" AND res.tahun = "${tahun}"
             ${sorting == "bukti_transaksi" ? 'ORDER BY res.tanggal ASC, res.waktu ASC, res.bukti_transaksi ASC' : 'ORDER BY res.tanggal ASC'}
@@ -125,7 +121,6 @@ export const deleteJurnalUmumByUuidRepo = async (uuid, req_id) => {
     }, {
         where: {
             uuid,
-            client_id: JSON.parse(req_id).client_id
         }
     })
 }
@@ -138,7 +133,6 @@ export const getJurnalUmumByBuktiTransaksiRepo = async (bukti_transaksi, uuidLis
             FROM jurnal_umum_tab jut
             WHERE jut.bukti_transaksi = "${bukti_transaksi}" AND jut.enabled = 1
             ${uuidList != "EMPTY" ? `AND jut.uuid NOT IN(${uuidList})` : ''}
-            AND jut.client_id = '${JSON.parse(req_id).client_id}'
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -154,7 +148,6 @@ export const getJurnalUmumByBuktiTransaksiAllDataRepo = async (bukti_transaksi, 
             FROM jurnal_umum_tab jut
             WHERE jut.bukti_transaksi = "${bukti_transaksi}" AND jut.enabled = 1
             ${uuidList != "EMPTY" ? `AND jut.uuid NOT IN(${uuidList})` : ''}
-            AND jut.client_id = '${JSON.parse(req_id).client_id}'
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -167,7 +160,6 @@ export const deleteJurnalUmumByBuktiTransaksiRepo = async (bukti_transaksi, req_
     }, {
         where: {
             bukti_transaksi,
-            client_id: JSON.parse(req_id).client_id
         }
     })
 }
@@ -189,7 +181,6 @@ export const updateJurnalUmumByUuidRepo = async (uuid, jurnalUmumData, req_id) =
     }, {
         where: {
             uuid,
-            client_id: JSON.parse(req_id).client_id
         }
     })
     return jurnalUmum

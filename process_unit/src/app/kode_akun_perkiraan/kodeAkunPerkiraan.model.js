@@ -40,13 +40,6 @@ const KodeAkunPerkiraanModel = db.define("kode_akun_perkiraan_tab",
             validate:{
                 notEmpty: true
             }
-        },
-        client_id:{
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            }
         }
     }, {
         freezeTableName: true

@@ -27,7 +27,6 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                 JOIN kode_akun_perkiraan_tab kapt ON kapt.uuid = jut.kode_akun_uuid
                 WHERE kapt.enabled = 1 AND jut.enabled = 1
                 AND jut.uraian LIKE '%${search}%'
-                AND jut.client_id = '${JSON.parse(req_id).client_id}'
             ) AS res
             JOIN kode_akun_perkiraan_tab kapt ON kapt.code = res.kode_akun
             WHERE res.bulan = "${bulan}" AND res.tahun = "${tahun}"

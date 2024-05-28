@@ -4,7 +4,6 @@ export const getUserByUsernameRepo = async (username, req_id) => {
     const user = await UserModel.findOne({
         where: {
             username,
-            client_id: JSON.parse(req_id).client_id
         }
     })
     return user
@@ -14,7 +13,6 @@ export const getUserByUuidRepo = async (uuid, req_id) => {
     const user = await UserModel.findOne({
         where: {
             uuid,
-            client_id: JSON.parse(req_id).client_id
         }
     })
     return user

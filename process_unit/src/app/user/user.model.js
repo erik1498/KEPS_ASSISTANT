@@ -61,13 +61,6 @@ const UserModel = db.define("user_tab",
             validate: {
                 notEmpty: true,
             }
-        },
-        client_id:{
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            }
         }
     }, {
     freezeTableName: true

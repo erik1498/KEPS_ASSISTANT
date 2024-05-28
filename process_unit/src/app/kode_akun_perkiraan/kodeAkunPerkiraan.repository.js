@@ -7,7 +7,7 @@ import { getBankKodeAkun, getKasKodeAkun } from "../../constant/kode_akun_perkir
 export const getAllKodeAkunPerkiraanByCodeListRepo = async (data, req_id) => {
     const kodeAkunPerkiraans = await db.query(
         `
-        SELECT * FROM kode_akun_perkiraan_tab kapt WHERE kapt.code IN (${data.join(",")}) AND kapt.client_id = '${JSON.parse(req_id).client_id}'
+        SELECT * FROM kode_akun_perkiraan_tab kapt WHERE kapt.code IN (${data.join(",")})
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -19,7 +19,6 @@ export const getAllKodeAkunPerkiraanRepo = async (pageNumber, size, search, req_
     const kodeAkunPerkiraansCount = await db.query(
         `
             SELECT COUNT(0) AS count FROM kode_akun_perkiraan_tab WHERE name LIKE '%${search}%' AND enabled = 1
-            AND client_id = '${JSON.parse(req_identity).client_id}'
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -31,7 +30,6 @@ export const getAllKodeAkunPerkiraanRepo = async (pageNumber, size, search, req_
         `
             SELECT kapt.* FROM kode_akun_perkiraan_tab kapt
             WHERE kapt.name LIKE '%${search}%' 
-            AND kapt.client_id = '${JSON.parse(req_identity).client_id}'
             AND kapt.enabled = 1 
             ORDER BY kapt.code ASC LIMIT ${pageNumber}, ${size}
         `,
@@ -91,7 +89,6 @@ export const getKodeAkunPerkiraanByCodeRepo = async (code, uuid, req_id) => {
         `
             SELECT COUNT(0) AS count FROM kode_akun_perkiraan_tab WHERE code = '${code}' AND enabled = 1
             ${uuid != null ? `AND kode_akun_perkiraan_tab.uuid != "${uuid}"` : ''}
-            AND client_id = '${JSON.parse(req_id).client_id}'
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -102,7 +99,6 @@ export const getKodeAkunPerkiraanByTypeRepo = async (type, req_id) => {
     const kodeAkunPerkiraan = await KodeAkunPerkiraanModel.findAll({
         where: {
             type,
-            client_id: JSON.parse(req_id).client_id
         }
     })
     return kodeAkunPerkiraan
@@ -114,7 +110,6 @@ export const getKodeAkunPerkiraanExceptTypeRepo = async (type, req_id) => {
             type: {
                 [Op.not]: type
             },
-            client_id: JSON.parse(req_id).client_id
         }
     })
     return kodeAkunPerkiraan
@@ -125,7 +120,6 @@ export const getKodeAkunPerkiraanByUuidRepo = async (uuid, req_id) => {
         where: {
             uuid,
             enabled: true,
-            client_id: JSON.parse(req_id).client_id
         }
     })
     return kodeAkunPerkiraan
@@ -141,7 +135,6 @@ export const getKodeAkunPerkiraanByUuidSudahDigunakanRepo = async (uuid, req_id)
             AND jut.enabled = 1 
             AND jut.bulan < "${new Date().getMonth()}"
             AND jut.tahun <= "${new Date().getFullYear()}"
-            AND jut.client_id = "${JSON.parse(req_id).client_id}"
             ORDER BY jut.tanggal ASC, jut.bulan ASC, jut.tahun 
             ASC LIMIT 1
         `,
@@ -167,7 +160,6 @@ export const deleteKodeAkunPerkiraanByUuidRepo = async (uuid, req_id) => {
     }, {
         where: {
             uuid,
-            client_id: JSON.parse(req_id).client_id
         }
     })
 }
@@ -180,7 +172,6 @@ export const updateKodeAkunPerkiraanByUuidRepo = async (uuid, kodeAkunPerkiraanD
     }, {
         where: {
             uuid,
-            client_id: JSON.parse(req_id).client_id
         }
     })
     return kodeAkunPerkiraan

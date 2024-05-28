@@ -28,7 +28,6 @@ export const getLoggerDataRepo = async (bulan, tahun, req_id) => {
                 lt.* 
             FROM logger_tab lt 
             WHERE lt.createdAt >= "${tahun}-${bulan}-01" AND lt.createdAt < "${maxTanggal}"
-            AND lt.client_id = '${JSON.parse(req_id).client_id}'
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
