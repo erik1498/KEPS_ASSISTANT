@@ -16,9 +16,8 @@ export const LOGGER_MONITOR = async (service, method, data, req_identity, error)
         method,
         data,
         req_time: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`,
-        req_identity: JSON.parse(req_identity),
-        client_id: JSON.parse(req_identity).client_id
-    })
+        req_identity: JSON.parse(req_identity)
+    }, req_identity)
 }
 
 export const LOGGER = (logType, message, object, req_identity, req_original_url, req_method, error_monitor) => {

@@ -23,12 +23,12 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     jut.uraian,
                     "JURNAL UMUM" AS sumber,
                     jut.enabled
-                FROM jurnal_umum_tab jut
-                JOIN kode_akun_perkiraan_tab kapt ON kapt.uuid = jut.kode_akun_uuid
+                FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = jut.kode_akun_uuid
                 WHERE kapt.enabled = 1 AND jut.enabled = 1
                 AND jut.uraian LIKE '%${search}%'
             ) AS res
-            JOIN kode_akun_perkiraan_tab kapt ON kapt.code = res.kode_akun
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.code = res.kode_akun
             WHERE res.bulan = "${bulan}" AND res.tahun = "${tahun}"
             AND kapt.uuid = "${uuid}"
             ORDER BY res.tahun ASC, res.bulan ASC, res.tanggal ASC, res.waktu ASC

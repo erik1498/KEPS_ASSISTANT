@@ -40,7 +40,7 @@ const PORT = getEnv("PORT")
 
 await connectDatabase();
 
-app.use(async (req, res, next) => {
+app.use((req, res, next) => {
     if (!req.header("Client_id")) {
         return res.status(401).json({
             errorData: JSON.stringify({
@@ -55,33 +55,9 @@ app.use(async (req, res, next) => {
         "userId": null,
         "client_id": req.header("Client_id")
     })
-    res.setHeader("request-id", genUUID)
-    res.setHeader("X-Powered-By", "KEPS-ASSISTANT")
-
-    let databaseConnectInCorrect = true
-    do {
-        await db.query(
-            `USE db_keps_assistant_${req.header("Client_id")}`
-            ,
-            { type: Sequelize.QueryTypes.RAW }
-        );
-
-        const [results] = await db.query('SELECT DATABASE()', { type: Sequelize.QueryTypes.SELECT });
-
-        LOGGER(logType.INFO, "DATABASE USE CHECK", {
-            dbConnect: results["DATABASE()"],
-            dbExpectation: `db_keps_assistant_${req.header("Client_id")}`,
-            checkResult: results["DATABASE()"] == `db_keps_assistant_${req.header("Client_id")}` && results["DATABASE()"] != null
-        })
-        LOGGER(logType.INFO, "RECONNECT DATABASE")
-
-        console.log("CONSOLE DATABASES USE ", results["DATABASE()"], `db_keps_assistant_${req.header("Client_id")}`, results["DATABASE()"] == `db_keps_assistant_${req.header("Client_id")}`)
-
-        if (results["DATABASE()"] == `db_keps_assistant_${req.header("Client_id")}` && results["DATABASE()"] != null) {
-            databaseConnectInCorrect = false;
-            next();
-        }
-    } while (databaseConnectInCorrect)
+    res.setHeader("request-id", genUUID);
+    res.setHeader("X-Powered-By", "KEPS-ASSISTANT");
+    next();
 })
 
 routerList.map(route => {

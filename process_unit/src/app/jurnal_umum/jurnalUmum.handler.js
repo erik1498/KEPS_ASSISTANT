@@ -135,20 +135,3 @@ export const updateJurnalUmumByUUID = async (req, res) => {
         })
     }
 }
-
-export const backupJurnalByBulanAndTahun = async (req, res) => {
-    LOGGER(logType.INFO, "Start backupJurnalByBulanAndTahun", null, req.identity)
-    try {
-        const { bulan, tahun } = req.params
-        await updateJurnalUmumByUuidService(uuid, req.body, req.identity, req.originalUrl, req.method)
-        res.status(200).json({
-            message: "Delete Success"
-        })
-    } catch (error) {
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
-        res.status(500).json({
-            type: "internalServerError",
-            errorData: error.message
-        })
-    }
-}

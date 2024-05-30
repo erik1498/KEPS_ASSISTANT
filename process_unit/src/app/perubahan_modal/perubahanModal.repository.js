@@ -1,13 +1,13 @@
 import { Sequelize } from "sequelize"
 import db from "../../config/Database.js"
+import { generateDatabaseName } from "../../utils/databaseUtil.js"
 
 export const getPerubahanModalByTahunRepo = async (tahun, req_id) => {
-    console.log("PERUBAHAN MODAL", req_id, tahun)
     const perubahanModal = await db.query(
         `
             SELECT 
                 nt.*
-            FROM neraca_tab nt 
+            FROM ${generateDatabaseName(req_id)}.neraca_tab nt 
             WHERE 
             nt.tahun = '${tahun}'
             ORDER BY nt.bulan ASC

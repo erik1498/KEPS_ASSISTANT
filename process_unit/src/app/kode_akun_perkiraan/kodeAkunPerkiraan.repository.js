@@ -1,24 +1,12 @@
-import { Op, Sequelize } from "sequelize";
+import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import KodeAkunPerkiraanModel from "./kodeAkunPerkiraan.model.js";
-import { getBankKodeAkun, getKasKodeAkun } from "../../constant/kode_akun_perkiraan_constant.js";
+import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 
-
-export const getAllKodeAkunPerkiraanByCodeListRepo = async (data, req_id) => {
-    const kodeAkunPerkiraans = await db.query(
-        `
-        SELECT * FROM kode_akun_perkiraan_tab kapt WHERE kapt.code IN (${data.join(",")})
-        `,
-        { type: Sequelize.QueryTypes.SELECT }
-    )
-
-    return kodeAkunPerkiraans
-}
-
-export const getAllKodeAkunPerkiraanRepo = async (pageNumber, size, search, req_identity) => {
+export const getAllKodeAkunPerkiraanRepo = async (pageNumber, size, search, req_id) => {
     const kodeAkunPerkiraansCount = await db.query(
         `
-            SELECT COUNT(0) AS count FROM kode_akun_perkiraan_tab WHERE name LIKE '%${search}%' AND enabled = 1
+            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab WHERE name LIKE '%${search}%' AND enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -28,7 +16,7 @@ export const getAllKodeAkunPerkiraanRepo = async (pageNumber, size, search, req_
 
     const kodeAkunPerkiraans = await db.query(
         `
-            SELECT kapt.* FROM kode_akun_perkiraan_tab kapt
+            SELECT kapt.* FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt
             WHERE kapt.name LIKE '%${search}%' 
             AND kapt.enabled = 1 
             ORDER BY kapt.code ASC LIMIT ${pageNumber}, ${size}
@@ -44,50 +32,10 @@ export const getAllKodeAkunPerkiraanRepo = async (pageNumber, size, search, req_
     }
 }
 
-export const getAllKodeAkunPerkiraanKasRepo = async () => {
-    const kodeAkunPerkiraans = await db.query(
-        `
-            SELECT * FROM kode_akun_perkiraan_tab WHERE code IN (${getKasKodeAkun.join(",")})
-        `,
-        { type: Sequelize.QueryTypes.SELECT }
-    )
-    return kodeAkunPerkiraans;
-}
-
-export const getAllKodeAkunPerkiraanNoKasRepo = async () => {
-    const kodeAkunPerkiraans = await db.query(
-        `
-            SELECT * FROM kode_akun_perkiraan_tab WHERE code NOT IN (${getKasKodeAkun.join(",")})
-        `,
-        { type: Sequelize.QueryTypes.SELECT }
-    )
-    return kodeAkunPerkiraans;
-}
-
-export const getAllKodeAkunPerkiraanBankRepo = async () => {
-    const kodeAkunPerkiraans = await db.query(
-        `
-            SELECT * FROM kode_akun_perkiraan_tab WHERE code IN (${getBankKodeAkun.join(",")})
-        `,
-        { type: Sequelize.QueryTypes.SELECT }
-    )
-    return kodeAkunPerkiraans;
-}
-
-export const getAllKodeAkunPerkiraanNoBankRepo = async () => {
-    const kodeAkunPerkiraans = await db.query(
-        `
-            SELECT * FROM kode_akun_perkiraan_tab WHERE code NOT IN (${getBankKodeAkun.join(",")})
-        `,
-        { type: Sequelize.QueryTypes.SELECT }
-    )
-    return kodeAkunPerkiraans;
-}
-
 export const getKodeAkunPerkiraanByCodeRepo = async (code, uuid, req_id) => {
     const kodeAkunPerkiraan = await db.query(
         `
-            SELECT COUNT(0) AS count FROM kode_akun_perkiraan_tab WHERE code = '${code}' AND enabled = 1
+            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab WHERE code = '${code}' AND enabled = 1
             ${uuid != null ? `AND kode_akun_perkiraan_tab.uuid != "${uuid}"` : ''}
         `,
         { type: Sequelize.QueryTypes.SELECT }
@@ -95,34 +43,16 @@ export const getKodeAkunPerkiraanByCodeRepo = async (code, uuid, req_id) => {
     return kodeAkunPerkiraan
 }
 
-export const getKodeAkunPerkiraanByTypeRepo = async (type, req_id) => {
-    const kodeAkunPerkiraan = await KodeAkunPerkiraanModel.findAll({
-        where: {
-            type,
-        }
-    })
-    return kodeAkunPerkiraan
-}
-
-export const getKodeAkunPerkiraanExceptTypeRepo = async (type, req_id) => {
-    const kodeAkunPerkiraan = await KodeAkunPerkiraanModel.findAll({
-        where: {
-            type: {
-                [Op.not]: type
-            },
-        }
-    })
-    return kodeAkunPerkiraan
-}
-
 export const getKodeAkunPerkiraanByUuidRepo = async (uuid, req_id) => {
-    const kodeAkunPerkiraan = await KodeAkunPerkiraanModel.findOne({
-        where: {
+    return selectOneQueryUtil(
+        generateDatabaseName(req_id),
+        KodeAkunPerkiraanModel,
+        null,
+        {
             uuid,
-            enabled: true,
+            enabled: true
         }
-    })
-    return kodeAkunPerkiraan
+    )
 }
 
 export const getKodeAkunPerkiraanByUuidSudahDigunakanRepo = async (uuid, req_id) => {
@@ -130,7 +60,7 @@ export const getKodeAkunPerkiraanByUuidSudahDigunakanRepo = async (uuid, req_id)
         `
             SELECT 
                 jut.*
-            FROM jurnal_umum_tab jut 
+            FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut 
             WHERE jut.kode_akun_uuid = "${uuid}" 
             AND jut.enabled = 1 
             AND jut.bulan < "${new Date().getMonth()}"
@@ -144,35 +74,43 @@ export const getKodeAkunPerkiraanByUuidSudahDigunakanRepo = async (uuid, req_id)
 }
 
 export const createKodeAkunPerkiraanRepo = async (kodeAkunPerkiraanData, req_id) => {
-    const kodeAkunPerkiraan = await KodeAkunPerkiraanModel.create({
-        type: kodeAkunPerkiraanData.type,
-        name: kodeAkunPerkiraanData.name,
-        code: kodeAkunPerkiraanData.code,
-        enabled: kodeAkunPerkiraanData.enabled,
-        client_id: JSON.parse(req_id).client_id
-    })
-    return kodeAkunPerkiraan
+    return insertQueryUtil(
+        generateDatabaseName(req_id),
+        KodeAkunPerkiraanModel,
+        {
+            type: kodeAkunPerkiraanData.type,
+            name: kodeAkunPerkiraanData.name,
+            code: kodeAkunPerkiraanData.code,
+            enabled: kodeAkunPerkiraanData.enabled,
+            client_id: req_id
+        }
+    )
 }
 
 export const deleteKodeAkunPerkiraanByUuidRepo = async (uuid, req_id) => {
-    await KodeAkunPerkiraanModel.update({
-        enabled: false
-    }, {
-        where: {
-            uuid,
+    updateQueryUtil(
+        generateDatabaseName(req_id),
+        KodeAkunPerkiraanModel,
+        {
+            enabled: false
+        },
+        {
+            uuid
         }
-    })
+    )
 }
 
 export const updateKodeAkunPerkiraanByUuidRepo = async (uuid, kodeAkunPerkiraanData, req_id) => {
-    const kodeAkunPerkiraan = await KodeAkunPerkiraanModel.update({
-        type: kodeAkunPerkiraanData.type,
-        name: kodeAkunPerkiraanData.name,
-        code: kodeAkunPerkiraanData.code,
-    }, {
-        where: {
-            uuid,
+    return updateQueryUtil(
+        generateDatabaseName(req_id),
+        KodeAkunPerkiraanModel,
+        {
+            type: kodeAkunPerkiraanData.type,
+            name: kodeAkunPerkiraanData.name,
+            code: kodeAkunPerkiraanData.code,
+        },
+        {
+            uuid
         }
-    })
-    return kodeAkunPerkiraan
+    )
 }

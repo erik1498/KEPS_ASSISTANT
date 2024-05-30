@@ -1,31 +1,39 @@
+import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil } from "../../utils/databaseUtil.js";
 import UserModel from "./user.model.js";
 
 export const getUserByUsernameRepo = async (username, req_id) => {
-    const user = await UserModel.findOne({
-        where: {
-            username,
+    return selectOneQueryUtil(
+        generateDatabaseName(req_id),
+        UserModel,
+        null,
+        {
+            username
         }
-    })
-    return user
+    )
 }
 
 export const getUserByUuidRepo = async (uuid, req_id) => {
-    const user = await UserModel.findOne({
-        where: {
-            uuid,
+    return selectOneQueryUtil(
+        generateDatabaseName(req_id),
+        UserModel,
+        null,
+        {
+            uuid
         }
-    })
-    return user
+    )
 }
 
 
 export const createUserRepo = async (userData, req_id) => {
-    const user = await UserModel.create({
-        username: userData.username,
-        password: userData.password,
-        name: userData.name,
-        role: userData.role,
-        client_id: JSON.parse(req_id).client_id
-    })
-    return user
+    return insertQueryUtil(
+        generateDatabaseName(req_id),
+        UserModel,
+        {
+            username: userData.username,
+            password: userData.password,
+            name: userData.name,
+            role: userData.role,
+            client_id: JSON.parse(req_id).client_id
+        }
+    )
 }

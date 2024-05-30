@@ -8,24 +8,17 @@ const db = new Sequelize({
     username: getEnv("DB_USER"),
     password: getEnv("DB_PASSWORD"),
     dialect: "mysql",
-    logging: true,
-    pool: {
-        max: 10,
-        min: 0,
-        acquire: 30000,
-        idle: 10000,
-        evict: 10000
-    }
+    logging: false
 })
 
 export const connectDatabase = () => {
     return new Promise(async (res) => {
         try {
             await db.authenticate()
-            LOGGER(logType.INFO, "DATABASE TERKONEKSI !!!", null, null, null, null, false)
+            LOGGER(logType.INFO, "DATABASE TERKONEKSI !!!")
             res(true)
         } catch (error) {
-            LOGGER(logType.INFO, "KONEKSI DATABASE GAGAL, AKAN DICOBA 5 DETIK LAGI !!!", null, null, null, null, false)
+            LOGGER(logType.INFO, "KONEKSI DATABASE GAGAL, AKAN DICOBA 5 DETIK LAGI !!!")
             setTimeout(connectDatabase, 5000)
         }
     })

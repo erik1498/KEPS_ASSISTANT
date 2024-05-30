@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
+import { generateDatabaseName } from "../../utils/databaseUtil.js";
 
 export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) => {
     const neracaSaldo = await db.query(
@@ -12,8 +13,8 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 kapt.name AS kode_akun_perkiraan_name,
                 kapt.code AS kode_akun_perkiraan_code,
                 kapt.type AS kode_akun_perkiraan_type
-            FROM jurnal_umum_tab jut 
-            JOIN kode_akun_perkiraan_tab kapt ON kapt.uuid = jut.kode_akun_uuid 
+            FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = jut.kode_akun_uuid 
             WHERE jut.enabled = 1
             AND jut.bulan = "${bulan}" 
             AND jut.tahun = "${tahun}"
@@ -32,12 +33,12 @@ export const getPembatalanPenjualanJasaByBulanRepo = async (tahun, bulan, req_id
             SELECT 
                 ppjt.uuid, 
                 (
-                    SELECT IFNULL(SUM(harga), 0) FROM rincian_pembatalan_penjualan_jasa_tab rppjt 
+                    SELECT IFNULL(SUM(harga), 0) FROM ${generateDatabaseName(req_id)}.rincian_pembatalan_penjualan_jasa_tab rppjt 
                     WHERE rppjt.faktur_penjualan_jasa_uuid = fpjt.uuid 
                     AND rppjt.status = 1
                 ) AS nilai
-            FROM pembatalan_penjualan_jasa_tab ppjt 
-            JOIN faktur_penjualan_jasa_tab fpjt ON fpjt.uuid = ppjt.faktur_penjualan_jasa 
+            FROM ${generateDatabaseName(req_id)}.pembatalan_penjualan_jasa_tab ppjt 
+            JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_jasa_tab fpjt ON fpjt.uuid = ppjt.faktur_penjualan_jasa 
             WHERE fpjt.tanggal <= "${tahun}-${bulan}-31" AND fpjt.tanggal >= "${tahun}-${bulan}-01"
         `,
         {
@@ -52,10 +53,10 @@ export const getFakturPenjualanJasaByBulanRepo = async (tahun, bulan, req_id) =>
         `            
             SELECT
             (
-                SELECT IFNULL(SUM(harga), 0) FROM rincian_faktur_penjualan_jasa_tab rfpjt 
+                SELECT IFNULL(SUM(harga), 0) FROM ${generateDatabaseName(req_id)}.rincian_faktur_penjualan_jasa_tab rfpjt 
                 WHERE rfpjt.faktur_penjualan_jasa = fpjt.uuid 
             ) AS hutang, fpjt.uuid 
-            FROM faktur_penjualan_jasa_tab fpjt 
+            FROM ${generateDatabaseName(req_id)}.faktur_penjualan_jasa_tab fpjt 
             WHERE fpjt.tanggal <= "${tahun}-${bulan}-31" AND fpjt.tanggal >= "${tahun}-${bulan}-01"
         `,
         {
@@ -72,20 +73,20 @@ export const getFakturPenjualanBarangByBulanRepo = async (tahun, bulan, req_id) 
                 fpt.*,
                 tpt.name AS tipe_pembayaran,
                 (
-                    SELECT IFNULL(SUM(harga * jumlah) + SUM(ppn * jumlah) , 0) FROM rincian_pesanan_penjualan_tab rppt 
+                    SELECT IFNULL(SUM(harga * jumlah) + SUM(ppn * jumlah) , 0) FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_tab rppt 
                     WHERE rppt.pesanan_penjualan = ppt.uuid
                 ) AS total,
                 (
-                    SELECT IFNULL(SUM(ppn * jumlah) , 0) FROM rincian_pesanan_penjualan_tab rppt 
+                    SELECT IFNULL(SUM(ppn * jumlah) , 0) FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_tab rppt 
                     WHERE rppt.pesanan_penjualan = ppt.uuid
                 ) AS ppn,
                 (
-                    SELECT IFNULL(SUM(harga * jumlah) , 0) FROM rincian_pesanan_penjualan_tab rppt 
+                    SELECT IFNULL(SUM(harga * jumlah) , 0) FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_tab rppt 
                     WHERE rppt.pesanan_penjualan = ppt.uuid
                 ) AS dpp
-            FROM faktur_penjualan_tab fpt 
-            JOIN pesanan_penjualan_tab ppt ON ppt.uuid = fpt.pesanan_penjualan 
-            JOIN tipe_pembayaran_tab tpt ON tpt.uuid = fpt.tipe_pembayaran 
+            FROM ${generateDatabaseName(req_id)}.faktur_penjualan_tab fpt 
+            JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_tab ppt ON ppt.uuid = fpt.pesanan_penjualan 
+            JOIN ${generateDatabaseName(req_id)}.tipe_pembayaran_tab tpt ON tpt.uuid = fpt.tipe_pembayaran 
             WHERE fpt.tanggal <= "${tahun}-${bulan}-31" AND fpt.tanggal >= "${tahun}-${bulan}-01"
         `,
         {
@@ -105,15 +106,15 @@ export const getPelunasanPenjualanBarangByBulanRepo = async (tahun, bulan) => {
                     kapt.name AS nama_akun,
                     kapt.type AS type_akun,
                     (
-                        SELECT SUM(IFNULL(nilai, 0)) FROM rincian_pelunasan_penjualan_tab rppt 
+                        SELECT SUM(IFNULL(nilai, 0)) FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_tab rppt 
                         WHERE rppt.pelunasan_penjualan = ppt.uuid 
                     ) AS sudah_dibayar,
                     fpt.no_faktur_penjualan, fpt.uuid AS faktur_penjualan, ppt2.uuid AS pesanan_penjualan 
-                FROM pelunasan_penjualan_tab ppt 
-                JOIN kode_akun_perkiraan_tab kapt ON kapt.uuid = ppt.kode_akun 
-                JOIN faktur_penjualan_tab fpt ON fpt.uuid = ppt.faktur_penjualan 
-                JOIN pesanan_penjualan_tab ppt2 ON ppt2.uuid = fpt.pesanan_penjualan 
-                JOIN tipe_pembayaran_tab tpt ON tpt.uuid = fpt.tipe_pembayaran
+                FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_tab ppt 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppt.kode_akun 
+                JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_tab fpt ON fpt.uuid = ppt.faktur_penjualan 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_tab ppt2 ON ppt2.uuid = fpt.pesanan_penjualan 
+                JOIN ${generateDatabaseName(req_id)}.tipe_pembayaran_tab tpt ON tpt.uuid = fpt.tipe_pembayaran
                 WHERE ppt.tanggal <= "${tahun}-${bulan}-31" AND ppt.tanggal >= "${tahun}-${bulan}-01"
             ) AS res WHERE res.sudah_dibayar > 0
         `,
@@ -128,21 +129,21 @@ export const getReturPenjualanBarangByBulanRepo = async (tahun, bulan) => {
     const pesananPenjualanBarang = await db.query(
         `            
             SELECT 
-                SUM(rincian_retur_penjualan_tab.harga * rincian_retur_penjualan_tab.retur) AS dpp,
-                SUM(rincian_retur_penjualan_tab.ppn * rincian_retur_penjualan_tab.retur) AS ppn,
+                SUM(rrpt.harga * rrpt.retur) AS dpp,
+                SUM(rrpt.ppn * rrpt.retur) AS ppn,
                 (
-                    SUM(rincian_retur_penjualan_tab.harga * rincian_retur_penjualan_tab.retur) + SUM(rincian_retur_penjualan_tab.ppn * rincian_retur_penjualan_tab.retur)
+                    SUM(rrpt.harga * rrpt.retur) + SUM(rrpt.ppn * rrpt.retur)
                 ) AS total,
-                tipe_pembayaran_tab.name AS tipe_pembayaran,
-                kode_akun_perkiraan_tab.code AS kode_akun
-            FROM rincian_retur_penjualan_tab 
-            JOIN retur_penjualan_tab ON retur_penjualan_tab.uuid = rincian_retur_penjualan_tab.retur_penjualan_uuid 
-            JOIN faktur_penjualan_tab ON faktur_penjualan_tab.uuid = retur_penjualan_tab.faktur_penjualan
-            JOIN tipe_pembayaran_tab ON tipe_pembayaran_tab.uuid = faktur_penjualan_tab.tipe_pembayaran 
-            JOIN pesanan_penjualan_tab ON pesanan_penjualan_tab.uuid = faktur_penjualan_tab.pesanan_penjualan      
-            JOIN pelunasan_penjualan_tab ON pelunasan_penjualan_tab.faktur_penjualan = faktur_penjualan_tab.uuid
-            JOIN kode_akun_perkiraan_tab ON kode_akun_perkiraan_tab.uuid = pelunasan_penjualan_tab.kode_akun 
-            WHERE rincian_retur_penjualan_tab.tanggal <= "${tahun}-${bulan}-31" AND rincian_retur_penjualan_tab.tanggal >= "${tahun}-${bulan}-01"
+                tpt.name AS tipe_pembayaran,
+                kapt.code AS kode_akun
+            FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_tab rrpt
+            JOIN ${generateDatabaseName(req_id)}.retur_penjualan_tab rpt ON rpt.uuid = rrpt.retur_penjualan_uuid 
+            JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_tab fpt ON fpt.uuid = rpt.faktur_penjualan
+            JOIN ${generateDatabaseName(req_id)}.tipe_pembayaran_tab tpt ON tpt.uuid = fpt.tipe_pembayaran 
+            JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_tab ppt ON ppt.uuid = fpt.pesanan_penjualan      
+            JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_tab ppt2 ON ppt2.faktur_penjualan = fpt.uuid
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppt2.kode_akun 
+            WHERE rrpt.tanggal <= "${tahun}-${bulan}-31" AND rrpt.tanggal >= "${tahun}-${bulan}-01"
         `,
         {
             type: Sequelize.QueryTypes.SELECT

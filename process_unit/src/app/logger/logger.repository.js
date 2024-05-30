@@ -1,19 +1,22 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import LoggerModel from "./logger.model.js";
+import { generateDatabaseName, insertQueryUtil } from "../../utils/databaseUtil.js";
 
-export const createLoggerRepo = async (loggerData) => {
-    const logger = await LoggerModel.create({
-        service: loggerData.service,
-        status: loggerData.status,
-        method: loggerData.method,
-        data: JSON.stringify(loggerData.data),
-        req_time: loggerData.req_time,
-        req_id: loggerData.req_identity.id,
-        req_user_id: loggerData.req_identity.userId ? loggerData.req_identity.userId : "NULL",
-        client_id: loggerData.client_id
-    })
-    return logger
+export const createLoggerRepo = async (loggerData, req_id) => {
+    return insertQueryUtil(
+        generateDatabaseName(req_id),
+        LoggerModel,
+        {
+            service: loggerData.service,
+            status: loggerData.status,
+            method: loggerData.method,
+            data: JSON.stringify(loggerData.data),
+            req_time: loggerData.req_time,
+            req_id: loggerData.req_identity.id,
+            req_user_id: loggerData.req_identity.userId ? loggerData.req_identity.userId : "NULL",
+        }
+    )
 }
 
 export const getLoggerDataRepo = async (bulan, tahun, req_id) => {
@@ -26,7 +29,7 @@ export const getLoggerDataRepo = async (bulan, tahun, req_id) => {
         `
             SELECT 
                 lt.* 
-            FROM logger_tab lt 
+            FROM ${generateDatabaseName(req_id)}.logger_tab lt 
             WHERE lt.createdAt >= "${tahun}-${bulan}-01" AND lt.createdAt < "${maxTanggal}"
         `,
         { type: Sequelize.QueryTypes.SELECT }
