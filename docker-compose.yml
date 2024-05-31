@@ -5,7 +5,7 @@ services:
     image: mariadb:10.3.16
     container_name: keps_assistant_resources
     environment:
-      MYSQL_ROOT_PASSWORD: kepsAssistantDatabase123@#%__
+      MYSQL_ROOT_PASSWORD: kepsAssistantDatabasePassword123@#%__
     expose:
       - "3306"
     volumes:
