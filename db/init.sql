@@ -6,8 +6,8 @@ CREATE USER 'kepsAssistantUserDB123@#%__'@'172.30.0.3' IDENTIFIED BY 'kepsAssist
 
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'kepsAssistantDatabasePassword123@#%__';
 
-GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_initial.* TO 'kepsAssistantUserDB123@#%__'@'172.30.0.3' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
-GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_alor.* TO 'kepsAssistantUserDB123@#%__'@'172.30.0.3' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
-GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_keps.* TO 'kepsAssistantUserDB123@#%__'@'172.30.0.3' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
+GRANT INSERT, SELECT, UPDATE, DELETE ON db_keps_assistant_initial.* TO 'kepsAssistantUserDB123@#%__'@'172.30.0.3' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
+GRANT INSERT, SELECT, UPDATE, DELETE ON db_keps_assistant_alor.* TO 'kepsAssistantUserDB123@#%__'@'172.30.0.3' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
+GRANT INSERT, SELECT, UPDATE, DELETE ON db_keps_assistant_keps.* TO 'kepsAssistantUserDB123@#%__'@'172.30.0.3' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 
 FLUSH PRIVILEGES;
