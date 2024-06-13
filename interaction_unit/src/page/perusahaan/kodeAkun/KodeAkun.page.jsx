@@ -1,4 +1,4 @@
-import { FaPen, FaPlus, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
+import { FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
 import PageTitle from "../../../component/general/PageTitle"
 import Wrap from "../../../component/layout/Wrap"
 import { useDataContext } from "../../../context/dataContext.context"
@@ -9,11 +9,15 @@ import Pagination from "../../../component/general/Pagination"
 import KodeAkunForm from "./component/KodeAkunForm"
 import { showAlert, showDialog, showError } from "../../../helper/form.helper"
 import { AKUN_TIDAK_BOLEH_DIUPDATE } from "../../../helper/jurnalUmum.helper"
+import { useRef } from "react"
+import { useReactToPrint } from "react-to-print"
+import { KodeAkunPrint } from "./component/KodeAkunPrint"
+import { getBulanByIndex } from "../../../helper/date.helper"
 
 const KodeAkunPage = () => {
 
     const dataContext = useDataContext()
-    const { _getDataKodeAkun } = dataContext
+    const { _getDataKodeAkun, data } = dataContext
 
     const [kodeAkun, setKodeAkun] = useState([])
     const [isLoading, setIsLoading] = useState(false)
@@ -27,6 +31,11 @@ const KodeAkunPage = () => {
 
     const [searchStatus, setSearchStatus] = useState(false)
     const [search, setSearch] = useState("")
+
+    const kodeAkunPrintRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => kodeAkunPrintRef.current,
+    });
 
     const [pagination, setPagination] = useState({
         page: 1,
@@ -116,13 +125,27 @@ const KodeAkunPage = () => {
                                         <FaTimes onClick={() => _getData("")} className="cursor-pointer" />
                                 }
                             </label>
-                            <div>
+                            <div className="flex gap-x-2 items-center">
                                 <button className="btn btn-sm bg-blue-900 text-white border-none"
                                     onClick={() => {
                                         setKodeAkunEdit(null)
                                         setAddKodeAkun(!addKodeAkun)
                                     }}
                                 ><FaPlus /> Tambah Kode Akun</button>
+                                <div className="hidden">
+                                    <KodeAkunPrint
+                                        data={data?.kodeAkun}
+                                        ref={kodeAkunPrintRef}
+                                        bulan={getBulanByIndex(new Date().getMonth())}
+                                        tahun={data.tahun}
+                                    />
+                                </div>
+                                <button
+                                    onClick={handlePrint}
+                                    className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
+                                >
+                                    <FaPrint /> Cetak Kode Akun
+                                </button>
                             </div>
                         </div>
                         <div className="overflow-x-auto bg-white shadow-xl rounded-md h-[50vh] no-scrollbar px-6 pb-4">
