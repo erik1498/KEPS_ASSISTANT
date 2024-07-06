@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  resources:
+    image: mariadb:10.3.16
+    container_name: keps_assistant_resources
+    environment:
+      MYSQL_ROOT_PASSWORD: kepsAssistantDatabasePassword123@#%__
+    ports:
+      - "9838:3306"
+    volumes:
+      - ./resources_unit:/var/lib/mysql
+      - ./backup:/backup
+      - ./db:/docker-entrypoint-initdb.d
+      - ./initial_database:/initial_database

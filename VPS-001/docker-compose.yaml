@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  process:
+    build:
+      context: ./process_unit
+      args:
+        - DB_HOST=173.30.0.2
+        - DB_PORT=3306
+        - DB_USER=kepsAssistantUserDB123@#%__
+        - DB_PASSWORD=kepsAssistantPassDB123@#%__
+        - CLIENT_HOST=["http://localhost:5173"]
+        - USER_PERMISSION_SECURITY_ENABLED=false
+        - USER_PARAMETER_SECURITY_ENABLED=false
+    container_name: keps_assistant_process
+    environment:
+      - TZ=Asia/Makassar
+    ports:
+      - "2001:2001"
+    volumes:
+      - ./logging:/usr/process_unit/workdir/log
+    networks:
+      keps_vps_1_network:
+        ipv4_address: 172.30.0.2
+
+  interaction:
+    build:
+      context: ./interaction_unit
+    container_name: keps_assistant_interaction
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT=http://localhost:2001
+      - TZ=Asia/Makassar
+    networks:
+      keps_vps_1_network:
+        ipv4_address: 172.30.0.3
+
+networks:
+  keps_vps_1_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/16

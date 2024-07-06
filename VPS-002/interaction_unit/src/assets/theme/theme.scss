@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  // @apply bg-slate-300 overflow-x-hidden relative min-h-screen w-full bg-[url('/loginbg.jpg')] bg-center bg-cover;
+  @apply bg-slate-300 overflow-x-hidden relative min-h-screen w-full;
+
+  .page-container {
+    @apply h-screen w-screen overflow-scroll no-scrollbar pb-10;
+
+    .page-container-wp {
+      @apply min-h-full relative;
+
+      // .content {
+      // @apply pt-[95px] pb-[69px] min-h-full;
+      // }
+    }
+  }
+
+  .form-message {
+    @apply absolute py-1 pl-3 text-red-700 right-0 bottom-[-25px] font-bold text-[13px];
+
+
+    // position: absolute;
+    // top: -30px;
+    // background-color: #f14668;
+    // padding: 2px 10px;
+    // border-radius: 5px;
+    // color: white;
+    // right: 0;
+  }
+}
+
+@layer utilities {
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  @media print {
+    @page {
+      margin-top: 60px;
+      margin-bottom: 60px;
+    }
+
+    body {
+      background-color: white !important;
+      padding: 5rem;
+      zoom: .7;
+    }
+  }
+}
