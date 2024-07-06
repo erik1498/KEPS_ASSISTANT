@@ -1,0 +1,10 @@
+export const KEPS_ASSISTANT_PATH = "KEPS_ASSISTANT_PATH"
+
+export const COOKIE_FOLDER_PATH = "COOKIE_FOLDER_PATH"
+export const HOME_URL = "HOME_URL"
+export const MAC_PARAMETER_KEY = "MAC_PARAMETER_KEY"
+export const USER_PARAMETER_KEY = "USER_PARAMETER_KEY"
+export const LICENSE_PATH = "LICENSE_PATH"
+export const MAC_ADDRESS = "MAC_ADDRESS"
+export const CLIENT_ID = "CLIENT_ID"
+export const OS_INFO = "OS_INFO"
