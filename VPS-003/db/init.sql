@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS db_logging_keps_assistant_duta_multi_computer;
 
 CREATE USER 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'kepsAssistantDatabasePassword123@#%__';
+GRANT ALL PRIVILEGES ON *.* TO 'kepsAssistantRootDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantDatabasePassword123@#%__';
 
 USE db_keps_assistant_duta_multi_computer;
 SOURCE /initial_database/db_keps_assistant_initial.sql;
