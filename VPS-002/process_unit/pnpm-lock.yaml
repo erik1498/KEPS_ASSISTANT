@@ -53,6 +53,9 @@ importers:
       pino-pretty:
         specifier: ^11.0.0
         version: 11.0.0
+      rotating-file-stream:
+        specifier: ^3.2.3
+        version: 3.2.3
       sequelize:
         specifier: ^6.33.0
         version: 6.37.3(mysql2@3.9.7)
@@ -972,6 +975,10 @@ packages:
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
     hasBin: true
+
+  rotating-file-stream@3.2.3:
+    resolution: {integrity: sha512-cfmm3tqdnbuYw2FBmRTPBDaohYEbMJ3211T35o6eZdr4d7v69+ZeK1Av84Br7FLj2dlzyeZSbN6qTuXXE6dawQ==}
+    engines: {node: '>=14.0'}
 
   safe-buffer@5.1.2:
     resolution: {integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==}
@@ -2272,6 +2279,8 @@ snapshots:
   rimraf@3.0.2:
     dependencies:
       glob: 7.2.3
+
+  rotating-file-stream@3.2.3: {}
 
   safe-buffer@5.1.2: {}
 

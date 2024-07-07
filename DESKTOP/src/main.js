@@ -29,9 +29,6 @@ const createWindow = async () => {
             },
         })
 
-        win.webContents.openDevTools();
-
-        // Event listener untuk mendeteksi DevTools terputus
         win.webContents.on('devtools-closed', () => {
             win.webContents.executeJavaScript(`window.showErrorMessage('DevTools was disconnected from the page.');`);
         });

@@ -118,13 +118,6 @@ CREATE TABLE `user_tab` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `user_tab`
---
-
-INSERT INTO `user_tab` (`id`, `uuid`, `username`, `password`, `name`, `role`, `serial_key`, `mac_address`, `os_info`, `createdAt`, `updatedAt`) VALUES
-(2, '4d768fb0-f97f-48d7-86a7-4840a7bdebc0', 'erick', '$2b$10$dYta1q5QgHYAuSp24foFVeuFVNP6Q09BhIgy6WHXLotwvI4Ea4Wwi', 'USER', 'Admin', 'Z6A7G-RS78E-VI2DZ-4HNF1-YYX1Q', '14:5a:fc:5d:44:23', '{\"hostname\":\"erickhene-Aspire-A515-45\",\"user_info\":{\"uid\":1000,\"gid\":1000,\"username\":\"erickhene\",\"homedir\":\"/home/erickhene\",\"shell\":\"/bin/bash\"},\"arch\":\"x64\",\"platform\":\"linux\",\"type\":\"Linux\",\"memory\":\"16\",\"cpu\":\"AMD Ryzen 5 5500U with Radeon Graphics\"}', '2024-04-26 15:49:50', '2024-04-26 15:49:50');
-
---
 -- Indexes for dumped tables
 --
 

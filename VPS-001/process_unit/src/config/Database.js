@@ -18,7 +18,14 @@ export const connectDatabase = () => {
             LOGGER(logType.INFO, "DATABASE TERKONEKSI !!!")
             res(true)
         } catch (error) {
-            LOGGER(logType.INFO, "KONEKSI DATABASE GAGAL, AKAN DICOBA 5 DETIK LAGI !!!")
+            LOGGER(logType.INFO, "KONEKSI DATABASE GAGAL, AKAN DICOBA 5 DETIK LAGI !!!", {
+                host: getEnv("DB_HOST"),
+                port: getEnv("DB_PORT"),
+                username: getEnv("DB_USER"),
+                password: getEnv("DB_PASSWORD"),
+                dialect: "mysql",
+                logging: false
+            })
             setTimeout(connectDatabase, 5000)
         }
     })

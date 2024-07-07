@@ -2,9 +2,6 @@ import { jurnalUmumValidation } from "./jurnalUmum.validation.js"
 import { createJurnalUmumService, deleteJurnalUmumByBuktiTransaksiService, deleteJurnalUmumByUuidService, getJurnalUmumByBulanService, updateJurnalUmumByUuidService } from "./jurnalUmum.services.js"
 import { bulanTahunValidation, generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
-import { getLoggerData } from "../logger/logger.services.js"
-import { encryptFile } from "../../utils/encryptUtil.js"
-import { getEnv } from "../../utils/envUtils.js"
 
 export const getAllJurnalUmumByBulanAndTypeSorting = async (req, res) => {
     LOGGER(logType.INFO, "Start getAllJurnalUmumByBulanAndTypeSortingController", null, req.identity)
@@ -21,28 +18,8 @@ export const getAllJurnalUmumByBulanAndTypeSorting = async (req, res) => {
 
         const { bulan, tahun } = value
 
-        let { print, search } = req.query
+        let { search } = req.query
         search = search ? search.trim() : ""
-
-        if (print) {
-            let name = `${bulan}_${tahun}_${new Date().getTime()}.keps`
-            let data = await getJurnalUmumByBulanService(bulan, tahun, sorting, search, req.identity)
-            data = data.concat(data, data, data, data, data)
-
-            LOGGER(logType.INFO, "JURNAL LENGTH " + data.length, null, req.identity)
-
-            encryptFile(`keps_backup/jurnal_${name}`, JSON.stringify(data), getEnv("ENCRYPT_KEY"))
-
-            const loggerData = await getLoggerData(bulan, tahun)
-
-            LOGGER(logType.INFO, "LOGGER LENGTH " + loggerData.length, null, req.identity)
-
-            encryptFile(`keps_backup/logger_${name}`, JSON.stringify(loggerData), getEnv("ENCRYPT_KEY"))
-
-            return res.json({
-                message: `${name} CREATED`
-            })
-        }
 
         res.json({
             data: await getJurnalUmumByBulanService(bulan, tahun, sorting, search, req.identity),

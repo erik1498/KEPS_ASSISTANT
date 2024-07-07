@@ -20,12 +20,18 @@ services:
     ports:
       - "2001:2001"
     volumes:
-      - ./logging:/usr/process_unit/workdir/log
+      - ./log:/usr/process_unit/workdir/log
     networks:
       keps_vps_1_network:
         ipv4_address: 170.30.0.3
 
   interaction:
+    deploy:
+        resources:
+          limits:
+            cpus: '1.0'
+          reservations:
+            cpus: '1.0'
     build:
       context: ./interaction_unit
     container_name: keps_assistant_interaction
