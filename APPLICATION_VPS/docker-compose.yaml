@@ -11,7 +11,7 @@ services:
         - DB_NAME=db_keps_assistant
         - DB_USER=kepsAssistantUserDB123@#%__
         - DB_PASSWORD=kepsAssistantPassDB123@#%__
-        - CLIENT_HOST=["http://localhost:5173"]
+        - CLIENT_HOST=["http://192.168.43.172:5173"]
         - USER_PERMISSION_SECURITY_ENABLED=true
         - USER_PARAMETER_SECURITY_ENABLED=true
     container_name: keps_assistant_process
@@ -26,19 +26,13 @@ services:
         ipv4_address: 170.30.0.3
 
   interaction:
-    deploy:
-        resources:
-          limits:
-            cpus: '1.0'
-          reservations:
-            cpus: '1.0'
     build:
       context: ./interaction_unit
     container_name: keps_assistant_interaction
     ports:
       - "5173:5173"
     environment:
-      - VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT=http://localhost:2001
+      - VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT=http://192.168.43.172:2001
       - TZ=Asia/Makassar
     networks:
       keps_vps_1_network:

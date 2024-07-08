@@ -119,7 +119,6 @@ const createWindow = async () => {
 function getOSInfo() {
     return {
         hostname: os.hostname(),
-        user_info: os.userInfo(),
         arch: os.arch(),
         platform: os.platform(),
         type: os.type(),

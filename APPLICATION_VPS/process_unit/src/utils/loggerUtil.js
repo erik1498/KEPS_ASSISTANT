@@ -64,7 +64,7 @@ function generator(time, index) {
     const hour = String(time.getHours()).padStart(2, '0');
     const minute = String(time.getMinutes()).padStart(2, '0');
     const second = String(time.getSeconds()).padStart(2, '0');
-    return `info/${year}-${month}-${day}-${hour}-${minute}-${second}-${index}.log`;
+    return `${year}-${month}-${day}-${hour}-${minute}-${second}-${index}.log`;
 }
 
 // Konfigurasi stream untuk rotasi file berdasarkan ukuran
@@ -73,6 +73,7 @@ const stream = createStream(generator, {
     interval: '1d', // Durasi rotasi (misalnya 1 hari)
     path: path.join(__dirname, 'log')
 });
+
 export const pinoLogFileConfig = pino({
     level: "debug",
 }, stream);
