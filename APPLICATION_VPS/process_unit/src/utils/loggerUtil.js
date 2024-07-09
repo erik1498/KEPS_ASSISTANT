@@ -53,7 +53,7 @@ export const LOGGER = (logType, message, object, req_identity, req_original_url,
 }
 
 // Fungsi untuk membuat nama file log baru
-function generator(time, index) {
+const generator = (time, index) => {
     if (!time) {
         time = new Date();
         index = "Start";
@@ -61,10 +61,7 @@ function generator(time, index) {
     const year = time.getFullYear();
     const month = String(time.getMonth() + 1).padStart(2, '0');
     const day = String(time.getDate()).padStart(2, '0');
-    const hour = String(time.getHours()).padStart(2, '0');
-    const minute = String(time.getMinutes()).padStart(2, '0');
-    const second = String(time.getSeconds()).padStart(2, '0');
-    return `${year}-${month}-${day}-${hour}-${minute}-${second}-${index}.log`;
+    return `${year}-${month}-${day}-${index}.log`;
 }
 
 // Konfigurasi stream untuk rotasi file berdasarkan ukuran
