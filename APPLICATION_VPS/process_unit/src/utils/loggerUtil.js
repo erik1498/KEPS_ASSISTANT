@@ -32,16 +32,19 @@ export const LOGGER = (logType, message, object, req_identity, req_original_url,
     message = JSON.stringify(logger_message, null, 4);
 
     if (logType == "info") {
-        pinoLogConfig.info(message)
+        pinoLogFileConfig.info(message)
+        pinoLogTerminalConfig.info(message)
     }
     if (logType == "error") {
-        pinoLogConfig.error(message)
+        pinoLogFileConfig.error(message)
+        pinoLogTerminalConfig.error(message)
         if (error_monitor) {
             LOGGER_MONITOR(req_original_url, req_method, object, req_identity, true)
         }
     }
     if (logType == "debug") {
-        pinoLogConfig.debug(message)
+        pinoLogFileConfig.debug(message)
+        pinoLogTerminalConfig.debug(message)
     }
 }
 
@@ -63,10 +66,25 @@ const rotatingStream = createStream((time, index) => {
     maxFiles: 5 // Keep a maximum of 5 log files
 });
 
-export const pinoLogConfig = pino(
+export const pinoLogFileConfig = pino(
     {
         level: "debug",
         timestamp: () => `, "time":"${moment().format()}"`,
     },
     rotatingStream
+)
+
+
+export const pinoLogTerminalConfig = pino(
+    {
+        level: "debug",
+        timestamp: () => `, "time":"${moment().format()}"`,
+        transport: {
+            targets: [
+                {
+                    target: "pino-pretty"
+                }
+            ]
+        },
+    },
 )
