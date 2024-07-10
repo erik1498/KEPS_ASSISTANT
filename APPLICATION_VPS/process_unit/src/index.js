@@ -3,11 +3,9 @@ import cors from "cors"
 import { routerList } from './routes/route.js'
 import { LOGGER, logType } from './utils/loggerUtil.js'
 import { v4 } from 'uuid'
-import db, { connectDatabase } from './config/Database.js'
+import { connectDatabase } from './config/Database.js'
 import { getEnv } from './utils/envUtils.js'
 import { rateLimit } from 'express-rate-limit'
-import { Sequelize } from 'sequelize'
-
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes

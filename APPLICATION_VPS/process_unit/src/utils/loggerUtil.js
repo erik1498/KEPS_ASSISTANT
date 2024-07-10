@@ -1,18 +1,14 @@
 import pino from "pino";
 import moment from "moment"
-import { createStream } from "rotating-file-stream"
-import path from 'path'
-import { fileURLToPath } from 'url'
 import { createLoggerService } from "../app/logger/logger.services.js";
+import { createStream } from 'rotating-file-stream';
+
 
 export const logType = {
     INFO: "info",
     ERROR: "error",
     DEBUG: "debug"
 }
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export const LOGGER_MONITOR = async (service, method, data, req_identity, error) => {
     const date = new Date()
@@ -36,55 +32,41 @@ export const LOGGER = (logType, message, object, req_identity, req_original_url,
     message = JSON.stringify(logger_message, null, 4);
 
     if (logType == "info") {
-        pinoLogTerminalConfig.info(message)
-        pinoLogFileConfig.info(message)
+        pinoLogConfig.info(message)
     }
     if (logType == "error") {
-        pinoLogTerminalConfig.error(message)
-        pinoLogFileConfig.error(message)
+        pinoLogConfig.error(message)
         if (error_monitor) {
             LOGGER_MONITOR(req_original_url, req_method, object, req_identity, true)
         }
     }
     if (logType == "debug") {
-        pinoLogTerminalConfig.debug(message)
-        pinoLogFileConfig.debug(message)
+        pinoLogConfig.debug(message)
     }
 }
 
-// Fungsi untuk membuat nama file log baru
-const generator = (time, index) => {
-    if (!time) {
-        time = new Date();
-        index = "Start";
-    };
-    const year = time.getFullYear();
-    const month = String(time.getMonth() + 1).padStart(2, '0');
-    const day = String(time.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}-${index}.log`;
+const getDate = () => {
+    let date_ob = new Date();
+    return `${(date_ob.getDate() < 10 ? "0" + date_ob.getDate() : date_ob.getDate()) + "-" + ((date_ob.getMonth() + 1) < 10 ? "0" + (date_ob.getMonth() + 1) : (date_ob.getMonth() + 1)) + "-" + date_ob.getFullYear()}`;
 }
 
-// Konfigurasi stream untuk rotasi file berdasarkan ukuran
-const stream = createStream(generator, {
-    size: '20M', // Ukuran maksimum file log sebelum dirotasi (misalnya 10MB)
-    interval: '1d', // Durasi rotasi (misalnya 1 hari)
-    path: path.join(__dirname, 'log')
+const logDirectory = './log'; // Definisikan direktori log
+
+// // Buat stream untuk log rotation
+const rotatingStream = createStream((time, index) => {
+    if (!time) return `${getDate()}.log`;
+    return `${getDate()}-${index}.log`;
+}, {
+    size: '10MB', // Rotate log files when they reach 10MB
+    path: logDirectory,
+    compress: 'gzip', // Mengompres file log yang dirotasi
+    maxFiles: 5 // Keep a maximum of 5 log files
 });
 
-export const pinoLogFileConfig = pino({
-    level: "debug",
-}, stream);
-
-export const pinoLogTerminalConfig = pino(
+export const pinoLogConfig = pino(
     {
         level: "debug",
         timestamp: () => `, "time":"${moment().format()}"`,
-        transport: {
-            targets: [
-                {
-                    target: "pino-pretty"
-                },
-            ]
-        },
     },
+    rotatingStream
 )
