@@ -8,7 +8,7 @@ import { getExpiredTimeFromToken } from "../../utils/jwtUtils.js"
 import { decryptString, encryptString } from "../../utils/encryptUtil.js"
 
 export const loginUser = async (req, res) => {
-    LOGGER(logType.INFO, "Start loginUser", req.body, req.identity)
+    LOGGER(logType.INFO, "Start loginUser", { username: req.body.username }, req.identity)
     try {
         let { username, password } = req.body
 
