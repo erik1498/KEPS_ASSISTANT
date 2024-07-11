@@ -5,6 +5,7 @@ services:
     image: mariadb:10.3.16
     container_name: keps_assistant_resources
     environment:
+      MYSQL_ROOT_USER: kepsAssistantUserDB123@#%__
       MYSQL_ROOT_PASSWORD: kepsAssistantDatabasePassword123@#%__
     ports:
       - "9838:3306"

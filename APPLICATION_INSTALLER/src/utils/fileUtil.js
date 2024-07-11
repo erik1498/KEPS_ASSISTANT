@@ -16,6 +16,13 @@ export const createFile = (path, data) => {
             }).catch(err => {
                 if (err) throw err;
             })
+        }else{
+            fs.writeFile(path, data, (err) => {
+                if (err) {
+                    rej("Gagal Membuat File " + path, err.stack)
+                }
+                res("Berhasil Membuat File", path)
+            })
         }
     })
 }
