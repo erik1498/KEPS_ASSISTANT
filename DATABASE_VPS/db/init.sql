@@ -1,6 +1,8 @@
 CREATE DATABASE IF NOT EXISTS db_keps_assistant_erick_company_prd;
 CREATE DATABASE IF NOT EXISTS db_keps_assistant_logging_erick_company_prd;
 
+CREATE USER 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
+
 GRANT ALL PRIVILEGES ON *.* TO 'kepsAssistantRootDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantDatabasePassword123@#%__';
 
 USE db_keps_assistant_erick_company_prd;
