@@ -5,3 +5,4 @@ logging
 dist
 .vscode
 log
+user_generate
