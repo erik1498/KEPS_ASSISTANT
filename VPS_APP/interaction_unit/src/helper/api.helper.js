@@ -4,12 +4,14 @@ import { apiLogin } from '../service/endPointList.api';
 
 export const axiosJWT = axios.create()
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 axiosJWT.interceptors.request.use(async (config) => {
   const currentDate = new Date()
   if (getCookie("tokenExpired") && getCookie("refreshToken") != null) {
     if (currentDate.getTime() >= parseFloat(getCookie("tokenExpired")) * 1000) {
       const response = await axios.post(
-        import.meta.env.VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT + "/user/refresh",
+        apiUrl + "/user/refresh",
         {
           refreshToken: getCookie("refreshToken")
         }

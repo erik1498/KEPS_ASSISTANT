@@ -11,7 +11,6 @@ import dashboardPath from './path/dashboard/dashboard.path';
 import loginPath from './path/login.path';
 import LoadingPage from './component/layout/LoadingPage';
 import LoginPage from './page/Login.page';
-import { useEffect } from 'react';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));

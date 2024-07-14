@@ -1,7 +1,6 @@
 import { objectPathEndPointAPI } from '../config/objectPath.config';
 
-const baseAPIKepsAssistant = import.meta.env
-  .VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT;
+const baseAPIKepsAssistant = import.meta.env.VITE_API_URL;
 
 export const SrvLogin = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/user'

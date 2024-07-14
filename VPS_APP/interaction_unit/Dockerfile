@@ -5,9 +5,11 @@ WORKDIR /usr/interaction_unit/workdir
 COPY . .
 
 RUN npm install -g npm@latest
+RUN npm install -g serve
 RUN npm install -g pnpm@latest
 RUN pnpm install
+RUN pnpm run build
 
-EXPOSE 5173
+EXPOSE 3000
 
-CMD ["pnpm", "run", "dev"]
+CMD ["serve", "-s", "dist"]

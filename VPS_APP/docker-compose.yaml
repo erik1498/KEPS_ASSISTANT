@@ -11,9 +11,9 @@ services:
         - DB_NAME=db_keps_assistant
         - DB_USER=kepsAssistantUserDB123@#%__
         - DB_PASSWORD=kepsAssistantPassDB123@#%__
-        - CLIENT_HOST=["http://192.168.43.172:5173"]
-        - USER_PERMISSION_SECURITY_ENABLED=true
-        - USER_PARAMETER_SECURITY_ENABLED=true
+        - CLIENT_HOST=["http://192.168.43.172:3000"]
+        - USER_PERMISSION_SECURITY_ENABLED=false
+        - USER_PARAMETER_SECURITY_ENABLED=false
     container_name: keps_assistant_process
     environment:
       - TZ=Asia/Makassar
@@ -30,9 +30,9 @@ services:
       context: ./interaction_unit
     container_name: keps_assistant_interaction
     ports:
-      - "5173:5173"
+      - "3000:3000"
     environment:
-      - VITE_BASE_API_KEPS_ASSISTANT_MANAGEMENT=http://192.168.43.172:2001
+      - VITE_API_URL=http://192.168.43.172:2001
       - TZ=Asia/Makassar
     networks:
       keps_vps_1_network:
