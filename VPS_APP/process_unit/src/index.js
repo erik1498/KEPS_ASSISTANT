@@ -54,9 +54,10 @@ app.use((req, res, next) => {
         "client_id": req.header("Client_id")
     })
     res.setHeader("request-id", genUUID);
-    res.setHeader("X-Powered-By", "KEPS-ASSISTANT");
     next();
 })
+
+app.disable("x-powered-by")
 
 routerList.map(route => {
     app.use(route.prefix, route.controller)
