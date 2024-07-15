@@ -1,7 +1,6 @@
 import React from "react";
 import JurnalUmumRow from "./JurnalUmumRow";
 import DebetKreditStatusCard from "../../../../component/card/DebetKreditStatusCard";
-import { convertTo12HoursFormat, getHariTanggal } from "../../../../helper/date.helper";
 
 export const JurnalUmumPrint = React.forwardRef((props, ref) => {
     return (

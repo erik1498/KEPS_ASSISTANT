@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
-import { FaPlus, FaSave, FaTimes, FaTrash } from "react-icons/fa";
+import { FaPlus, FaPrint, FaSave, FaTimes, FaTrash } from "react-icons/fa";
 import { initialKodeAkunValue } from "../../../../helper/select.helper";
 import FormSelect from "../../../../component/form/FormSelect";
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel";
@@ -12,6 +12,8 @@ import { apiJurnalUmumCRUD } from "../../../../service/endPointList.api";
 import { formShowMessage, formValidation, showAlert, showError } from "../../../../helper/form.helper";
 import { normalizeDataJurnalUmumSubmit } from "../../../../helper/jurnalUmum.helper";
 import { axiosJWT } from "../../../../helper/api.helper";
+import { useReactToPrint } from "react-to-print";
+import { JurnalUmumFormPrint } from "./JurnalUmumFormPrint";
 
 const JurnalUmumForm = ({
   setAddJurnalEvent,
@@ -155,6 +157,13 @@ const JurnalUmumForm = ({
     setTransaksiList(transaksiListCopy)
   }
 
+
+  const jurnalUmumFormPrintRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => jurnalUmumFormPrintRef.current,
+  });
+
   useEffect(() => {
     setIsLoadingEvent(true)
     setKodeAkunList(kodeAkun)
@@ -184,8 +193,8 @@ const JurnalUmumForm = ({
   }, [transaksiList])
 
   return <>
-    <div className="bg-white px-6 rounded-md shadow-2xl h-[70vh] overflow-scroll no-scrollbar relative">
-      <div className="sticky top-0 pt-3 h-max bg-white w-full z-10">
+    <div className="bg-white rounded-md shadow-2xl h-[70vh] overflow-scroll no-scrollbar relative">
+      <div className="sticky top-0 pt-3 px-6 h-max bg-white w-full z-10">
         <div className="mb-3 flex justify-between items-center">
           <h1 className="uppercase text-gray-600 font-bold">{buktiTransaksiEdit != null ? "Edit " : "Tambah "} Transaksi</h1>
           <button
@@ -223,7 +232,7 @@ const JurnalUmumForm = ({
           />
         </div>
       </div>
-      <div className="flex flex-col mt-6 w-full">
+      <div className="flex flex-col px-6 mt-6 w-full">
         {
           transaksiList.map((transaksi, i) => {
             return <>
@@ -401,16 +410,34 @@ const JurnalUmumForm = ({
             </>
           })
         }
-        <div className="flex sticky bottom-0 bg-white py-3 w-full">
+        <div className="flex sticky bottom-0 bg-white py-3 w-full items-end gap-x-2">
           <button className="btn btn-sm bg-blue-800 mt-4 text-white" onClick={() => addTransaksi()}><FaPlus /> Tambah Transaksi</button>
           {
-            transaksiList.length > 0 ? <button className="btn btn-sm bg-green-800 mt-4 text-white" onClick={() => {
-              _saveTransaksi({
-                transaksiList,
-                hariTanggal,
-                buktiTransaksi
-              })
-            }}><FaSave /> Simpan</button> : <></>
+            transaksiList.length > 0 ? <>
+              <button className="btn btn-sm bg-green-800 mt-4 text-white" onClick={() => {
+                _saveTransaksi({
+                  transaksiList,
+                  hariTanggal,
+                  buktiTransaksi
+                })
+              }}><FaSave /> Simpan</button>
+
+              <div className="hidden">
+                <JurnalUmumFormPrint
+                  data={transaksiList}
+                  buktiTransaksi={buktiTransaksi}
+                  totalDebetKredit={totalDebetKredit}
+                  tanggal={hariTanggal}
+                  ref={jurnalUmumFormPrintRef}
+                />
+              </div>
+              <button
+                onClick={handlePrint}
+                className="btn btn-sm bg-red-600 hover:bg-red-600 text-white mt-2 border-red-600"
+              >
+                <FaPrint /> Cetak Form
+              </button>
+            </> : <></>
           }
         </div>
       </div>
