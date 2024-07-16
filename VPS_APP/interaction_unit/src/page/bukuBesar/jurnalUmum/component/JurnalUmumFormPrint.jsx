@@ -90,7 +90,7 @@ export const JurnalUmumFormPrint = React.forwardRef((props, ref) => {
                         </>
                     })
                 }
-                <div className="abosolute bottom-0 mt-6 border border-0 border-t-2 border-black w-full p-3 rounded">
+                <div className="abosolute bottom-0 mt-6 border border-b-0 border-l-0 border-r-0 border-t-2 border-black w-full p-3 rounded">
                     <p>Note : </p>
                 </div>
             </div >
