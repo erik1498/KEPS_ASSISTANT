@@ -12,7 +12,6 @@ export const generateValidationMessage = (error) => {
 }
 
 export const bulanTahunValidation = (payload) => {
-    console.log(payload)
     const schema = Joi.object({
         bulan: Joi.number().required().messages({
             'number.base': "Harus Berupa Angka",

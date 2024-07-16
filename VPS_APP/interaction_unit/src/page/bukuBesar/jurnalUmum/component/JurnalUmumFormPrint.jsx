@@ -8,7 +8,7 @@ export const JurnalUmumFormPrint = React.forwardRef((props, ref) => {
             ref={ref}
         >
             <div className="px-3">
-                <h1 className="text-6xl font-bold mb-3">Form Jurnal Umum</h1>
+                <h1 className="text-4xl font-bold mb-3">Form Jurnal Umum</h1>
                 <h1 className="text-2xl font-bold">Tanggal : {props.tanggal}</h1>
                 <h1 className="text-2xl font-bold mb-20">Bukti Transaksi : {props.buktiTransaksi}</h1>
                 {
@@ -90,6 +90,9 @@ export const JurnalUmumFormPrint = React.forwardRef((props, ref) => {
                         </>
                     })
                 }
+                <div className="abosolute bottom-0 mt-6 border border-0 border-t-2 border-black w-full p-3 rounded">
+                    <p>Note : </p>
+                </div>
             </div >
         </div >
     );

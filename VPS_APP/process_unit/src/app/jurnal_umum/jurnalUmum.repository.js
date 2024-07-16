@@ -26,10 +26,16 @@ export const getJurnalUmumNeracaByBulanRepo = async (bulan, req_id) => {
                 kapt.type AS type_akun 
             FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON jut.kode_akun_uuid = kapt.uuid
-            WHERE jut.bulan = ${bulan} AND jut.tahun = ${new Date().getFullYear()}
+            WHERE jut.bulan = :bulan AND jut.tahun = 
             AND kapt.type IN ("Harta", "Utang", "Modal")
         `,
-        { type: Sequelize.QueryTypes.SELECT }
+        {
+            replacements: {
+                bulan,
+                tahun: `${new Date().getFullYear()}`
+            },
+            type: Sequelize.QueryTypes.SELECT
+        }
     )
     return jurnalUmums
 }
@@ -45,10 +51,16 @@ export const getJurnalUmumLabaRugiByBulanRepo = async (bulan, req_id) => {
                 kapt.type AS type_akun 
             FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab.jut 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON jut.kode_akun_uuid = kapt.uuid
-            WHERE jut.bulan = ${bulan} AND jut.tahun = ${new Date().getFullYear()}
+            WHERE jut.bulan = :bulan AND jut.tahun = :tahun
             AND kapt.type IN ("Pendapatan", "Beban")
         `,
-        { type: Sequelize.QueryTypes.SELECT }
+        {
+            replacements: {
+                tahun: `${new Date().getFullYear()}`,
+                bulan
+            },
+            type: Sequelize.QueryTypes.SELECT
+        }
     )
     return jurnalUmums
 }
@@ -81,19 +93,26 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = jut.kode_akun_uuid
                     WHERE kapt.enabled = 1 AND jut.enabled = 1
                     AND (
-                        jut.uraian LIKE '%${search}%' 
-                        OR jut.bukti_transaksi LIKE '%${search}%'
-                        OR kapt.code LIKE '%${search}%'
-                        OR kapt.type LIKE '%${search}%'
-                        OR kapt.name LIKE '%${search}%'
-                        OR jut.debet LIKE '%${search}%'
-                        OR jut.kredit LIKE '%${search}%'
+                        jut.uraian LIKE :search 
+                        OR jut.bukti_transaksi LIKE :search
+                        OR kapt.code LIKE :search
+                        OR kapt.type LIKE :search
+                        OR kapt.name LIKE :search
+                        OR jut.debet LIKE :search
+                        OR jut.kredit LIKE :search
                     )
                 ) AS res
-                WHERE res.bulan = "${bulan}" AND res.tahun = "${tahun}"
+                WHERE res.bulan = :bulan AND res.tahun = :tahun
             ${sorting == "bukti_transaksi" ? 'ORDER BY res.tanggal ASC, res.waktu ASC, res.bukti_transaksi ASC' : 'ORDER BY res.tanggal ASC'}
         `,
-        { type: Sequelize.QueryTypes.SELECT }
+        {
+            replacements: {
+                bulan,
+                tahun,
+                search: `%${search}%`
+            },
+            type: Sequelize.QueryTypes.SELECT
+        }
     )
     return jurnalUmums
 }
@@ -141,10 +160,16 @@ export const getJurnalUmumByBuktiTransaksiRepo = async (bukti_transaksi, uuidLis
             SELECT 
                 COUNT(0) AS count
             FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut
-            WHERE jut.bukti_transaksi = "${bukti_transaksi}" AND jut.enabled = 1
-            ${uuidList != "EMPTY" ? `AND jut.uuid NOT IN(${uuidList})` : ''}
+            WHERE jut.bukti_transaksi = :bukti_transaksi AND jut.enabled = 1
+            ${uuidList != "EMPTY" ? `AND jut.uuid NOT IN(:uuid_list)` : ''}
         `,
-        { type: Sequelize.QueryTypes.SELECT }
+        {
+            replacements: {
+                bukti_transaksi: bukti_transaksi,
+                uuid_list: uuidList
+            },
+            type: Sequelize.QueryTypes.SELECT
+        }
     )
     return jurnalUmums
 }
@@ -156,10 +181,16 @@ export const getJurnalUmumByBuktiTransaksiAllDataRepo = async (bukti_transaksi, 
                 jut.bulan,
                 jut.tahun
             FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut
-            WHERE jut.bukti_transaksi = "${bukti_transaksi}" AND jut.enabled = 1
-            ${uuidList != "EMPTY" ? `AND jut.uuid NOT IN(${uuidList})` : ''}
+            WHERE jut.bukti_transaksi = :bukti_transaksi AND jut.enabled = 1
+            ${uuidList != "EMPTY" ? `AND jut.uuid NOT IN(:uuid_list)` : ''}
         `,
-        { type: Sequelize.QueryTypes.SELECT }
+        {
+            replacements: {
+                bukti_transaksi,
+                uuid_list: uuidList
+            },
+            type: Sequelize.QueryTypes.SELECT
+        }
     )
     return jurnalUmums
 }
