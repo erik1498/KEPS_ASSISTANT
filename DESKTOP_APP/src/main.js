@@ -22,7 +22,7 @@ const createWindow = async () => {
         const win = new BrowserWindow({
             autoHideMenuBar: true,
             webPreferences: {
-                devTools: true,
+                devTools: false,
                 nodeIntegration: true,
                 contextIsolation: false,
                 zoomFactor: 0.75
