@@ -44,7 +44,6 @@ const createWindow = async () => {
                 let detailsCopy = { ...details }
 
                 detailsCopy.requestHeaders['Mode'] = "Desktop"
-                detailsCopy.requestHeaders['Client_id'] = getEnV(keps_assistant_path, CLIENT_ID)
                 detailsCopy.requestHeaders['User-Parameters'] = encryptString(JSON.stringify({
                     timestamp: detailsCopy.timestamp,
                     macAddr: getmac(),
