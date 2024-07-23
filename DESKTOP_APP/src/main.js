@@ -4,7 +4,7 @@ import { getEnv, getEnV } from "./utils/envUtils.js";
 import { decryptKeygenString, encryptString } from "./utils/encryptUtil.js";
 import getmac from "getmac"
 import { PERMISSION_METHOD } from "./constant/method.constant.js";
-import { CLIENT_ID, HOME_URL, KEPS_ASSISTANT_PATH, LICENSE_PATH, MAC_ADDRESS, OS_INFO, USER_PARAMETER_KEY } from "./constant/environtment.constant.js";
+import { HOME_URL, KEPS_ASSISTANT_PATH, LICENSE_PATH, MAC_ADDRESS, OS_INFO, USER_PARAMETER_KEY } from "./constant/environtment.constant.js";
 import chalk from "chalk";
 import http from "http"
 import { URL } from "node:url"
@@ -22,7 +22,7 @@ const createWindow = async () => {
         const win = new BrowserWindow({
             autoHideMenuBar: true,
             webPreferences: {
-                devTools: false,
+                // devTools: false,
                 nodeIntegration: true,
                 contextIsolation: false,
                 zoomFactor: 0.75
@@ -44,6 +44,7 @@ const createWindow = async () => {
                 let detailsCopy = { ...details }
 
                 detailsCopy.requestHeaders['Mode'] = "Desktop"
+                detailsCopy.requestHeaders['Client_id'] = "alor"
                 detailsCopy.requestHeaders['User-Parameters'] = encryptString(JSON.stringify({
                     timestamp: detailsCopy.timestamp,
                     macAddr: getmac(),
@@ -71,7 +72,8 @@ const createWindow = async () => {
         })
 
         win.maximize()
-        win.loadURL(getEnV(keps_assistant_path, HOME_URL), {
+        win.loadURL("http://localhost:5173", {
+        // win.loadURL(getEnV(keps_assistant_path, HOME_URL), {
             extraHeaders: 'Mode: Desktop'
         })
 

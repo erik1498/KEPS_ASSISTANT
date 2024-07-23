@@ -3,9 +3,9 @@ const FormInputWithLabel = ({
     type,
     onchange = () => { },
     others,
-    addClassLabel,
-    addClassInput,
-    addClassParent
+    addClassLabel = '',
+    addClassInput = '',
+    addClassParent = ''
 }) => {
     return <div className={`${addClassParent} w-full`}>
         <label className="form-control w-full bg-white relative">

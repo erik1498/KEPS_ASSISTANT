@@ -90,9 +90,25 @@ export const JurnalUmumFormPrint = React.forwardRef((props, ref) => {
                         </>
                     })
                 }
-                <div className="abosolute bottom-0 mt-6 border border-b-0 border-l-0 border-r-0 border-t-2 border-black w-full p-3 rounded">
+            <div className="page-break">
+                <div className="mt-6 pb-64">
                     <p>Note : </p>
                 </div>
+                <div className="flex justify-between">
+                    <div className="flex flex-1 flex-col font-bold">
+                        <p>Accounting</p>
+                        <p className="mt-20">Tina</p>
+                    </div>
+                    <div className="flex flex-1 flex-col items-start justify-start font-bold">
+                        <p>Bendahara</p>
+                        <p className="mt-20">Lina</p>
+                    </div>
+                    <div className="flex flex-1 flex-col items-start justify-start font-bold">
+                        <p>Direktur</p>
+                        <p className="mt-20">Naomi</p>
+                    </div>
+                </div>
+            </div>
             </div >
         </div >
     );

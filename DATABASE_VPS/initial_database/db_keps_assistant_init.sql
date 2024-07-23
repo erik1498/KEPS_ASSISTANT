@@ -79,7 +79,7 @@ INSERT INTO `kode_akun_perkiraan_tab` (`id`, `uuid`, `type`, `name`, `code`, `en
 (137, '1d78c9c1-277c-4fbf-abc5-307ddf8c937e', 'Pendapatan', 'Penjualan Jasa', '405', 1, '2024-05-27 12:49:41', '2024-05-27 12:49:41'),
 (138, 'ab90cf91-022f-4708-81f5-13910c29415b', 'Harga Pokok Penjualan', 'Persediaan Barang Dagang Awal', '701', 1, '2024-05-27 12:51:02', '2024-05-27 12:51:02'),
 (139, '8a950e8e-8d45-47c1-9088-40d643496783', 'Harga Pokok Penjualan', 'Pembelian', '702', 1, '2024-05-27 12:51:34', '2024-05-27 12:51:34'),
-(140, 'afb32afd-9e8f-496f-b800-1d85f3ea5a85', 'Harta', 'Persediaan Barang Dagang Akhir', '799', 1, '2024-05-27 12:51:54', '2024-05-27 12:51:54');
+(140, 'afb32afd-9e8f-496f-b800-1d85f3ea5a85', 'Harga Pokok Penjualan', 'Persediaan Barang Dagang Akhir', '799', 1, '2024-05-27 12:51:54', '2024-05-27 12:51:54');
 
 -- --------------------------------------------------------
 

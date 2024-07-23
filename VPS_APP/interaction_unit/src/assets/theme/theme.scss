@@ -52,6 +52,10 @@ body {
       margin-top: 60px;
       margin-bottom: 60px;
     }
+    
+    .page-break {
+      page-break-before: always;
+    }
 
     body {
       background-color: white !important;

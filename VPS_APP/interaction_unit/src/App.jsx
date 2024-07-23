@@ -11,6 +11,7 @@ import dashboardPath from './path/dashboard/dashboard.path';
 import loginPath from './path/login.path';
 import LoadingPage from './component/layout/LoadingPage';
 import LoginPage from './page/Login.page';
+import aktivitasDokumenPath from './path/aktivitasDokumen/aktivitasDokumen';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -20,6 +21,7 @@ const NeracaPage = React.lazy(() => import('./page/laporan/neraca/Neraca.page'))
 const KodeAkunPage = React.lazy(() => import('./page/perusahaan/kodeAkun/KodeAkun.page'));
 const PerubahanModalPage = React.lazy(() => import('./page/laporan/perubahanModal/PerubahanModal.page'));
 const Dashboard2Page = React.lazy(() => import('./page/dashboard/Dashboard2.page'));
+const AktivitasDokumenPage = React.lazy(() => import('./page/aktivitasDokumen/AktivitasDokumen.page'));
 
 function App() {
   return (
@@ -33,6 +35,9 @@ function App() {
         </Routes>
         <Routes basename={kodeAkunPath.main}>
           <Route path={kodeAkunPath.main} element={<KodeAkunPage />} />
+        </Routes>
+        <Routes basename={aktivitasDokumenPath.main}>
+          <Route path={aktivitasDokumenPath.main} element={<AktivitasDokumenPage />} />
         </Routes>
         <Routes basename={jurnalUmumPath.main}>
           <Route path={jurnalUmumPath.main} element={<JurnalUmumPage />} />

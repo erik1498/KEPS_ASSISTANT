@@ -1,4 +1,4 @@
-import { FaBook, FaBuilding, FaClipboardList, FaCog, FaListOl, FaMicrochip, FaMoneyBill, FaRegChartBar, FaSignOutAlt, FaThLarge } from "react-icons/fa";
+import { FaBook, FaBuilding, FaClipboardList, FaCog, FaFileCsv, FaListOl, FaMicrochip, FaMoneyBill, FaRegChartBar, FaSignOutAlt, FaThLarge } from "react-icons/fa";
 import NavigationLink from "./NavigationLink";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -52,6 +52,14 @@ const Navigasi = () => {
                         icon={<FaClipboardList />}
                         label={"Kode Akun"}
                         to={"/perusahaan/kodeAkun"}
+                    />
+                </li>
+                <li>
+                    <NavigationLink
+                        icon={<FaFileCsv />}
+                        label={"Aktivitas Dokumen"}
+                        to={"/aktivitasDokumen"}
+                        addClass={"ml-2"}
                     />
                 </li>
                 <li>
