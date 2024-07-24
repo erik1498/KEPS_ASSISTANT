@@ -91,7 +91,7 @@ export const JurnalUmumFormPrint = React.forwardRef((props, ref) => {
                     })
                 }
             <div className="page-break">
-                <div className="mt-6 pb-64">
+                <div className="mt-6 pb-64 border border-black pt-2 px-2 mb-20">
                     <p>Note : </p>
                 </div>
                 <div className="flex justify-between">
