@@ -22,7 +22,7 @@ const createWindow = async () => {
         const win = new BrowserWindow({
             autoHideMenuBar: true,
             webPreferences: {
-                // devTools: false,
+                devTools: false,
                 nodeIntegration: true,
                 contextIsolation: false,
                 zoomFactor: 0.75
@@ -44,7 +44,6 @@ const createWindow = async () => {
                 let detailsCopy = { ...details }
 
                 detailsCopy.requestHeaders['Mode'] = "Desktop"
-                detailsCopy.requestHeaders['Client_id'] = "alor"
                 detailsCopy.requestHeaders['User-Parameters'] = encryptString(JSON.stringify({
                     timestamp: detailsCopy.timestamp,
                     macAddr: getmac(),
@@ -72,8 +71,7 @@ const createWindow = async () => {
         })
 
         win.maximize()
-        win.loadURL("http://localhost:5173", {
-        // win.loadURL(getEnV(keps_assistant_path, HOME_URL), {
+        win.loadURL(getEnV(keps_assistant_path, HOME_URL), {
             extraHeaders: 'Mode: Desktop'
         })
 
