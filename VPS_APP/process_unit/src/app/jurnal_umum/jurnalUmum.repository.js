@@ -26,7 +26,7 @@ export const getJurnalUmumNeracaByBulanRepo = async (bulan, req_id) => {
                 kapt.type AS type_akun 
             FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON jut.kode_akun_uuid = kapt.uuid
-            WHERE jut.bulan = :bulan AND jut.tahun = 
+            WHERE jut.bulan = :bulan AND jut.tahun = :tahun
             AND kapt.type IN ("Harta", "Utang", "Modal")
         `,
         {
@@ -161,12 +161,11 @@ export const getJurnalUmumByBuktiTransaksiRepo = async (bukti_transaksi, uuidLis
                 COUNT(0) AS count
             FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut
             WHERE jut.bukti_transaksi = :bukti_transaksi AND jut.enabled = 1
-            ${uuidList != "EMPTY" ? `AND jut.uuid NOT IN(:uuid_list)` : ''}
+            ${uuidList != "EMPTY" ? `AND jut.uuid NOT IN(${uuidList})` : ''}
         `,
         {
             replacements: {
-                bukti_transaksi: bukti_transaksi,
-                uuid_list: uuidList
+                bukti_transaksi: bukti_transaksi
             },
             type: Sequelize.QueryTypes.SELECT
         }

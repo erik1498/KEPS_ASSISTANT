@@ -53,3 +53,32 @@ export const SrvPegawai = objectPathEndPointAPI(
 export const SrvPayroll = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/payroll'
 )
+
+export const SrvAktivitasDokumen = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/aktivitas_dokumen'
+)
+
+export const SrvRiwayatPembayaranAktivitasDokumen = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/riwayat_pembayaran_aktivitas_dokumen'
+)
+
+export const SrvRiwayatAktivitasDokumen = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/riwayat_aktivitas_dokumen'
+)
+
+export const SrvStatusRiwayatAktivitasDokumen = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/status_riwayat_aktivitas_dokumen'
+)
+
+export const SrvStatusRiwayatAktivitasDokumenPegawaiPelaksana = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/status_riwayat_aktivitas_dokumen_pegawai_pelaksana'
+)
+
+export const SrvStatusRiwayatAktivitasDokumenKeterangan = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/status_riwayat_aktivitas_dokumen_keterangan'
+
+)
+
+export const SrvDokumenKlien = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/dokumen_klien'
+)

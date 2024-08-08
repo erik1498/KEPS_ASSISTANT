@@ -22,6 +22,10 @@ export const getHariTanggal = () => {
     return new Date().toISOString().slice(0, 10)
 }
 
+export const getHariTanggalFull = () => {
+    return new Date().toISOString().slice(0, 16)
+}
+
 export const convertTo12HoursFormat = (time) => {
     time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 

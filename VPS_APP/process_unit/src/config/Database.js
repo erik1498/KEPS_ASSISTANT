@@ -8,7 +8,7 @@ const db = new Sequelize({
     username: getEnv("DB_USER"),
     password: getEnv("DB_PASSWORD"),
     dialect: "mysql",
-    logging: false
+    logging: true
 })
 
 export const connectDatabase = () => {

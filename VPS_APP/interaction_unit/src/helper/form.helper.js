@@ -1,8 +1,8 @@
-export const formValidation = () => {
+export const formValidation = (formElement) => {
     return new Promise((res, rej) => {
         let falseField = [];
 
-        const inputList = document.querySelectorAll("input")
+        const inputList = formElement ? formElement.querySelectorAll("input") : document.querySelectorAll("input")
 
         inputList.forEach(element => {
             if (!element.classList.contains("no-required")) {

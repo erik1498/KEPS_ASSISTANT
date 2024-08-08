@@ -1,5 +1,5 @@
 import { _shapeObjectMethodCRUD } from './_config.api';
-import { SrvDivisi, SrvHistoryAkun, SrvJabatan, SrvJurnalUmum, SrvKodeAkun, SrvLabaRugi, SrvLogin, SrvNeraca, SrvNeracaSaldo, SrvPayroll, SrvPegawai, SrvPerubahanModal, SrvStatusTanggungan } from './_endPoint.api';
+import { SrvAktivitasDokumen, SrvDivisi, SrvDokumenKlien, SrvHistoryAkun, SrvJabatan, SrvJurnalUmum, SrvKodeAkun, SrvLabaRugi, SrvLogin, SrvNeraca, SrvNeracaSaldo, SrvPayroll, SrvPegawai, SrvPerubahanModal, SrvRiwayatAktivitasDokumen, SrvRiwayatPembayaranAktivitasDokumen, SrvStatusRiwayatAktivitasDokumen, SrvStatusRiwayatAktivitasDokumenKeterangan, SrvStatusRiwayatAktivitasDokumenPegawaiPelaksana, SrvStatusTanggungan } from './_endPoint.api';
 
 export const apiLogin = { ..._shapeObjectMethodCRUD(SrvLogin) };
 
@@ -26,3 +26,17 @@ export const apiPegawaiCRUD = { ..._shapeObjectMethodCRUD(SrvPegawai) }
 export const apiPayroll = { ..._shapeObjectMethodCRUD(SrvPayroll) }
 
 export const apiPerubahanModal = { ..._shapeObjectMethodCRUD(SrvPerubahanModal) }
+
+export const apiAktivitasDokumen = {..._shapeObjectMethodCRUD(SrvAktivitasDokumen)}
+
+export const apiRiwayatPembayaranAktivitasDokumen = {..._shapeObjectMethodCRUD(SrvRiwayatPembayaranAktivitasDokumen)}
+
+export const apiRiwayatAktivitasDokumen = {..._shapeObjectMethodCRUD(SrvRiwayatAktivitasDokumen)}
+
+export const apiStatusRiwayatAktivitasDokumen = {..._shapeObjectMethodCRUD(SrvStatusRiwayatAktivitasDokumen)}
+
+export const apiStatusRiwayatAktivitasDokumenPegawaiPelaksana = {..._shapeObjectMethodCRUD(SrvStatusRiwayatAktivitasDokumenPegawaiPelaksana)}
+
+export const apiStatusRiwayatAktivitasDokumenKeterangan = {..._shapeObjectMethodCRUD(SrvStatusRiwayatAktivitasDokumenKeterangan)}
+
+export const apiDokumenKlien = {..._shapeObjectMethodCRUD(SrvDokumenKlien)}
