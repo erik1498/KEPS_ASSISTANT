@@ -7,10 +7,11 @@ import { formValidation } from "../../../helper/form.helper"
 import { apiStatusRiwayatAktivitasDokumen } from "../../../service/endPointList.api"
 import PegawaiPelaksana from "./PegawaiPelaksana"
 import KeteranganStatusRiwayatAktivitasDokumen from "./KeteranganStatusRiwayatAktivitasDokumen"
-import LoadingPage from "../../../component/layout/LoadingPage"
+import LoadingMiniPage from "../../../component/layout/LoadingMiniPage"
 
 const StatusRiwayatAktivitasDokumen = ({
-    idStatusAktivitasDokumen
+    idStatusAktivitasDokumen,
+    viewMode
 }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [statusAktivitasList, setStatusAktivitasList] = useState([])
@@ -50,6 +51,7 @@ const StatusRiwayatAktivitasDokumen = ({
             .then(res => {
                 setStatusAktivitasList(res.data.entry)
                 setIsLoading(x => x = false)
+                setTanggalStatusAktivitas(getHariTanggalFull())
             }).catch(err => {
                 console.log(err)
             })
@@ -63,73 +65,82 @@ const StatusRiwayatAktivitasDokumen = ({
     }, [idStatusAktivitasDokumen])
 
     return isLoading ?
-        <LoadingPage /> :
+        <LoadingMiniPage /> :
         <>
-            <form onSubmit={e => addStatusAktivitas(e)}>
-                <div className="flex sticky bottom-0 bg-white py-3 w-full items-end gap-x-2">
-                    <FormInputWithLabel
-                        label={"Status Aktivitas"}
-                        type={"text"}
-                        onchange={(e) => {
-                            setStatusAktivitas(e.target.value)
-                        }}
-                        others={
-                            {
-                                value: statusAktivitas,
-                                name: "statusAktivitas"
-                            }
-                        }
-                    />
-                    <FormInputWithLabel
-                        label={"Hari/Tanggal Status Aktivitas"}
-                        type={"datetime-local"}
-                        onchange={(e) => {
-                            setTanggalStatusAktivitas(e.target.value)
-                        }}
-                        others={
-                            {
-                                value: tanggalStatusAktivitas,
-                                name: "tanggalStatusAktivitas"
-                            }
-                        }
-                    />
-                    <button
-                        className="btn btn-sm bg-blue-800 mt-4 text-white"
-                        type="submit"
-                    >
-                        <FaPlus /> Tambah
-                    </button>
-                </div>
-            </form>
+            {
+                viewMode ? <></> : <>
+                    <form onSubmit={e => addStatusAktivitas(e)}>
+                        <div className="flex sticky bottom-0 bg-white pb-3 w-full items-end gap-x-2">
+                            <FormInputWithLabel
+                                label={"Status Aktivitas"}
+                                type={"text"}
+                                onchange={(e) => {
+                                    setStatusAktivitas(e.target.value)
+                                }}
+                                others={
+                                    {
+                                        value: statusAktivitas,
+                                        name: "statusAktivitas"
+                                    }
+                                }
+                            />
+                            <FormInputWithLabel
+                                label={"Hari/Tanggal Status Aktivitas"}
+                                type={"datetime-local"}
+                                onchange={(e) => {
+                                    setTanggalStatusAktivitas(e.target.value)
+                                }}
+                                others={
+                                    {
+                                        value: tanggalStatusAktivitas,
+                                        name: "tanggalStatusAktivitas"
+                                    }
+                                }
+                            />
+                            <button
+                                className="btn btn-sm bg-blue-800 mt-4 text-white"
+                                type="submit"
+                            >
+                                <FaPlus /> Tambah
+                            </button>
+                        </div>
+                    </form>
+                </>
+            }
 
             {
-                statusAktivitasList.length > 0 ? <p className="font-bold text-md my-5">Riwayat Status Aktivitas </p> : <></>
+                statusAktivitasList.length > 0 ? <p className={`${viewMode ? "text-xs mt-4 mb-2" : "text-md mt-6"} font-bold mb-4`}>Riwayat Status Aktivitas </p> : <></>
             }
 
             {
                 statusAktivitasList.map((itemj, j) => {
                     return <>
-                        <div className="border-l-4 border-blue-900 pb-12">
-                            <div className="w-full flex items-start justify-between mb-3 bg-blue-900 text-white px-5 rounded-r-md py-3" key={j}>
-                                <div className="flex flex-col">
-                                    <p className="text-sm">{itemj.tanggal}</p>
-                                    <p className="text-md font-bold mt-4">{itemj.judul_status}</p>
-                                </div>
-                                <div className="bg-red-700 flex gap-x-2 font-bold items-center rounded px-6 py-1 cursor-pointer"
-                                    onClick={() => hapusStatus(itemj.uuid)}
-                                >
-                                    <p className="text-sm">Hapus</p>
-                                    <FaTrash size={12} />
-                                </div>
-                            </div>
+                        <div className="px-2">
+                            <div className="relative border-l-2 border-blue-800 pl-4 pb-6">
+                                <div className="absolute -left-2 top-0 h-3 w-3 rounded-full bg-blue-800"></div>
+                                <p className="text-md font-bold">{itemj.judul_status}</p>
+                                <p className="text-[11px]">{itemj.tanggal}</p>
 
-                            <div className="pl-3">
+                                {
+                                    viewMode ? <></>
+                                        : <>
+                                            <button
+                                                className="btn btn-xs w-max bg-red-800 text-white mt-4"
+                                                onClick={() => hapusStatus(itemj.uuid)}
+                                            >
+                                                <FaTrash size={10} />
+                                                Hapus
+                                            </button>
+                                        </>
+                                }
+
                                 <PegawaiPelaksana
                                     idStatusRiwayatAktivitasDokumen={itemj.uuid}
+                                    viewMode={viewMode}
                                 />
-
                                 <KeteranganStatusRiwayatAktivitasDokumen
                                     idStatusRiwayatAktivitasDokumen={itemj.uuid}
+                                    viewMode={viewMode}
                                 />
                             </div>
                         </div>

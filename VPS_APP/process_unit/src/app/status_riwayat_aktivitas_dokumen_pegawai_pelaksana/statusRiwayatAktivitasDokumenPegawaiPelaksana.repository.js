@@ -3,6 +3,20 @@ import db from "../../config/Database.js";
 import StatusRiwayatAktivitasDokumenPegawaiPelaksanaModel from "./statusRiwayatAktivitasDokumenPegawaiPelaksana.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 
+export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasRepo = async (req_id) => {
+    const statusRiwayatAktivitasDokumenPegawaiPelaksanas = await db.query(
+        `
+            SELECT 
+                sradppt.pegawai_pelaksana
+            FROM ${generateDatabaseName(req_id)}.status_riwayat_aktivitas_dokumen_pegawai_pelaksana_tab sradppt 
+            JOIN ${generateDatabaseName(req_id)}.status_riwayat_aktivitas_dokumen_tab sradt ON sradt.uuid  = sradppt.status_riwayat_aktivitas_dokumen 
+            JOIN ${generateDatabaseName(req_id)}.riwayat_aktivitas_dokumen_tab radt ON radt.uuid = sradt.riwayat_aktivitas_dokumen 
+            WHERE sradppt.enabled = 1 AND sradt.enabled = 1 AND radt.enabled = 1
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return statusRiwayatAktivitasDokumenPegawaiPelaksanas
+}
 export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumenRepo = async (status_riwayat_aktivitas_dokumen, pageNumber, size, search, req_id) => {
     const statusRiwayatAktivitasDokumenPegawaiPelaksanasCount = await db.query(
         `

@@ -276,3 +276,15 @@ export const pegawaiList = [
         nama: "Aprianus Mario Deno"
     },
 ]
+
+export const statusAktivitasDokumenList = [
+    {
+        nama: "Mulai"
+    },
+    {
+        nama: "Dalam Proses"
+    },
+    {
+        nama: "Selesai"
+    }
+]

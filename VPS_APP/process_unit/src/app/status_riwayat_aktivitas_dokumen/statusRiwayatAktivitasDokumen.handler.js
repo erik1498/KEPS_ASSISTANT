@@ -50,7 +50,7 @@ export const postCreateStatusRiwayatAktivitasDokumen = async (req, res) => {
             })
         }
         const statusRiwayatAktivitasDokumen = await createStatusRiwayatAktivitasDokumenService(value, req.identity)
-        LOGGER_MONITOR(req.originalUrl, req.method, aktivitasDokumen, req.identity)
+        LOGGER_MONITOR(req.originalUrl, req.method, statusRiwayatAktivitasDokumen, req.identity)
         res.json({
             data: statusRiwayatAktivitasDokumen,
             message: "Create data Success"

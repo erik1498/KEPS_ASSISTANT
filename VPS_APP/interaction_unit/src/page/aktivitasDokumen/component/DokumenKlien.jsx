@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react"
 import FormInputWithLabel from "../../../component/form/FormInputWithLabel"
-import { inputOnlyRupiah } from "../../../helper/actionEvent.helper"
-import { getHariTanggalFull } from "../../../helper/date.helper"
 import { FaPlus, FaTrash } from "react-icons/fa"
 import { apiDokumenKlien } from "../../../service/endPointList.api"
 import { formValidation } from "../../../helper/form.helper"
-import LoadingPage from "../../../component/layout/LoadingPage"
+import LoadingMiniPage from "../../../component/layout/LoadingMiniPage"
 
 const DokumenKlien = ({
     idAktivitasDokumen,
+    viewMode
 }) => {
 
     const [isLoading, setIsLoading] = useState(false)
@@ -29,8 +28,8 @@ const DokumenKlien = ({
 
     const addDokumenKlien = async (e) => {
         e.preventDefault()
-        setIsLoading(x => x = true)
         if (await formValidation(e.target)) {
+            setIsLoading(x => x = true)
             apiDokumenKlien.custom("", "POST", null, {
                 data: {
                     aktivitas_dokumen: idAktivitasDokumen,
@@ -61,64 +60,75 @@ const DokumenKlien = ({
     }, [])
 
     return isLoading ?
-        <LoadingPage />
+        <LoadingMiniPage />
         :
         <>
-            <h1 className="text-lg font-bold mt-6">Daftar Dokumen Klien</h1>
-            <form onSubmit={(e) => addDokumenKlien(e)}>
-                <div className="flex bg-white py-3 w-full items-end gap-x-2 mb-3">
-                    <FormInputWithLabel
-                        label={"Nomor Dokumen"}
-                        type={"text"}
-                        onchange={(e) => {
-                            setNomorDokumen(e.target.value)
-                        }}
-                        others={
-                            {
-                                name: "nomorDokumen"
-                            }
-                        }
-                    />
-                    <FormInputWithLabel
-                        label={"Keterangan Dokumen"}
-                        type={"text"}
-                        onchange={(e) => {
-                            setKeteranganDokumen(e.target.value)
-                        }}
-                        others={
-                            {
-                                name: "Keterangan"
-                            }
-                        }
-                    />
-                    <button
-                        className="btn btn-sm bg-blue-800 mt-4 text-white"
-                        type="submit"
-                    >
-                        <FaPlus /> Tambah
-                    </button>
-                </div>
-            </form>
-            <table className="table table-zebra rounded-l mb-6">
-                <tr className="font-bold bg-gray-900 text-white">
-                    <td>Nomor Dokumen</td>
-                    <td>Keterangan Dokumen</td>
-                    <td>Aksi</td>
-                </tr>
+            <h1 className={`${viewMode ? "text-sm mt-4 mb-2" : "text-lg mt-6"} font-bold`}>Daftar Dokumen Klien</h1>
+            {
+                viewMode ? <></> : <>
+                    <form onSubmit={(e) => addDokumenKlien(e)}>
+                        <div className="flex bg-white py-3 w-full items-end gap-x-2 mb-3">
+                            <FormInputWithLabel
+                                label={"Nomor Dokumen"}
+                                type={"text"}
+                                onchange={(e) => {
+                                    setNomorDokumen(e.target.value)
+                                }}
+                                others={
+                                    {
+                                        name: "nomorDokumen"
+                                    }
+                                }
+                            />
+                            <FormInputWithLabel
+                                label={"Keterangan Dokumen"}
+                                type={"text"}
+                                onchange={(e) => {
+                                    setKeteranganDokumen(e.target.value)
+                                }}
+                                others={
+                                    {
+                                        name: "Keterangan"
+                                    }
+                                }
+                            />
+                            <button
+                                className="btn btn-sm bg-blue-800 mt-4 text-white"
+                                type="submit"
+                            >
+                                <FaPlus /> Tambah
+                            </button>
+                        </div>
+                    </form>
+                </>
+            }
+            <table className={`table ${viewMode ? "table-sm" : ""} table-zebra mb-6`}>
+                {
+                    viewMode ? <></> : <>
+                        <tr className="font-bold bg-gray-900 text-white">
+                            <td>Nomor Dokumen</td>
+                            <td>Keterangan Dokumen</td>
+                            <td>Aksi</td>
+                        </tr>
+                    </>
+                }
                 <tbody>
                     {
                         dokumenKlienList.map((item, i) => {
                             return <tr>
                                 <td>{item.nomor_dokumen}</td>
                                 <td>{item.keterangan_dokumen}</td>
-                                <td>
-                                    <FaTrash
-                                        onClick={() => {
-                                            deleteDokumenKlien(item.uuid)
-                                        }}
-                                        className="text-red-600 cursor-pointer"
-                                    />
-                                </td>
+                                {
+                                    viewMode ? <></> :
+                                        <td>
+                                            <FaTrash
+                                                onClick={() => {
+                                                    deleteDokumenKlien(item.uuid)
+                                                }}
+                                                className="text-red-600 cursor-pointer"
+                                            />
+                                        </td>
+                                }
                             </tr>
                         })
                     }

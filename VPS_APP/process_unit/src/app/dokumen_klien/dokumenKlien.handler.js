@@ -50,7 +50,7 @@ export const postCreateDokumenKlien = async (req, res) => {
             })
         }
         const dokumenKlien = await createDokumenKlienService(value, req.identity)
-        LOGGER_MONITOR(req.originalUrl, req.method, aktivitasDokumen, req.identity)
+        LOGGER_MONITOR(req.originalUrl, req.method, dokumenKlienData, req.identity)
         res.json({
             data: dokumenKlien,
             message: "Create data Success"

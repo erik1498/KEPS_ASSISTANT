@@ -23,7 +23,17 @@ export const getHariTanggal = () => {
 }
 
 export const getHariTanggalFull = () => {
-    return new Date().toISOString().slice(0, 16)
+    const dateNow = new Date()
+    
+    const year = dateNow.getFullYear()
+    const month = dateNow.getMonth() + 1 < 10 ? `0${dateNow.getMonth() + 1}` : dateNow.getMonth() + 1
+    const date = dateNow.getDate() < 10 ? `0${dateNow.getDate()}` : dateNow.getDate()
+
+    const hour = dateNow.getHours() < 10 ? `0${dateNow.getHours()}` : dateNow.getHours()
+    const minute = dateNow.getMinutes() < 10 ? `0${dateNow.getMinutes()}` : dateNow.getMinutes()
+    const second = dateNow.getSeconds() < 10 ? `0${dateNow.getSeconds()}` : dateNow.getSeconds()
+
+    return `${year}-${month}-${date}T${hour}:${minute}:${second}.000`
 }
 
 export const convertTo12HoursFormat = (time) => {

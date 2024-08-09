@@ -76,6 +76,13 @@ const AktivitasDokumenModel = db.define("aktivitas_dokumen_tab",
                 notEmpty:true,
             }
         },
+        status: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
         enabled: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

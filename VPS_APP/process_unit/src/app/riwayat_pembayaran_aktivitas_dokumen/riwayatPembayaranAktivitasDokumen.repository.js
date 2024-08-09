@@ -4,6 +4,19 @@ import RiwayatPembayaranAktivitasDokumenModel from "./riwayatPembayaranAktivitas
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
+export const getAllRiwayatPembayaranAktivitasDokumensRepo = async (req_id) => {
+    const riwayatPembayaranAktivitasDokumens = await db.query(
+        `
+            SELECT 
+                pegawai_penerima 
+            FROM ${generateDatabaseName(req_id)}.riwayat_pembayaran_aktivitas_dokumen_tab 
+            WHERE enabled = 1 
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return riwayatPembayaranAktivitasDokumens
+}
+
 export const getAllRiwayatPembayaranAktivitasDokumenRepo = async (aktivitas_dokumen, pageNumber, size, search, req_id) => {
     const riwayatPembayaranAktivitasDokumensCount = await db.query(
         `

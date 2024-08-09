@@ -7,11 +7,12 @@ import { FaPlus, FaTrash } from "react-icons/fa"
 import { apiRiwayatPembayaranAktivitasDokumen } from "../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../helper/number.helper"
 import { formValidation } from "../../../helper/form.helper"
-import LoadingPage from "../../../component/layout/LoadingPage"
+import LoadingMiniPage from "../../../component/layout/LoadingMiniPage"
 import { pegawaiList } from "../../../config/objectList.config"
 
 const RiwayatPembayaranAktivitasDokumen = ({
-    idAktivitasDokumen
+    idAktivitasDokumen,
+    viewMode
 }) => {
 
     const [isLoading, setIsLoading] = useState(false)
@@ -67,94 +68,105 @@ const RiwayatPembayaranAktivitasDokumen = ({
     }, [])
 
     return isLoading ?
-        <LoadingPage />
+        <LoadingMiniPage />
         : <>
-            <h1 className="text-lg font-bold mt-6">Riwayat Pembayaran</h1>
-            <form onSubmit={(e) => addRiwayatPembayaran(e)}>
-                <div className="flex bg-white py-3 w-full items-end gap-x-2 mb-3">
-                    <FormInputWithLabel
-                        label={"Hari/Tanggal Pembayaran"}
-                        type={"datetime-local"}
-                        onchange={(e) => {
-                            setTanggal(e.target.value)
-                        }}
-                        others={
-                            {
-                                value: tanggal,
-                                name: "tanggal"
-                            }
-                        }
-                    />
-                    <FormInputWithLabel
-                        label={"Jumlah Pembayaran"}
-                        type={"text"}
-                        onchange={(e) => {
-                            inputOnlyRupiah(e)
-                            setNilaiPembayaran(e.target.value)
-                        }}
-                        others={
-                            {
-                                value: nilaiPembayaran,
-                                name: "nilaiPembayaran"
-                            }
-                        }
-                    />
-                    <FormSelectWithLabel
-                        label={"Staf Penerima Pembayaran"}
-                        onchange={(e) => {
-                            setPegawaiPenerima(e)
-                        }}
-                        optionsDataList={pegawaiList}
-                        optionsLabel={"nama"}
-                        optionsValue={"nama"}
-                        selectValue={pegawaiPenerima}
-                        selectName={"kodeAkunType"}
-                    />
-                    <FormInputWithLabel
-                        label={"Nomor Kwitansi / Tanda Terima"}
-                        type={"text"}
-                        onchange={(e) => {
-                            setNomorKwitansi(e.target.value)
-                        }}
-                        others={
-                            {
-                                value: nomorKwitansi,
-                                name: "nomorKwitansi"
-                            }
-                        }
-                    />
-                    <button
-                        className="btn btn-sm bg-blue-800 mt-4 text-white"
-                        type="submit"
-                    >
-                        <FaPlus /> Tambah
-                    </button>
-                </div>
-            </form>
-            <table className="table table-zebra rounded-l mb-6">
-                <tr className="font-bold bg-gray-900 text-white">
-                    <td>Jumlah Pembayaran</td>
-                    <td>Hari/Tanggal Pembayaran</td>
-                    <td>Staf Penerima Pembayaran</td>
-                    <td>Nomor Kwitansi</td>
-                    <td>Aksi</td>
-                </tr>
+            <h1 className={`${viewMode ? "text-md mt-4 mb-1" : "text-lg mt-6"} font-bold`}>Riwayat Pembayaran</h1>
+            {
+                viewMode ? <></> : <>
+                    <form onSubmit={(e) => addRiwayatPembayaran(e)}>
+                        <div className="flex bg-white py-3 w-full items-end gap-x-2 mb-3">
+                            <FormInputWithLabel
+                                label={"Hari/Tanggal Pembayaran"}
+                                type={"datetime-local"}
+                                onchange={(e) => {
+                                    setTanggal(e.target.value)
+                                }}
+                                others={
+                                    {
+                                        value: tanggal,
+                                        name: "tanggal"
+                                    }
+                                }
+                            />
+                            <FormInputWithLabel
+                                label={"Jumlah Pembayaran"}
+                                type={"text"}
+                                onchange={(e) => {
+                                    inputOnlyRupiah(e)
+                                    setNilaiPembayaran(e.target.value)
+                                }}
+                                others={
+                                    {
+                                        value: nilaiPembayaran,
+                                        name: "nilaiPembayaran"
+                                    }
+                                }
+                            />
+                            <FormSelectWithLabel
+                                label={"Staf Penerima Pembayaran"}
+                                onchange={(e) => {
+                                    setPegawaiPenerima(e)
+                                }}
+                                optionsDataList={pegawaiList}
+                                optionsLabel={"nama"}
+                                optionsValue={"nama"}
+                                selectValue={pegawaiPenerima}
+                                selectName={"kodeAkunType"}
+                            />
+                            <FormInputWithLabel
+                                label={"Nomor Kwitansi / Tanda Terima"}
+                                type={"text"}
+                                onchange={(e) => {
+                                    setNomorKwitansi(e.target.value)
+                                }}
+                                others={
+                                    {
+                                        value: nomorKwitansi,
+                                        name: "nomorKwitansi"
+                                    }
+                                }
+                            />
+                            <button
+                                className="btn btn-sm bg-blue-800 mt-4 text-white"
+                                type="submit"
+                            >
+                                <FaPlus /> Tambah
+                            </button>
+                        </div>
+                    </form>
+                </>
+            }
+            <table className={`table ${viewMode ? "table-sm" : ""} table-zebra mb-6`}>
+                {
+                    viewMode ? <></> : <>
+                        <tr className="font-bold bg-gray-900 text-white">
+                            <td>Jumlah Pembayaran</td>
+                            <td>Hari/Tanggal Pembayaran</td>
+                            <td>Staf Penerima Pembayaran</td>
+                            <td>Nomor Kwitansi</td>
+                            <td>Aksi</td>
+                        </tr>
+                    </>
+                }
                 <tbody>
                     {
                         riwayatPembayaran.map((item, i) => {
                             return <tr>
                                 <td>{item.tanggal}</td>
-                                <td>{parseToRupiahText(item.nilai_pembayaran)}</td>
+                                <td>Rp. {parseToRupiahText(item.nilai_pembayaran)}</td>
                                 <td>{item.pegawai_penerima}</td>
                                 <td>{item.nomor_kwitansi_tanda_terima}</td>
-                                <td>
-                                    <FaTrash
-                                        onClick={() => {
-                                            deleteRiwayatPembayaran(item.uuid)
-                                        }}
-                                        className="text-red-600 cursor-pointer"
-                                    />
-                                </td>
+                                {
+                                    viewMode ? <></> :
+                                        <td>
+                                            <FaTrash
+                                                onClick={() => {
+                                                    deleteRiwayatPembayaran(item.uuid)
+                                                }}
+                                                className="text-red-600 cursor-pointer"
+                                            />
+                                        </td>
+                                }
                             </tr>
                         })
                     }

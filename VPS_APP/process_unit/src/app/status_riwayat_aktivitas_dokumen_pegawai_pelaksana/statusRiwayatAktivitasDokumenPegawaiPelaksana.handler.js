@@ -1,7 +1,24 @@
 import { statusRiwayatAktivitasDokumenPegawaiPelaksanaValidation } from "./statusRiwayatAktivitasDokumenPegawaiPelaksana.validation.js"
-import { createStatusRiwayatAktivitasDokumenPegawaiPelaksanaService, deleteStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidService, getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumenService, getStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidService, updateStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidService } from "./statusRiwayatAktivitasDokumenPegawaiPelaksana.services.js"
+import { createStatusRiwayatAktivitasDokumenPegawaiPelaksanaService, deleteStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidService, getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumenService, getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasService, getStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidService, updateStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidService } from "./statusRiwayatAktivitasDokumenPegawaiPelaksana.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+
+export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanas = async (req, res) => {
+    LOGGER(logType.INFO, "Start getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanas", null, req.identity)
+    try {
+        const statusRiwayatAktivitasDokumenPegawaiPelaksanas = await getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasService(req.identity)
+        res.json({
+            data: statusRiwayatAktivitasDokumenPegawaiPelaksanas,
+            message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            message: error.message
+        })
+    }
+}
 
 export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumen = async (req, res) => {
     LOGGER(logType.INFO, "Start getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumenController", null, req.identity)
@@ -50,7 +67,7 @@ export const postCreateStatusRiwayatAktivitasDokumenPegawaiPelaksana = async (re
             })
         }
         const statusRiwayatAktivitasDokumenPegawaiPelaksana = await createStatusRiwayatAktivitasDokumenPegawaiPelaksanaService(value, req.identity)
-        LOGGER_MONITOR(req.originalUrl, req.method, aktivitasDokumen, req.identity)
+        LOGGER_MONITOR(req.originalUrl, req.method, statusRiwayatAktivitasDokumenPegawaiPelaksana, req.identity)
         res.json({
             data: statusRiwayatAktivitasDokumenPegawaiPelaksana,
             message: "Create data Success"

@@ -1,9 +1,10 @@
 import express from "express"
-import { deleteRiwayatPembayaranAktivitasDokumenByUUID, getAllRiwayatPembayaranAktivitasDokumensByAktivitasDokumen, getRiwayatPembayaranAktivitasDokumenByUUID, postCreateRiwayatPembayaranAktivitasDokumen, updateRiwayatPembayaranAktivitasDokumenByUUID } from "./riwayatPembayaranAktivitasDokumen.handler.js"
+import { deleteRiwayatPembayaranAktivitasDokumenByUUID, getAllRiwayatPembayaranAktivitasDokumens, getAllRiwayatPembayaranAktivitasDokumensByAktivitasDokumen, getRiwayatPembayaranAktivitasDokumenByUUID, postCreateRiwayatPembayaranAktivitasDokumen, updateRiwayatPembayaranAktivitasDokumenByUUID } from "./riwayatPembayaranAktivitasDokumen.handler.js"
 import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
+router.get("/all", authTokenMiddleware(), getAllRiwayatPembayaranAktivitasDokumens)
 router.get("/:aktivitas_dokumen", authTokenMiddleware(), getAllRiwayatPembayaranAktivitasDokumensByAktivitasDokumen)
 router.get("/:uuid", authTokenMiddleware(), getRiwayatPembayaranAktivitasDokumenByUUID)
 router.post("/", authTokenMiddleware(), postCreateRiwayatPembayaranAktivitasDokumen)

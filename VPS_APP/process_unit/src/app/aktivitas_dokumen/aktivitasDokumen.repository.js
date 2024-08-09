@@ -150,6 +150,7 @@ export const createAktivitasDokumenRepo = async (aktivitasDokumenData, req_id) =
             penanggung_jawab: aktivitasDokumenData.penanggung_jawab,
             biaya: aktivitasDokumenData.biaya,
             keterangan: aktivitasDokumenData.keterangan,
+            status: aktivitasDokumenData.status,
             enabled: aktivitasDokumenData.enabled
         }
     )
@@ -185,6 +186,7 @@ export const updateAktivitasDokumenByUuidRepo = async (uuid, aktivitasDokumenDat
             penanggung_jawab: aktivitasDokumenData.penanggung_jawab,
             biaya: aktivitasDokumenData.biaya,
             keterangan: aktivitasDokumenData.keterangan,
+            status: aktivitasDokumenData.status,
             enabled: 1
         },
         {

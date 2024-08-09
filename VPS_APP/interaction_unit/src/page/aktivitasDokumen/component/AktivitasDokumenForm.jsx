@@ -6,7 +6,7 @@ import FormSelectWithLabel from "../../../component/form/FormSelectWithLabel";
 import { useEffect, useState } from "react";
 import { inputOnlyRupiah } from "../../../helper/actionEvent.helper";
 import { apiAktivitasDokumen } from "../../../service/endPointList.api";
-import { pegawaiList, tipeDokumenList } from "../../../config/objectList.config";
+import { pegawaiList, statusAktivitasDokumenList, tipeDokumenList } from "../../../config/objectList.config";
 import RiwayatPembayaranAktivitasDokumen from "./RiwayatPembayaranAktivitasDokumen";
 import RiwayatAktivitasDokumen from "./RiwayatAktivitasDokumen";
 import DokumenKlien from "./DokumenKlien";
@@ -31,6 +31,10 @@ const AktivitasDokumen = ({
     const [biaya, setBiaya] = useState("")
 
     const [keteranganSurat, setKeteranganSurat] = useState("")
+    const [statusAktivitasDokumen, setStatusAktivitasDokumen] = useState({
+        label: "Mulai",
+        value: "Mulai"
+    })
 
     const _saveAktivitasDokumen = async (e) => {
         e.preventDefault()
@@ -45,7 +49,8 @@ const AktivitasDokumen = ({
                 penanggung_jawab: penanggungJawab?.value,
                 biaya: biaya,
                 no_surat: nomorSurat,
-                keterangan: keteranganSurat
+                keterangan: keteranganSurat,
+                status: statusAktivitasDokumen?.value
             }
 
             apiAktivitasDokumen.custom(`${idAktivitasDokumen != null ? `/${idAktivitasDokumen}` : ""}`, idAktivitasDokumen != null ? "PUT" : "POST", null, {
@@ -83,6 +88,10 @@ const AktivitasDokumen = ({
                 setPenanggungJawab(x => x = {
                     label: res.data.penanggung_jawab,
                     value: res.data.penanggung_jawab
+                })
+                setStatusAktivitasDokumen(x => x = {
+                    label: res.data.status,
+                    value: res.data.status
                 })
             }).catch(err => {
                 console.log(err)
@@ -227,6 +236,19 @@ const AktivitasDokumen = ({
                                     name: "keteranganSurat"
                                 }
                             }
+                        />
+                    </div>
+                    <div className="flex gap-x-3 mt-4">
+                        <FormSelectWithLabel
+                            label={"Status Aktivitas Dokumen"}
+                            onchange={(e) => {
+                                setStatusAktivitasDokumen(x => x = e)
+                            }}
+                            selectValue={statusAktivitasDokumen}
+                            optionsDataList={statusAktivitasDokumenList}
+                            optionsLabel={"nama"}
+                            optionsValue={"nama"}
+                            selectName={"kodeAkunType"}
                         />
                     </div>
                     <button

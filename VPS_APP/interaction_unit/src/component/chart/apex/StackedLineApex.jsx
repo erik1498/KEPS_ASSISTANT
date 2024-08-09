@@ -7,7 +7,8 @@ const StackedLineApex = ({
     height,
     seriesValueLabel,
     valueUseRp = true,
-    valueAddString = ""
+    valueAddString = "",
+    colors = ['#15803d', '#dc2626']
 }) => {
     const options = {
         chart: {
@@ -34,13 +35,13 @@ const StackedLineApex = ({
         dataLabels: {
             // enabled: true,
         },
-        colors: ['#15803d', '#dc2626'],
+        colors: colors,
         legend: {
             position: 'top',
             horizontalAlign: 'left',
             fontWeight: 600,
             formatter: (seriesName, opt) => {
-                return `Rp. ${parseToRupiahText(seriesValueLabel[opt.seriesIndex])}`
+                return `${valueUseRp ? "Rp. " : ""} ${parseToRupiahText(seriesValueLabel[opt.seriesIndex])}`
             }
         },
         xaxis: {

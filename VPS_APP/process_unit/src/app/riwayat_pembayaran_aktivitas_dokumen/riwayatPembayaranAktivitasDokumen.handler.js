@@ -1,7 +1,24 @@
 import { riwayatPembayaranAktivitasDokumenValidation } from "./riwayatPembayaranAktivitasDokumen.validation.js"
-import { createRiwayatPembayaranAktivitasDokumenService, deleteRiwayatPembayaranAktivitasDokumenByUuidService, getAllRiwayatPembayaranAktivitasDokumensByAktivitasDokumenService, getRiwayatPembayaranAktivitasDokumenByUuidService, updateRiwayatPembayaranAktivitasDokumenByUuidService } from "./riwayatPembayaranAktivitasDokumen.services.js"
+import { createRiwayatPembayaranAktivitasDokumenService, deleteRiwayatPembayaranAktivitasDokumenByUuidService, getAllRiwayatPembayaranAktivitasDokumensByAktivitasDokumenService, getAllRiwayatPembayaranAktivitasDokumensService, getRiwayatPembayaranAktivitasDokumenByUuidService, updateRiwayatPembayaranAktivitasDokumenByUuidService } from "./riwayatPembayaranAktivitasDokumen.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+
+export const getAllRiwayatPembayaranAktivitasDokumens = async (req, res) => {
+    LOGGER(logType.INFO, "Start getAllRiwayatPembayaranAktivitasDokumens", null, req.identity)
+    try {
+        const riwayatPembayaranAktivitasDokumens = await getAllRiwayatPembayaranAktivitasDokumensService(req.params.aktivitas_dokumen, req.query, req.identity)
+        res.json({
+            data: riwayatPembayaranAktivitasDokumens,
+            message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            message: error.message
+        })
+    }
+}
 
 export const getAllRiwayatPembayaranAktivitasDokumensByAktivitasDokumen = async (req, res) => {
     LOGGER(logType.INFO, "Start getAllRiwayatPembayaranAktivitasDokumenController", null, req.identity)
@@ -50,7 +67,7 @@ export const postCreateRiwayatPembayaranAktivitasDokumen = async (req, res) => {
             })
         }
         const riwayatPembayaranAktivitasDokumen = await createRiwayatPembayaranAktivitasDokumenService(value, req.identity)
-        LOGGER_MONITOR(req.originalUrl, req.method, aktivitasDokumen, req.identity)
+        LOGGER_MONITOR(req.originalUrl, req.method, riwayatPembayaranAktivitasDokumen, req.identity)
         res.json({
             data: riwayatPembayaranAktivitasDokumen,
             message: "Create data Success"

@@ -1,12 +1,12 @@
 import Chart from "react-apexcharts";
-import { getTanggal } from "../../../helper/date.helper";
-import { getRandom } from "../../../helper/number.helper";
 
-const RadialBarApex = () => {
-    const options = {
+const RadialBarApex = ({
+    options = {
         labels: ['Debet'],
-    }
-    const series = [80]
-    return <Chart options={options} series={series} type="radialBar" height={"300"} />
+    },
+    series = [80],
+    height=300
+}) => {
+    return <Chart options={options} series={series} type="radialBar" height={height} />
 }
 export default RadialBarApex;

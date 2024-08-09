@@ -1,9 +1,10 @@
 import express from "express"
-import { deleteStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUUID, getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumen, getStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUUID, postCreateStatusRiwayatAktivitasDokumenPegawaiPelaksana, updateStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUUID } from "./statusRiwayatAktivitasDokumenPegawaiPelaksana.handler.js"
+import { deleteStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUUID, getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanas, getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumen, getStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUUID, postCreateStatusRiwayatAktivitasDokumenPegawaiPelaksana, updateStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUUID } from "./statusRiwayatAktivitasDokumenPegawaiPelaksana.handler.js"
 import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
+router.get("/all", authTokenMiddleware(), getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanas)
 router.get("/:status_riwayat_aktivitas_dokumen", authTokenMiddleware(), getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumen)
 router.get("/:uuid", authTokenMiddleware(), getStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUUID)
 router.post("/", authTokenMiddleware(), postCreateStatusRiwayatAktivitasDokumenPegawaiPelaksana)
