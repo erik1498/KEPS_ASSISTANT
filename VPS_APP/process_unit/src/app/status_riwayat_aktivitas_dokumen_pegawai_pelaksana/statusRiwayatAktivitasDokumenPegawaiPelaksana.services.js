@@ -2,9 +2,9 @@ import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createStatusRiwayatAktivitasDokumenPegawaiPelaksanaRepo, deleteStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidRepo, getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumenRepo, getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasRepo, getStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidRepo, updateStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidRepo } from "./statusRiwayatAktivitasDokumenPegawaiPelaksana.repository.js"
 
-export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasService = async (req_id) => {
-    LOGGER(logType.INFO, "Start getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasService", null, req_id)
-    return getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasRepo(req_id)
+export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasService = async (tahun, req_id) => {
+    LOGGER(logType.INFO, "Start getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasService", { tahun }, req_id)
+    return getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasRepo(tahun, req_id)
 }
 export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumenService = async (status_riwayat_aktivitas_dokumen, query, req_id) => {
     LOGGER(logType.INFO, "Start getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumenService", { status_riwayat_aktivitas_dokumen }, req_id)

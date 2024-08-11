@@ -13,7 +13,7 @@ export const getAllAktivitasDokumenRepo = async (tahun, pageNumber, size, search
                 SELECT 
                     adt.*
                 FROM ${generateDatabaseName(req_id)}.aktivitas_dokumen_tab adt
-                WHERE adt.tanggal >= "01-01-${tahun}" AND adt.tanggal <= "31-12-${tahun}"
+                WHERE adt.tahun = ${tahun}
                 AND adt.enabled = 1
                 ORDER BY adt.tanggal DESC
             ) AS res
@@ -98,7 +98,7 @@ export const getAllAktivitasDokumenRepo = async (tahun, pageNumber, size, search
                     ) AS judul_riwayat_aktivitas_uuid,
                     adt.*
                 FROM ${generateDatabaseName(req_id)}.aktivitas_dokumen_tab adt
-                WHERE adt.tanggal >= "01-01-${tahun}" AND adt.tanggal <= "31-12-${tahun}"
+                WHERE adt.tahun = ${tahun}
                 AND adt.enabled = 1
                 ORDER BY adt.tanggal DESC
             ) AS res
@@ -151,6 +151,7 @@ export const createAktivitasDokumenRepo = async (aktivitasDokumenData, req_id) =
             biaya: aktivitasDokumenData.biaya,
             keterangan: aktivitasDokumenData.keterangan,
             status: aktivitasDokumenData.status,
+            tahun: aktivitasDokumenData.tahun,
             enabled: aktivitasDokumenData.enabled
         }
     )
@@ -187,6 +188,7 @@ export const updateAktivitasDokumenByUuidRepo = async (uuid, aktivitasDokumenDat
             biaya: aktivitasDokumenData.biaya,
             keterangan: aktivitasDokumenData.keterangan,
             status: aktivitasDokumenData.status,
+            tahun: aktivitasDokumenData.tahun,
             enabled: 1
         },
         {
@@ -195,13 +197,13 @@ export const updateAktivitasDokumenByUuidRepo = async (uuid, aktivitasDokumenDat
     )
 }
 
-export const getCountAktivitasDokumenRepo = async (req_id) => {
+export const getCountAktivitasDokumenRepo = async (tahun, req_id) => {
     const aktivitasDokumen = await db.query(
         `
             SELECT 
                 COUNT(0) AS count
             FROM ${generateDatabaseName(req_id)}.aktivitas_dokumen_tab adt
-            WHERE enabled = 1
+            WHERE enabled = 1 AND tahun = ${tahun}
         `,
         {
             type: Sequelize.QueryTypes.SELECT

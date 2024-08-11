@@ -33,9 +33,9 @@ export const getAktivitasDokumenByUuidService = async (uuid, req_id) => {
 export const createAktivitasDokumenService = async (aktivitasDokumenData, req_id) => {
     LOGGER(logType.INFO, `Start createAktivitasDokumenService`, aktivitasDokumenData, req_id)
 
-    const jumlahAktivitasDokumen = await getCountAktivitasDokumenRepo(req_id)
+    const jumlahAktivitasDokumen = await getCountAktivitasDokumenRepo(aktivitasDokumenData.tahun, req_id)
     
-    aktivitasDokumenData["no_surat"] = `${jumlahAktivitasDokumen[0].count + 1}/${new Date().getFullYear()}`
+    aktivitasDokumenData["no_surat"] = `${jumlahAktivitasDokumen[0].count + 1}/${aktivitasDokumenData.tahun}`
     aktivitasDokumenData["enabled"] = 1
 
     const aktivitasDokumen = await createAktivitasDokumenRepo(aktivitasDokumenData, req_id)

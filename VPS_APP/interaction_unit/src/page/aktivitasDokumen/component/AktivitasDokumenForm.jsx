@@ -11,12 +11,15 @@ import RiwayatPembayaranAktivitasDokumen from "./RiwayatPembayaranAktivitasDokum
 import RiwayatAktivitasDokumen from "./RiwayatAktivitasDokumen";
 import DokumenKlien from "./DokumenKlien";
 import { parseToRupiahText } from "../../../helper/number.helper";
+import { useDataContext } from "../../../context/dataContext.context";
 
 const AktivitasDokumen = ({
     setAddAktivitasDokumenEvent,
     idAktivitasDokumen,
     setIdAktivitasDokumen = () => { },
 }) => {
+
+    const { data } = useDataContext()
     const [isLoading, setIsLoading] = useState(false)
     const [hariTanggal, setHariTanggal] = useState(getHariTanggalFull())
     const [nomorSurat, setNomorSurat] = useState("Otomatis Terisi Ketika Disimpan")
@@ -50,7 +53,8 @@ const AktivitasDokumen = ({
                 biaya: biaya,
                 no_surat: nomorSurat,
                 keterangan: keteranganSurat,
-                status: statusAktivitasDokumen?.value
+                status: statusAktivitasDokumen?.value,
+                tahun: data?.tahun
             }
 
             apiAktivitasDokumen.custom(`${idAktivitasDokumen != null ? `/${idAktivitasDokumen}` : ""}`, idAktivitasDokumen != null ? "PUT" : "POST", null, {

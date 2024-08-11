@@ -9,11 +9,8 @@ import FormSelect from "../form/FormSelect";
 import { useDataContext } from "../../context/dataContext.context";
 import { yearList } from "../../config/objectList.config";
 import { getBulanList } from "../../helper/date.helper";
-import { apiLogin } from "../../service/endPointList.api";
-import { showError } from "../../helper/form.helper";
 
 const Navigasi = () => {
-    const navigate = useNavigate()
 
     const { data, setData } = useDataContext()
 

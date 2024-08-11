@@ -3,15 +3,20 @@ import db from "../../config/Database.js";
 import StatusRiwayatAktivitasDokumenPegawaiPelaksanaModel from "./statusRiwayatAktivitasDokumenPegawaiPelaksana.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 
-export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasRepo = async (req_id) => {
+export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasRepo = async (tahun, req_id) => {
     const statusRiwayatAktivitasDokumenPegawaiPelaksanas = await db.query(
         `
             SELECT 
-                sradppt.pegawai_pelaksana
-            FROM ${generateDatabaseName(req_id)}.status_riwayat_aktivitas_dokumen_pegawai_pelaksana_tab sradppt 
-            JOIN ${generateDatabaseName(req_id)}.status_riwayat_aktivitas_dokumen_tab sradt ON sradt.uuid  = sradppt.status_riwayat_aktivitas_dokumen 
+                (
+                    SELECT 
+                        GROUP_CONCAT(sradppt.pegawai_pelaksana) 
+                    FROM ${generateDatabaseName(req_id)}.status_riwayat_aktivitas_dokumen_pegawai_pelaksana_tab sradppt 
+                    WHERE sradppt.status_riwayat_aktivitas_dokumen = sradt.uuid 
+                ) AS pegawai_pelaksana
+            FROM ${generateDatabaseName(req_id)}.status_riwayat_aktivitas_dokumen_tab sradt 
             JOIN ${generateDatabaseName(req_id)}.riwayat_aktivitas_dokumen_tab radt ON radt.uuid = sradt.riwayat_aktivitas_dokumen 
-            WHERE sradppt.enabled = 1 AND sradt.enabled = 1 AND radt.enabled = 1
+            JOIN ${generateDatabaseName(req_id)}.aktivitas_dokumen_tab adt ON adt.uuid = radt.aktivitas_dokumen 
+            WHERE sradt.enabled = 1 AND radt.enabled =  1 AND adt.enabled = 1 AND adt.tahun = ${tahun}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

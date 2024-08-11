@@ -6,7 +6,7 @@ import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 export const getAllRiwayatPembayaranAktivitasDokumens = async (req, res) => {
     LOGGER(logType.INFO, "Start getAllRiwayatPembayaranAktivitasDokumens", null, req.identity)
     try {
-        const riwayatPembayaranAktivitasDokumens = await getAllRiwayatPembayaranAktivitasDokumensService(req.params.aktivitas_dokumen, req.query, req.identity)
+        const riwayatPembayaranAktivitasDokumens = await getAllRiwayatPembayaranAktivitasDokumensService(req.params.tahun, req.identity)
         res.json({
             data: riwayatPembayaranAktivitasDokumens,
             message: "Get Data Success"

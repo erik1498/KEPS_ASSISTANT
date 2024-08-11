@@ -49,6 +49,9 @@ export const aktivitasDokumenValidation = (payload) => {
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
+        tahun: Joi.required().messages({
+            "any.required": "Harus Diisi",
+        }),
     })
 
     return schema.validate(payload)

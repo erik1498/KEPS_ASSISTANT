@@ -20,13 +20,13 @@ const Wrap = ({
   const [displayNotCompatible, setDisplayNotCompatible] = useState(false)
 
   useEffect(() => {
-    // window.addEventListener("resize", () => {
-    //   if (window.innerWidth < 1680 || window.innerHeight < 900) {
-    //     setDisplayNotCompatible(true)
-    //   }else{
-    //     setDisplayNotCompatible(false)
-    //   }
-    // })
+    window.addEventListener("resize", () => {
+      if (window.innerWidth < 1680 || window.innerHeight < 900) {
+        setDisplayNotCompatible(true)
+      }else{
+        setDisplayNotCompatible(false)
+      }
+    })
   }, [])
 
   return displayNotCompatible ? <DisplayNotCompatiblePage /> : <div className="page-container">

@@ -2,9 +2,9 @@ import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createRiwayatPembayaranAktivitasDokumenRepo, deleteRiwayatPembayaranAktivitasDokumenByUuidRepo, getAllRiwayatPembayaranAktivitasDokumenRepo, getAllRiwayatPembayaranAktivitasDokumensRepo, getRiwayatPembayaranAktivitasDokumenByUuidRepo, updateRiwayatPembayaranAktivitasDokumenByUuidRepo } from "./riwayatPembayaranAktivitasDokumen.repository.js"
 
-export const getAllRiwayatPembayaranAktivitasDokumensService = async (req_id) => {
-    LOGGER(logType.INFO, "Start getAllRiwayatPembayaranAktivitasDokumensService", null, req_id)
-    return getAllRiwayatPembayaranAktivitasDokumensRepo(req_id)
+export const getAllRiwayatPembayaranAktivitasDokumensService = async (tahun, req_id) => {
+    LOGGER(logType.INFO, "Start getAllRiwayatPembayaranAktivitasDokumensService", { tahun }, req_id)
+    return getAllRiwayatPembayaranAktivitasDokumensRepo(tahun, req_id)
 }
 
 export const getAllRiwayatPembayaranAktivitasDokumensByAktivitasDokumenService = async (aktivitas_dokumen, query, req_id) => {

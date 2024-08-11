@@ -4,7 +4,7 @@ import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
-router.get("/all", authTokenMiddleware(), getAllRiwayatPembayaranAktivitasDokumens)
+router.get("/all/:tahun", authTokenMiddleware(), getAllRiwayatPembayaranAktivitasDokumens)
 router.get("/:aktivitas_dokumen", authTokenMiddleware(), getAllRiwayatPembayaranAktivitasDokumensByAktivitasDokumen)
 router.get("/:uuid", authTokenMiddleware(), getRiwayatPembayaranAktivitasDokumenByUUID)
 router.post("/", authTokenMiddleware(), postCreateRiwayatPembayaranAktivitasDokumen)

@@ -83,6 +83,13 @@ const AktivitasDokumenModel = db.define("aktivitas_dokumen_tab",
                 notEmpty:true,
             }
         },
+        tahun: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
         enabled: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

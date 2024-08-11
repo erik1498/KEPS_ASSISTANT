@@ -4,13 +4,24 @@ import RiwayatPembayaranAktivitasDokumenModel from "./riwayatPembayaranAktivitas
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
-export const getAllRiwayatPembayaranAktivitasDokumensRepo = async (req_id) => {
+export const getAllRiwayatPembayaranAktivitasDokumensRepo = async (tahun, req_id) => {
     const riwayatPembayaranAktivitasDokumens = await db.query(
         `
             SELECT 
-                pegawai_penerima 
-            FROM ${generateDatabaseName(req_id)}.riwayat_pembayaran_aktivitas_dokumen_tab 
-            WHERE enabled = 1 
+                adt.no_surat,
+                adt.biaya,
+                (
+                    SELECT
+                        GROUP_CONCAT('{"',
+                            CONCAT('tanggal":"',rpadt.tanggal, '","nilai_pembayaran":"', rpadt.nilai_pembayaran, '","pegawai_penerima":"', rpadt.pegawai_penerima, '","nomor_kwitansi_tanda_terima":"', rpadt.nomor_kwitansi_tanda_terima, '","aktivitas_dokumen":"', rpadt.aktivitas_dokumen) 
+                        ,'"}')
+                    FROM ${generateDatabaseName(req_id)}.riwayat_pembayaran_aktivitas_dokumen_tab rpadt 
+                    WHERE rpadt.aktivitas_dokumen = adt.uuid 
+                    AND adt.enabled = 1
+                ) AS list_pembayaran
+            FROM ${generateDatabaseName(req_id)}.aktivitas_dokumen_tab adt 
+            WHERE adt.enabled = 1
+            AND adt.tahun = "${tahun}"
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
