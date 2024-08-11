@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import FormInputWithLabel from "../../../component/form/FormInputWithLabel"
-import { getHariTanggalFull } from "../../../helper/date.helper"
+import { formatDate, getHariTanggalFull } from "../../../helper/date.helper"
 import { FaPlus, FaTimes, FaTrash } from "react-icons/fa"
 import { formValidation } from "../../../helper/form.helper"
 import { apiStatusRiwayatAktivitasDokumenKeterangan } from "../../../service/endPointList.api"
@@ -127,7 +127,7 @@ const KeteranganStatusRiwayatAktivitasDokumen = ({
                             }
                             <div>
                                 <p className={`text-xs`}>{iteml.keterangan}</p>
-                                <p className="text-[9px]">{iteml.tanggal}</p>
+                                <p className="text-[9px]">{formatDate(iteml.tanggal)}</p>
                             </div>
                         </div>
                     </div>

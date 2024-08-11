@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import FormInputWithLabel from "../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../helper/actionEvent.helper"
-import { getHariTanggal, getHariTanggalFull } from "../../../helper/date.helper"
+import { formatDate, getHariTanggal, getHariTanggalFull } from "../../../helper/date.helper"
 import FormSelectWithLabel from "../../../component/form/FormSelectWithLabel"
 import { FaPlus, FaTrash } from "react-icons/fa"
 import { apiRiwayatPembayaranAktivitasDokumen } from "../../../service/endPointList.api"
@@ -152,7 +152,7 @@ const RiwayatPembayaranAktivitasDokumen = ({
                     {
                         riwayatPembayaran.map((item, i) => {
                             return <tr>
-                                <td>{item.tanggal}</td>
+                                <td>{formatDate(item.tanggal)}</td>
                                 <td>Rp. {parseToRupiahText(item.nilai_pembayaran)}</td>
                                 <td>{item.pegawai_penerima}</td>
                                 <td>{item.nomor_kwitansi_tanda_terima}</td>

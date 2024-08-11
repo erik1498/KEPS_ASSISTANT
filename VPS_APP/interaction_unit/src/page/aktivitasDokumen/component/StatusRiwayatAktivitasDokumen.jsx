@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import FormInputWithLabel from "../../../component/form/FormInputWithLabel"
-import { getHariTanggal, getHariTanggalFull } from "../../../helper/date.helper"
+import { formatDate, getHariTanggal, getHariTanggalFull } from "../../../helper/date.helper"
 import FormSelectWithLabel from "../../../component/form/FormSelectWithLabel"
 import { FaPlus, FaTrash } from "react-icons/fa"
 import { formValidation } from "../../../helper/form.helper"
@@ -119,7 +119,7 @@ const StatusRiwayatAktivitasDokumen = ({
                             <div className="relative border-l-2 border-blue-800 pl-4 pb-6">
                                 <div className="absolute -left-2 top-0 h-3 w-3 rounded-full bg-blue-800"></div>
                                 <p className="text-md font-bold">{itemj.judul_status}</p>
-                                <p className="text-[11px]">{itemj.tanggal}</p>
+                                <p className="text-[11px]">{formatDate(itemj.tanggal)}</p>
 
                                 {
                                     viewMode ? <></>

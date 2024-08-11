@@ -2,7 +2,7 @@ import { FaDotCircle, FaPlus, FaTrash } from "react-icons/fa"
 import FormInputWithLabel from "../../../component/form/FormInputWithLabel"
 import FormSelectWithLabel from "../../../component/form/FormSelectWithLabel"
 import { useEffect, useState } from "react"
-import { getHariTanggal, getHariTanggalFull } from "../../../helper/date.helper"
+import { formatDate, getHariTanggal, getHariTanggalFull } from "../../../helper/date.helper"
 import { apiRiwayatAktivitasDokumen } from "../../../service/endPointList.api"
 import { formValidation } from "../../../helper/form.helper"
 import StatusRiwayatAktivitasDokumen from "./StatusRiwayatAktivitasDokumen"
@@ -116,7 +116,7 @@ const RiwayatAktivitasDokumen = ({
                             <div className="col-span-3 flex flex-col">
                                 <div className="bg-blue-800 w-3/12 h-6 rounded-full mb-2"></div>
                                 <p className="text-xl font-bold mt-2 ml-2">{riwayat.judul_aktivitas}</p>
-                                <p className="text-xs ml-2">{riwayat.tanggal}</p>
+                                <p className="text-xs ml-2">{formatDate(riwayat.tanggal)}</p>
                                 {
                                     viewMode ? <></> : <>
                                         <button

@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { pegawaiList, statusAktivitasDokumenList } from "../../../config/objectList.config";
+import { pegawaiList } from "../../../config/objectList.config";
 import { parseToRupiahText } from "../../../helper/number.helper";
 import { apiAktivitasDokumen, apiRiwayatPembayaranAktivitasDokumen, apiStatusRiwayatAktivitasDokumenPegawaiPelaksana } from "../../../service/endPointList.api";
 import { useDataContext } from "../../../context/dataContext.context";
 import StackedBarApex from "../../../component/chart/apex/StackedBarApex";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa";
-import RadialBarApex from "../../../component/chart/apex/RadialBarApex";
 
 const AktivitasDokumen = () => {
 
@@ -34,7 +32,9 @@ const AktivitasDokumen = () => {
                 pegawaiListData[index].dalam_proses = responseData.filter(x => x.penanggung_jawab == pegawaiListData[index].nama && x.status == "Dalam Proses").length
                 pegawaiListData[index].selesai = responseData.filter(x => x.penanggung_jawab == pegawaiListData[index].nama && x.status == "Selesai").length
                 pegawaiListData[index].riwayat_pembayaran = riwayatPembayaranData.filter(x => x.pegawai_penerima == pegawaiListData[index].nama).length
+                pegawaiListData[index].riwayat_pembayaran_total = riwayatPembayaranData.length
                 pegawaiListData[index].pegawai_pelaksana = riwayatStatusAktivitasPegawaiPelaksanaData.filter(x => x.pegawai_pelaksana == pegawaiListData[index].nama).length
+                pegawaiListData[index].pegawai_pelaksana_total = riwayatStatusAktivitasPegawaiPelaksanaData.length
             }
 
             setDataAktivitasDokumen(x => x = {
@@ -106,23 +106,38 @@ const AktivitasDokumen = () => {
                             <div className="w-full">
                                 <p className="font-bold bg-gray-400 w-max rounded-md px-4 text-white">{item.total_dokumen} Dokumen</p>
                                 <div className="flex w-full py-3">
-                                    <div className={`bg-blue-600 h-6 w-[${(item.mulai * 100) / item.total_dokumen}%] rounded`}></div>
-                                    <div className={`bg-red-600 h-6 w-[${(item.dalam_proses * 100) / item.total_dokumen}%] rounded`}></div>
-                                    <div className={`bg-green-600 h-6 w-[${(item.selesai * 100) / item.total_dokumen}%] rounded`}></div>
+                                    <div className={`bg-blue-600 h-6 rounded`} style={{ width: `${(item.mulai * 100) / item.total_dokumen}%` }}></div>
+                                    <div className={`bg-red-600 h-6 rounded`} style={{ width: `${(item.dalam_proses * 100) / item.total_dokumen}%` }}></div>
+                                    <div className={`bg-green-600 h-6 rounded`} style={{ width: `${(item.selesai * 100) / item.total_dokumen}%` }}></div>
                                 </div>
                                 <div className="flex gap-x-2 font-bold w-full pb-3">
-                                    <p className="text-blue-600 rounded">
+                                    <p className="text-blue-600 border-r-2 border-gray-400 pr-2">
                                         {item.mulai} Mulai
                                     </p>
-                                    <p className="text-red-600 rounded">
+                                    <p className="text-red-600 border-r-2 border-gray-400 pr-2">
                                         {item.dalam_proses} Dalam Proses
                                     </p>
                                     <p className="text-green-600 rounded">
                                         {item.selesai} Selesai
                                     </p>
                                 </div>
-                                <p>Terlibat Dalam {item.riwayat_pembayaran} Riwayat Pembayaran</p>
-                                <p>{item.pegawai_pelaksana} Kali Menjadi Staf Pelaksana</p>
+
+                                <div className="border-b-2 pb-4 border-gray-300">
+                                    <p className="text-md font-bold mt-5 mb-2">Keterlibatan Dalam Riwayat Pembayaran</p>
+                                    <div className="flex w-full">
+                                        <div className={`bg-orange-600 h-3 rounded`} style={{ width: `${(item.riwayat_pembayaran * 100) / item.riwayat_pembayaran_total}%` }}></div>
+                                    </div>
+                                    <p className="text-xs font-semibold mt-1">Terlibat Dalam {item.riwayat_pembayaran} Dari {item.riwayat_pembayaran_total} Riwayat Pembayaran ({(item.riwayat_pembayaran * 100) / item.riwayat_pembayaran_total} %)</p>
+                                </div>
+
+
+                                <div className="border-b-2 pb-4 border-gray-300">
+                                    <p className="text-md font-bold mt-5 mb-2">Staf Pelaksana</p>
+                                    <div className="flex w-full">
+                                        <div className={`bg-lime-600 h-3 rounded`} style={{ width: `${(item.pegawai_pelaksana * 100) / item.pegawai_pelaksana_total}%` }}></div>
+                                    </div>
+                                    <p className="text-xs font-semibold mt-1">Menjadi {item.pegawai_pelaksana} Kali Staff Pelaksana Dari {item.pegawai_pelaksana_total} Staf Pelaksana ({(item.pegawai_pelaksana * 100) / item.pegawai_pelaksana_total} %)</p>
+                                </div>
                             </div>
                         </div>
                     </div>
