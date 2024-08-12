@@ -145,9 +145,9 @@ const AktivitasDokumen = () => {
                                         <div className="border-b-2 pb-4 border-gray-300">
                                             <p className="text-md font-bold mt-5 mb-2">Staf Pelaksana</p>
                                             <div className="flex w-full">
-                                                <div className={`bg-lime-600 h-3 rounded`} style={{ width: `${isNaN((item.pegawai_pelaksana * 100) / dataAktivitasDokumen.total_pegawai_pelaksana) ? "0" : (item.pegawai_pelaksana * 100) / dataAktivitasDokumen.total_pegawai_pelaksana}%` }}></div>
+                                                <div className={`bg-lime-600 h-3 rounded`} style={{ width: `${isNaN((item.pegawai_pelaksana * 100) / item?.pegawai_pelaksana_total) ? "0" : (item.pegawai_pelaksana * 100) / item?.pegawai_pelaksana_total}%` }}></div>
                                             </div>
-                                            <p className="text-xs font-semibold mt-1">Menjadi {item.pegawai_pelaksana} Kali Staff Pelaksana Dari {item.pegawai_pelaksana_total} Tugas ({isNaN((item.pegawai_pelaksana * 100) / dataAktivitasDokumen.total_pegawai_pelaksana) ? "0" : (item.pegawai_pelaksana * 100) / dataAktivitasDokumen.total_pegawai_pelaksana}%`)</p>
+                                            <p className="text-xs font-semibold mt-1">Menjadi {item.pegawai_pelaksana} Kali Staff Pelaksana Dari {item.pegawai_pelaksana_total} Tugas ({isNaN((item.pegawai_pelaksana * 100) / item?.pegawai_pelaksana_total) ? "0" : (item.pegawai_pelaksana * 100) / item?.pegawai_pelaksana_total}%`)</p>
                                         </div>
                                     </div>
                                 </div>
@@ -163,7 +163,7 @@ const AktivitasDokumen = () => {
                         {
                             dataAktivitasDokumen?.riwayat_pembayaran?.map((item, i) => {
                                 return <div className="w-full" key={i}>
-                                    <div className="bg-blue-800 rounded-full h-5 w-3/12 mt-5"></div>
+                                    <div className="bg-blue-800 rounded-full h-3 w-3/12 mt-5"></div>
                                     <div className="flex justify-between py-3 pl-2">
                                         <p className="font-bold text-md">No.Surat : {item.no_surat}</p>
                                         <p className="font-bold text-md bg-green-700 text-white px-2 rounded-full">Rp. {parseToRupiahText(item.biaya)}</p>
