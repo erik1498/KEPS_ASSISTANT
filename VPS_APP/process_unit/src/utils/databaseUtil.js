@@ -3,8 +3,7 @@ import db from "../config/Database.js";
 import { getEnv } from "./envUtils.js";
 
 export const generateDatabaseName = (req_identity, logger) => {
-    // return logger ? `${getEnv("DB_NAME")}_logging_${JSON.parse(req_identity).client_id}` : `${getEnv("DB_NAME")}_${JSON.parse(req_identity).client_id}`
-    return `${getEnv("DB_NAME")}_alor`
+    return logger ? `${getEnv("DB_NAME")}_logging_${JSON.parse(req_identity).client_id}` : `${getEnv("DB_NAME")}_${JSON.parse(req_identity).client_id}`
 }
 
 export const selectOneQueryUtil = async (db_name, model, attributes, whereCondition) => {
