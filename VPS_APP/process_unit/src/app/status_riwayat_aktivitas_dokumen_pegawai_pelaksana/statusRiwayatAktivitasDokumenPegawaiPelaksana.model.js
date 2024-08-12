@@ -1,10 +1,10 @@
 import { Sequelize } from "sequelize";
-import db from "../../config/Database.js";
+import db, { defaultModelBuilder } from "../../config/Database.js";
 
 const {DataTypes} = Sequelize;
 
 const StatusRiwayatAktivitasDokumenPegawaiPelaksanaModel = db.define("status_riwayat_aktivitas_dokumen_pegawai_pelaksana_tab", 
-    {
+    defaultModelBuilder({
         uuid: {
             type: DataTypes.STRING,
             defaultValue: DataTypes.UUIDV4,
@@ -34,7 +34,7 @@ const StatusRiwayatAktivitasDokumenPegawaiPelaksanaModel = db.define("status_riw
                 notEmpty:true,
             }
         },
-    }, {
+    }), {
         freezeTableName: true
     }
 )

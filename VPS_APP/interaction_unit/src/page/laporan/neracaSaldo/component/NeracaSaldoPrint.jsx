@@ -1,6 +1,7 @@
 import React from "react";
 import NeracaSaldoRow from "./NeracaSaldoRow";
 import DebetKreditStatusCard from "../../../../component/card/DebetKreditStatusCard";
+import { formatDate, getHariTanggalFull } from "../../../../helper/date.helper";
 
 export const NeracaSaldoPrint = React.forwardRef((props, ref) => {
     return (
@@ -10,6 +11,7 @@ export const NeracaSaldoPrint = React.forwardRef((props, ref) => {
             <div className="px-3 mb-10">
                 <h1 className="text-2xl font-bold">{props.bulan} {props.tahun}</h1>
                 <h1 className="text-6xl font-bold">Neraca Saldo</h1>
+                <p className="mb-5">Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
             </div>
 
             <DebetKreditStatusCard

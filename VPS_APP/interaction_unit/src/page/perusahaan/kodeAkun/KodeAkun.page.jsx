@@ -8,11 +8,11 @@ import { useEffect } from "react"
 import Pagination from "../../../component/general/Pagination"
 import KodeAkunForm from "./component/KodeAkunForm"
 import { showAlert, showDialog, showError } from "../../../helper/form.helper"
-import { AKUN_TIDAK_BOLEH_DIUPDATE } from "../../../helper/jurnalUmum.helper"
 import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
 import { KodeAkunPrint } from "./component/KodeAkunPrint"
 import { getBulanByIndex } from "../../../helper/date.helper"
+import { AKUN_TIDAK_BOLEH_DIUPDATE } from "../../../config/objectList.config"
 
 const KodeAkunPage = () => {
 

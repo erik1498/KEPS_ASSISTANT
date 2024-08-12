@@ -49,6 +49,7 @@ export const getRiwayatAktivitasDokumenByUuidRepo = async (uuid, req_id) => {
 
 export const createRiwayatAktivitasDokumenRepo = async (riwayatAktivitasDokumenData, req_id) => {
     return insertQueryUtil(
+        req_id, 
         generateDatabaseName(req_id),
         RiwayatAktivitasDokumenModel,
         {
@@ -62,6 +63,7 @@ export const createRiwayatAktivitasDokumenRepo = async (riwayatAktivitasDokumenD
 
 export const deleteRiwayatAktivitasDokumenByUuidRepo = async (uuid, req_id) => {
     updateQueryUtil(
+        req_id,
         generateDatabaseName(req_id),
         RiwayatAktivitasDokumenModel,
         {

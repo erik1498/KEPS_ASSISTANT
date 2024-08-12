@@ -1,10 +1,10 @@
 import { Sequelize } from "sequelize";
-import db from "../../config/Database.js";
+import db, { defaultModelBuilder } from "../../config/Database.js";
 
 const { DataTypes } = Sequelize;
 
 const KodeAkunPerkiraanModel = db.define("kode_akun_perkiraan_tab",
-    {
+    defaultModelBuilder({
         uuid: {
             type: DataTypes.STRING,
             defaultValue: DataTypes.UUIDV4,
@@ -41,7 +41,7 @@ const KodeAkunPerkiraanModel = db.define("kode_akun_perkiraan_tab",
                 notEmpty: true
             }
         }
-    }, {
+    }), {
     freezeTableName: true
 }
 )

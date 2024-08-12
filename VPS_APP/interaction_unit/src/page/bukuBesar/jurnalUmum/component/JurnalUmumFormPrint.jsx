@@ -1,6 +1,6 @@
 import React from "react";
 import { parseToRupiahText } from "../../../../helper/number.helper";
-import { convertTo12HoursFormat } from "../../../../helper/date.helper";
+import { convertTo12HoursFormat, formatDate, getHariTanggalFull } from "../../../../helper/date.helper";
 
 export const JurnalUmumFormPrint = React.forwardRef((props, ref) => {
     return (
@@ -8,9 +8,12 @@ export const JurnalUmumFormPrint = React.forwardRef((props, ref) => {
             ref={ref}
         >
             <div className="px-3">
-                <h1 className="text-4xl font-bold mb-3">Form Jurnal Umum</h1>
-                <h1 className="text-2xl font-bold">Tanggal : {props.tanggal}</h1>
-                <h1 className="text-2xl font-bold mb-20">Bukti Transaksi : {props.buktiTransaksi}</h1>
+                <h1 className="text-4xl font-bold">Form Jurnal Umum</h1>
+                <p className="mb-5">Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
+                <div className="flex justify-between">
+                    <h1 className="text-2xl font-bold">Tanggal : {formatDate(props.tanggal, false)}</h1>
+                    <h1 className="text-2xl font-bold mb-20">{props.buktiTransaksi}</h1>
+                </div>
                 {
                     props.data.map((item, idx) => {
                         return <>
@@ -90,25 +93,25 @@ export const JurnalUmumFormPrint = React.forwardRef((props, ref) => {
                         </>
                     })
                 }
-            <div className="page-break">
-                <div className="mt-6 pb-64 border border-black pt-2 px-2 mb-20">
-                    <p>Note : </p>
-                </div>
-                <div className="flex justify-between">
-                    <div className="flex flex-1 flex-col font-bold">
-                        <p>Accounting</p>
-                        <p className="mt-20">Tina</p>
+                {/* <div className="page-break">
+                    <div className="mt-6 pb-64 border border-black pt-2 px-2 mb-20">
+                        <p>Note : </p>
                     </div>
-                    <div className="flex flex-1 flex-col items-start justify-start font-bold">
-                        <p>Bendahara</p>
-                        <p className="mt-20">Lina</p>
+                    <div className="flex justify-between">
+                        <div className="flex flex-1 flex-col font-bold">
+                            <p>Accounting</p>
+                            <p className="mt-20">Tina</p>
+                        </div>
+                        <div className="flex flex-1 flex-col items-start justify-start font-bold">
+                            <p>Bendahara</p>
+                            <p className="mt-20">Lina</p>
+                        </div>
+                        <div className="flex flex-1 flex-col items-start justify-start font-bold">
+                            <p>Direktur</p>
+                            <p className="mt-20">Naomi</p>
+                        </div>
                     </div>
-                    <div className="flex flex-1 flex-col items-start justify-start font-bold">
-                        <p>Direktur</p>
-                        <p className="mt-20">Naomi</p>
-                    </div>
-                </div>
-            </div>
+                </div> */}
             </div >
         </div >
     );

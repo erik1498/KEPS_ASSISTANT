@@ -70,6 +70,7 @@ export const createRiwayatPembayaranAktivitasDokumenRepo = async (riwayatPembaya
         "nilai_pembayaran"
     ])
     return insertQueryUtil(
+        req_id, 
         generateDatabaseName(req_id),
         RiwayatPembayaranAktivitasDokumenModel,
         {
@@ -85,6 +86,7 @@ export const createRiwayatPembayaranAktivitasDokumenRepo = async (riwayatPembaya
 
 export const deleteRiwayatPembayaranAktivitasDokumenByUuidRepo = async (uuid, req_id) => {
     return updateQueryUtil(
+        req_id,
         generateDatabaseName(req_id),
         RiwayatPembayaranAktivitasDokumenModel,
         {

@@ -1,10 +1,10 @@
 import { Sequelize } from "sequelize";
-import db from "../../config/Database.js";
+import db, { defaultModelBuilder } from "../../config/Database.js";
 
 const {DataTypes} = Sequelize;
 
 const NeracaModel = db.define("neraca_tab", 
-    {
+    defaultModelBuilder({
         uuid: {
             type: DataTypes.STRING,
             defaultValue: DataTypes.UUIDV4,
@@ -34,7 +34,7 @@ const NeracaModel = db.define("neraca_tab",
                 notEmpty:true
             }
         }
-    }, {
+    }), {
         freezeTableName: true
     }
 )

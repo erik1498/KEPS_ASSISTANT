@@ -1,10 +1,10 @@
 import { Sequelize } from "sequelize";
-import db from "../../config/Database.js";
+import db, { defaultModelBuilder } from "../../config/Database.js";
 
 const {DataTypes} = Sequelize;
 
 const DokumenKlienModel = db.define("dokumen_klien_tab", 
-    {
+    defaultModelBuilder({
         uuid: {
             type: DataTypes.STRING,
             defaultValue: DataTypes.UUIDV4,
@@ -41,7 +41,7 @@ const DokumenKlienModel = db.define("dokumen_klien_tab",
                 notEmpty:true,
             }
         },
-    }, {
+    }), {
         freezeTableName: true
     }
 )

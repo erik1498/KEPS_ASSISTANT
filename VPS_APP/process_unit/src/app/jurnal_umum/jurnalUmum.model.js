@@ -1,10 +1,10 @@
 import { Sequelize } from "sequelize";
-import db from "../../config/Database.js";
+import db, { defaultModelBuilder } from "../../config/Database.js";
 
 const {DataTypes} = Sequelize;
 
 const JurnalUmumModel = db.define("jurnal_umum_tab", 
-    {
+    defaultModelBuilder({
         uuid: {
             type: DataTypes.STRING,
             defaultValue: DataTypes.UUIDV4,
@@ -90,7 +90,7 @@ const JurnalUmumModel = db.define("jurnal_umum_tab",
                 notEmpty: true
             }
         }
-    }, {
+    }), {
         freezeTableName: true
     }
 )

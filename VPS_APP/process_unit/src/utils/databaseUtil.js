@@ -6,6 +6,10 @@ export const generateDatabaseName = (req_identity, logger) => {
     return logger ? `${getEnv("DB_NAME")}_logging_${JSON.parse(req_identity).client_id}` : `${getEnv("DB_NAME")}_${JSON.parse(req_identity).client_id}`
 }
 
+export const getUserIdFromRequestIdentity = (req_identity) => {
+    return JSON.parse(req_identity).userId
+}
+
 export const selectOneQueryUtil = async (db_name, model, attributes, whereCondition) => {
     const selectQuery = db.getQueryInterface().queryGenerator.selectQuery(`${db_name}.${model.getTableName()}`, {
         attributes,
@@ -31,9 +35,15 @@ export const selectAllQueryUtil = async (db_name, model, attributes, whereCondit
     return data
 }
 
-export const insertQueryUtil = async (db_name, model, data) => {
+export const insertQueryUtil = async (req_id, db_name, model, data) => {
     data.createdAt = new Date();
     data.updatedAt = new Date();
+
+    if (model.getAttributes().createdBy != null) {
+        data.createdBy = getUserIdFromRequestIdentity(req_id)
+        data.updatedBy = "Empty"
+    }
+
     const insertQuery = db.getQueryInterface().queryGenerator.insertQuery(`${db_name}.${model.getTableName()}`, model.build(data).get());
 
     const [id, _] = await db.query(
@@ -49,8 +59,13 @@ export const insertQueryUtil = async (db_name, model, data) => {
     });
 }
 
-export const updateQueryUtil = async (db_name, model, data, whereCondition) => {
+export const updateQueryUtil = async (req_id, db_name, model, data, whereCondition) => {
     data.updatedAt = new Date();
+
+    if (model.getAttributes().updatedBy != null) {
+        data.updatedBy = getUserIdFromRequestIdentity(req_id)
+    }
+
     const updateQuery = db.getQueryInterface().queryGenerator.updateQuery(`${db_name}.${model.getTableName()}`, data, whereCondition);
 
     return await db.query(

@@ -5,6 +5,7 @@ import { generateDatabaseName, insertQueryUtil } from "../../utils/databaseUtil.
 
 export const createNeracaRepo = async (neracaData, req_id) => {
     return insertQueryUtil(
+        req_id, 
         generateDatabaseName(req_id),
         NeracaModel,
         {

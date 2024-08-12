@@ -1,6 +1,7 @@
 import React from "react";
 import RowCard from "../../../../component/card/RowCard";
 import AktivaPasivaStatusCard from "../../../../component/card/AktivaPasivaStatusCard";
+import { formatDate, getHariTanggalFull } from "../../../../helper/date.helper";
 
 export const NeracaPrint = React.forwardRef((props, ref) => {
     return (
@@ -10,6 +11,7 @@ export const NeracaPrint = React.forwardRef((props, ref) => {
             <div className="px-3 mb-4">
                 <h1 className="text-2xl font-bold">{props.bulan} {props.tahun}</h1>
                 <h1 className="text-6xl font-bold">Neraca</h1>
+                <p className="mb-5">Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
             </div>
             <AktivaPasivaStatusCard
                 aktiva={props?.data?.neraca?.aktiva}

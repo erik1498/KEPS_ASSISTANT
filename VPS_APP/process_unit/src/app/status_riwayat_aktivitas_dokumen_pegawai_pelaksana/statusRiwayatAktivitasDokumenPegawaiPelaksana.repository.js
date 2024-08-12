@@ -61,6 +61,7 @@ export const getStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidRepo = async 
 
 export const createStatusRiwayatAktivitasDokumenPegawaiPelaksanaRepo = async (statusRiwayatAktivitasDokumenPegawaiPelaksanaData, req_id) => {
     return insertQueryUtil(
+        req_id, 
         generateDatabaseName(req_id),
         StatusRiwayatAktivitasDokumenPegawaiPelaksanaModel,
         {
@@ -73,6 +74,7 @@ export const createStatusRiwayatAktivitasDokumenPegawaiPelaksanaRepo = async (st
 
 export const deleteStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidRepo = async (uuid, req_id) => {
     updateQueryUtil(
+        req_id,
         generateDatabaseName(req_id),
         StatusRiwayatAktivitasDokumenPegawaiPelaksanaModel,
         {

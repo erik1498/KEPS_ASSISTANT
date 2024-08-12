@@ -3,6 +3,7 @@ import { generateDatabaseName, insertQueryUtil } from "../../utils/databaseUtil.
 
 export const createLoggerRepo = async (loggerData, req_id) => {
     return insertQueryUtil(
+        req_id, 
         generateDatabaseName(req_id, true),
         LoggerModel,
         {

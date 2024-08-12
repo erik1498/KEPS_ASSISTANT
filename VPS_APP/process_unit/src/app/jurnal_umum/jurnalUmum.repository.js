@@ -122,6 +122,7 @@ export const createJurnalUmumRepo = async (jurnalUmumData, req_id) => {
         "debet", "kredit"
     ])
     return insertQueryUtil(
+        req_id, 
         generateDatabaseName(req_id),
         JurnalUmumModel,
         {
@@ -143,6 +144,7 @@ export const createJurnalUmumRepo = async (jurnalUmumData, req_id) => {
 
 export const deleteJurnalUmumByUuidRepo = async (uuid, req_id) => {
     return updateQueryUtil(
+        req_id,
         generateDatabaseName(req_id),
         JurnalUmumModel,
         {
@@ -196,6 +198,7 @@ export const getJurnalUmumByBuktiTransaksiAllDataRepo = async (bukti_transaksi, 
 
 export const deleteJurnalUmumByBuktiTransaksiRepo = async (bukti_transaksi, req_id) => {
     updateQueryUtil(
+        req_id,
         generateDatabaseName(req_id),
         JurnalUmumModel,
         {
@@ -212,6 +215,7 @@ export const updateJurnalUmumByUuidRepo = async (uuid, jurnalUmumData, req_id) =
         "debet", "kredit"
     ])
     return updateQueryUtil(
+        req_id,
         generateDatabaseName(req_id),
         JurnalUmumModel,
         {

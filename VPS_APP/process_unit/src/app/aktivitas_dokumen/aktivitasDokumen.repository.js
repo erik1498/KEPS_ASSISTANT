@@ -138,6 +138,7 @@ export const createAktivitasDokumenRepo = async (aktivitasDokumenData, req_id) =
         "biaya"
     ])
     return insertQueryUtil(
+        req_id, 
         generateDatabaseName(req_id),
         AktivitasDokumenModel,
         {
@@ -159,6 +160,7 @@ export const createAktivitasDokumenRepo = async (aktivitasDokumenData, req_id) =
 
 export const deleteAktivitasDokumenByUuidRepo = async (uuid, req_id) => {
     return updateQueryUtil(
+        req_id,
         generateDatabaseName(req_id),
         AktivitasDokumenModel,
         {
@@ -175,6 +177,7 @@ export const updateAktivitasDokumenByUuidRepo = async (uuid, aktivitasDokumenDat
         "biaya"
     ])
     return updateQueryUtil(
+        req_id,
         generateDatabaseName(req_id),
         AktivitasDokumenModel,
         {

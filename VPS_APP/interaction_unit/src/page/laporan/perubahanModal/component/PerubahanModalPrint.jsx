@@ -1,5 +1,6 @@
 import React from "react";
 import PerubahanModalRow from "./PerubahanModalRow";
+import { formatDate, getHariTanggalFull } from "../../../../helper/date.helper";
 
 export const PerubahanModalPrint = React.forwardRef((props, ref) => {
     return (
@@ -9,6 +10,7 @@ export const PerubahanModalPrint = React.forwardRef((props, ref) => {
             <div className="px-3 mb-10">
                 <h1 className="text-2xl font-bold">{props.tahun}</h1>
                 <h1 className="text-6xl font-bold">Perubahan Modal</h1>
+                <p className="mb-5">Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
             </div>
             {
                 props.data.map((item) => {

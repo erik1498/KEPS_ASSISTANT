@@ -2,12 +2,15 @@ import { Sequelize } from "sequelize";
 import { getEnv } from "../utils/envUtils.js";
 import { LOGGER, logType } from "../utils/loggerUtil.js";
 
+const { DataTypes } = Sequelize;
+
 const db = new Sequelize({
     host: getEnv("DB_HOST"),
     port: getEnv("DB_PORT"),
     username: getEnv("DB_USER"),
     password: getEnv("DB_PASSWORD"),
     dialect: "mysql",
+    timezone: '+08:00',
     logging: false
 })
 
@@ -27,6 +30,27 @@ export const connectDatabase = () => {
             setTimeout(connectDatabase, 5000)
         }
     })
+}
+
+export const defaultModelBuilder = (attributes) => {
+
+    attributes.createdBy = {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+        }
+    }
+
+    attributes.updatedBy = {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+        }
+    }
+    
+    return attributes
 }
 
 export default db;

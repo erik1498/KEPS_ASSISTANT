@@ -113,7 +113,7 @@ const RiwayatAktivitasDokumen = ({
                 {
                     riwayatAktivitasList.map((riwayat, i) => {
                         return <div className="mb-7 pb-5 grid grid-cols-12 gap-x-2">
-                            <div className="col-span-3 flex flex-col">
+                            <div className="col-span-5 flex flex-col">
                                 <div className="bg-blue-800 w-3/12 h-6 rounded-full mb-2"></div>
                                 <p className="text-xl font-bold mt-2 ml-2">{riwayat.judul_aktivitas}</p>
                                 <p className="text-xs ml-2">{formatDate(riwayat.tanggal)}</p>
@@ -129,7 +129,7 @@ const RiwayatAktivitasDokumen = ({
                                     </>
                                 }
                             </div>
-                            <div className="col-span-9">
+                            <div className="col-span-5">
                                 <StatusRiwayatAktivitasDokumen
                                     idStatusAktivitasDokumen={riwayat.uuid}
                                     setIsLoading={setIsLoading}

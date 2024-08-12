@@ -43,6 +43,7 @@ export const getDokumenKlienByUuidRepo = async (uuid, req_id) => {
 
 export const createDokumenKlienRepo = async (dokumenKlienData, req_id) => {
     return insertQueryUtil(
+        req_id, 
         generateDatabaseName(req_id),
         DokumenKlienModel,
         {
@@ -56,6 +57,7 @@ export const createDokumenKlienRepo = async (dokumenKlienData, req_id) => {
 
 export const deleteDokumenKlienByUuidRepo = async (uuid, req_id) => {
     return updateQueryUtil(
+        req_id,
         generateDatabaseName(req_id),
         DokumenKlienModel,
         {

@@ -26,6 +26,7 @@ export const getUserByUuidRepo = async (uuid, req_id) => {
 
 export const createUserRepo = async (userData, req_id) => {
     return insertQueryUtil(
+        req_id, 
         generateDatabaseName(req_id),
         UserModel,
         {

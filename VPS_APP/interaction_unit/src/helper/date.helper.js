@@ -24,7 +24,7 @@ export const getHariTanggal = () => {
 
 export const getHariTanggalFull = () => {
     const dateNow = new Date()
-    
+
     const year = dateNow.getFullYear()
     const month = dateNow.getMonth() + 1 < 10 ? `0${dateNow.getMonth() + 1}` : dateNow.getMonth() + 1
     const date = dateNow.getDate() < 10 ? `0${dateNow.getDate()}` : dateNow.getDate()
@@ -36,7 +36,7 @@ export const getHariTanggalFull = () => {
     return `${year}-${month}-${date}T${hour}:${minute}:${second}.000`
 }
 
-export const formatDate = (dateString) => {
+export const formatDate = (dateString, withHours = true) => {
     let date = new Date(dateString);
 
     // Mendapatkan komponen tanggal
@@ -44,20 +44,25 @@ export const formatDate = (dateString) => {
     let month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() dimulai dari 0
     let year = date.getFullYear();
 
-    // Mendapatkan komponen waktu
-    let hours = date.getHours();
-    let minutes = date.getMinutes().toString().padStart(2, '0');
-    let seconds = date.getSeconds().toString().padStart(2, '0');
-
-    // Mengatur format 12 jam
-    let ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // Ubah 0 jam menjadi 12
-
-    let formattedTime = hours.toString().padStart(2, '0') + ':' + minutes + ':' + seconds + ' ' + ampm;
     let formattedDate = day + '/' + month + '/' + year;
 
-    return formattedDate + ' ' + formattedTime;
+    if (withHours) {
+
+        // Mendapatkan komponen waktu
+        let hours = date.getHours();
+        let minutes = date.getMinutes().toString().padStart(2, '0');
+        let seconds = date.getSeconds().toString().padStart(2, '0');
+
+        // Mengatur format 12 jam
+        let ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // Ubah 0 jam menjadi 12
+        let formattedTime = hours.toString().padStart(2, '0') + ':' + minutes + ':' + seconds + ' ' + ampm;
+        return formattedDate + ' ' + formattedTime;
+
+    }
+
+    return formattedDate;
 }
 
 export const convertTo12HoursFormat = (time) => {

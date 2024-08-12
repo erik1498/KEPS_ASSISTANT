@@ -1,4 +1,5 @@
 import React from "react";
+import { formatDate, getHariTanggalFull } from "../../../../helper/date.helper";
 
 export const KodeAkunPrint = React.forwardRef((props, ref) => {
     return (
@@ -6,8 +7,8 @@ export const KodeAkunPrint = React.forwardRef((props, ref) => {
             ref={ref}
         >
             <div className="px-3 mb-4">
-                <h1 className="text-2xl font-bold">{props.bulan} {props.tahun}</h1>
                 <h1 className="text-6xl font-bold">Kode Akun</h1>
+                <p className="mb-5">Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
             </div>
             <table className="table">
                 <thead>

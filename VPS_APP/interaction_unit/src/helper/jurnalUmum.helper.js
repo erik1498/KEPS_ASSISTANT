@@ -11,8 +11,6 @@ const getDiffByTransaksi = (data) => {
     return arrData
 }
 
-export const AKUN_TIDAK_BOLEH_DIUPDATE = ["101", "102", "301", "302", "303", "398", "399", "401", "405", "701", "702", "799"]
-
 export const normalizeDataJurnalUmum = (data) => {
     return new Promise((res, rej) => {
         let totalDebet = 0;

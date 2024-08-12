@@ -75,20 +75,21 @@ export const getKodeAkunPerkiraanByUuidSudahDigunakanRepo = async (uuid, req_id)
 
 export const createKodeAkunPerkiraanRepo = async (kodeAkunPerkiraanData, req_id) => {
     return insertQueryUtil(
+        req_id, 
         generateDatabaseName(req_id),
         KodeAkunPerkiraanModel,
         {
             type: kodeAkunPerkiraanData.type,
             name: kodeAkunPerkiraanData.name,
             code: kodeAkunPerkiraanData.code,
-            enabled: kodeAkunPerkiraanData.enabled,
-            client_id: req_id
+            enabled: kodeAkunPerkiraanData.enabled
         }
     )
 }
 
 export const deleteKodeAkunPerkiraanByUuidRepo = async (uuid, req_id) => {
     updateQueryUtil(
+        req_id,
         generateDatabaseName(req_id),
         KodeAkunPerkiraanModel,
         {
@@ -102,6 +103,7 @@ export const deleteKodeAkunPerkiraanByUuidRepo = async (uuid, req_id) => {
 
 export const updateKodeAkunPerkiraanByUuidRepo = async (uuid, kodeAkunPerkiraanData, req_id) => {
     return updateQueryUtil(
+        req_id,
         generateDatabaseName(req_id),
         KodeAkunPerkiraanModel,
         {
