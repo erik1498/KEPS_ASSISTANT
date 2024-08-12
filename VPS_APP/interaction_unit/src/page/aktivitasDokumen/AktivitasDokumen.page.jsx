@@ -4,10 +4,10 @@ import Wrap from "../../component/layout/Wrap"
 import { FaEye, FaPen, FaPlus, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
 import AktivitasDokumenForm from "./component/AktivitasDokumenForm"
 import { apiAktivitasDokumen } from "../../service/endPointList.api"
-import { parseToRupiahText } from "../../../../process_unit/src/utils/numberParsingUtil"
 import { useDataContext } from "../../context/dataContext.context"
 import Pagination from "../../component/general/Pagination"
 import DetailDokumen from "./component/DetailDokumen"
+import { parseToRupiahText } from "../../helper/number.helper"
 
 const AktivitasDokumenPage = () => {
 
