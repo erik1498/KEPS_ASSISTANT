@@ -9,7 +9,7 @@ services:
         - DB_HOST=192.168.43.172
         - DB_PORT=9838
         - DB_NAME=db_keps_assistant
-        - DB_MIGRATION=false
+        - DB_MIGRATION=true
         - DB_USER=kepsAssistantUserDB123@#%__
         - DB_PASSWORD=kepsAssistantPassDB123@#%__
         - CLIENT_HOST=["http://192.168.43.172:3000"]
