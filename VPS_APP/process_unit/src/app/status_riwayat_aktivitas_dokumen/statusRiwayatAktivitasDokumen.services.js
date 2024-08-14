@@ -39,7 +39,7 @@ export const createStatusRiwayatAktivitasDokumenService = async (statusRiwayatAk
     LOGGER(logType.INFO, `Start createStatusRiwayatAktivitasDokumenService`, statusRiwayatAktivitasDokumenData, req_id)
 
     statusRiwayatAktivitasDokumenData["enabled"] = 1
-    const statusRiwayatAktivitasDokumen = await createStatusRiwayatAktivitasDokumenRepo(statusRiwayatAktivitasDokumenData)
+    const statusRiwayatAktivitasDokumen = await createStatusRiwayatAktivitasDokumenRepo(statusRiwayatAktivitasDokumenData, req_id)
     return statusRiwayatAktivitasDokumen
 }
 
@@ -53,7 +53,7 @@ export const deleteStatusRiwayatAktivitasDokumenByUuidService = async (uuid, req
 export const updateStatusRiwayatAktivitasDokumenByUuidService = async (uuid, statusRiwayatAktivitasDokumenData, req_id, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateStatusRiwayatAktivitasDokumenByUuidService [${uuid}]`, statusRiwayatAktivitasDokumenData, req_id)
     const beforeData = await getStatusRiwayatAktivitasDokumenByUuidService(uuid)
-    const statusRiwayatAktivitasDokumen = await updateStatusRiwayatAktivitasDokumenByUuidRepo(uuid, statusRiwayatAktivitasDokumenData)
+    const statusRiwayatAktivitasDokumen = await updateStatusRiwayatAktivitasDokumenByUuidRepo(uuid, statusRiwayatAktivitasDokumenData, req_id)
 
     LOGGER_MONITOR(req_original_url, req_method, {
         beforeData,

@@ -137,9 +137,9 @@ const AktivitasDokumen = () => {
                                         <div className="border-b-2 pb-4 border-gray-300">
                                             <p className="text-md font-bold mt-5 mb-2">Keterlibatan Dalam Riwayat Pembayaran</p>
                                             <div className="flex w-full">
-                                                <div className={`bg-orange-600 h-3 rounded`} style={{ width: `${(item.riwayat_pembayaran * 100) / item.riwayat_pembayaran_total}%` }}></div>
+                                                <div className={`bg-orange-600 h-3 rounded`} style={{ width: `${isNaN((item.riwayat_pembayaran * 100) / item.riwayat_pembayaran_total) ? 0 : (item.riwayat_pembayaran * 100) / item.riwayat_pembayaran_total}%` }}></div>
                                             </div>
-                                            <p className="text-xs font-semibold mt-1">Terlibat Dalam {item.riwayat_pembayaran} Dari {item.riwayat_pembayaran_total} Riwayat Pembayaran ({(item.riwayat_pembayaran * 100) / item.riwayat_pembayaran_total} %)</p>
+                                            <p className="text-xs font-semibold mt-1">Terlibat Dalam {item.riwayat_pembayaran} Dari {item.riwayat_pembayaran_total} Riwayat Pembayaran ({isNaN((item.riwayat_pembayaran * 100) / item.riwayat_pembayaran_total) ? 0 : (item.riwayat_pembayaran * 100) / item.riwayat_pembayaran_total} %)</p>
                                         </div>
 
                                         <div className="border-b-2 pb-4 border-gray-300">

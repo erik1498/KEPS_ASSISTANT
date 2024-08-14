@@ -138,7 +138,7 @@ export const createAktivitasDokumenRepo = async (aktivitasDokumenData, req_id) =
         "biaya"
     ])
     return insertQueryUtil(
-        req_id, 
+        req_id,
         generateDatabaseName(req_id),
         AktivitasDokumenModel,
         {
@@ -153,6 +153,9 @@ export const createAktivitasDokumenRepo = async (aktivitasDokumenData, req_id) =
             keterangan: aktivitasDokumenData.keterangan,
             status: aktivitasDokumenData.status,
             tahun: aktivitasDokumenData.tahun,
+            nomor_hp_klien: aktivitasDokumenData.nomor_hp_klien,
+            email_klien: aktivitasDokumenData.email_klien,
+            alamat_klien: aktivitasDokumenData.alamat_klien,
             enabled: aktivitasDokumenData.enabled
         }
     )
@@ -192,6 +195,9 @@ export const updateAktivitasDokumenByUuidRepo = async (uuid, aktivitasDokumenDat
             keterangan: aktivitasDokumenData.keterangan,
             status: aktivitasDokumenData.status,
             tahun: aktivitasDokumenData.tahun,
+            nomor_hp_klien: aktivitasDokumenData.nomor_hp_klien,
+            email_klien: aktivitasDokumenData.email_klien,
+            alamat_klien: aktivitasDokumenData.alamat_klien,
             enabled: 1
         },
         {

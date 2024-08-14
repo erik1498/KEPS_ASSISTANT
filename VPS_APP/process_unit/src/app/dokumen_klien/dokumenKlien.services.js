@@ -51,8 +51,8 @@ export const deleteDokumenKlienByUuidService = async (uuid, req_id) => {
 
 export const updateDokumenKlienByUuidService = async (uuid, dokumenKlienData, req_id, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateDokumenKlienByUuidService [${uuid}]`, dokumenKlienData, req_id)
-    const beforeData = await getDokumenKlienByUuidService(uuid)
-    const dokumenKlien = await updateDokumenKlienByUuidRepo(uuid, dokumenKlienData)
+    const beforeData = await getDokumenKlienByUuidService(uuid, req_id)
+    const dokumenKlien = await updateDokumenKlienByUuidRepo(uuid, dokumenKlienData, req_id)
 
     LOGGER_MONITOR(req_original_url, req_method, {
         beforeData,

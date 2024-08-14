@@ -37,6 +37,10 @@ export const getHariTanggalFull = () => {
 }
 
 export const formatDate = (dateString, withHours = true) => {
+    if (!dateString) {
+        return ""
+    }
+    
     let date = new Date(dateString);
 
     // Mendapatkan komponen tanggal

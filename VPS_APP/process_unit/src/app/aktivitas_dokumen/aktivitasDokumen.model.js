@@ -55,6 +55,27 @@ const AktivitasDokumenModel = db.define("aktivitas_dokumen_tab",
                 notEmpty: true,
             }
         },
+        nomor_hp_klien: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
+        email_klien: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
+        alamat_klien: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
         penanggung_jawab: {
             type: DataTypes.STRING,
             allowNull: false,

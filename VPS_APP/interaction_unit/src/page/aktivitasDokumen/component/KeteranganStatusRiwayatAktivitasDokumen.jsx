@@ -118,7 +118,7 @@ const KeteranganStatusRiwayatAktivitasDokumen = ({
                         <div className="flex gap-x-3 items-start">
                             {
                                 viewMode ? <></> : <>
-                                    <FaTimes
+                                    <FaTrash
                                         onClick={() => hapusKeterangan(iteml.uuid)}
                                         className="text-red-500 cursor-pointer"
                                         size={15}

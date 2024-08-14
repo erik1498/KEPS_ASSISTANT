@@ -63,7 +63,7 @@ const DokumenKlien = ({
         <LoadingMiniPage />
         :
         <>
-            <h1 className={`${viewMode ? "text-sm mt-4 mb-2" : "text-lg mt-6"} font-bold`}>Daftar Dokumen Klien</h1>
+            <h1 className={`${viewMode ? "text-sm mt-1 mb-2" : "text-lg mt-6"} font-bold`}>Daftar Dokumen Klien</h1>
             {
                 viewMode ? <></> : <>
                     <form onSubmit={(e) => addDokumenKlien(e)}>

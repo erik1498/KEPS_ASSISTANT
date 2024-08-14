@@ -29,6 +29,17 @@ export const aktivitasDokumenValidation = (payload) => {
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
+        nomor_hp_klien: Joi.string().required().messages({
+            'string.base': "Harus Berupa Text",
+            "string.empty": "Harus Diisi",
+            "any.required": "Harus Diisi",
+        }),
+        email_klien: Joi.string().messages({
+            'string.base': "Harus Berupa Text",
+        }),
+        alamat_klien: Joi.string().messages({
+            'string.base': "Harus Berupa Text",
+        }),
         penanggung_jawab: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",

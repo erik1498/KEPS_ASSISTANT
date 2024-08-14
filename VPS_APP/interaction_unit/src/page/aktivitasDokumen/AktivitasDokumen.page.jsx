@@ -8,6 +8,7 @@ import { useDataContext } from "../../context/dataContext.context"
 import Pagination from "../../component/general/Pagination"
 import DetailDokumen from "./component/DetailDokumen"
 import { parseToRupiahText } from "../../helper/number.helper"
+import { formatDate } from "../../helper/date.helper"
 
 const AktivitasDokumenPage = () => {
 
@@ -124,7 +125,7 @@ const AktivitasDokumenPage = () => {
                                                 aktivitasDokumenList.map((item, i) => {
                                                     return <div className="mt-4 border-b-2 pb-4 border-gray-500">
                                                         <div className="flex justify-between">
-                                                            <p className="text-sm">Tanggal {item.tanggal} | {item.penanggung_jawab}</p>
+                                                            <p className="text-sm">Tanggal {formatDate(item.tanggal)} | {item.penanggung_jawab}</p>
                                                             <div className="flex items-center">
                                                                 <button
                                                                     className="btn btn-xs bg-transparent shadow-none border-0 text-green-400"
@@ -150,6 +151,20 @@ const AktivitasDokumenPage = () => {
                                                         <p className="text-sm mb-4">Status Dokumen ( {item.status} )</p>
                                                         <p className="py-1 w-max rounded font-bold">No. Surat : {item.no_surat}</p>
                                                         <p className="text-sm">{item.klien}</p>
+                                                        <div className="flex gap-x-3">
+                                                            <div className="flex gap-x-2">
+                                                                <p className="text-sm font-bold">HP : </p>
+                                                                <p className="text-sm">{item.nomor_hp_klien}</p>
+                                                            </div>
+                                                            <div className="flex gap-x-2">
+                                                                <p className="text-sm font-bold">EMAIL : </p>
+                                                                <p className="text-sm">{item.email_klien}</p>
+                                                            </div>
+                                                            <div className="flex gap-x-2">
+                                                                <p className="text-sm font-bold">Alamat : </p>
+                                                                <p className="text-sm">{item.alamat_klien}</p>
+                                                            </div>
+                                                        </div>
                                                         <p className="text-sm w-max mt-2">{item.jumlah_dokumen} Dokumen Klien</p>
 
                                                         <div className="flex justify-between">
@@ -176,10 +191,10 @@ const AktivitasDokumenPage = () => {
                                                                 <div className="border-l-2 border-blue-800">
                                                                     <p className="text-sm bg-blue-800 w-max px-3 rounded-r-lg text-white mt-4 font-bold">Aktivitas Terakhir</p>
                                                                     <div className="pl-2">
-                                                                        <p className="text-xs font-bold mt-2">{item.tanggal_riwayat_aktivitas_uuid}</p>
+                                                                        <p className="text-xs font-bold mt-2">{formatDate(item.tanggal_riwayat_aktivitas_uuid)}</p>
                                                                         <p className="text-sm mt-1 text-gray-700">{item.judul_riwayat_aktivitas_uuid}</p>
                                                                         <p className="text-sm bg-blue-600 w-max px-3 rounded text-white mt-4 font-bold">Status Terakhir</p>
-                                                                        <p className="text-xs font-bold mt-2">{item.tanggal_status_riwayat_aktivitas_terakhir}</p>
+                                                                        <p className="text-xs font-bold mt-2">{formatDate(item.tanggal_status_riwayat_aktivitas_terakhir)}</p>
                                                                         <p className="text-sm mt-1 text-gray-700">{item.judul_status_riwayat_aktivitas_terakhir}</p>
                                                                     </div>
                                                                 </div>

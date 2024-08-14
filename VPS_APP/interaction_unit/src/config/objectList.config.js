@@ -1,4 +1,281 @@
+// START COMPANY CONFIG
+
 export const AKUN_TIDAK_BOLEH_DIUPDATE = ["101", "102", "301", "302", "303", "398", "399", "401", "405", "701", "702", "799"]
+
+export const tipeDokumenList = [
+    {
+        title: "Notaris",
+        data: [
+            {
+                title: "Badan Hukum",
+                data: [
+                    {
+                        title: "Perseroan Terbatas"
+                    },
+                    {
+                        title: "Yayasan"
+                    },
+                    {
+                        title: "Lembaga / Perkumpulan"
+                    },
+                    {
+                        title: "Koperasi"
+                    }
+                ]
+            },
+            {
+                title: "Badan Usaha",
+                data: [
+                    {
+                        title: "Perseroan Komanditer"
+                    },
+                    {
+                        title: "UD"
+                    },
+                    {
+                        title: "Firma"
+                    },
+                    {
+                        title: "Lembaga / Perkumpulan Non-Badan Hukum"
+                    }
+                ]
+            },
+            {
+                title: "Pengikatan Jual Beli ( PJB ) Lunas",
+            },
+            {
+                title: "Sewa Menyewa",
+            },
+            {
+                title: "Hibah",
+            },
+            {
+                title: "Waris",
+            },
+            {
+                title: "Fidusia",
+            },
+            {
+                title: "Waarmerking Surat Dibawah Tangan",
+            },
+            {
+                title: "Legalisasi Surat Dibawah Tangan",
+            },
+            {
+                title: "Persetujuan Dan Kuasa",
+            },
+            {
+                title: "SKMHT ( Surat Kuasa Membebankan Hak Tanggungan )",
+            },
+            {
+                title: "Penegasan Perseroan Terbatas Perorangan (PT. PERORANGAN)"
+            },
+            {
+                title: "Kuasa Untuk Menjual"
+            },
+            {
+                title: "Kuasa Untuk Membeli"
+            },
+            {
+                title: "Perjanjian Pengikatan Jual Beli (PPJB)"
+            },
+            {
+                title: "Pernyataan",
+            },
+            {
+                title: "Akta Lainnya",
+            },
+        ]
+    },
+    {
+        title: "PPAT",
+        data: [
+            {
+                title: "Akta Jual Beli",
+            },
+            {
+                title: "Akta Hibah",
+            },
+            {
+                title: "Akta Pemberian Hak Tanggungan",
+            },
+            {
+                title: "Akta Pembagian Hak Bersama",
+            },
+            {
+                title: "SKMHT",
+            },
+            {
+                title: "Akta Peralihan Hak Pewarisan",
+            },
+            {
+                title: "Akta Peralihan Tukar Menukar",
+            },
+            {
+                title: "Pemasukan Modal Dalam Perusahaan (INBRENG)",
+            },
+            {
+                title: "Reorganisasi Atau Restruktur Perseroan",
+            },
+            {
+                title: "Perubahan Data Berdasarkan Penetapan Atau Putusan Pengadilan",
+            },
+            {
+                title: "Pengalihan Hak Lelang",
+            },
+            {
+                title: "Cessie",
+            },
+            {
+                title: "Subrogasi",
+            },
+            {
+                title: "Roya",
+            },
+            {
+                title: "Roya Elektonik Perorangan",
+            },
+            {
+                title: "Merger Hak Tanggungan",
+            },
+            {
+                title: "Akta Lainnya",
+            }
+        ]
+    },
+    {
+        title: "Lain - Lain",
+        data: [
+            {
+                title: "Kesepakatan Bersama Jual Beli Dibawah Tangan"
+            },
+            {
+                title: "Pendaftaran Tanah Pertama Kali",
+            },
+            {
+                title: "Jasa Penanganan Pengecekan Lokasi Tanah",
+            },
+            {
+                title: "PKKPR Otomatis"
+            }, 
+            {
+                title: "Legalisasi"
+            }, 
+            {
+                title: "Turun Hak"
+            }, 
+            {
+                title: "Naik Hak"
+            },
+            {
+                title: "Pemecahan/Pemisahan",
+            },
+            {
+                title: "Ploting Bidang Tanah",
+            },
+            {
+                title: "Ganti Blanko Sertifikat Tanah",
+            },
+            {
+                title: "IPPT/ASPEK",
+            },
+            {
+                title: "Pengurusan Rekon Bidang Tanah",
+            },
+            {
+                title: "Jasa Pengurusan Tata Ruang",
+            },
+            {
+                title: "Jasa Pengurusan HAKI",
+            },
+            {
+                title: "Pengurusan IMB/PBG",
+            },
+            {
+                title: "Verifikasi Sertifikat Standar",
+            }, 
+            {
+                title: "Turun Waris"
+            }, 
+            {
+                title: "Blanko Permohonan Jasa Pengurusan BPJP"
+            }, 
+            {
+                title: "Permohonan Pengurusan NPWP dan Kuasa"
+            }, 
+            {
+                title: "Surat Keterangan Domisili, Permohonan Dan Kuasa"
+            }, 
+            {
+                title: "Jasa Pengurusan Penerjemah Tersumpah Untuk PT. Asing dan PT. Lokal"
+            },
+            {
+                title: "Blanko Permohonan dan Kuasa Pengurusan KTP dan KARTU KELUARGA"
+            },
+            {
+                title: "Blanko Kwitansi dan Tanda Terima ( PAKAI NOMOR )"
+            },
+            {
+                title: "Mediasi"
+            },
+            {
+                title: "Jasa Pengurusan Surat Keterangan Domisili Perseroan Terbatas dan Pribadi"
+            },
+            {
+                title: "PPKPR Perorangan"
+            },
+            {
+                title: "KKPR Non Berusaha"
+            },
+            {
+                title: "Perjanjian"
+            },
+            {
+                title: "Jasa Pengurusan Blanko PBB"
+            },
+            {
+                title: "Waarmerking"
+            },
+            {
+                title: "Jasa Lainya"
+            },
+        ]
+    }
+]
+
+export const pegawaiList = [
+    {
+        nama: "Doni Saputra"
+    },{
+        nama: "Marselinus Yansen"
+    },{
+        nama: "Doroteus Kuri"
+    },{
+        nama: "Katarina Lilia Since"
+    },{
+        nama: "Germana Cicit Wahyuni"
+    },{
+        nama: "Rusnawati"
+    },{
+        nama: "Yuliana Prisnawati Siboe"
+    },{
+        nama: "Aprianus Mario Deno"
+    },
+]
+
+export const statusAktivitasDokumenList = [
+    {
+        nama: "Mulai"
+    },
+    {
+        nama: "Dalam Proses"
+    },
+    {
+        nama: "Selesai"
+    }
+]
+
+// END COMPANY CONFIG
 
 export const objectListDetail = (title,
     content) => ({
@@ -81,212 +358,3 @@ export const JenisKelamin = () => {
         },
     ]
 }
-
-export const tipeDokumenList = [
-    {
-        title: "Notaris",
-        data: [
-            {
-                title: "Badan Hukum",
-                data: [
-                    {
-                        title: "Perseroan Terbatas"
-                    },
-                    {
-                        title: "Yayasan"
-                    },
-                    {
-                        title: "Lembaga / Perkumpulan"
-                    },
-                    {
-                        title: "Koperasi"
-                    }
-                ]
-            },
-            {
-                title: "Badan Usaha",
-                data: [
-                    {
-                        title: "Perseroan Komanditer"
-                    },
-                    {
-                        title: "UD"
-                    },
-                    {
-                        title: "Firma"
-                    },
-                ]
-            },
-            {
-                title: "Jual Beli",
-                data: [
-                    {
-                        title: "Kuasa Untuk Menjual"
-                    },
-                    {
-                        title: "Kuasa Untuk Membeli"
-                    },
-                    {
-                        title: "PPJB"
-                    },
-                    {
-                        title: "PJB"
-                    },
-                    {
-                        title: "Kesepakatan Bersama"
-                    },
-                ]
-            },
-            {
-                title: "Sewa Menyewa",
-            },
-            {
-                title: "Hibah",
-            },
-            {
-                title: "Waris",
-            },
-            {
-                title: "Fidusia",
-            },
-            {
-                title: "Waarmerking",
-            },
-            {
-                title: "Legalisasi",
-            },
-            {
-                title: "Persetujuan Dan Kuasa",
-            },
-            {
-                title: "Pernyataan",
-            },
-            {
-                title: "SKMHT",
-            }
-        ]
-    },
-    {
-        title: "PPAT",
-        data: [
-            {
-                title: "Akta Jual Beli",
-            },
-            {
-                title: "Akta Hibah",
-            },
-            {
-                title: "Akta Pemberian Hak Tanggungan",
-            },
-            {
-                title: "Akta Pembagian Hak Bersama",
-            },
-            {
-                title: "SKMHT",
-            },
-            {
-                title: "Akta Peralihan Hak Pewarisan",
-            },
-            {
-                title: "Akta Peralihan Tukar Menukar",
-            },
-            {
-                title: "Pemasukan Modal Dalam Perusahaan",
-            },
-            {
-                title: "Reorganisasi Atau Restruktur Perseroan",
-            },
-            {
-                title: "Perubahan Data Berdasarkan Penetapan Atau Putusan Pengadilan",
-            },
-            {
-                title: "Pengalihan Hak Lelang",
-            },
-            {
-                title: "Cessie",
-            },
-            {
-                title: "Subrogasi",
-            },
-            {
-                title: "Roya",
-            },
-            {
-                title: "Roya Elektonik Perorangan",
-            },
-            {
-                title: "Merger Hak Tanggungan",
-            }
-        ]
-    },
-    {
-        title: "Lain - Lain",
-        data: [
-            {
-                title: "Pengurusan Rekon Bidang Tanah",
-            },
-            {
-                title: "Pendaftaran Tanah Pertama Kali",
-            },
-            {
-                title: "Pindah KTP",
-            },
-            {
-                title: "KKPR",
-            },
-            {
-                title: "Legalisir",
-            },
-            {
-                title: "Turun Hak",
-            },
-            {
-                title: "Naik Hak",
-            },
-            {
-                title: "Pemecahan / Pemisahan",
-            },
-            {
-                title: "Ploting",
-            },
-            {
-                title: "Ganti Blanko",
-            },
-            {
-                title: "IPPT",
-            },
-        ]
-    }
-]
-
-export const pegawaiList = [
-    {
-        nama: "Doni Saputra"
-    },{
-        nama: "Marselinus Yansen"
-    },{
-        nama: "Doroteus Kuri"
-    },{
-        nama: "Katarina Lilia Since"
-    },{
-        nama: "Germana Cicit Wahyuni"
-    },{
-        nama: "Rusnawati"
-    },{
-        nama: "Yuliana Prisnawati Siboe"
-    },{
-        nama: "Aprianus Mario Deno"
-    },
-]
-
-export const statusAktivitasDokumenList = [
-    {
-        nama: "Mulai"
-    },
-    {
-        nama: "Dalam Proses"
-    },
-    {
-        nama: "Selesai"
-    }
-]

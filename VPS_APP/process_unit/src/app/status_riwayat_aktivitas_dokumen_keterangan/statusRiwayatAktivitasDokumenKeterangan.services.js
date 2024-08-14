@@ -51,8 +51,8 @@ export const deleteStatusRiwayatAktivitasDokumenKeteranganByUuidService = async 
 
 export const updateStatusRiwayatAktivitasDokumenKeteranganByUuidService = async (uuid, statusRiwayatAktivitasDokumenKeteranganData, req_id, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateStatusRiwayatAktivitasDokumenKeteranganByUuidService [${uuid}]`, statusRiwayatAktivitasDokumenKeteranganData, req_id)
-    const beforeData = await getStatusRiwayatAktivitasDokumenKeteranganByUuidService(uuid)
-    const statusRiwayatAktivitasDokumenKeterangan = await updateStatusRiwayatAktivitasDokumenKeteranganByUuidRepo(uuid, statusRiwayatAktivitasDokumenKeteranganData)
+    const beforeData = await getStatusRiwayatAktivitasDokumenKeteranganByUuidService(uuid, req_id)
+    const statusRiwayatAktivitasDokumenKeterangan = await updateStatusRiwayatAktivitasDokumenKeteranganByUuidRepo(uuid, statusRiwayatAktivitasDokumenKeteranganData, req_id)
 
     LOGGER_MONITOR(req_original_url, req_method, {
         beforeData,

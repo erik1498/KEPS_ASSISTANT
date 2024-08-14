@@ -60,9 +60,25 @@ const DetailDokumen = ({
         </div>
 
         <div className="flex justify-between">
-            <p className="text-md">{item.klien}</p>
+            <div className="flex flex-col">
+                <p className="text-md">{item.klien}</p>
+                <div className="flex gap-x-3 mt-2">
+                    <div className="flex gap-x-2">
+                        <p className="text-sm font-bold">HP : </p>
+                        <p className="text-sm">{item.nomor_hp_klien}</p>
+                    </div>
+                    <div className="flex gap-x-2">
+                        <p className="text-sm font-bold">EMAIL : </p>
+                        <p className="text-sm">{item.email_klien}</p>
+                    </div>
+                    <div className="flex gap-x-2">
+                        <p className="text-sm font-bold">Alamat : </p>
+                        <p className="text-sm">{item.alamat_klien}</p>
+                    </div>
+                </div>
+            </div>
             <div className="flex justify-between">
-                <div className="flex gap-x-2 bg-gray-500 text-white font-bold rounded-lg w-max">
+                <div className="flex gap-x-2 bg-gray-500 text-white font-bold rounded-lg w-max h-max">
                     <p className="text-md w-max pl-2">{item.tipe_dokumen}</p>
                     <p className={`text-md w-max border-l-2 px-2 border-white ${item.jenis_dokumen == "EMPTY" ? "" : "border-r-2"}`}>{item.kategori_dokumen}</p>
                     {
@@ -76,6 +92,7 @@ const DetailDokumen = ({
         <p className="text-md font-bold mt-3">Keterangan</p>
         <p className="text-md mt-1">{item.keterangan}</p>
 
+        <p className="text-sm font-bold w-max mt-6">{item.jumlah_dokumen} Dokumen Klien</p>
         <DokumenKlien
             idAktivitasDokumen={item.uuid}
             viewMode={true}

@@ -6,8 +6,12 @@ const router = express.Router()
 
 router.get("/tahun/:tahun", authTokenMiddleware(), getAllAktivitasDokumens)
 router.get("/:uuid", authTokenMiddleware(), getAktivitasDokumenByUUID)
-router.post("/", authTokenMiddleware(), postCreateAktivitasDokumen)
-router.put("/:uuid", authTokenMiddleware(), updateAktivitasDokumenByUUID)
+router.post("/", authTokenMiddleware([
+    "AKTIVITAS_DOKUMEN_GET"
+]), postCreateAktivitasDokumen)
+router.put("/:uuid", authTokenMiddleware([
+    "AKTIVITAS_DOKUMEN_GET"
+]), updateAktivitasDokumenByUUID)
 router.delete("/:uuid", authTokenMiddleware(), deleteAktivitasDokumenByUUID)
 
 export const getAktivitasDokumenRoute = () => {

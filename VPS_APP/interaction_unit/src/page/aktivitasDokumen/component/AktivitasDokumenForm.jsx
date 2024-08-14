@@ -4,7 +4,7 @@ import { formValidation } from "../../../helper/form.helper";
 import FormInputWithLabel from "../../../component/form/FormInputWithLabel";
 import FormSelectWithLabel from "../../../component/form/FormSelectWithLabel";
 import { useEffect, useState } from "react";
-import { inputOnlyRupiah } from "../../../helper/actionEvent.helper";
+import { inputOnlyNumber, inputOnlyRupiah } from "../../../helper/actionEvent.helper";
 import { apiAktivitasDokumen } from "../../../service/endPointList.api";
 import { pegawaiList, statusAktivitasDokumenList, tipeDokumenList } from "../../../config/objectList.config";
 import RiwayatPembayaranAktivitasDokumen from "./RiwayatPembayaranAktivitasDokumen";
@@ -19,6 +19,9 @@ const AktivitasDokumen = ({
     setIdAktivitasDokumen = () => { },
 }) => {
 
+    const [jenisDokumenEditable, setJenisDokumenEditable] = useState(false)
+    const [kategoriDokumenList, setKategoriDokumenList] = useState([])
+    const [jenisDokumenList, setJenisDokumenList] = useState([])
     const { data } = useDataContext()
     const [isLoading, setIsLoading] = useState(false)
     const [hariTanggal, setHariTanggal] = useState(getHariTanggalFull())
@@ -27,9 +30,12 @@ const AktivitasDokumen = ({
         label: tipeDokumenList[0].title,
         value: tipeDokumenList[0].title,
     })
-    const [kategoriDokumen, setKategoriDokumen] = useState()
+    const [kategoriDokumen, setKategoriDokumen] = useState([])
     const [jenisDokumen, setJenisDokumen] = useState()
     const [klien, setKlien] = useState("")
+    const [nomorHPKlien, setNomorHPKlien] = useState("")
+    const [alamatKlien, setAlamatKlien] = useState("")
+    const [emailKlien, setEmailKlien] = useState("")
     const [penanggungJawab, setPenanggungJawab] = useState()
     const [biaya, setBiaya] = useState("")
 
@@ -49,6 +55,9 @@ const AktivitasDokumen = ({
                 kategori_dokumen: kategoriDokumen?.value,
                 jenis_dokumen: jenisDokumen ? jenisDokumen.value : "EMPTY",
                 klien: klien,
+                nomor_hp_klien: nomorHPKlien,
+                email_klien: emailKlien,
+                alamat_klien: alamatKlien,
                 penanggung_jawab: penanggungJawab?.value,
                 biaya: biaya,
                 no_surat: nomorSurat,
@@ -75,6 +84,9 @@ const AktivitasDokumen = ({
                 setHariTanggal(x => x = res.data.tanggal)
                 setNomorSurat(x => x = res.data.no_surat)
                 setKlien(x => x = res.data.klien)
+                setNomorHPKlien(x => x = res.data.nomor_hp_klien)
+                setEmailKlien(x => x = res.data.email_klien)
+                setAlamatKlien(x => x = res.data.alamat_klien)
                 setBiaya(x => x = parseToRupiahText(res.data.biaya))
                 setKeteranganSurat(x => x = res.data.keterangan)
                 setTipeDokumen(x => x = {
@@ -101,6 +113,35 @@ const AktivitasDokumen = ({
                 console.log(err)
             })
     }
+
+    useEffect(() => {
+        setKategoriDokumenList(x => x = tipeDokumenList.filter(x => x.title == tipeDokumen?.value)[0]?.data)
+        if (!idAktivitasDokumen) {
+            setKategoriDokumen(x => x = {
+                label: tipeDokumenList.filter(x => x.title == tipeDokumen?.value)[0]?.data[0].title,
+                value: tipeDokumenList.filter(x => x.title == tipeDokumen?.value)[0]?.data[0].title,
+            })
+        }
+    }, [tipeDokumen])
+
+    useEffect(() => {
+        if (kategoriDokumenList?.filter(x => x.title == kategoriDokumen.label)?.at(0)?.data != null) {
+            setJenisDokumenList(x => x = kategoriDokumenList?.filter(x => x.title == kategoriDokumen.label)?.at(0).data)
+            if (!idAktivitasDokumen || jenisDokumenEditable == true) {
+                setJenisDokumen(x => x = {
+                    label: kategoriDokumenList?.filter(x => x.title == kategoriDokumen.label)?.at(0).data.at(0).title,
+                    value: kategoriDokumenList?.filter(x => x.title == kategoriDokumen.label)?.at(0).data.at(0).title,
+                })
+            }
+        } else {
+            setJenisDokumenList(x => x = [])
+            setJenisDokumen(x => x = {
+                label: "EMPTY",
+                value: "EMPTY",
+            })
+        }
+        setJenisDokumenEditable(x => x = true)
+    }, [kategoriDokumen])
 
     useEffect(() => {
         if (idAktivitasDokumen) {
@@ -166,19 +207,19 @@ const AktivitasDokumen = ({
                                 setKategoriDokumen(x => x = e)
                             }}
                             selectValue={kategoriDokumen}
-                            optionsDataList={tipeDokumenList.filter(x => x.title == tipeDokumen?.value)[0]?.data}
+                            optionsDataList={kategoriDokumenList}
                             optionsLabel={"title"}
                             optionsValue={"title"}
                             selectName={"kodeAkunType"}
                         />
                         {
-                            tipeDokumenList.filter(x => x.title == tipeDokumen?.value)[0]?.data?.filter(x => x.title == kategoriDokumen?.value)[0]?.data?.length > 0 ?
+                            kategoriDokumenList.filter(x => x.title == kategoriDokumen.label).at(0)?.data?.length > 0 ?
                                 <FormSelectWithLabel
                                     label={"Jenis Dokumen"}
                                     onchange={(e) => {
                                         setJenisDokumen(x => x = e)
                                     }}
-                                    optionsDataList={tipeDokumenList.filter(x => x.title == tipeDokumen?.value)[0].data.filter(x => x.title == kategoriDokumen.label)[0].data}
+                                    optionsDataList={jenisDokumenList}
                                     optionsLabel={"title"}
                                     selectValue={jenisDokumen}
                                     optionsValue={"title"}
@@ -201,6 +242,48 @@ const AktivitasDokumen = ({
                                 }
                             }
                         />
+                        <FormInputWithLabel
+                            label={"Nomor HP Klien"}
+                            type={"text"}
+                            onchange={(e) => {
+                                inputOnlyNumber(e)
+                                setNomorHPKlien(e.target.value)
+                            }}
+                            others={
+                                {
+                                    value: nomorHPKlien,
+                                    name: "klien"
+                                }
+                            }
+                        />
+                        <FormInputWithLabel
+                            label={"Email Klien"}
+                            type={"email"}
+                            onchange={(e) => {
+                                setEmailKlien(e.target.value)
+                            }}
+                            others={
+                                {
+                                    value: emailKlien,
+                                    name: "klien"
+                                }
+                            }
+                        />
+                        <FormInputWithLabel
+                            label={"Alamat Klien"}
+                            type={"test"}
+                            onchange={(e) => {
+                                setAlamatKlien(e.target.value)
+                            }}
+                            others={
+                                {
+                                    value: alamatKlien,
+                                    name: "klien"
+                                }
+                            }
+                        />
+                    </div>
+                    <div className="flex gap-x-3 mt-4">
                         <FormSelectWithLabel
                             label={"Penanggung Jawab"}
                             onchange={(e) => {

@@ -18,6 +18,7 @@ export const getAllRiwayatPembayaranAktivitasDokumensRepo = async (tahun, req_id
                     FROM ${generateDatabaseName(req_id)}.riwayat_pembayaran_aktivitas_dokumen_tab rpadt 
                     WHERE rpadt.aktivitas_dokumen = adt.uuid 
                     AND adt.enabled = 1
+                    AND rpadt.enabled = 1
                 ) AS list_pembayaran
             FROM ${generateDatabaseName(req_id)}.aktivitas_dokumen_tab adt 
             WHERE adt.enabled = 1

@@ -32,7 +32,7 @@ export const getAllRiwayatPembayaranAktivitasDokumensByAktivitasDokumenService =
 
 export const getRiwayatPembayaranAktivitasDokumenByUuidService = async (uuid, req_id) => {
     LOGGER(logType.INFO, `Start getRiwayatPembayaranAktivitasDokumenByUuidService [${uuid}]`, null, req_id)
-    const riwayatPembayaranAktivitasDokumen = await getRiwayatPembayaranAktivitasDokumenByUuidRepo(uuid)
+    const riwayatPembayaranAktivitasDokumen = await getRiwayatPembayaranAktivitasDokumenByUuidRepo(uuid, req_id)
 
     if (!riwayatPembayaranAktivitasDokumen) {
         throw Error("data not found")
@@ -49,15 +49,15 @@ export const createRiwayatPembayaranAktivitasDokumenService = async (riwayatPemb
 
 export const deleteRiwayatPembayaranAktivitasDokumenByUuidService = async (uuid, req_id) => {
     LOGGER(logType.INFO, `Start deleteRiwayatPembayaranAktivitasDokumenByUuidService [${uuid}]`, null, req_id)
-    await getRiwayatPembayaranAktivitasDokumenByUuidService(uuid)
-    await deleteRiwayatPembayaranAktivitasDokumenByUuidRepo(uuid)
+    await getRiwayatPembayaranAktivitasDokumenByUuidService(uuid, req_id)
+    await deleteRiwayatPembayaranAktivitasDokumenByUuidRepo(uuid, req_id)
     return true
 }
 
 export const updateRiwayatPembayaranAktivitasDokumenByUuidService = async (uuid, riwayatPembayaranAktivitasDokumenData, req_id, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateRiwayatPembayaranAktivitasDokumenByUuidService [${uuid}]`, riwayatPembayaranAktivitasDokumenData, req_id)
-    await getRiwayatPembayaranAktivitasDokumenByUuidService(uuid)
-    const riwayatPembayaranAktivitasDokumen = await updateRiwayatPembayaranAktivitasDokumenByUuidRepo(uuid, riwayatPembayaranAktivitasDokumenData)
+    await getRiwayatPembayaranAktivitasDokumenByUuidService(uuid, req_id)
+    const riwayatPembayaranAktivitasDokumen = await updateRiwayatPembayaranAktivitasDokumenByUuidRepo(uuid, riwayatPembayaranAktivitasDokumenData, req_id)
 
     LOGGER_MONITOR(req_original_url, req_method, {
         beforeData,

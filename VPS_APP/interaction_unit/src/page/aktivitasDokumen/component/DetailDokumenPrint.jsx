@@ -27,14 +27,31 @@ export const DetailDokumenPrint = React.forwardRef((props, ref) => {
                 </div>
 
                 <div className="flex justify-between">
-                    <p className="text-md">{props?.data?.klien}</p>
+                    <div className="flex flex-col">
+                        <p className="text-md">{props.data.klien}</p>
+                        <div className="flex gap-x-3 mt-2">
+                            <div className="flex gap-x-2">
+                                <p className="text-sm font-bold">HP : </p>
+                                <p className="text-sm">{props.data.nomor_hp_klien}</p>
+                            </div>
+                            <div className="flex gap-x-2">
+                                <p className="text-sm font-bold">EMAIL : </p>
+                                <p className="text-sm">{props.data.email_klien}</p>
+                            </div>
+                            <div className="flex gap-x-2">
+                                <p className="text-sm font-bold">Alamat : </p>
+                                <p className="text-sm">{props.data.alamat_klien}</p>
+                            </div>
+                        </div>
+                        <p className="text-sm w-max mt-2">{props.data.jumlah_dokumen} Dokumen Klien</p>
+                    </div>
                     <div className="flex justify-between">
-                        <div className="flex gap-x-2 bg-gray-500 text-white font-bold rounded-lg w-max">
-                            <p className="text-md w-max pl-2">{props?.data?.tipe_dokumen}</p>
-                            <p className={`text-md w-max border-l-2 px-2 border-white ${props?.data?.jenis_dokumen == "EMPTY" ? "" : "border-r-2"}`}>{props?.data?.kategori_dokumen}</p>
+                        <div className="flex gap-x-2 bg-gray-500 text-white font-bold rounded-lg w-max h-max">
+                            <p className="text-md w-max pl-2">{props.data.tipe_dokumen}</p>
+                            <p className={`text-md w-max border-l-2 px-2 border-white ${props.data.jenis_dokumen == "EMPTY" ? "" : "border-r-2"}`}>{props.data.kategori_dokumen}</p>
                             {
-                                props?.data?.jenis_dokumen != "EMPTY" ? <>
-                                    <p className="text-md w-max pr-2">{props?.data?.jenis_dokumen}</p>
+                                props.data.jenis_dokumen != "EMPTY" ? <>
+                                    <p className="text-md w-max pr-2">{props.data.jenis_dokumen}</p>
                                 </> : <></>
                             }
                         </div>
@@ -57,6 +74,31 @@ export const DetailDokumenPrint = React.forwardRef((props, ref) => {
                     idAktivitasDokumen={props?.data?.uuid}
                     viewMode={true}
                 />
+            </div>
+            <div className="page-break">
+                <div className="flex justify-between">
+                    <h1 className="font-bold mb-10">Penyerahan Dokumen Pada Tanggal : </h1>
+                    <h1>_____________________________________</h1>
+                </div>
+                <div className="flex justify-between">
+                    <div className="flex flex-1 flex-col font-bold">
+                        <p>Diserahkan Oleh</p>
+                        <p className="mt-20">_________________________________________________</p>
+                    </div>
+                    <div className="flex flex-1 flex-col items-start justify-start font-bold">
+                        <p>Diterima Oleh</p>
+                        <p className="mt-20">_________________________________________________</p>
+                    </div>
+                </div>
+                <div className="flex justify-between gap-x-2 mt-10">
+                    <div className="flex flex-1 flex-col items-start justify-start font-bold">
+                        <p>DIsetujui Oleh</p>
+                        <p className="mt-20">_________________________________________________</p>
+                    </div>
+                </div>
+                <div className="mt-6 pb-64 border border-black pt-2 px-2 mb-20">
+                    <p>Catatan : </p>
+                </div>
             </div>
         </div>
     )

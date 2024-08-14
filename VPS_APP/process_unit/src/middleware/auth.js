@@ -3,7 +3,7 @@ import { getEnv } from "../utils/envUtils.js";
 import { decryptString } from "../utils/encryptUtil.js";
 import { LOGGER, logType } from "../utils/loggerUtil.js";
 
-export const authTokenMiddleware = (roles) => {
+export const authTokenMiddleware = (roles = []) => {
     return (req, res, next) => {
         if (getEnv("USER_PERMISSION_SECURITY_ENABLED") == "true" && !req.header("User-Permission")) {
             LOGGER(logType.ERROR, "User-Permission Is Null", {
@@ -41,6 +41,21 @@ export const authTokenMiddleware = (roles) => {
                     type: "unauthorizedError",
                     message: "Akun Tidak Terdaftar"
                 });
+            }
+
+            if (roles.length > 0) {
+                if (
+                    roles
+                        .filter(x => {
+                            return JSON.parse(decode.userRole).indexOf(x) > -1
+                    }).length == 0
+                ) {
+                    return res.status(401).json({
+                        type: "unauthorizedError",
+                        message: "Akun Tidak Diizinkan",
+                        redirect_to_login: false
+                    });
+                }
             }
 
             if (getEnv("USER_PARAMETER_SECURITY_ENABLED") == "true" && userParameter.macAddr != decode.macAddr) {
