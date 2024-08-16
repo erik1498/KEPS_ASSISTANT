@@ -66,7 +66,7 @@ const RiwayatAktivitasDokumen = ({
     return isLoading ? <LoadingMiniPage />
         :
         <>
-            <h1 className={`${viewMode ? "text-xs mt-4 mb-2" : "text-lg mt-6"} font-bold`}>Aktivitas</h1>
+            <h1 className={`${viewMode ? "text-sm mt-4 mb-2" : "text-lg mt-6"} font-bold`}>Aktivitas</h1>
             {
                 viewMode ? <></>
                     :

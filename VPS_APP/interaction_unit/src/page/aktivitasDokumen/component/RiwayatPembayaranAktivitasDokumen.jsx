@@ -70,7 +70,7 @@ const RiwayatPembayaranAktivitasDokumen = ({
     return isLoading ?
         <LoadingMiniPage />
         : <>
-            <h1 className={`${viewMode ? "text-md mt-4 mb-1" : "text-lg mt-6"} font-bold`}>Riwayat Pembayaran</h1>
+            <h1 className={`${viewMode ? "text-sm mt-4 mb-1" : "text-lg mt-6"} font-bold`}>Riwayat Pembayaran</h1>
             {
                 viewMode ? <></> : <>
                     <form onSubmit={(e) => addRiwayatPembayaran(e)}>

@@ -109,7 +109,7 @@ const StatusRiwayatAktivitasDokumen = ({
             }
 
             {
-                statusAktivitasList.length > 0 ? <p className={`${viewMode ? "text-xs mt-4 mb-2" : "text-md mt-6"} font-bold mb-4`}>Riwayat Status Aktivitas </p> : <></>
+                statusAktivitasList.length > 0 ? <p className={`${viewMode ? "text-sm mt-4 mb-2" : "text-md mt-6"} font-bold mb-4`}>Riwayat Status Aktivitas </p> : <></>
             }
 
             {

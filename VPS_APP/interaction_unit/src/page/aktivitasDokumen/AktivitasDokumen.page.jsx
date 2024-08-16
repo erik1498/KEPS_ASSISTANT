@@ -151,20 +151,6 @@ const AktivitasDokumenPage = () => {
                                                         <p className="text-sm mb-4">Status Dokumen ( {item.status} )</p>
                                                         <p className="py-1 w-max rounded font-bold">No. Surat : {item.no_surat}</p>
                                                         <p className="text-sm">{item.klien}</p>
-                                                        <div className="flex gap-x-3">
-                                                            <div className="flex gap-x-2">
-                                                                <p className="text-sm font-bold">HP : </p>
-                                                                <p className="text-sm">{item.nomor_hp_klien}</p>
-                                                            </div>
-                                                            <div className="flex gap-x-2">
-                                                                <p className="text-sm font-bold">EMAIL : </p>
-                                                                <p className="text-sm">{item.email_klien}</p>
-                                                            </div>
-                                                            <div className="flex gap-x-2">
-                                                                <p className="text-sm font-bold">Alamat : </p>
-                                                                <p className="text-sm">{item.alamat_klien}</p>
-                                                            </div>
-                                                        </div>
                                                         <p className="text-sm w-max mt-2">{item.jumlah_dokumen} Dokumen Klien</p>
 
                                                         <div className="flex justify-between">

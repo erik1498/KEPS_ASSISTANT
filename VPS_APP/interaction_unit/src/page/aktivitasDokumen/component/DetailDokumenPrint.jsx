@@ -26,16 +26,16 @@ export const DetailDokumenPrint = React.forwardRef((props, ref) => {
                     }
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex justify-between border-y-2 py-5 mt-5">
                     <div className="flex flex-col">
-                        <p className="text-md">{props.data.klien}</p>
-                        <div className="flex gap-x-3 mt-2">
+                        <p className="text-xl font-bold">{props.data.klien}</p>
+                        <div className="flex flex-col gap-x-3 mt-2">
                             <div className="flex gap-x-2">
-                                <p className="text-sm font-bold">HP : </p>
+                                <p className="text-sm font-bold">Nomor HP : </p>
                                 <p className="text-sm">{props.data.nomor_hp_klien}</p>
                             </div>
                             <div className="flex gap-x-2">
-                                <p className="text-sm font-bold">EMAIL : </p>
+                                <p className="text-sm font-bold">Email : </p>
                                 <p className="text-sm">{props.data.email_klien}</p>
                             </div>
                             <div className="flex gap-x-2">
@@ -43,7 +43,6 @@ export const DetailDokumenPrint = React.forwardRef((props, ref) => {
                                 <p className="text-sm">{props.data.alamat_klien}</p>
                             </div>
                         </div>
-                        <p className="text-sm w-max mt-2">{props.data.jumlah_dokumen} Dokumen Klien</p>
                     </div>
                     <div className="flex justify-between">
                         <div className="flex gap-x-2 bg-gray-500 text-white font-bold rounded-lg w-max h-max">
@@ -57,8 +56,11 @@ export const DetailDokumenPrint = React.forwardRef((props, ref) => {
                         </div>
                     </div>
                 </div>
-                <p className="text-md font-bold mt-3">Keterangan</p>
-                <p className="text-md mt-1">{props?.data?.keterangan}</p>
+
+                <div className="border-b-2 py-5">
+                    <p className="text-sm font-bold">Keterangan</p>
+                    <p className="text-sm mt-1">{props.data.keterangan}</p>
+                </div>
 
                 <DokumenKlien
                     idAktivitasDokumen={props?.data?.uuid}
@@ -92,11 +94,17 @@ export const DetailDokumenPrint = React.forwardRef((props, ref) => {
                 </div>
                 <div className="flex justify-between gap-x-2 mt-10">
                     <div className="flex flex-1 flex-col items-start justify-start font-bold">
-                        <p>DIsetujui Oleh</p>
+                        <p>Disetujui Oleh</p>
                         <p className="mt-20">_________________________________________________</p>
                     </div>
                 </div>
-                <div className="mt-6 pb-64 border border-black pt-2 px-2 mb-20">
+                <div className="flex justify-between gap-x-2 mt-10">
+                    <div className="flex flex-1 flex-col items-start justify-start font-bold">
+                        <p>Kontak Penerima Berkas</p>
+                        <p className="mt-5">_________________________________________________</p>
+                    </div>
+                </div>
+                <div className="mt-6 pb-[80vh] border border-black pt-2 px-2 mb-20">
                     <p>Catatan : </p>
                 </div>
             </div>

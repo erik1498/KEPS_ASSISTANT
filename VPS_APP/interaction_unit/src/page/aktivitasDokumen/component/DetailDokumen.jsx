@@ -59,16 +59,16 @@ const DetailDokumen = ({
             }
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex justify-between border-y-2 py-5 mt-5">
             <div className="flex flex-col">
-                <p className="text-md">{item.klien}</p>
-                <div className="flex gap-x-3 mt-2">
+                <p className="text-xl font-bold">{item.klien}</p>
+                <div className="flex flex-col gap-x-3 mt-2">
                     <div className="flex gap-x-2">
-                        <p className="text-sm font-bold">HP : </p>
+                        <p className="text-sm font-bold">Nomor HP : </p>
                         <p className="text-sm">{item.nomor_hp_klien}</p>
                     </div>
                     <div className="flex gap-x-2">
-                        <p className="text-sm font-bold">EMAIL : </p>
+                        <p className="text-sm font-bold">Email : </p>
                         <p className="text-sm">{item.email_klien}</p>
                     </div>
                     <div className="flex gap-x-2">
@@ -89,8 +89,11 @@ const DetailDokumen = ({
                 </div>
             </div>
         </div>
-        <p className="text-md font-bold mt-3">Keterangan</p>
-        <p className="text-md mt-1">{item.keterangan}</p>
+
+        <div className="border-b-2 py-5">
+            <p className="text-sm font-bold">Keterangan</p>
+            <p className="text-sm mt-1">{item.keterangan}</p>
+        </div>
 
         <p className="text-sm font-bold w-max mt-6">{item.jumlah_dokumen} Dokumen Klien</p>
         <DokumenKlien
