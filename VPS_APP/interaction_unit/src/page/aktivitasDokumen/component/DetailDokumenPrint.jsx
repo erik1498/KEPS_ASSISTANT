@@ -57,7 +57,7 @@ export const DetailDokumenPrint = React.forwardRef((props, ref) => {
                     </div>
                 </div>
 
-                <div className="border-b-2 py-5">
+                <div className="border-b-2 py-5 mb-3">
                     <p className="text-sm font-bold">Keterangan</p>
                     <p className="text-sm mt-1">{props.data.keterangan}</p>
                 </div>

@@ -9,6 +9,7 @@ const FormInput = ({
   return (
     <div className="w-full relative">
       <input
+        maxLength={200}
         name={name}
         type={type}
         className={` ${border ? `border-b-2 border-gray-800` : `border-none `} bg-transparent px-3 py-1 input-sm w-full outline-none`}

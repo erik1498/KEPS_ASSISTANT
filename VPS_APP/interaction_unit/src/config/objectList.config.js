@@ -157,13 +157,13 @@ export const tipeDokumenList = [
             },
             {
                 title: "PKKPR Otomatis"
-            }, 
+            },
             {
                 title: "Legalisasi"
-            }, 
+            },
             {
                 title: "Turun Hak"
-            }, 
+            },
             {
                 title: "Naik Hak"
             },
@@ -193,19 +193,19 @@ export const tipeDokumenList = [
             },
             {
                 title: "Verifikasi Sertifikat Standar",
-            }, 
+            },
             {
                 title: "Turun Waris"
-            }, 
+            },
             {
                 title: "Blanko Permohonan Jasa Pengurusan BPJP"
-            }, 
+            },
             {
                 title: "Permohonan Pengurusan NPWP dan Kuasa"
-            }, 
+            },
             {
                 title: "Surat Keterangan Domisili, Permohonan Dan Kuasa"
-            }, 
+            },
             {
                 title: "Jasa Pengurusan Penerjemah Tersumpah Untuk PT. Asing dan PT. Lokal"
             },
@@ -246,19 +246,19 @@ export const tipeDokumenList = [
 export const pegawaiList = [
     {
         nama: "Doni Saputra"
-    },{
+    }, {
         nama: "Marselinus Yansen"
-    },{
+    }, {
         nama: "Doroteus Kuri"
-    },{
+    }, {
         nama: "Katarina Lilia Since"
-    },{
+    }, {
         nama: "Germana Cicit Wahyuni"
-    },{
+    }, {
         nama: "Rusnawati"
-    },{
+    }, {
         nama: "Yuliana Prisnawati Siboe"
-    },{
+    }, {
         nama: "Aprianus Mario Deno"
     },
 ]
@@ -285,13 +285,36 @@ export const objectListDetail = (title,
 
 export const yearList = () => {
     let arrayYear = []
-    for (let index = 2020; index <= new Date().getFullYear(); index++) {
+    for (let index = 2024; index <= new Date().getFullYear(); index++) {
         arrayYear.push({
             value: index
         })
     }
     return arrayYear;
 }
+
+export const kodeHargaList = [
+    {
+        label: "Harga 1",
+        value: "1"
+    },
+    {
+        label: "Harga 2",
+        value: "2"
+    },
+    {
+        label: "Harga 3",
+        value: "3"
+    },
+    {
+        label: "Harga 4",
+        value: "4"
+    },
+    {
+        label: "Harga 5",
+        value: "5"
+    },
+]
 
 export const KodeAkunType = () => {
     return [

@@ -33,14 +33,7 @@ const RiwayatAktivitasDokumenModel = db.define("riwayat_aktivitas_dokumen_tab",
             validate:{
                 notEmpty:true,
             }
-        },
-        enabled: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate:{
-                notEmpty:true,
-            }
-        },
+        }
     }), {
         freezeTableName: true
     }

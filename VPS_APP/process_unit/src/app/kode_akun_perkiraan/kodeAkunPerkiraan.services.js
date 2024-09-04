@@ -31,7 +31,10 @@ export const getKodeAkunPerkiraanByUuidService = async (uuid, req_identity) => {
     const kodeAkunPerkiraan = await getKodeAkunPerkiraanByUuidRepo(uuid, req_identity)
 
     if (!kodeAkunPerkiraan) {
-        throw Error("data not found")
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
     }
     return kodeAkunPerkiraan
 }
@@ -61,7 +64,10 @@ export const getKodeAkunPerkiraanByUuidSudahDigunakanService = async (uuid, req_
 
     LOGGER(logType.INFO, `getKodeAkunPerkiraanByUuidSudahDigunakanRepo [${uuid}]`, kodeAkunPerkiraan, req_identity)
     if (!kodeAkunPerkiraan) {
-        throw Error("data not found")
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
     }
     return kodeAkunPerkiraan
 }

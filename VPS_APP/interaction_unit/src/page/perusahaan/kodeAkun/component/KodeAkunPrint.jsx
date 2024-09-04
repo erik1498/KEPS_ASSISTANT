@@ -24,12 +24,12 @@ export const KodeAkunPrint = React.forwardRef((props, ref) => {
                         props?.data?.map((item, i) => {
                             return <>
                                 {
-                                    i > 0 ? <tr key={i}>
-                                        <td>{i}</td>
+                                    <tr key={i}>
+                                        <td>{i + 1}</td>
                                         <td>{item.code}</td>
                                         <td>{item.type}</td>
                                         <td>{item.name}</td>
-                                    </tr> : <></>
+                                    </tr>
                                 }
                             </>
                         })

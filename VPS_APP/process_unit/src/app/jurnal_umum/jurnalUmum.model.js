@@ -82,13 +82,6 @@ const JurnalUmumModel = db.define("jurnal_umum_tab",
             validate:{
                 notEmpty:true,
             }
-        },
-        enabled: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            validate:{
-                notEmpty: true
-            }
         }
     }), {
         freezeTableName: true

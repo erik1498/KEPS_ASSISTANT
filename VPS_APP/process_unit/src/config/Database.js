@@ -89,6 +89,14 @@ export const defaultModelBuilder = (attributes) => {
         }
     }
 
+    attributes.enabled = {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+        }
+    }
+
     return attributes
 }
 

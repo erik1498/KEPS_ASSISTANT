@@ -110,14 +110,7 @@ const AktivitasDokumenModel = db.define("aktivitas_dokumen_tab",
             validate: {
                 notEmpty: true,
             }
-        },
-        enabled: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            }
-        },
+        }
     }), {
     freezeTableName: true
 }

@@ -8,7 +8,10 @@ export const getJurnalUmumByUuidService = async (uuid, req_id) => {
     const jurnalUmum = await getJurnalUmumByUuidRepo(uuid, req_id)
 
     if (!jurnalUmum) {
-        throw Error("data not found")
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
     }
     return jurnalUmum
 }
@@ -34,7 +37,10 @@ export const getJurnalUmumNeracaByBulanService = async (bulan, req_id) => {
     const jurnalUmum = await getJurnalUmumNeracaByBulanRepo(bulan, req_id)
 
     if (!jurnalUmum) {
-        throw Error("data not found")
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
     }
     return jurnalUmum
 }
@@ -44,7 +50,10 @@ export const getJurnalUmumLabaRugiByBulanService = async (bulan, req_id) => {
     const jurnalUmum = await getJurnalUmumLabaRugiByBulanRepo(bulan, req_id)
 
     if (!jurnalUmum) {
-        throw Error("data not found")
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
     }
     return jurnalUmum
 }

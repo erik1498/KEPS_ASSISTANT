@@ -47,14 +47,7 @@ const RiwayatPembayaranAktivitasDokumenModel = db.define("riwayat_pembayaran_akt
             validate:{
                 notEmpty:true,
             }
-        },
-        enabled: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            validate:{
-                notEmpty:true,
-            }
-        },
+        }
     }), {
         freezeTableName: true
     }

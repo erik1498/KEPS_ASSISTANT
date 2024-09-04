@@ -46,45 +46,49 @@ export const formShowMessage = (errorData) => {
 }
 
 export const showError = (error) => {
-    let errorMessage = JSON.parse(error.response.data.errorData)
+    try {
+        let errorMessage = JSON.parse(error.response.data.errorData)
 
-    let alertElement = document.getElementById("alertElement")
-    if (alertElement) {
-        alertElement.remove()
+        let alertElement = document.getElementById("alertElement")
+        if (alertElement) {
+            alertElement.remove()
+        }
+
+        const divAlert = document.createElement("div")
+        divAlert.className = "absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-80"
+        divAlert.id = "alertElement"
+        divAlert.style.zIndex = 999
+
+        const divAlertChild = document.createElement("div")
+        divAlertChild.className = "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white font-bold px-16 py-20 rounded-box flex flex-col gap-y-4"
+
+
+        const titleH1 = document.createElement("h1")
+        titleH1.className = "text-4xl font-bold text-red-800"
+        titleH1.innerHTML = `Peringatan...!!!`
+
+        const messageError = document.createElement("p")
+        messageError.className = "text-2xl"
+        messageError.innerHTML = errorMessage.message
+
+        const buttonClose = document.createElement("button")
+        buttonClose.className = "btn bg-blue-900 hover:bg-blue-900 text-white mt-5"
+        buttonClose.innerHTML = "TUTUP"
+        buttonClose.addEventListener("click", (e) => {
+            e.target.parentNode.parentNode.remove()
+        })
+
+        const root = document.getElementById("root")
+
+        divAlertChild.appendChild(titleH1)
+        divAlertChild.appendChild(messageError)
+        divAlertChild.appendChild(buttonClose)
+        divAlert.appendChild(divAlertChild)
+
+        root.appendChild(divAlert)
+    } catch (err) {
+        console.log(err, error)
     }
-
-    const divAlert = document.createElement("div")
-    divAlert.className = "absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-80"
-    divAlert.id = "alertElement"
-    divAlert.style.zIndex = 999
-
-    const divAlertChild = document.createElement("div")
-    divAlertChild.className = "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white font-bold px-16 py-20 rounded-box flex flex-col gap-y-4"
-
-
-    const titleH1 = document.createElement("h1")
-    titleH1.className = "text-4xl font-bold text-red-800"
-    titleH1.innerHTML = `Peringatan...!!!`
-
-    const messageError = document.createElement("p")
-    messageError.className = "text-2xl"
-    messageError.innerHTML = errorMessage.message
-
-    const buttonClose = document.createElement("button")
-    buttonClose.className = "btn bg-blue-900 hover:bg-blue-900 text-white mt-5"
-    buttonClose.innerHTML = "TUTUP"
-    buttonClose.addEventListener("click", (e) => {
-        e.target.parentNode.parentNode.remove()
-    })
-
-    const root = document.getElementById("root")
-
-    divAlertChild.appendChild(titleH1)
-    divAlertChild.appendChild(messageError)
-    divAlertChild.appendChild(buttonClose)
-    divAlert.appendChild(divAlertChild)
-
-    root.appendChild(divAlert)
 }
 
 

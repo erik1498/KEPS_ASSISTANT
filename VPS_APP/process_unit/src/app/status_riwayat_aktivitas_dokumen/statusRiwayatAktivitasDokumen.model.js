@@ -33,14 +33,7 @@ const StatusRiwayatAktivitasDokumenModel = db.define("status_riwayat_aktivitas_d
             validate:{
                 notEmpty:true,
             }
-        },
-        enabled: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            validate:{
-                notEmpty:true,
-            }
-        },
+        }
     }), {
         freezeTableName: true
     }

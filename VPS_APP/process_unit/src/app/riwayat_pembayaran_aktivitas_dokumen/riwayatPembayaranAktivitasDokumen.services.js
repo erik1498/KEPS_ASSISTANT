@@ -35,7 +35,10 @@ export const getRiwayatPembayaranAktivitasDokumenByUuidService = async (uuid, re
     const riwayatPembayaranAktivitasDokumen = await getRiwayatPembayaranAktivitasDokumenByUuidRepo(uuid, req_id)
 
     if (!riwayatPembayaranAktivitasDokumen) {
-        throw Error("data not found")
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
     }
     return riwayatPembayaranAktivitasDokumen
 }

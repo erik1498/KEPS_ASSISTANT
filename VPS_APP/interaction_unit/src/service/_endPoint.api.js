@@ -34,6 +34,26 @@ export const SrvKodeAkun = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kode_akun_perkiraan'
 )
 
+export const SrvCustomer = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/customer'
+)
+
+export const SrvSupplier = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/supplier'
+)
+
+export const SrvCabang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/cabang'
+)
+
+export const SrvTipePembayaran = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/tipe_pembayaran'
+)
+
+export const SrvSyaratPembayaran = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/syarat_pembayaran'
+)
+
 export const SrvStatusTanggungan = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/status_tanggungan'
 )

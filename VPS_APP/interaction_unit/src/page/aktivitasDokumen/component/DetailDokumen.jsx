@@ -95,7 +95,7 @@ const DetailDokumen = ({
             <p className="text-sm mt-1">{item.keterangan}</p>
         </div>
 
-        <p className="text-sm font-bold w-max mt-6">{item.jumlah_dokumen} Dokumen Klien</p>
+        <p className="text-sm font-bold w-max mt-6 mb-3">{item.jumlah_dokumen} Dokumen Klien</p>
         <DokumenKlien
             idAktivitasDokumen={item.uuid}
             viewMode={true}

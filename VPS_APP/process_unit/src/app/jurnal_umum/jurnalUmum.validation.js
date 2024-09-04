@@ -16,8 +16,9 @@ export const jurnalUmumValidation = (payload) => {
         waktu: Joi.required().messages({
             "any.required": "Harus Diisi",
         }),
-        uraian: Joi.string().required().messages({
+        uraian: Joi.string().max(200).required().messages({
             'string.base': "Harus Berupa Text",
+            'string.max': 'Panjang maksimal adalah 200 karakter',
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),

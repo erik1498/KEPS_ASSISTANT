@@ -1,4 +1,4 @@
-import { FaBook, FaBuilding, FaClipboardList, FaCog, FaFileCsv, FaListOl, FaMicrochip, FaMoneyBill, FaRegChartBar, FaSignOutAlt, FaThLarge } from "react-icons/fa";
+import { FaBook, FaBuilding, FaClipboardList, FaCog, FaExchangeAlt, FaFileCsv, FaListOl, FaMicrochip, FaMoneyBill, FaRegChartBar, FaSignOutAlt, FaThLarge, FaToolbox } from "react-icons/fa";
 import NavigationLink from "./NavigationLink";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -45,19 +45,243 @@ const Navigasi = () => {
                     />
                 </li>
                 <li>
-                    <NavigationLink
-                        icon={<FaClipboardList />}
-                        label={"Kode Akun"}
-                        to={"/perusahaan/kodeAkun"}
-                    />
+                    <details>
+                        <NavigationLinkParent
+                            Icon={<FaBuilding size={15} />}
+                            parentName={"Perusahaan"}
+                            sideBars={sideBars[0]}
+                        />
+                        <ul className="menu bg-base-200 rounded-box w-56">
+                            <li>
+                                <p className="font-bold pointer-events-none">Master</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Kode Akun"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/customer" addClass={"my-1"} label={"Data Customer"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Data Supplier"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/pegawai" addClass={"my-1"} label={"Data Pegawai"} />
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <NavigationLink to="/perusahaan/cabang" addClass={"my-1"} label={"Cabang"} />
+                            </li>
+                            <li>
+                                <NavigationLink to="/perusahaan/divisi" addClass={"my-1"} label={"Divisi"} />
+                            </li>
+                            <li>
+                                <NavigationLink to="/perusahaan/jabatan" addClass={"my-1"} label={"Jabatan"} />
+                            </li>
+                            <li>
+                                <NavigationLink to="/perusahaan/tipePembayaran" addClass={"my-1"} label={"Tipe Pembayaran"} />
+                            </li>
+                            <li>
+                                <NavigationLink to="/perusahaan/syaratPembayaran" addClass={"my-1"} label={"Syarat Pembayaran"} />
+                            </li>
+                            <li>
+                                <NavigationLink to="/perusahaan/statusTanggungan" addClass={"my-1"} label={"Status Tanggungan"} />
+                            </li>
+                        </ul>
+                    </details>
                 </li>
                 <li>
-                    <NavigationLink
-                        icon={<FaFileCsv />}
-                        label={"Aktivitas Dokumen"}
-                        to={"/aktivitasDokumen"}
-                        addClass={"ml-2"}
-                    />
+                    <details>
+                        <NavigationLinkParent
+                            Icon={<FaExchangeAlt size={15} />}
+                            parentName={"Transaksi"}
+                            sideBars={sideBars[0]}
+                        />
+                        <ul className="menu bg-base-200 rounded-box w-56">
+                            <li>
+                                <p className="font-bold pointer-events-none">Kas & Bank</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Penerimaan Kas"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Pengeluaran Kas"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Penerimaan Bank"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/pegawai" addClass={"my-1"} label={"Pengeluaran Bank"} />
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p className="font-bold pointer-events-none">Penjualan</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Penjualan Barang"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Penjualan Jasa"} />
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p className="font-bold pointer-events-none">Pembelian</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Pembelian Barang"} />
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p className="font-bold pointer-events-none">Payroll</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Pendapatan Pegawai"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Potongan Pegawai"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Slip Gaji Pegawai"} />
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </details>
+                </li>
+                <li>
+                    <details>
+                        <NavigationLinkParent
+                            Icon={<FaToolbox size={15} />}
+                            parentName={"Aset Tetap & Perlengkapan"}
+                            sideBars={sideBars[0]}
+                        />
+                        <ul className="menu bg-base-200 rounded-box w-56">
+                            <li>
+                                <p className="font-bold pointer-events-none">Aset Tetap</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Daftar Aset"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Kategori Aset"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Kelompok Aset"} />
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p className="font-bold pointer-events-none">Perlengkapan</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Daftar Perlengkapan"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Kategori Perlengkapan"} />
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p className="font-bold pointer-events-none">Penyusutan</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Metode Penyusutan"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Hitungan Penyusutan"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Penyusutan"} />
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </details>
+                </li>
+                <li>
+                    <details>
+                        <NavigationLinkParent
+                            Icon={<FaToolbox size={15} />}
+                            parentName={"Persediaan"}
+                            sideBars={sideBars[0]}
+                        />
+                        <ul className="menu bg-base-200 rounded-box w-max max-h-[80vh] no-scrollbar">
+                            <li>
+                                <p className="font-bold pointer-events-none">Barang</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Daftar Barang"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Satuan Barang"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Kategori Barang"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Jenis Barang"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Jenis Penjualan"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Transfer Barang"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Konversi Penjualan"} />
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p className="font-bold pointer-events-none">Jasa</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Daftar Jasa"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Satuan Jasa"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Kategori Jasa"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Jenis Jasa"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Jenis Penjualan"} />
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p className="font-bold pointer-events-none">Opname</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Perintah Stok Opname"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Stok Opname"} />
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p className="font-bold pointer-events-none">Gudang</p>
+                                <ul>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Daftar Gudang"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jenis Gudang"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Kategori Gudang"} />
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </details>
                 </li>
                 <li>
                     <details>
@@ -98,6 +322,14 @@ const Navigasi = () => {
                             </li>
                         </ul>
                     </details>
+                </li>
+                <li>
+                    <NavigationLink
+                        icon={<FaFileCsv />}
+                        label={"Aktivitas Dokumen"}
+                        to={"/aktivitasDokumen"}
+                        addClass={"ml-2"}
+                    />
                 </li>
             </ul>
             <div className="flex justify-between  py-3 px-8 bg-blue-900">

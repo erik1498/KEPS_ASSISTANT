@@ -34,7 +34,10 @@ export const getStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidService = asy
     const statusRiwayatAktivitasDokumenPegawaiPelaksana = await getStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidRepo(uuid, req_id)
 
     if (!statusRiwayatAktivitasDokumenPegawaiPelaksana) {
-        throw Error("data not found")
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
     }
     return statusRiwayatAktivitasDokumenPegawaiPelaksana
 }

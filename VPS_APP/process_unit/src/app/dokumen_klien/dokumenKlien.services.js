@@ -30,7 +30,10 @@ export const getDokumenKlienByUuidService = async (uuid, req_id) => {
     const dokumenKlien = await getDokumenKlienByUuidRepo(uuid, req_id)
 
     if (!dokumenKlien) {
-        throw Error("data not found")
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
     }
     return dokumenKlien
 }

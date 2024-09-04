@@ -1,11 +1,21 @@
 import { _shapeObjectMethodCRUD } from './_config.api';
-import { SrvAktivitasDokumen, SrvDivisi, SrvDokumenKlien, SrvHistoryAkun, SrvJabatan, SrvJurnalUmum, SrvKodeAkun, SrvLabaRugi, SrvLogin, SrvNeraca, SrvNeracaSaldo, SrvPayroll, SrvPegawai, SrvPerubahanModal, SrvRiwayatAktivitasDokumen, SrvRiwayatPembayaranAktivitasDokumen, SrvStatusRiwayatAktivitasDokumen, SrvStatusRiwayatAktivitasDokumenKeterangan, SrvStatusRiwayatAktivitasDokumenPegawaiPelaksana, SrvStatusTanggungan } from './_endPoint.api';
+import { SrvAktivitasDokumen, SrvCabang, SrvCustomer, SrvDivisi, SrvDokumenKlien, SrvHistoryAkun, SrvJabatan, SrvJurnalUmum, SrvKodeAkun, SrvLabaRugi, SrvLogin, SrvNeraca, SrvNeracaSaldo, SrvPayroll, SrvPegawai, SrvPerubahanModal, SrvRiwayatAktivitasDokumen, SrvRiwayatPembayaranAktivitasDokumen, SrvStatusRiwayatAktivitasDokumen, SrvStatusRiwayatAktivitasDokumenKeterangan, SrvStatusRiwayatAktivitasDokumenPegawaiPelaksana, SrvStatusTanggungan, SrvSupplier, SrvSyaratPembayaran, SrvTipePembayaran } from './_endPoint.api';
 
 export const apiLogin = { ..._shapeObjectMethodCRUD(SrvLogin) };
 
 export const apiJurnalUmumCRUD = { ..._shapeObjectMethodCRUD(SrvJurnalUmum) };
 
 export const apiKodeAkunCRUD = { ..._shapeObjectMethodCRUD(SrvKodeAkun) }
+
+export const apiCustomerCRUD = { ..._shapeObjectMethodCRUD(SrvCustomer) }
+
+export const apiSupplierCRUD = { ..._shapeObjectMethodCRUD(SrvSupplier) }
+
+export const apiCabangCRUD = { ..._shapeObjectMethodCRUD(SrvCabang) }
+
+export const apiTipePembayaranCRUD = { ..._shapeObjectMethodCRUD(SrvTipePembayaran) }
+
+export const apiSyaratPembayaranCRUD = { ..._shapeObjectMethodCRUD(SrvSyaratPembayaran) }
 
 export const apiHistoryAkunR = { ..._shapeObjectMethodCRUD(SrvHistoryAkun) }
 

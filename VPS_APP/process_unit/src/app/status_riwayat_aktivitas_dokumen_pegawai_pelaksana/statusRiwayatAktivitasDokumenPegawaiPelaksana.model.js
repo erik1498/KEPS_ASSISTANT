@@ -26,14 +26,7 @@ const StatusRiwayatAktivitasDokumenPegawaiPelaksanaModel = db.define("status_riw
             validate:{
                 notEmpty:true,
             }
-        },
-        enabled: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            validate:{
-                notEmpty:true,
-            }
-        },
+        }
     }), {
         freezeTableName: true
     }
