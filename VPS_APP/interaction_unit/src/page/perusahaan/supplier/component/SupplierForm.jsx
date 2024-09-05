@@ -1,8 +1,8 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
-import { useState } from "react"
-import { formShowMessage, formValidation, showAlert } from "../../../../helper/form.helper"
-import { apiSupplierCRUD } from "../../../../service/endPointList.api"
+import { useEffect, useState } from "react"
+import { formShowMessage, formValidation, showAlert, showError } from "../../../../helper/form.helper"
+import { apiJenisBarangCRUD, apiSupplierCRUD } from "../../../../service/endPointList.api"
 import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
 import { kodeHargaList } from "../../../../config/objectList.config"
@@ -12,6 +12,7 @@ const SupplierForm = ({
     supplierEdit,
     getData = () => { }
 }) => {
+    const [jenisBarangList, setJenisBarangList] = useState([])
     const [namaSupplier, setNamaSupplier] = useState(supplierEdit?.name ? supplierEdit.name : ``)
     const [kodeSupplier, setKodeSupplier] = useState(supplierEdit?.code ? supplierEdit.code : ``)
     const [NPWPSupplier, setNPWPSupplier] = useState(supplierEdit?.npwp ? supplierEdit.npwp : ``)
@@ -51,6 +52,20 @@ const SupplierForm = ({
                 })
         }
     }
+
+    const _getDataJenisBarang = () => {
+        apiJenisBarangCRUD
+            .custom(``, "GET")
+            .then(resData => {
+                setJenisBarangList(resData.data.entry)
+            }).catch(err => {
+                showError(err)
+            })
+    }
+
+    useEffect(() => {
+        _getDataJenisBarang()
+    }, [])
 
     return <>
         <div className="bg-white px-6 py-3 rounded-md shadow-2xl">
@@ -164,9 +179,9 @@ const SupplierForm = ({
             <div className="mt-5 flex gap-x-2">
                 <FormSelectWithLabel
                     label={"Jenis Barang"}
-                    optionsDataList={kodeHargaList}
-                    optionsLabel={"label"}
-                    optionsValue={"value"}
+                    optionsDataList={jenisBarangList}
+                    optionsLabel={"name"}
+                    optionsValue={"uuid"}
                     selectValue={jenisBarangSupplier}
                     onchange={(e) => {
                         setJenisBarangSupplier(e)

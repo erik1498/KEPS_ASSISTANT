@@ -1,36 +1,36 @@
 import { FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
-import PageTitle from "../../../component/general/PageTitle"
-import Wrap from "../../../component/layout/Wrap"
-import { useDataContext } from "../../../context/dataContext.context"
+import PageTitle from "../../../../component/general/PageTitle"
+import Wrap from "../../../../component/layout/Wrap"
+import { useDataContext } from "../../../../context/dataContext.context"
 import { useState } from "react"
-import { apiSupplierCRUD } from "../../../service/endPointList.api"
+import { apiSatuanBarangCRUD } from "../../../../service/endPointList.api"
 import { useEffect } from "react"
-import Pagination from "../../../component/general/Pagination"
-import SupplierForm from "./component/SupplierForm"
-import { showAlert, showDialog, showError } from "../../../helper/form.helper"
+import Pagination from "../../../../component/general/Pagination"
+import SatuanBarangForm from "./component/SatuanBarangForm"
+import { showAlert, showDialog, showError } from "../../../../helper/form.helper"
 import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
-import { SupplierPrint } from "./component/SupplierPrint"
-import { getBulanByIndex } from "../../../helper/date.helper"
+import { SatuanBarangPrint } from "./component/SatuanBarangPrint"
+import { getBulanByIndex } from "../../../../helper/date.helper"
 
-const SupplierPage = () => {
+const SatuanBarangPage = () => {
 
     const dataContext = useDataContext()
     const { data } = dataContext
 
-    const [supplier, setSupplier] = useState([])
+    const [satuanBarang, setSatuanBarang] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const [addSupplier, setAddSupplier] = useState(false)
-    const [supplierEdit, setSupplierEdit] = useState({
-        name: "",
+    const [addSatuanBarang, setAddSatuanBarang] = useState(false)
+    const [satuanBarangEdit, setSatuanBarangEdit] = useState({
+        name: ""
     })
 
     const [searchStatus, setSearchStatus] = useState(false)
     const [search, setSearch] = useState("")
 
-    const SupplierPrintRef = useRef();
+    const SatuanBarangPrintRef = useRef();
     const handlePrint = useReactToPrint({
-        content: () => SupplierPrintRef.current,
+        content: () => SatuanBarangPrintRef.current,
     });
 
     const [pagination, setPagination] = useState({
@@ -45,12 +45,12 @@ const SupplierPage = () => {
             setSearch(searchParam)
         }
         setIsLoading(true)
-        apiSupplierCRUD
+        apiSatuanBarangCRUD
             .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
             .then(resData => {
 
                 setSearchStatus(searchParam.length < 1)
-                setSupplier(resData?.data?.entry)
+                setSatuanBarang(resData?.data?.entry)
                 setPagination(resData?.data?.pagination)
                 setIsLoading(false)
             }).catch(err => {
@@ -58,17 +58,17 @@ const SupplierPage = () => {
             })
     }
 
-    const _editSupplier = (i) => {
-        let supplierSelected = supplier[i]
-        setSupplierEdit(supplierSelected)
-        setAddSupplier(!addSupplier)
+    const _editSatuanBarang = (i) => {
+        let satuanBarangSelected = satuanBarang[i]
+        setSatuanBarangEdit(satuanBarangSelected)
+        setAddSatuanBarang(!addSatuanBarang)
     }
 
-    const _deleteSupplier = async (i) => {
+    const _deleteSatuanBarang = async (i) => {
         if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
-            let supplierSelected = supplier[i]
-            apiSupplierCRUD
-                .custom(`/${supplierSelected.uuid}`, "DELETE")
+            let satuanBarangSelected = satuanBarang[i]
+            apiSatuanBarangCRUD
+                .custom(`/${satuanBarangSelected.uuid}`, "DELETE")
                 .then(() => {
                     showAlert("Berhasil", "Data berhasil dihapus")
                     _getData()
@@ -100,13 +100,13 @@ const SupplierPage = () => {
     return <Wrap
         isLoading={isLoading}>
         <div>
-            <PageTitle title="Supplier" />
+            <PageTitle title="SatuanBarang" />
             {
-                addSupplier ?
-                    <SupplierForm
-                        setAddSupplierEvent={() => setAddSupplier(false)}
+                addSatuanBarang ?
+                    <SatuanBarangForm
+                        setAddSatuanBarangEvent={() => setAddSatuanBarang(false)}
                         getData={_getData}
-                        supplierEdit={supplierEdit}
+                        satuanBarangEdit={satuanBarangEdit}
                     />
                     :
                     <>
@@ -123,14 +123,14 @@ const SupplierPage = () => {
                             <div className="flex gap-x-2 items-center">
                                 <button className="btn btn-sm bg-blue-900 text-white border-none"
                                     onClick={() => {
-                                        setSupplierEdit(null)
-                                        setAddSupplier(!addSupplier)
+                                        setSatuanBarangEdit(null)
+                                        setAddSatuanBarang(!addSatuanBarang)
                                     }}
-                                ><FaPlus /> Tambah Supplier</button>
+                                ><FaPlus /> Tambah Satuan Barang</button>
                                 <div className="hidden">
-                                    <SupplierPrint
-                                        data={supplier}
-                                        ref={SupplierPrintRef}
+                                    <SatuanBarangPrint
+                                        data={satuanBarang}
+                                        ref={SatuanBarangPrintRef}
                                         bulan={getBulanByIndex(new Date().getMonth())}
                                         tahun={data.tahun}
                                     />
@@ -139,7 +139,7 @@ const SupplierPage = () => {
                                     onClick={handlePrint}
                                     className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
                                 >
-                                    <FaPrint /> Cetak Supplier
+                                    <FaPrint /> Cetak Satuan Barang
                                 </button>
                             </div>
                         </div>
@@ -149,27 +149,25 @@ const SupplierPage = () => {
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
-                                        <th>Nama Supplier</th>
-                                        <th>Kode Supplier</th>
+                                        <th>Nama Satuan Barang</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        supplier?.map((item, i) => {
+                                        satuanBarang?.map((item, i) => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
                                                     <td>{item.name}</td>
-                                                    <td>{item.code}</td>
                                                     <td className="flex gap-x-2">
                                                         <FaPen size={12} className="text-yellow-500 cursor-pointer"
                                                             onClick={() => {
-                                                                _editSupplier(i)
+                                                                _editSatuanBarang(i)
                                                             }} />
                                                         <FaTrash size={12} className="text-red-500 cursor-pointer"
                                                             onClick={() => {
-                                                                _deleteSupplier(i)
+                                                                _deleteSatuanBarang(i)
                                                             }}
                                                         />
                                                     </td>
@@ -186,4 +184,4 @@ const SupplierPage = () => {
         </div>
     </Wrap>
 }
-export default SupplierPage
+export default SatuanBarangPage

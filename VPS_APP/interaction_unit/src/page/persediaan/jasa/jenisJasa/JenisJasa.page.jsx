@@ -1,36 +1,36 @@
 import { FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
-import PageTitle from "../../../component/general/PageTitle"
-import Wrap from "../../../component/layout/Wrap"
-import { useDataContext } from "../../../context/dataContext.context"
+import PageTitle from "../../../../component/general/PageTitle"
+import Wrap from "../../../../component/layout/Wrap"
+import { useDataContext } from "../../../../context/dataContext.context"
 import { useState } from "react"
-import { apiSupplierCRUD } from "../../../service/endPointList.api"
+import { apiJenisJasaCRUD } from "../../../../service/endPointList.api"
 import { useEffect } from "react"
-import Pagination from "../../../component/general/Pagination"
-import SupplierForm from "./component/SupplierForm"
-import { showAlert, showDialog, showError } from "../../../helper/form.helper"
+import Pagination from "../../../../component/general/Pagination"
+import JenisJasaForm from "./component/JenisJasaForm"
+import { showAlert, showDialog, showError } from "../../../../helper/form.helper"
 import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
-import { SupplierPrint } from "./component/SupplierPrint"
-import { getBulanByIndex } from "../../../helper/date.helper"
+import { JenisJasaPrint } from "./component/JenisJasaPrint"
+import { getBulanByIndex } from "../../../../helper/date.helper"
 
-const SupplierPage = () => {
+const JenisJasaPage = () => {
 
     const dataContext = useDataContext()
     const { data } = dataContext
 
-    const [supplier, setSupplier] = useState([])
+    const [jenisJasa, setJenisJasa] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const [addSupplier, setAddSupplier] = useState(false)
-    const [supplierEdit, setSupplierEdit] = useState({
-        name: "",
+    const [addJenisJasa, setAddJenisJasa] = useState(false)
+    const [jenisJasaEdit, setJenisJasaEdit] = useState({
+        name: ""
     })
 
     const [searchStatus, setSearchStatus] = useState(false)
     const [search, setSearch] = useState("")
 
-    const SupplierPrintRef = useRef();
+    const JenisJasaPrintRef = useRef();
     const handlePrint = useReactToPrint({
-        content: () => SupplierPrintRef.current,
+        content: () => JenisJasaPrintRef.current,
     });
 
     const [pagination, setPagination] = useState({
@@ -45,12 +45,12 @@ const SupplierPage = () => {
             setSearch(searchParam)
         }
         setIsLoading(true)
-        apiSupplierCRUD
+        apiJenisJasaCRUD
             .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
             .then(resData => {
 
                 setSearchStatus(searchParam.length < 1)
-                setSupplier(resData?.data?.entry)
+                setJenisJasa(resData?.data?.entry)
                 setPagination(resData?.data?.pagination)
                 setIsLoading(false)
             }).catch(err => {
@@ -58,17 +58,17 @@ const SupplierPage = () => {
             })
     }
 
-    const _editSupplier = (i) => {
-        let supplierSelected = supplier[i]
-        setSupplierEdit(supplierSelected)
-        setAddSupplier(!addSupplier)
+    const _editJenisJasa = (i) => {
+        let jenisJasaSelected = jenisJasa[i]
+        setJenisJasaEdit(jenisJasaSelected)
+        setAddJenisJasa(!addJenisJasa)
     }
 
-    const _deleteSupplier = async (i) => {
+    const _deleteJenisJasa = async (i) => {
         if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
-            let supplierSelected = supplier[i]
-            apiSupplierCRUD
-                .custom(`/${supplierSelected.uuid}`, "DELETE")
+            let jenisJasaSelected = jenisJasa[i]
+            apiJenisJasaCRUD
+                .custom(`/${jenisJasaSelected.uuid}`, "DELETE")
                 .then(() => {
                     showAlert("Berhasil", "Data berhasil dihapus")
                     _getData()
@@ -100,13 +100,13 @@ const SupplierPage = () => {
     return <Wrap
         isLoading={isLoading}>
         <div>
-            <PageTitle title="Supplier" />
+            <PageTitle title="Jenis Jasa" />
             {
-                addSupplier ?
-                    <SupplierForm
-                        setAddSupplierEvent={() => setAddSupplier(false)}
+                addJenisJasa ?
+                    <JenisJasaForm
+                        setAddJenisJasaEvent={() => setAddJenisJasa(false)}
                         getData={_getData}
-                        supplierEdit={supplierEdit}
+                        jenisJasaEdit={jenisJasaEdit}
                     />
                     :
                     <>
@@ -123,14 +123,14 @@ const SupplierPage = () => {
                             <div className="flex gap-x-2 items-center">
                                 <button className="btn btn-sm bg-blue-900 text-white border-none"
                                     onClick={() => {
-                                        setSupplierEdit(null)
-                                        setAddSupplier(!addSupplier)
+                                        setJenisJasaEdit(null)
+                                        setAddJenisJasa(!addJenisJasa)
                                     }}
-                                ><FaPlus /> Tambah Supplier</button>
+                                ><FaPlus /> Tambah Jenis Jasa</button>
                                 <div className="hidden">
-                                    <SupplierPrint
-                                        data={supplier}
-                                        ref={SupplierPrintRef}
+                                    <JenisJasaPrint
+                                        data={jenisJasa}
+                                        ref={JenisJasaPrintRef}
                                         bulan={getBulanByIndex(new Date().getMonth())}
                                         tahun={data.tahun}
                                     />
@@ -139,7 +139,7 @@ const SupplierPage = () => {
                                     onClick={handlePrint}
                                     className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
                                 >
-                                    <FaPrint /> Cetak Supplier
+                                    <FaPrint /> Cetak Jenis Jasa
                                 </button>
                             </div>
                         </div>
@@ -149,14 +149,14 @@ const SupplierPage = () => {
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
-                                        <th>Nama Supplier</th>
-                                        <th>Kode Supplier</th>
+                                        <th>Nama Jenis Jasa</th>
+                                        <th>Kode Jenis Jasa</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        supplier?.map((item, i) => {
+                                        jenisJasa?.map((item, i) => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
@@ -165,11 +165,11 @@ const SupplierPage = () => {
                                                     <td className="flex gap-x-2">
                                                         <FaPen size={12} className="text-yellow-500 cursor-pointer"
                                                             onClick={() => {
-                                                                _editSupplier(i)
+                                                                _editJenisJasa(i)
                                                             }} />
                                                         <FaTrash size={12} className="text-red-500 cursor-pointer"
                                                             onClick={() => {
-                                                                _deleteSupplier(i)
+                                                                _deleteJenisJasa(i)
                                                             }}
                                                         />
                                                     </td>
@@ -186,4 +186,4 @@ const SupplierPage = () => {
         </div>
     </Wrap>
 }
-export default SupplierPage
+export default JenisJasaPage

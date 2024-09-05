@@ -102,3 +102,35 @@ export const SrvStatusRiwayatAktivitasDokumenKeterangan = objectPathEndPointAPI(
 export const SrvDokumenKlien = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/dokumen_klien'
 )
+
+export const SrvSatuanBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/satuan_barang'
+)
+
+export const SrvKategoriBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/kategori_barang'
+)
+
+export const SrvJenisBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/jenis_barang'
+)
+
+export const SrvJenisPenjualanBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/jenis_penjualan_barang'
+)
+
+export const SrvSatuanJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/satuan_jasa'
+)
+
+export const SrvKategoriJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/kategori_jasa'
+)
+
+export const SrvJenisJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/jenis_jasa'
+)
+
+export const SrvJenisPenjualanJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/jenis_penjualan_jasa'
+)

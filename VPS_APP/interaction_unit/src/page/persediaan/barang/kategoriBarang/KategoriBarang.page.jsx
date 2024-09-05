@@ -1,36 +1,36 @@
 import { FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
-import PageTitle from "../../../component/general/PageTitle"
-import Wrap from "../../../component/layout/Wrap"
-import { useDataContext } from "../../../context/dataContext.context"
+import PageTitle from "../../../../component/general/PageTitle"
+import Wrap from "../../../../component/layout/Wrap"
+import { useDataContext } from "../../../../context/dataContext.context"
 import { useState } from "react"
-import { apiSupplierCRUD } from "../../../service/endPointList.api"
+import { apiKategoriBarangCRUD } from "../../../../service/endPointList.api"
 import { useEffect } from "react"
-import Pagination from "../../../component/general/Pagination"
-import SupplierForm from "./component/SupplierForm"
-import { showAlert, showDialog, showError } from "../../../helper/form.helper"
+import Pagination from "../../../../component/general/Pagination"
+import KategoriBarangForm from "./component/KategoriBarangForm"
+import { showAlert, showDialog, showError } from "../../../../helper/form.helper"
 import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
-import { SupplierPrint } from "./component/SupplierPrint"
-import { getBulanByIndex } from "../../../helper/date.helper"
+import { KategoriBarangPrint } from "./component/KategoriBarangPrint"
+import { getBulanByIndex } from "../../../../helper/date.helper"
 
-const SupplierPage = () => {
+const KategoriBarangPage = () => {
 
     const dataContext = useDataContext()
     const { data } = dataContext
 
-    const [supplier, setSupplier] = useState([])
+    const [kategoriBarang, setKategoriBarang] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const [addSupplier, setAddSupplier] = useState(false)
-    const [supplierEdit, setSupplierEdit] = useState({
-        name: "",
+    const [addKategoriBarang, setAddKategoriBarang] = useState(false)
+    const [kategoriBarangEdit, setKategoriBarangEdit] = useState({
+        name: ""
     })
 
     const [searchStatus, setSearchStatus] = useState(false)
     const [search, setSearch] = useState("")
 
-    const SupplierPrintRef = useRef();
+    const KategoriBarangPrintRef = useRef();
     const handlePrint = useReactToPrint({
-        content: () => SupplierPrintRef.current,
+        content: () => KategoriBarangPrintRef.current,
     });
 
     const [pagination, setPagination] = useState({
@@ -45,12 +45,12 @@ const SupplierPage = () => {
             setSearch(searchParam)
         }
         setIsLoading(true)
-        apiSupplierCRUD
+        apiKategoriBarangCRUD
             .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
             .then(resData => {
 
                 setSearchStatus(searchParam.length < 1)
-                setSupplier(resData?.data?.entry)
+                setKategoriBarang(resData?.data?.entry)
                 setPagination(resData?.data?.pagination)
                 setIsLoading(false)
             }).catch(err => {
@@ -58,17 +58,17 @@ const SupplierPage = () => {
             })
     }
 
-    const _editSupplier = (i) => {
-        let supplierSelected = supplier[i]
-        setSupplierEdit(supplierSelected)
-        setAddSupplier(!addSupplier)
+    const _editKategoriBarang = (i) => {
+        let kategoriBarangSelected = kategoriBarang[i]
+        setKategoriBarangEdit(kategoriBarangSelected)
+        setAddKategoriBarang(!addKategoriBarang)
     }
 
-    const _deleteSupplier = async (i) => {
+    const _deleteKategoriBarang = async (i) => {
         if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
-            let supplierSelected = supplier[i]
-            apiSupplierCRUD
-                .custom(`/${supplierSelected.uuid}`, "DELETE")
+            let kategoriBarangSelected = kategoriBarang[i]
+            apiKategoriBarangCRUD
+                .custom(`/${kategoriBarangSelected.uuid}`, "DELETE")
                 .then(() => {
                     showAlert("Berhasil", "Data berhasil dihapus")
                     _getData()
@@ -100,13 +100,13 @@ const SupplierPage = () => {
     return <Wrap
         isLoading={isLoading}>
         <div>
-            <PageTitle title="Supplier" />
+            <PageTitle title="Kategori Barang" />
             {
-                addSupplier ?
-                    <SupplierForm
-                        setAddSupplierEvent={() => setAddSupplier(false)}
+                addKategoriBarang ?
+                    <KategoriBarangForm
+                        setAddKategoriBarangEvent={() => setAddKategoriBarang(false)}
                         getData={_getData}
-                        supplierEdit={supplierEdit}
+                        kategoriBarangEdit={kategoriBarangEdit}
                     />
                     :
                     <>
@@ -123,14 +123,14 @@ const SupplierPage = () => {
                             <div className="flex gap-x-2 items-center">
                                 <button className="btn btn-sm bg-blue-900 text-white border-none"
                                     onClick={() => {
-                                        setSupplierEdit(null)
-                                        setAddSupplier(!addSupplier)
+                                        setKategoriBarangEdit(null)
+                                        setAddKategoriBarang(!addKategoriBarang)
                                     }}
-                                ><FaPlus /> Tambah Supplier</button>
+                                ><FaPlus /> Tambah Kategori Barang</button>
                                 <div className="hidden">
-                                    <SupplierPrint
-                                        data={supplier}
-                                        ref={SupplierPrintRef}
+                                    <KategoriBarangPrint
+                                        data={kategoriBarang}
+                                        ref={KategoriBarangPrintRef}
                                         bulan={getBulanByIndex(new Date().getMonth())}
                                         tahun={data.tahun}
                                     />
@@ -139,7 +139,7 @@ const SupplierPage = () => {
                                     onClick={handlePrint}
                                     className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
                                 >
-                                    <FaPrint /> Cetak Supplier
+                                    <FaPrint /> Cetak Kategori Barang
                                 </button>
                             </div>
                         </div>
@@ -149,27 +149,25 @@ const SupplierPage = () => {
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
-                                        <th>Nama Supplier</th>
-                                        <th>Kode Supplier</th>
+                                        <th>Nama Kategori Barang</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        supplier?.map((item, i) => {
+                                        kategoriBarang?.map((item, i) => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
                                                     <td>{item.name}</td>
-                                                    <td>{item.code}</td>
                                                     <td className="flex gap-x-2">
                                                         <FaPen size={12} className="text-yellow-500 cursor-pointer"
                                                             onClick={() => {
-                                                                _editSupplier(i)
+                                                                _editKategoriBarang(i)
                                                             }} />
                                                         <FaTrash size={12} className="text-red-500 cursor-pointer"
                                                             onClick={() => {
-                                                                _deleteSupplier(i)
+                                                                _deleteKategoriBarang(i)
                                                             }}
                                                         />
                                                     </td>
@@ -186,4 +184,4 @@ const SupplierPage = () => {
         </div>
     </Wrap>
 }
-export default SupplierPage
+export default KategoriBarangPage

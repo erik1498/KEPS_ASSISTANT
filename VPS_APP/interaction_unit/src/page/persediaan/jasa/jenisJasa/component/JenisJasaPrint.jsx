@@ -1,21 +1,21 @@
 import React from "react";
-import { formatDate, getHariTanggalFull } from "../../../../helper/date.helper";
+import { formatDate, getHariTanggalFull } from "../../../../../helper/date.helper";
 
-export const SupplierPrint = React.forwardRef((props, ref) => {
+export const JenisJasaPrint = React.forwardRef((props, ref) => {
     return (
         <div
             ref={ref}
         >
             <div className="px-3 mb-4">
-                <h1 className="text-6xl font-bold">Supplier</h1>
+                <h1 className="text-6xl font-bold">Jenis Jasa</h1>
                 <p className="mb-5">Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
             </div>
             <table className="table">
                 <thead>
                     <tr className="sticky top-0 bg-white py-4 text-black">
                         <th width={12}>No</th>
-                        <th>Nama Supplier</th>
-                        <th>Kode Supplier</th>
+                        <th>Nama Jenis Jasa</th>
+                        <th>Kode Jenis Jasa</th>
                     </tr>
                 </thead>
                 <tbody>

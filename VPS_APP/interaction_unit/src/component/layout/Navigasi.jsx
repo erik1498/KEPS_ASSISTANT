@@ -216,22 +216,22 @@ const Navigasi = () => {
                                         <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Daftar Barang"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Satuan Barang"} />
+                                        <NavigationLink to="/persediaan/barang/satuanBarang" addClass={"my-1"} label={"Satuan Barang"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Kategori Barang"} />
+                                        <NavigationLink to="/persediaan/barang/kategoriBarang" addClass={"my-1"} label={"Kategori Barang"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Jenis Barang"} />
+                                        <NavigationLink to="/persediaan/barang/jenisBarang" addClass={"my-1"} label={"Jenis Barang"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Jenis Penjualan"} />
+                                        <NavigationLink to="/persediaan/barang/jenisPenjualanBarang" addClass={"my-1"} label={"Jenis Penjualan"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Transfer Barang"} />
+                                        <NavigationLink to="/persediaan/barang/transferBarang" addClass={"my-1"} label={"Transfer Barang"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Konversi Penjualan"} />
+                                        <NavigationLink to="/persediaan/barang/konversiBarang" addClass={"my-1"} label={"Konversi Penjualan"} />
                                     </li>
                                 </ul>
                             </li>
@@ -239,19 +239,19 @@ const Navigasi = () => {
                                 <p className="font-bold pointer-events-none">Jasa</p>
                                 <ul>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Daftar Jasa"} />
+                                        <NavigationLink to="/persediaan/jasa/daftarJasa" addClass={"my-1"} label={"Daftar Jasa"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Satuan Jasa"} />
+                                        <NavigationLink to="/persediaan/jasa/satuanJasa" addClass={"my-1"} label={"Satuan Jasa"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Kategori Jasa"} />
+                                        <NavigationLink to="/persediaan/jasa/kategoriJasa" addClass={"my-1"} label={"Kategori Jasa"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Jenis Jasa"} />
+                                        <NavigationLink to="/persediaan/jasa/jenisJasa" addClass={"my-1"} label={"Jenis Jasa"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Jenis Penjualan"} />
+                                        <NavigationLink to="/persediaan/jasa/jenisPenjualanJasa" addClass={"my-1"} label={"Jenis Penjualan"} />
                                     </li>
                                 </ul>
                             </li>

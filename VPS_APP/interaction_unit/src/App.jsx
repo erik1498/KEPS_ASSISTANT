@@ -21,6 +21,14 @@ import statusTanggunganPath from './path/perusahaan/statusTanggungan.path';
 import customerPath from './path/perusahaan/customer.path';
 import supplierPath from './path/perusahaan/supplier.path';
 import pegawaiPath from './path/perusahaan/pegawai.path';
+import satuanBarangPath from './path/persediaan/barang/satuanBarang.path';
+import kategoriBarangPath from './path/persediaan/barang/kategoriBarang.path';
+import jenisBarangPath from './path/persediaan/barang/jenisBarang.path';
+import jenisPenjualanBarangPath from './path/persediaan/barang/jenisPenjualanBarang.path';
+import satuanJasaPath from './path/persediaan/jasa/satuanJasa.path';
+import kategoriJasaPath from './path/persediaan/jasa/kategoriJasa.path';
+import jenisJasaPath from './path/persediaan/jasa/jenisJasa.path';
+import jenisPenjualanJasaPath from './path/persediaan/jasa/jenisPenjualanJasa.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -39,7 +47,15 @@ const SyaratPembayaranPage = React.lazy(() => import('./page/perusahaan/syaratPe
 const StatusTanggunganPage = React.lazy(() => import('./page/perusahaan/statusTangungan/StatusTanggungan.page'))
 const CustomerPage = React.lazy(() => import('./page/perusahaan/customer/Customer.page'))
 const SupplierPage = React.lazy(() => import('./page/perusahaan/supplier/Supplier.page'))
-const PegawaiPage  = React.lazy(() => import('./page/perusahaan/pegawai/Pegawai.page'))
+const PegawaiPage = React.lazy(() => import('./page/perusahaan/pegawai/Pegawai.page'))
+const SatuanBarangPage = React.lazy(() => import('./page/persediaan/barang/satuanBarang/SatuanBarang.page'))
+const KategoriBarangPage = React.lazy(() => import('./page/persediaan/barang/kategoriBarang/KategoriBarang.page'))
+const JenisBarangPage = React.lazy(() => import('./page/persediaan/barang/jenisBarang/JenisBarang.page'))
+const JenisPenjualanBarangPage = React.lazy(() => import('./page/persediaan/barang/jenisPenjualanBarang/JenisPenjualanBarang.page'))
+const SatuanJasaPage = React.lazy(() => import('./page/persediaan/jasa/satuanJasa/SatuanJasa.page'))
+const KategoriJasaPage = React.lazy(() => import('./page/persediaan/jasa/kategoriJasa/KategoriJasa.page'))
+const JenisJasaPage = React.lazy(() => import('./page/persediaan/jasa/jenisJasa/JenisJasa.page'))
+const JenisPenjualanJasaPage = React.lazy(() => import('./page/persediaan/jasa/jenisPenjualanJasa/JenisPenjualanJasa.page'))
 
 function App() {
   return (
@@ -83,6 +99,30 @@ function App() {
         </Routes>
         <Routes basename={aktivitasDokumenPath.main}>
           <Route path={aktivitasDokumenPath.main} element={<AktivitasDokumenPage />} />
+        </Routes>
+        <Routes basename={satuanBarangPath.main}>
+          <Route path={satuanBarangPath.main} element={<SatuanBarangPage />} />
+        </Routes>
+        <Routes basename={kategoriBarangPath.main}>
+          <Route path={kategoriBarangPath.main} element={<KategoriBarangPage />} />
+        </Routes>
+        <Routes basename={jenisBarangPath.main}>
+          <Route path={jenisBarangPath.main} element={<JenisBarangPage />} />
+        </Routes>
+        <Routes basename={jenisPenjualanBarangPath.main}>
+          <Route path={jenisPenjualanBarangPath.main} element={<JenisPenjualanBarangPage />} />
+        </Routes>
+        <Routes basename={satuanJasaPath.main}>
+          <Route path={satuanJasaPath.main} element={<SatuanJasaPage />} />
+        </Routes>
+        <Routes basename={kategoriJasaPath.main}>
+          <Route path={kategoriJasaPath.main} element={<KategoriJasaPage />} />
+        </Routes>
+        <Routes basename={jenisJasaPath.main}>
+          <Route path={jenisJasaPath.main} element={<JenisJasaPage />} />
+        </Routes>
+        <Routes basename={jenisPenjualanJasaPath.main}>
+          <Route path={jenisPenjualanJasaPath.main} element={<JenisPenjualanJasaPage />} />
         </Routes>
         <Routes basename={jurnalUmumPath.main}>
           <Route path={jurnalUmumPath.main} element={<JurnalUmumPage />} />
