@@ -29,6 +29,12 @@ import satuanJasaPath from './path/persediaan/jasa/satuanJasa.path';
 import kategoriJasaPath from './path/persediaan/jasa/kategoriJasa.path';
 import jenisJasaPath from './path/persediaan/jasa/jenisJasa.path';
 import jenisPenjualanJasaPath from './path/persediaan/jasa/jenisPenjualanJasa.path';
+import kategoriGudangPath from './path/persediaan/gudang/kategoriGudang.path';
+import jenisGudangPath from './path/persediaan/gudang/jenisGudang.path';
+import kategoriAsetPath from './path/asetTetapDanPerlengkapan/asetTetap/kategoriAset.path';
+import kelompokAsetPath from './path/asetTetapDanPerlengkapan/asetTetap/kelompokAset.path';
+import kategoriPerlengkapanPath from './path/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan.path';
+import metodePenyusutanPath from './path/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -56,6 +62,12 @@ const SatuanJasaPage = React.lazy(() => import('./page/persediaan/jasa/satuanJas
 const KategoriJasaPage = React.lazy(() => import('./page/persediaan/jasa/kategoriJasa/KategoriJasa.page'))
 const JenisJasaPage = React.lazy(() => import('./page/persediaan/jasa/jenisJasa/JenisJasa.page'))
 const JenisPenjualanJasaPage = React.lazy(() => import('./page/persediaan/jasa/jenisPenjualanJasa/JenisPenjualanJasa.page'))
+const KategoriGudangPage = React.lazy(() => import('./page/persediaan/gudang/kategoriGudang/KategoriGudang.page'))
+const JenisGudangPage = React.lazy(() => import('./page/persediaan/gudang/jenisGudang/JenisGudang.page'))
+const KategoriAsetPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/asetTetap/kategoriAset/KategoriAset.page'))
+const KelompokAsetPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/asetTetap/kelompokAset/KelompokAset.page'))
+const KategoriPerlengkapanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan/KategoriPerlengkapan.page'))
+const MetodePenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/penyusutan/kategoriPerlengkapan/MetodePenyusutan.page'))
 
 function App() {
   return (
@@ -123,6 +135,24 @@ function App() {
         </Routes>
         <Routes basename={jenisPenjualanJasaPath.main}>
           <Route path={jenisPenjualanJasaPath.main} element={<JenisPenjualanJasaPage />} />
+        </Routes>
+        <Routes basename={kategoriGudangPath.main}>
+          <Route path={kategoriGudangPath.main} element={<KategoriGudangPage />} />
+        </Routes>
+        <Routes basename={jenisGudangPath.main}>
+          <Route path={jenisGudangPath.main} element={<JenisGudangPage />} />
+        </Routes>
+        <Routes basename={kategoriAsetPath.main}>
+          <Route path={kategoriAsetPath.main} element={<KategoriAsetPage />} />
+        </Routes>
+        <Routes basename={kelompokAsetPath.main}>
+          <Route path={kelompokAsetPath.main} element={<KelompokAsetPage />} />
+        </Routes>
+        <Routes basename={kategoriPerlengkapanPath.main}>
+          <Route path={kategoriPerlengkapanPath.main} element={<KategoriPerlengkapanPage />} />
+        </Routes>
+        <Routes basename={metodePenyusutanPath.main}>
+          <Route path={metodePenyusutanPath.main} element={<MetodePenyusutanPage />} />
         </Routes>
         <Routes basename={jurnalUmumPath.main}>
           <Route path={jurnalUmumPath.main} element={<JurnalUmumPage />} />

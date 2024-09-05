@@ -155,7 +155,7 @@ const Navigasi = () => {
                     <details>
                         <NavigationLinkParent
                             Icon={<FaToolbox size={15} />}
-                            parentName={"Aset Tetap & Perlengkapan"}
+                            parentName={"Aset Tetap Dan Perlengkapan"}
                             sideBars={sideBars[0]}
                         />
                         <ul className="menu bg-base-200 rounded-box w-56">
@@ -163,13 +163,13 @@ const Navigasi = () => {
                                 <p className="font-bold pointer-events-none">Aset Tetap</p>
                                 <ul>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Daftar Aset"} />
+                                        <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/daftarAset" addClass={"my-1"} label={"Daftar Aset"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Kategori Aset"} />
+                                        <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/kategoriAset" addClass={"my-1"} label={"Kategori Aset"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Kelompok Aset"} />
+                                        <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/kelompokAset" addClass={"my-1"} label={"Kelompok Aset"} />
                                     </li>
                                 </ul>
                             </li>
@@ -180,7 +180,7 @@ const Navigasi = () => {
                                         <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Daftar Perlengkapan"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Kategori Perlengkapan"} />
+                                        <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan" addClass={"my-1"} label={"Kategori Perlengkapan"} />
                                     </li>
                                 </ul>
                             </li>
@@ -188,7 +188,7 @@ const Navigasi = () => {
                                 <p className="font-bold pointer-events-none">Penyusutan</p>
                                 <ul>
                                     <li>
-                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Metode Penyusutan"} />
+                                        <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan" addClass={"my-1"} label={"Metode Penyusutan"} />
                                     </li>
                                     <li>
                                         <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Hitungan Penyusutan"} />
@@ -270,13 +270,13 @@ const Navigasi = () => {
                                 <p className="font-bold pointer-events-none">Gudang</p>
                                 <ul>
                                     <li>
-                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Daftar Gudang"} />
+                                        <NavigationLink to="/persediaan/gudang/daftarGudang" addClass={"my-1"} label={"Daftar Gudang"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jenis Gudang"} />
+                                        <NavigationLink to="/persediaan/gudang/jenisGudang" addClass={"my-1"} label={"Jenis Gudang"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Kategori Gudang"} />
+                                        <NavigationLink to="/persediaan/gudang/kategoriGudang" addClass={"my-1"} label={"Kategori Gudang"} />
                                     </li>
                                 </ul>
                             </li>
