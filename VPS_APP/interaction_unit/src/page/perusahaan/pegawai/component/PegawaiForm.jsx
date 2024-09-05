@@ -1,11 +1,13 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
-import { useState } from "react"
-import { formShowMessage, formValidation, showAlert } from "../../../../helper/form.helper"
-import { apiPegawaiCRUD } from "../../../../service/endPointList.api"
+import { useEffect, useState } from "react"
+import { formShowMessage, formValidation, showAlert, showError } from "../../../../helper/form.helper"
+import { apiDivisiCRUD, apiJabatanCRUD, apiPegawaiCRUD, apiStatusTanggunganCRUD } from "../../../../service/endPointList.api"
 import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
-import { kodeHargaList } from "../../../../config/objectList.config"
+import { agamaList, jenisKelaminList, kodeHargaList, statusKerjaList } from "../../../../config/objectList.config"
+import { getHariTanggal } from "../../../../helper/date.helper"
+import { initialDataFromEditObject } from "../../../../helper/select.helper"
 
 const PegawaiForm = ({
     setAddPegawaiEvent = () => { },
@@ -13,16 +15,40 @@ const PegawaiForm = ({
     getData = () => { }
 }) => {
     const [namaPegawai, setNamaPegawai] = useState(pegawaiEdit?.name ? pegawaiEdit.name : ``)
-    const [kodePegawai, setKodePegawai] = useState(pegawaiEdit?.code ? pegawaiEdit.code : ``)
+    const [NIPPegawai, setNIPPegawai] = useState(pegawaiEdit?.nip ? pegawaiEdit.nip : ``)
+    const [NIKPegawai, setNIKPegawai] = useState(pegawaiEdit?.nik ? pegawaiEdit.nik : ``)
     const [NPWPPegawai, setNPWPPegawai] = useState(pegawaiEdit?.npwp ? pegawaiEdit.npwp : ``)
-    const [alamatRumahPegawai, setAlamatRumahPegawai] = useState(pegawaiEdit?.alamat_rumah ? pegawaiEdit.alamat_rumah : ``)
-    const [alamatKantorPegawai, setAlamatKantorPegawai] = useState(pegawaiEdit?.alamat_kantor ? pegawaiEdit.alamat_kantor : ``)
-    const [nomorTeleponPegawai, setNomorTeleponPegawai] = useState(pegawaiEdit?.no_telp ? pegawaiEdit.no_telp : ``)
+    const [tempatLahirPegawai, setTempatLahirPegawai] = useState(pegawaiEdit?.tempat_lahir ? pegawaiEdit.tempat_lahir : ``)
+    const [tanggalLahirPegawai, setTanggalLahirPegawai] = useState(pegawaiEdit?.tanggal_lahir ? pegawaiEdit.tanggal_lahir : getHariTanggal())
+    const [alamatPegawai, setAlamatPegawai] = useState(pegawaiEdit?.alamat ? pegawaiEdit.alamat : ``)
     const [nomorHandphonePegawai, setNomorHandphonePegawai] = useState(pegawaiEdit?.no_hp ? pegawaiEdit.no_hp : ``)
-    const [jenisBarangPegawai, setJenisBarangPegawai] = useState(pegawaiEdit?.jenis_barang ? {
-        label: `Harga ${pegawaiEdit.jenis_barang}`,
-        value: pegawaiEdit.jenis_barang
-    } : ``)
+    const [jenisKelaminPegawai, setJenisKelamin] = useState(pegawaiEdit?.jenis_kelamin ? {
+        label: pegawaiEdit.jenis_kelamin == 0 ? "Perempuan" : "Laki - Laki",
+        value: pegawaiEdit.jenis_kelamin
+    } : {
+        label: jenisKelaminList[0].label,
+        value: jenisKelaminList[0].value
+    })
+    const [agamaPegawai, setAgamaPegawai] = useState(pegawaiEdit?.agama ? {
+        label: pegawaiEdit.agama,
+        value: pegawaiEdit.agama
+    } : {
+        label: agamaList[0].label,
+        value: agamaList[0].value
+    })
+    const [divisiPegawai, setDivisiPegawai] = useState(pegawaiEdit?.divisi ? pegawaiEdit.divisi : ``)
+    const [divisiList, setDivisiList] = useState([])
+    const [jabatanPegawai, setJabatanPegawai] = useState(pegawaiEdit?.jabatan ? pegawaiEdit.jabatan : ``)
+    const [jabatanList, setJabatanList] = useState([])
+    const [statusTanggunganPegawai, setStatusTanggunganPegawai] = useState()
+    const [statusTanggunganList, setStatusTanggunganList] = useState([])
+    const [statusKerjaPegawai, setStatusKerjaPegawai] = useState(pegawaiEdit?.status_kerja ? {
+        label: pegawaiEdit.status_kerja,
+        value: pegawaiEdit.status_kerja
+    } : {
+        label: statusKerjaList[0].label,
+        value: statusKerjaList[0].value
+    })
 
     const _savePegawai = async () => {
         if (await formValidation()) {
@@ -30,13 +56,19 @@ const PegawaiForm = ({
                 .custom(`${pegawaiEdit?.uuid ? `/${pegawaiEdit.uuid}` : ``}`, pegawaiEdit ? "PUT" : "POST", null, {
                     data: {
                         name: namaPegawai,
-                        code: kodePegawai,
+                        nip: NIPPegawai,
+                        nik: NIKPegawai,
                         npwp: NPWPPegawai,
-                        alamat_rumah: alamatRumahPegawai,
-                        alamat_kantor: alamatKantorPegawai,
-                        no_telp: nomorTeleponPegawai,
+                        tempat_lahir: tempatLahirPegawai,
+                        tanggal_lahir: tanggalLahirPegawai,
+                        alamat: alamatPegawai,
                         no_hp: nomorHandphonePegawai,
-                        jenis_barang: `${jenisBarangPegawai.value}`
+                        jenis_kelamin: jenisKelaminPegawai.value,
+                        agama: agamaPegawai.value,
+                        divisi: divisiPegawai.value,
+                        jabatan: jabatanPegawai.value,
+                        status_tanggungan: statusTanggunganPegawai.value,
+                        status_kerja: statusKerjaPegawai.value
                     }
                 }).then(() => {
                     if (pegawaiEdit) {
@@ -51,6 +83,90 @@ const PegawaiForm = ({
                 })
         }
     }
+
+    const _getDataDivisi = () => {
+        apiDivisiCRUD
+            .custom("", "GET")
+            .then(resData => {
+                setDivisiList(resData.data.entry)
+                if (pegawaiEdit) {
+                    initialDataFromEditObject({
+                        editObject: pegawaiEdit.divisi,
+                        dataList: resData.data.entry,
+                        setState: setDivisiPegawai,
+                        labelKey: "name",
+                        valueKey: "uuid",
+                    })
+                    return
+                }
+                if (resData.data.entry.length > 0) {
+                    setDivisiPegawai({
+                        label: resData.data.entry[0].name,
+                        value: resData.data.entry[0].uuid,
+                    })
+                }
+            }).catch(err => {
+                showError(err)
+            })
+    }
+
+    const _getDataJabatan = () => {
+        apiJabatanCRUD
+            .custom("", "GET")
+            .then(resData => {
+                setJabatanList(resData.data.entry)
+                if (pegawaiEdit) {
+                    initialDataFromEditObject({
+                        editObject: pegawaiEdit.jabatan,
+                        dataList: resData.data.entry,
+                        setState: setJabatanPegawai,
+                        labelKey: "name",
+                        valueKey: "uuid",
+                    })
+                    return
+                }
+                if (resData.data.entry.length > 0) {
+                    setJabatanPegawai({
+                        label: resData.data.entry[0].name,
+                        value: resData.data.entry[0].uuid,
+                    })
+                }
+            }).catch(err => {
+                showError(err)
+            })
+    }
+
+    const _getDataStatusTanggungan = () => {
+        apiStatusTanggunganCRUD
+            .custom("", "GET")
+            .then(resData => {
+                setStatusTanggunganList(resData.data.entry)
+                if (resData.data.entry.length > 0) {
+                    if (pegawaiEdit) {
+                        initialDataFromEditObject({
+                            editObject: pegawaiEdit.status_tanggungan,
+                            dataList: resData.data.entry,
+                            setState: setStatusTanggunganPegawai,
+                            labelKey: "name",
+                            valueKey: "uuid",
+                        })
+                        return
+                    }
+                    setStatusTanggunganPegawai({
+                        label: resData.data.entry[0].name,
+                        value: resData.data.entry[0].uuid,
+                    })
+                }
+            }).catch(err => {
+                showError(err)
+            })
+    }
+
+    useEffect(() => {
+        _getDataDivisi()
+        _getDataJabatan()
+        _getDataStatusTanggungan()
+    }, [])
 
     return <>
         <div className="bg-white px-6 py-3 rounded-md shadow-2xl">
@@ -79,15 +195,30 @@ const PegawaiForm = ({
             </div>
             <div className="mt-5 flex gap-x-2">
                 <FormInputWithLabel
-                    label={"Kode Pegawai"}
+                    label={"NIP Pegawai"}
                     type={"text"}
                     onchange={(e) => {
-                        setKodePegawai(e.target.value)
+                        inputOnlyNumber(e)
+                        setNIPPegawai(e.target.value)
                     }}
                     others={
                         {
-                            value: kodePegawai,
-                            name: "kodePegawai"
+                            value: NIPPegawai,
+                            name: "NIPPegawai"
+                        }
+                    }
+                />
+                <FormInputWithLabel
+                    label={"NIK Pegawai"}
+                    type={"text"}
+                    onchange={(e) => {
+                        inputOnlyNumber(e)
+                        setNIKPegawai(e.target.value)
+                    }}
+                    others={
+                        {
+                            value: NIKPegawai,
+                            name: "NIKPegawai"
                         }
                     }
                 />
@@ -108,42 +239,41 @@ const PegawaiForm = ({
             </div>
             <div className="mt-5 flex gap-x-2">
                 <FormInputWithLabel
-                    label={"Alamat Rumah"}
+                    label={"Tempat Lahir"}
                     type={"text"}
                     onchange={(e) => {
-                        setAlamatRumahPegawai(e.target.value)
+                        setTempatLahirPegawai(e.target.value)
                     }}
                     others={
                         {
-                            value: alamatRumahPegawai,
-                            name: "alamatRumahPegawai"
+                            value: tempatLahirPegawai,
+                            name: "tempatLahirPegawai"
                         }
                     }
                 />
                 <FormInputWithLabel
-                    label={"Alamat Kantor"}
-                    type={"text"}
+                    label={"Tanggal Lahir"}
+                    type={"date"}
                     onchange={(e) => {
-                        setAlamatKantorPegawai(e.target.value)
+                        setTanggalLahirPegawai(e.target.value)
                     }}
                     others={
                         {
-                            value: alamatKantorPegawai,
-                            name: "alamatKantorPegawai"
+                            value: tanggalLahirPegawai,
+                            name: "tanggalLahirPegawai"
                         }
                     }
                 />
                 <FormInputWithLabel
-                    label={"Nomor Telepon"}
+                    label={"Alamat"}
                     type={"text"}
                     onchange={(e) => {
-                        inputOnlyNumber(e)
-                        setNomorTeleponPegawai(e.target.value)
+                        setAlamatPegawai(e.target.value)
                     }}
                     others={
                         {
-                            value: nomorTeleponPegawai,
-                            name: "nomorTeleponPegawai"
+                            value: alamatPegawai,
+                            name: "alamatPegawai"
                         }
                     }
                 />
@@ -163,15 +293,72 @@ const PegawaiForm = ({
             </div>
             <div className="mt-5 flex gap-x-2">
                 <FormSelectWithLabel
-                    label={"Jenis Barang"}
-                    optionsDataList={kodeHargaList}
+                    label={"Jenis Kelamin"}
+                    optionsDataList={jenisKelaminList}
                     optionsLabel={"label"}
                     optionsValue={"value"}
-                    selectValue={jenisBarangPegawai}
+                    selectValue={jenisKelaminPegawai}
                     onchange={(e) => {
-                        setJenisBarangPegawai(e)
+                        setJenisKelamin(e)
                     }}
-                    selectName={`jenisBarangPegawai`}
+                    selectName={`jenisKelaminPegawai`}
+                />
+                <FormSelectWithLabel
+                    label={"Agama"}
+                    optionsDataList={agamaList}
+                    optionsLabel={"label"}
+                    optionsValue={"value"}
+                    selectValue={agamaPegawai}
+                    onchange={(e) => {
+                        setAgamaPegawai(e)
+                    }}
+                    selectName={`agamaPegawai`}
+                />
+                <FormSelectWithLabel
+                    label={"Divisi"}
+                    optionsDataList={divisiList}
+                    optionsLabel={"name"}
+                    optionsValue={"uuid"}
+                    selectValue={divisiPegawai}
+                    onchange={(e) => {
+                        setDivisiPegawai(e)
+                    }}
+                    selectName={`divisiPegawai`}
+                />
+                <FormSelectWithLabel
+                    label={"Jabatan"}
+                    optionsDataList={jabatanList}
+                    optionsLabel={"name"}
+                    optionsValue={"uuid"}
+                    selectValue={jabatanPegawai}
+                    onchange={(e) => {
+                        setJabatanPegawai(e)
+                    }}
+                    selectName={`jabatanPegawai`}
+                />
+            </div>
+            <div className="mt-5 flex gap-x-2">
+                <FormSelectWithLabel
+                    label={"Status Tanggungan"}
+                    optionsDataList={statusTanggunganList}
+                    optionsLabel={"name"}
+                    optionsValue={"uuid"}
+                    selectValue={statusTanggunganPegawai}
+                    onchange={(e) => {
+                        setStatusTanggunganPegawai(e)
+                    }}
+                    selectName={`statusTanggunganPegawai`}
+                />
+                <FormSelectWithLabel
+                    label={"Status Kerja"}
+                    optionsDataList={statusKerjaList}
+                    optionsLabel={"label"}
+                    optionsValue={"value"}
+                    selectValue={statusKerjaPegawai}
+                    onchange={(e) => {
+                        setStatusKerjaPegawai(e)
+                    }}
+                    selectName={`statusKerjaPegawai`}
                 />
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"

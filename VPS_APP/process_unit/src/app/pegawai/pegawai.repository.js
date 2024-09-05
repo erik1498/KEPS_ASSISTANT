@@ -6,7 +6,17 @@ import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryU
 export const getAllPegawaiRepo = async (pageNumber, size, search, req_id) => {
     const pegawaisCount = await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.pegawai_tab WHERE name LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                COUNT(0) AS count 
+            FROM ${generateDatabaseName(req_id)}.pegawai_tab pt
+            JOIN ${generateDatabaseName(req_id)}.divisi_tab dt ON dt.uuid = pt.divisi 
+            JOIN ${generateDatabaseName(req_id)}.jabatan_tab jt ON jt.uuid = pt.jabatan
+            JOIN ${generateDatabaseName(req_id)}.status_tanggungan_tab stt ON stt.uuid = pt.status_tanggungan 
+            WHERE pt.name LIKE '%${search}%' 
+            AND pt.enabled = 1
+            AND dt.enabled = 1
+            AND jt.enabled = 1
+            AND stt.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -16,7 +26,21 @@ export const getAllPegawaiRepo = async (pageNumber, size, search, req_id) => {
 
     const pegawais = await db.query(
         `
-            SELECT * FROM ${generateDatabaseName(req_id)}.pegawai_tab WHERE name LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
+            SELECT 
+                pt.*,
+                dt.name AS divisi_name,
+                jt.name AS jabatan_name,
+                stt.name AS status_tanggungan_name
+            FROM ${generateDatabaseName(req_id)}.pegawai_tab pt
+            JOIN ${generateDatabaseName(req_id)}.divisi_tab dt ON dt.uuid = pt.divisi 
+            JOIN ${generateDatabaseName(req_id)}.jabatan_tab jt ON jt.uuid = pt.jabatan
+            JOIN ${generateDatabaseName(req_id)}.status_tanggungan_tab stt ON stt.uuid = pt.status_tanggungan 
+            WHERE pt.name LIKE '%${search}%' 
+            AND pt.enabled = 1
+            AND dt.enabled = 1
+            AND jt.enabled = 1
+            AND stt.enabled = 1
+            LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

@@ -178,7 +178,7 @@ const SyaratPembayaranPage = () => {
                                                     <td>{item.tipe_pembayaran_name}</td>
                                                     <td>{item.name}</td>
                                                     <td>{item.hari_kadaluarsa}</td>
-                                                    <td>{item.denda}</td>
+                                                    <td>{item.denda} %</td>
                                                     <td className="flex gap-x-2">
                                                         <FaPen size={12} className="text-yellow-500 cursor-pointer"
                                                             onClick={() => {

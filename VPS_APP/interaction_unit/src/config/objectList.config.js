@@ -316,6 +316,59 @@ export const kodeHargaList = [
     },
 ]
 
+export const jenisKelaminList = [
+    {
+        label: "Laki - Laki",
+        value: "1"
+    },
+    {
+        label: "Perempuan",
+        value: "0"
+    },
+]
+
+export const statusKerjaList = [
+    {
+        label: "Tetap",
+        value: "Tetap"
+    },
+    {
+        label: "Kontrak",
+        value: "Kontrak"
+    },
+    {
+        label: "Tenaga Ahli",
+        value: "Tenaga Ahli"
+    }
+]
+
+export const agamaList = [
+    {
+        label: "Kristen Katholik",
+        value: "Kristen Katholik"
+    },
+    {
+        label: "Kristen Protestan",
+        value: "Kristen Protestan"
+    },
+    {
+        label: "Islam",
+        value: "Islam"
+    },
+    {
+        label: "Hindu",
+        value: "Hindu"
+    },
+    {
+        label: "Budha",
+        value: "Budha"
+    },
+    {
+        label: "Konghucu",
+        value: "Konghucu"
+    },
+]
+
 export const KodeAkunType = () => {
     return [
         {
@@ -341,30 +394,6 @@ export const KodeAkunType = () => {
         },
         {
             name: "Beban Lainnya"
-        }
-    ]
-}
-
-
-export const Agama = () => {
-    return [
-        {
-            name: "Islam"
-        },
-        {
-            name: "Kristen Katholik"
-        },
-        {
-            name: "Kristen Protestan"
-        },
-        {
-            name: "Hindu"
-        },
-        {
-            name: "Buddha"
-        },
-        {
-            name: "Konghucu"
         }
     ]
 }

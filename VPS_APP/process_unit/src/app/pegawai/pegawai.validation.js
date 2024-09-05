@@ -32,9 +32,8 @@ export const pegawaiValidation = (payload) => {
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        jenis_kelamin: Joi.string().required().messages({
-            'string.base': "Harus Berupa Text",
-            "string.empty": "Harus Diisi",
+        jenis_kelamin: Joi.number().required().messages({
+            'number.base': "Harus Berupa Angka",
             "any.required": "Harus Diisi",
         }),
         agama: Joi.string().required().messages({

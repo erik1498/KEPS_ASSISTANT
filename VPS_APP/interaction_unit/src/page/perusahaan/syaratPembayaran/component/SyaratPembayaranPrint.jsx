@@ -30,7 +30,7 @@ export const SyaratPembayaranPrint = React.forwardRef((props, ref) => {
                                         <td>{item.tipe_pembayaran_name}</td>
                                         <td>{item.name}</td>
                                         <td>{item.hari_kadaluarsa}</td>
-                                        <td>{item.denda}</td>
+                                        <td>{item.denda} %</td>
                                     </tr>
                                 }
                             </>

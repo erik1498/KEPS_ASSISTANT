@@ -149,8 +149,10 @@ const PegawaiPage = () => {
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
                                         <th>Nama Pegawai</th>
-                                        <th>Kode Pegawai</th>
-                                        <th>Jenis Barang</th>
+                                        <th>Divisi</th>
+                                        <th>Jabatan</th>
+                                        <th>Status Tanggungan</th>
+                                        <th>Status Kerja</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -161,8 +163,10 @@ const PegawaiPage = () => {
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
                                                     <td>{item.name}</td>
-                                                    <td>{item.code}</td>
-                                                    <td>Harga {item.kode_harga}</td>
+                                                    <td>{item.divisi_name}</td>
+                                                    <td>{item.jabatan_name}</td>
+                                                    <td>{item.status_tanggungan_name}</td>
+                                                    <td>{item.status_kerja}</td>
                                                     <td className="flex gap-x-2">
                                                         <FaPen size={12} className="text-yellow-500 cursor-pointer"
                                                             onClick={() => {

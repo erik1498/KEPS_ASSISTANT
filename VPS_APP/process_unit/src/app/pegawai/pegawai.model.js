@@ -56,7 +56,7 @@ const PegawaiModel = db.define("pegawai_tab",
             }
         },
         jenis_kelamin: {
-            type: DataTypes.STRING,
+            type: DataTypes.BOOLEAN,
             allowNull: false,
             validate:{
                 notEmpty:true,
