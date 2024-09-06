@@ -3,7 +3,7 @@ import db, { defaultModelBuilder } from "../../config/Database.js";
 
 const { DataTypes } = Sequelize;
 
-const DaftarBarangModel = db.define("daftar_barang_tab", 
+const KategoriHargaBarangModel = db.define("kategori_harga_barang_tab", 
     defaultModelBuilder({
         uuid: {
             type: DataTypes.STRING,
@@ -13,43 +13,57 @@ const DaftarBarangModel = db.define("daftar_barang_tab",
                 notEmpty:true
             }
         },
-        name: {
+        daftar_barang: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
-        kategori_barang: {
+        kode_barang: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
-        jenis_barang: {
+        satuan_barang: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
-        jenis_penjualan_barang: {
+        harga_1: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
-        ppn: {
-            type: DataTypes.BOOLEAN,
+        harga_2: {
+            type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
-        status: {
-            type: DataTypes.BOOLEAN,
+        harga_3: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
+        harga_4: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
+        harga_5: {
+            type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
@@ -60,4 +74,4 @@ const DaftarBarangModel = db.define("daftar_barang_tab",
 }
 )
 
-export default DaftarBarangModel
+export default KategoriHargaBarangModel

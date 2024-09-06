@@ -35,6 +35,7 @@ import kategoriAsetPath from './path/asetTetapDanPerlengkapan/asetTetap/kategori
 import kelompokAsetPath from './path/asetTetapDanPerlengkapan/asetTetap/kelompokAset.path';
 import kategoriPerlengkapanPath from './path/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan.path';
 import metodePenyusutanPath from './path/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan.path';
+import daftarBarangPath from './path/persediaan/barang/daftarBarang.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -68,6 +69,7 @@ const KategoriAsetPage = React.lazy(() => import('./page/asetTetapDanPerlengkapa
 const KelompokAsetPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/asetTetap/kelompokAset/KelompokAset.page'))
 const KategoriPerlengkapanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan/KategoriPerlengkapan.page'))
 const MetodePenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/penyusutan/kategoriPerlengkapan/MetodePenyusutan.page'))
+const DaftarBarangPage = React.lazy(() => import('./page/persediaan/barang/daftarBarang/DaftarBarang.page'))
 
 function App() {
   return (
@@ -111,6 +113,9 @@ function App() {
         </Routes>
         <Routes basename={aktivitasDokumenPath.main}>
           <Route path={aktivitasDokumenPath.main} element={<AktivitasDokumenPage />} />
+        </Routes>
+        <Routes basename={daftarBarangPath.main}>
+          <Route path={daftarBarangPath.main} element={<DaftarBarangPage />} />
         </Routes>
         <Routes basename={satuanBarangPath.main}>
           <Route path={satuanBarangPath.main} element={<SatuanBarangPage />} />

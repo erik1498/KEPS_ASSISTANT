@@ -410,3 +410,13 @@ export const JenisKelamin = () => {
         },
     ]
 }
+
+export const PPNList = [
+    {
+        label: "Ya",
+        value: 1
+    }, {
+        label: "Tidak",
+        value: 0
+    }
+]

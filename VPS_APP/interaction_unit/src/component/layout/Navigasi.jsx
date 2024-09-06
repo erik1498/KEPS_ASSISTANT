@@ -213,7 +213,7 @@ const Navigasi = () => {
                                 <p className="font-bold pointer-events-none">Barang</p>
                                 <ul>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Daftar Barang"} />
+                                        <NavigationLink to="/persediaan/barang/daftarBarang" addClass={"my-1"} label={"Daftar Barang"} />
                                     </li>
                                     <li>
                                         <NavigationLink to="/persediaan/barang/satuanBarang" addClass={"my-1"} label={"Satuan Barang"} />

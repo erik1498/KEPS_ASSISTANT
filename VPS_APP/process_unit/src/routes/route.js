@@ -17,6 +17,8 @@ import { getJurnalUmumRoute } from "../app/jurnal_umum/jurnalUmum.route.js";
 import { getKategoriAsetRoute } from "../app/kategori_aset/kategoriAset.route.js";
 import { getKategoriBarangRoute } from "../app/kategori_barang/kategoriBarang.route.js";
 import { getKategoriGudangRoute } from "../app/kategori_gudang/kategoriGudang.route.js";
+import { getKategoriHargaBarangRoute } from "../app/kategori_harga_barang/kategoriHargaBarang.route.js";
+import { getKategoriHargaJasaRoute } from "../app/kategori_harga_jasa/kategoriHargaJasa.route.js";
 import { getKategoriJasaRoute } from "../app/kategori_jasa/kategoriJasa.route.js";
 import { getKategoriPerlengkapanRoute } from "../app/kategori_perlengkapan/kategoriPerlengkapan.route.js";
 import { getKelompokAsetRoute } from "../app/kelompok_aset/kelompokAset.route.js";
@@ -84,5 +86,7 @@ export const routerList = new Array()
         getKategoriAsetRoute(),
         getKelompokAsetRoute(),
         getKategoriPerlengkapanRoute(),
-        getMetodePenyusutanRoute()
+        getMetodePenyusutanRoute(),
+        getKategoriHargaBarangRoute(),
+        getKategoriHargaJasaRoute()
     )

@@ -6,11 +6,12 @@ const FormSelectWithLabel = ({
     optionsLabel,
     optionsValue,
     selectValue,
+    disabled,
     onchange,
     selectName
 }) => {
     return <>
-        <label className="form-control w-full bg-white relative">
+        <label className={`form-control w-full bg-white relative ${disabled ? "pointer-events-none" : ""}`}>
             <div className="label">
                 <span className="label-text text-gray-800 font-bold">{label}</span>
             </div>

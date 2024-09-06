@@ -22,13 +22,13 @@ export const daftarBarangValidation = (payload) => {
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        ppn: Joi.string().required().messages({
-            'string.base': "Harus Berupa Text",
-            "string.empty": "Harus Diisi",
+        ppn: Joi.number().required().messages({
+            'number.base': "Harus Berupa Number",
+            "number.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        status: Joi.string().required().messages({
-            'string.base': "Harus Berupa Text",
+        status: Joi.number().required().messages({
+            'number.base': "Harus Berupa Number",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),

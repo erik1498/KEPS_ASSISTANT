@@ -39,6 +39,7 @@ export const getDaftarBarangByUuidService = async (uuid, req_identity) => {
 export const createDaftarBarangService = async (daftarBarangData, req_identity) => {
     LOGGER(logType.INFO, `Start createDaftarBarangService`, daftarBarangData, req_identity)
     daftarBarangData.enabled = 1
+    daftarBarangData.status = 1
 
     const daftarBarang = await createDaftarBarangRepo(daftarBarangData, req_identity)
     return daftarBarang
