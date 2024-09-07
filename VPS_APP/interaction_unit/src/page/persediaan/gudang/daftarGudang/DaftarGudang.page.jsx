@@ -150,7 +150,8 @@ const DaftarGudangPage = () => {
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
                                         <th>Nama Daftar Gudang</th>
-                                        <th>Kode Daftar Gudang</th>
+                                        <th>Kategori Gudang</th>
+                                        <th>Jenis Gudang</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -161,7 +162,8 @@ const DaftarGudangPage = () => {
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
                                                     <td>{item.name}</td>
-                                                    <td>{item.code}</td>
+                                                    <td>{item.kategori_gudang_name}</td>
+                                                    <td>{item.jenis_gudang_name}</td>
                                                     <td className="flex gap-x-2">
                                                         <FaPen size={12} className="text-yellow-500 cursor-pointer"
                                                             onClick={() => {

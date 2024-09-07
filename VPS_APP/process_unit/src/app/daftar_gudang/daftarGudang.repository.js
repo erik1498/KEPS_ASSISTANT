@@ -6,7 +6,13 @@ import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryU
 export const getAllDaftarGudangRepo = async (pageNumber, size, search, req_id) => {
     const daftarGudangsCount = await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.daftar_gudang_tab WHERE name LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                COUNT(0) AS count
+            FROM ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt 
+            JOIN ${generateDatabaseName(req_id)}.kategori_gudang_tab kgt ON kgt.uuid = dgt.kategori_gudang 
+            JOIN ${generateDatabaseName(req_id)}.jenis_gudang_tab jgt ON jgt.uuid = dgt.jenis_gudang 
+            WHERE dgt.enabled = 1 AND kgt.enabled = 1 AND jgt.enabled = 1
+            AND dgt.name LIKE '%${search}%'
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -16,7 +22,16 @@ export const getAllDaftarGudangRepo = async (pageNumber, size, search, req_id) =
 
     const daftarGudangs = await db.query(
         `
-            SELECT * FROM ${generateDatabaseName(req_id)}.daftar_gudang_tab WHERE name LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
+            SELECT 
+                dgt.*,
+                kgt.name As kategori_gudang_name,
+                jgt.name As jenis_gudang_name
+            FROM ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt 
+            JOIN ${generateDatabaseName(req_id)}.kategori_gudang_tab kgt ON kgt.uuid = dgt.kategori_gudang 
+            JOIN ${generateDatabaseName(req_id)}.jenis_gudang_tab jgt ON jgt.uuid = dgt.jenis_gudang 
+            WHERE dgt.enabled = 1 AND kgt.enabled = 1 AND jgt.enabled = 1
+            AND dgt.name LIKE '%${search}%'
+            LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

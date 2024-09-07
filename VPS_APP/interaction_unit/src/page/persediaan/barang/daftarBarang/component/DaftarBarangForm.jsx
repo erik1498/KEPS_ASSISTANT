@@ -54,7 +54,6 @@ const DaftarBarangForm = ({
                     }
                     setKategoriHargaForm(x => x = true)
                 }).catch(err => {
-                    console.log(err)
                     formShowMessage(JSON.parse(err.response.data.errorData))
                 })
         }
@@ -164,7 +163,8 @@ const DaftarBarangForm = ({
                     others={
                         {
                             value: namaDaftarBarang,
-                            name: "namaDaftarBarang"
+                            name: "namaDaftarBarang",
+                            disabled: kategoriHargaForm
                         }
                     }
                 />
@@ -225,7 +225,6 @@ const DaftarBarangForm = ({
                 kategoriHargaForm ?
                     <KategoriHargaForm
                         idDaftarbarang={uuidDaftarBarang}
-                        ppnDaftarBarang={ppnDaftarBarang}
                     />
                     : <>
                         <button className="btn btn-sm bg-green-800 mt-4 text-white"

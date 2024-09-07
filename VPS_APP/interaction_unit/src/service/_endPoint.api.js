@@ -139,6 +139,10 @@ export const SrvJenisPenjualanJasa = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/jenis_penjualan_jasa'
 )
 
+export const SrvDaftarGudang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/daftar_gudang'
+)
+
 export const SrvKategoriGudang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kategori_gudang'
 )
@@ -165,6 +169,10 @@ export const SrvMetodePenyusutan = objectPathEndPointAPI(
 
 export const SrvKategoriHargaBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kategori_harga_barang'
+)
+
+export const SrvStokAwalBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/stok_awal_barang'
 )
 
 export const SrvKategoriHargaJasa = objectPathEndPointAPI(

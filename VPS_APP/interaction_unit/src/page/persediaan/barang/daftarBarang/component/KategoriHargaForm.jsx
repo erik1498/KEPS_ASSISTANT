@@ -6,10 +6,10 @@ import { formValidation, showError } from "../../../../../helper/form.helper"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaSave } from "react-icons/fa"
+import StokAwalBarangForm from "./StokAwalBarangForm"
 
 const KategoriHargaForm = ({
-    idDaftarbarang,
-    ppnDaftarBarang
+    idDaftarbarang
 }) => {
     const [openForm, setOpenForm] = useState(false)
     const [kategoriHargaBarangList, setKategoriHargaBarangList] = useState([])
@@ -20,20 +20,19 @@ const KategoriHargaForm = ({
 
     const _getSatuanBarang = () => {
         setSatuanBarang(x => x = null)
+        setSatuanBarangList(x => x = [])
         setOpenForm(x => x = false)
         apiSatuanBarangCRUD
             .custom(``, "GET")
             .then(resData => {
-                setSatuanBarangList(resData.data.entry)
-                if (resData.data.entry.length > 0) {
-                    const satuanFixed = resData.data.entry.filter(item => kategoriHargaBarangList.findIndex(x => x.satuan_barang == item.uuid) < 0)
-                    if (satuanFixed.length > 0) {
-                        setOpenForm(x => x = true)
-                        setSatuanBarang({
-                            label: satuanFixed[0].name,
-                            value: satuanFixed[0].uuid,
-                        })
-                    }
+                const satuanFixed = resData.data.entry.filter(item => kategoriHargaBarangList.findIndex(x => x.satuan_barang == item.uuid) < 0)
+                if (satuanFixed.length > 0) {
+                    setSatuanBarangList(satuanFixed)
+                    setOpenForm(x => x = true)
+                    setSatuanBarang({
+                        label: satuanFixed[0].name,
+                        value: satuanFixed[0].uuid,
+                    })
                 }
             })
             .catch(err => {
@@ -54,7 +53,6 @@ const KategoriHargaForm = ({
                 data[`harga_${x.value}`] = hargaBarang[i]
             })
 
-
             apiKategoriHargaBarangCRUD.custom(``, `POST`, null, {
                 data
             }).then(() => {
@@ -69,7 +67,7 @@ const KategoriHargaForm = ({
         apiKategoriHargaBarangCRUD
             .custom("", "GET")
             .then(resData => {
-                setKategoriHargaBarangList(resData.data.entry)
+                setKategoriHargaBarangList(x => x = resData.data.entry)
             })
             .catch(err => {
                 showError(err)
@@ -78,6 +76,9 @@ const KategoriHargaForm = ({
 
     useEffect(() => {
         _getSatuanBarang()
+    }, [kategoriHargaBarangList])
+
+    useEffect(() => {
         _getDataKategoriHargaBarang()
     }, [])
 
@@ -163,6 +164,12 @@ const KategoriHargaForm = ({
                 }
             </tbody>
         </table>
+        {
+            satuanBarangList.length == 0 ? <StokAwalBarangForm
+                idDaftarBarang={idDaftarbarang}
+                kategoriHargaBarangList={kategoriHargaBarangList}
+            /> : <></>
+        }
     </>
 }
 export default KategoriHargaForm
