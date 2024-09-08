@@ -6,7 +6,18 @@ import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryU
 export const getAllDaftarJasaRepo = async (pageNumber, size, search, req_id) => {
     const daftarJasasCount = await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.daftar_jasa_tab WHERE name LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                COUNT(0) AS count
+            FROM ${generateDatabaseName(req_id)}.daftar_jasa_tab djt 
+            JOIN ${generateDatabaseName(req_id)}.kategori_jasa_tab kjt ON kjt.uuid = djt.kategori_jasa 
+            JOIN ${generateDatabaseName(req_id)}.jenis_jasa_tab jjt ON jjt.uuid = djt.jenis_jasa 
+            JOIN ${generateDatabaseName(req_id)}.jenis_penjualan_jasa_tab jpjt ON jpjt.uuid = djt.jenis_penjualan_jasa 
+            WHERE djt.name LIKE '%${search}%' 
+            AND djt.enabled = 1
+            AND kjt.enabled = 1
+            AND jjt.enabled = 1
+            AND jpjt.enabled = 1
+            LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -16,7 +27,21 @@ export const getAllDaftarJasaRepo = async (pageNumber, size, search, req_id) => 
 
     const daftarJasas = await db.query(
         `
-            SELECT * FROM ${generateDatabaseName(req_id)}.daftar_jasa_tab WHERE name LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
+            SELECT 
+                djt.*,
+                kjt.name AS kategori_jasa_name,
+                jjt.name AS jenis_jasa_name,
+                jpjt.name AS jenis_penjualan_jasa_name
+            FROM ${generateDatabaseName(req_id)}.daftar_jasa_tab djt 
+            JOIN ${generateDatabaseName(req_id)}.kategori_jasa_tab kjt ON kjt.uuid = djt.kategori_jasa 
+            JOIN ${generateDatabaseName(req_id)}.jenis_jasa_tab jjt ON jjt.uuid = djt.jenis_jasa 
+            JOIN ${generateDatabaseName(req_id)}.jenis_penjualan_jasa_tab jpjt ON jpjt.uuid = djt.jenis_penjualan_jasa 
+            WHERE djt.name LIKE '%${search}%' 
+            AND djt.enabled = 1
+            AND kjt.enabled = 1
+            AND jjt.enabled = 1
+            AND jpjt.enabled = 1
+            LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

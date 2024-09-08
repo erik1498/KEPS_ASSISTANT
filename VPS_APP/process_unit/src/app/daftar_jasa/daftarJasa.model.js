@@ -49,7 +49,7 @@ const DaftarJasaModel = db.define("daftar_jasa_tab",
             }
         },
         status: {
-            type: DataTypes.STRING,
+            type: DataTypes.BOOLEAN,
             allowNull: false,
             validate:{
                 notEmpty:true,

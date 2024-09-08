@@ -1,35 +1,25 @@
 import Joi from "joi"
 
-export const daftarJasaValidation = (payload) => {
+export const stokAwalJasaValidation = (payload) => {
     const schema = Joi.object({
-        name: Joi.string().required().messages({
+        daftar_jasa: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        kategori_jasa: Joi.string().required().messages({
+        daftar_gudang: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        jenis_jasa: Joi.string().required().messages({
+        kategori_harga_jasa: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        jenis_penjualan_jasa: Joi.string().required().messages({
+        jumlah: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
-            "any.required": "Harus Diisi",
-        }),
-        ppn: Joi.number().required().messages({
-            'number.base': "Harus Berupa Text",
-            "number.empty": "Harus Diisi",
-            "any.required": "Harus Diisi",
-        }),
-        status: Joi.number().required().messages({
-            'number.base': "Harus Berupa Text",
-            "number.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
     })

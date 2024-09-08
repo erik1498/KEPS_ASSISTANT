@@ -35,35 +35,35 @@ const KategoriHargaJasaModel = db.define("kategori_harga_jasa_tab",
             }
         },
         harga_1: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         harga_2: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         harga_3: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         harga_4: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         harga_5: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate:{
                 notEmpty:true,

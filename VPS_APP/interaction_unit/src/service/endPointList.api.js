@@ -1,5 +1,5 @@
 import { _shapeObjectMethodCRUD } from './_config.api';
-import { SrvAktivitasDokumen, SrvCabang, SrvCustomer, SrvDaftarBarang, SrvDaftarGudang, SrvDivisi, SrvDokumenKlien, SrvHistoryAkun, SrvJabatan, SrvJenisBarang, SrvJenisGudang, SrvJenisJasa, SrvJenisPenjualanBarang, SrvJenisPenjualanJasa, SrvJurnalUmum, SrvKategoriAset, SrvKategoriBarang, SrvKategoriGudang, SrvKategoriHargaBarang, SrvKategoriHargaJasa, SrvKategoriJasa, SrvKategoriPerlengkapan, SrvKelompokAset, SrvKodeAkun, SrvLabaRugi, SrvLogin, SrvMetodePenyusutan, SrvNeraca, SrvNeracaSaldo, SrvPayroll, SrvPegawai, SrvPerubahanModal, SrvRiwayatAktivitasDokumen, SrvRiwayatPembayaranAktivitasDokumen, SrvSatuanBarang, SrvSatuanJasa, SrvStatusRiwayatAktivitasDokumen, SrvStatusRiwayatAktivitasDokumenKeterangan, SrvStatusRiwayatAktivitasDokumenPegawaiPelaksana, SrvStatusTanggungan, SrvStokAwalBarang, SrvSupplier, SrvSyaratPembayaran, SrvTipePembayaran } from './_endPoint.api';
+import { SrvAktivitasDokumen, SrvCabang, SrvCustomer, SrvDaftarBarang, SrvDaftarGudang, SrvDaftarJasa, SrvDivisi, SrvDokumenKlien, SrvHistoryAkun, SrvJabatan, SrvJenisBarang, SrvJenisGudang, SrvJenisJasa, SrvJenisPenjualanBarang, SrvJenisPenjualanJasa, SrvJurnalUmum, SrvKategoriAset, SrvKategoriBarang, SrvKategoriGudang, SrvKategoriHargaBarang, SrvKategoriHargaJasa, SrvKategoriJasa, SrvKategoriPerlengkapan, SrvKelompokAset, SrvKodeAkun, SrvLabaRugi, SrvLogin, SrvMetodePenyusutan, SrvNeraca, SrvNeracaSaldo, SrvPayroll, SrvPegawai, SrvPerubahanModal, SrvRiwayatAktivitasDokumen, SrvRiwayatPembayaranAktivitasDokumen, SrvSatuanBarang, SrvSatuanJasa, SrvStatusRiwayatAktivitasDokumen, SrvStatusRiwayatAktivitasDokumenKeterangan, SrvStatusRiwayatAktivitasDokumenPegawaiPelaksana, SrvStatusTanggungan, SrvStokAwalBarang, SrvStokAwalJasa, SrvSupplier, SrvSyaratPembayaran, SrvTipePembayaran } from './_endPoint.api';
 
 export const apiLogin = { ..._shapeObjectMethodCRUD(SrvLogin) };
 
@@ -61,6 +61,8 @@ export const apiJenisBarangCRUD = { ..._shapeObjectMethodCRUD(SrvJenisBarang) }
 
 export const apiJenisPenjualanBarangCRUD = { ..._shapeObjectMethodCRUD(SrvJenisPenjualanBarang) }
 
+export const apiDaftarJasaCRUD = { ..._shapeObjectMethodCRUD(SrvDaftarJasa) }
+
 export const apiSatuanJasaCRUD = { ..._shapeObjectMethodCRUD(SrvSatuanJasa) }
 
 export const apiKategoriJasaCRUD = { ..._shapeObjectMethodCRUD(SrvKategoriJasa) }
@@ -88,3 +90,5 @@ export const apiStokAwalBarangCRUD = { ..._shapeObjectMethodCRUD(SrvStokAwalBara
 export const apiKategoriHargaBarangCRUD = { ..._shapeObjectMethodCRUD(SrvKategoriHargaBarang) }
 
 export const apiKategoriHargaJasaCRUD = { ..._shapeObjectMethodCRUD(SrvKategoriHargaJasa) }
+
+export const apiStokAwalJasaCRUD = { ..._shapeObjectMethodCRUD(SrvStokAwalJasa) }

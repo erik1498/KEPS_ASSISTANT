@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createKategoriHargaJasaRepo, deleteKategoriHargaJasaByUuidRepo, getAllKategoriHargaJasaRepo, getKategoriHargaJasaByUuidRepo, updateKategoriHargaJasaByUuidRepo } from "./kategoriHargaJasa.repository.js"
+import { createKategoriHargaJasaRepo, deleteKategoriHargaJasaByUuidRepo, getAllKategoriHargaJasaRepo, getKategoriHargaJasaByKodeJasaRepo, getKategoriHargaJasaByUuidRepo, updateKategoriHargaJasaByUuidRepo } from "./kategoriHargaJasa.repository.js"
 
 export const getAllKategoriHargaJasaService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllKategoriHargaJasaService", null, req_identity)
@@ -38,6 +38,7 @@ export const getKategoriHargaJasaByUuidService = async (uuid, req_identity) => {
 
 export const createKategoriHargaJasaService = async (kategoriHargaJasaData, req_identity) => {
     LOGGER(logType.INFO, `Start createKategoriHargaJasaService`, kategoriHargaJasaData, req_identity)
+    await checkKategoriHargaJasaByKodeJasaService(kategoriHargaJasaData.kode_jasa, req_identity)
     kategoriHargaJasaData.enabled = 1
 
     const kategoriHargaJasa = await createKategoriHargaJasaRepo(kategoriHargaJasaData, req_identity)
@@ -62,4 +63,20 @@ export const updateKategoriHargaJasaByUuidService = async (uuid, kategoriHargaJa
     }, req_identity)
 
     return kategoriHargaJasa
+}
+
+export const checkKategoriHargaJasaByKodeJasaService = async (kode_jasa, req_identity) => {
+    LOGGER(logType.INFO, `Start deleteKategoriHargaJasaByUuidService`, {
+        kode_jasa
+    }, req_identity)
+    
+    const kategoriHargaJasa = await getKategoriHargaJasaByKodeJasaRepo(kode_jasa, req_identity)
+
+    if (kategoriHargaJasa) {
+        throw Error(JSON.stringify({
+            message: "Kode Jasa Sudah Terdaftar",
+            field: "error"
+        }))
+    }
+    return
 }

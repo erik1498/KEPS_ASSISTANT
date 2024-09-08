@@ -39,6 +39,7 @@ import { getStatusRiwayatAktivitasDokumenKeteranganRoute } from "../app/status_r
 import { getStatusRiwayatAktivitasDokumenPegawaiPelaksanaRoute } from "../app/status_riwayat_aktivitas_dokumen_pegawai_pelaksana/statusRiwayatAktivitasDokumenPegawaiPelaksana.route.js";
 import { getStatusTanggunganRoute } from "../app/status_tanggungan/statusTanggungan.route.js";
 import { getStokAwalBarangRoute } from "../app/stok_awal_barang/stokAwalBarang.route.js";
+import { getStokAwalJasaRoute } from "../app/stok_awal_jasa/stokAwalJasa.route.js";
 import { getSupplierRoute } from "../app/supplier/supplier.route.js";
 import { getSyaratPembayaranRoute } from "../app/syarat_pembayaran/syaratPembayaran.route.js";
 import { getTipePembayaranRoute } from "../app/tipe_pembayaran/tipePembayaran.route.js";
@@ -90,5 +91,6 @@ export const routerList = new Array()
         getMetodePenyusutanRoute(),
         getKategoriHargaBarangRoute(),
         getKategoriHargaJasaRoute(),
-        getStokAwalBarangRoute()
+        getStokAwalBarangRoute(),
+        getStokAwalJasaRoute()
     )

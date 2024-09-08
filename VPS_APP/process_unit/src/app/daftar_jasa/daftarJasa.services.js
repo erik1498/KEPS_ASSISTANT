@@ -39,6 +39,7 @@ export const getDaftarJasaByUuidService = async (uuid, req_identity) => {
 export const createDaftarJasaService = async (daftarJasaData, req_identity) => {
     LOGGER(logType.INFO, `Start createDaftarJasaService`, daftarJasaData, req_identity)
     daftarJasaData.enabled = 1
+    daftarJasaData.status = 1
 
     const daftarJasa = await createDaftarJasaRepo(daftarJasaData, req_identity)
     return daftarJasa

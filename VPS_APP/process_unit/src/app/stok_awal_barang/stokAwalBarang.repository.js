@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import StokAwalBarangModel from "./stokAwalBarang.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
 export const getAllStokAwalBarangRepo = async (pageNumber, size, search, req_id) => {
     const stokAwalBarangsCount = await db.query(
@@ -132,6 +133,9 @@ export const getStokAwalBarangByBarangUUIDRepo = async (uuid, req_id) => {
 }
 
 export const createStokAwalBarangRepo = async (stokAwalBarangData, req_id) => {
+    stokAwalBarangData = removeDotInRupiahInput(stokAwalBarangData, [
+        "jumlah"
+    ])
     return insertQueryUtil(
         req_id,
         generateDatabaseName(req_id),
@@ -161,6 +165,9 @@ export const deleteStokAwalBarangByUuidRepo = async (uuid, req_id) => {
 }
 
 export const updateStokAwalBarangByUuidRepo = async (uuid, stokAwalBarangData, req_id) => {
+    stokAwalBarangData = removeDotInRupiahInput(stokAwalBarangData, [
+        "jumlah"
+    ])
     return updateQueryUtil(
         req_id,
         generateDatabaseName(req_id),
@@ -173,6 +180,23 @@ export const updateStokAwalBarangByUuidRepo = async (uuid, stokAwalBarangData, r
         },
         {
             uuid
+        }
+    )
+}
+
+export const getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo = async(daftar_gudang, kategori_harga_barang, req_id) => {
+    return await db.query(
+        `
+            SELECT
+                COUNT(0) AS count 
+            FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt 
+            WHERE sabt.daftar_gudang = "${daftar_gudang}"
+            AND sabt.kategori_harga_barang = "${kategori_harga_barang}"
+            AND sabt.enabled = 1
+            LIMIT 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
         }
     )
 }

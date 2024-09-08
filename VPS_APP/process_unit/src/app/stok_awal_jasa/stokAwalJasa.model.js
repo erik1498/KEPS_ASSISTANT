@@ -3,7 +3,7 @@ import db, { defaultModelBuilder } from "../../config/Database.js";
 
 const { DataTypes } = Sequelize;
 
-const KategoriHargaBarangModel = db.define("kategori_harga_barang_tab", 
+const StokAwalJasaModel = db.define("stok_awal_jasa_tab", 
     defaultModelBuilder({
         uuid: {
             type: DataTypes.STRING,
@@ -13,56 +13,28 @@ const KategoriHargaBarangModel = db.define("kategori_harga_barang_tab",
                 notEmpty:true
             }
         },
-        daftar_barang: {
+        daftar_jasa: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
-        kode_barang: {
+        daftar_gudang: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
-        satuan_barang: {
+        kategori_harga_jasa: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
-        harga_1: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate:{
-                notEmpty:true,
-            }
-        },
-        harga_2: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate:{
-                notEmpty:true,
-            }
-        },
-        harga_3: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate:{
-                notEmpty:true,
-            }
-        },
-        harga_4: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate:{
-                notEmpty:true,
-            }
-        },
-        harga_5: {
+        jumlah: {
             type: DataTypes.INTEGER,
             allowNull: false,
             validate:{
@@ -74,4 +46,4 @@ const KategoriHargaBarangModel = db.define("kategori_harga_barang_tab",
 }
 )
 
-export default KategoriHargaBarangModel
+export default StokAwalJasaModel

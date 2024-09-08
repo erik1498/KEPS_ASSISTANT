@@ -4,49 +4,49 @@ import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaSave } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
-import { apiDaftarGudangCRUD, apiStokAwalBarangCRUD } from "../../../../../service/endPointList.api"
+import { apiDaftarGudangCRUD, apiStokAwalJasaCRUD } from "../../../../../service/endPointList.api"
 
-const StokAwalBarangForm = ({
-    idDaftarBarang,
-    kategoriHargaBarangList
+const StokAwalJasaForm = ({
+    idDaftarJasa,
+    kategoriHargaJasaList
 }) => {
-    const [gudangBarang, setGudangBarang] = useState()
-    const [kategoriHargaBarang, setKategoriHargaBarang] = useState(kategoriHargaBarangList.length > 0 ? {
-        label: kategoriHargaBarangList[0].kode_barang,
-        value: kategoriHargaBarangList[0].uuid
+    const [gudangJasa, setGudangJasa] = useState()
+    const [kategoriHargaJasa, setKategoriHargaJasa] = useState(kategoriHargaJasaList.length > 0 ? {
+        label: kategoriHargaJasaList[0].kode_jasa,
+        value: kategoriHargaJasaList[0].uuid
     } : null)
     const [jumlah, setJumlah] = useState(0)
 
-    const [gudangBarangList, setGudangBarangList] = useState([])
+    const [gudangJasaList, setGudangJasaList] = useState([])
 
-    const [stokAwalBarangList, setStokAwalBarangList] = useState([])
+    const [stokAwalJasaList, setStokAwalJasaList] = useState([])
 
-    const _saveStokAwalBarang = async (e) => {
+    const _saveStokAwalJasa = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
-            apiStokAwalBarangCRUD
+            apiStokAwalJasaCRUD
                 .custom("", "POST", null, {
                     data: {
-                        daftar_barang: idDaftarBarang,
-                        daftar_gudang: gudangBarang.value,
-                        kategori_harga_barang: kategoriHargaBarang.value,
+                        daftar_jasa: idDaftarJasa,
+                        daftar_gudang: gudangJasa.value,
+                        kategori_harga_jasa: kategoriHargaJasa.value,
                         jumlah: jumlah
                     }
                 }).then(() => {
-                    _getStokAwalBarang()
+                    _getStokAwalJasa()
                 }).catch(err => {
                     showError(err)
                 })
         }
     }
 
-    const _getGudangBarang = () => {
+    const _getGudangJasa = () => {
         apiDaftarGudangCRUD
             .custom("", "GET")
             .then(resData => {
-                setGudangBarangList(resData.data.entry)
+                setGudangJasaList(resData.data.entry)
                 if (resData.data.entry.length > 0) {
-                    setGudangBarang({
+                    setGudangJasa({
                         label: resData.data.entry[0].name,
                         value: resData.data.entry[0].uuid
                     })
@@ -56,49 +56,49 @@ const StokAwalBarangForm = ({
             })
     }
 
-    const _getStokAwalBarang = () => {
-        apiStokAwalBarangCRUD
-            .custom(`/${idDaftarBarang}`, "GET")
+    const _getStokAwalJasa = () => {
+        apiStokAwalJasaCRUD
+            .custom(`/${idDaftarJasa}`, "GET")
             .then(resData => {
-                setStokAwalBarangList(resData.data)
+                setStokAwalJasaList(resData.data)
             }).catch(err => {
                 showError(err)
             })
     }
 
     useEffect(() => {
-        _getGudangBarang()
-    }, [stokAwalBarangList])
+        _getGudangJasa()
+    }, [stokAwalJasaList])
 
     useEffect(() => {
-        _getStokAwalBarang()
+        _getStokAwalJasa()
     }, [])
 
     return <>
-        <h1 className="mt-16 mb-5 uppercase text-gray-600 font-bold">Stok Awal Barang</h1>
-        <form onSubmit={e => _saveStokAwalBarang(e)} className="pb-6">
+        <h1 className="mt-16 mb-5 uppercase text-gray-600 font-bold">Stok Awal Jasa</h1>
+        <form onSubmit={e => _saveStokAwalJasa(e)} className="pb-6">
             <div className="flex gap-x-2 items-end">
                 <FormSelectWithLabel
-                    label={"Gudang Barang"}
-                    optionsDataList={gudangBarangList}
+                    label={"Gudang Jasa"}
+                    optionsDataList={gudangJasaList}
                     optionsLabel={"name"}
                     optionsValue={"uuid"}
-                    selectValue={gudangBarang}
+                    selectValue={gudangJasa}
                     onchange={(e) => {
-                        setGudangBarang(e)
+                        setGudangJasa(e)
                     }}
-                    selectName={`gudangBarang`}
+                    selectName={`gudangJasa`}
                 />
                 <FormSelectWithLabel
-                    label={"Kode Barang"}
-                    optionsDataList={kategoriHargaBarangList}
-                    optionsLabel={"kode_barang"}
+                    label={"Kode Jasa"}
+                    optionsDataList={kategoriHargaJasaList}
+                    optionsLabel={"kode_jasa"}
                     optionsValue={"uuid"}
-                    selectValue={kategoriHargaBarang}
+                    selectValue={kategoriHargaJasa}
                     onchange={(e) => {
-                        setKategoriHargaBarang(e)
+                        setKategoriHargaJasa(e)
                     }}
-                    selectName={`kategoriHargaBarang`}
+                    selectName={`kategoriHargaJasa`}
                 />
                 <FormInputWithLabel
                     label={"Jumlah"}
@@ -121,19 +121,19 @@ const StokAwalBarangForm = ({
             <thead className="py-4 text-black">
                 <th>No</th>
                 <th>Gudang</th>
-                <th>Kode Barang</th>
-                <th>Satuan Barang</th>
+                <th>Kode Jasa</th>
+                <th>Satuan Jasa</th>
                 <th>Jumlah</th>
             </thead>
             <tbody>
                 {
-                    stokAwalBarangList.map((x, i) => {
+                    stokAwalJasaList.map((x, i) => {
                         return <>
                             <tr>
                                 <td>{i + 1}</td>
                                 <td>{x.daftar_gudang_name}</td>
-                                <td>{x.kategori_harga_barang_kode_barang}</td>
-                                <td>{x.satuan_barang_name}</td>
+                                <td>{x.kategori_harga_jasa_kode_jasa}</td>
+                                <td>{x.satuan_jasa_name}</td>
                                 <td>{x.jumlah}</td>
                             </tr>
                         </>
@@ -143,4 +143,4 @@ const StokAwalBarangForm = ({
         </table>
     </>
 }
-export default StokAwalBarangForm
+export default StokAwalJasaForm

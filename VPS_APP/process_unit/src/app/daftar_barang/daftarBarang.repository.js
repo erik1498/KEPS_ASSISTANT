@@ -6,7 +6,18 @@ import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryU
 export const getAllDaftarBarangRepo = async (pageNumber, size, search, req_id) => {
     const daftarBarangsCount = await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.daftar_barang_tab WHERE name LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                COUNT(0) AS count
+            FROM ${generateDatabaseName(req_id)}.daftar_barang_tab dbt 
+            JOIN ${generateDatabaseName(req_id)}.kategori_barang_tab kbt ON kbt.uuid = dbt.kategori_barang 
+            JOIN ${generateDatabaseName(req_id)}.jenis_barang_tab jbt ON jbt.uuid = dbt.jenis_barang 
+            JOIN ${generateDatabaseName(req_id)}.jenis_penjualan_barang_tab jpbt ON jpbt.uuid = dbt.jenis_penjualan_barang 
+            WHERE dbt.name LIKE '%${search}%' 
+            AND dbt.enabled = 1
+            AND kbt.enabled = 1
+            AND jbt.enabled = 1
+            AND jpbt.enabled = 1
+            LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -16,7 +27,21 @@ export const getAllDaftarBarangRepo = async (pageNumber, size, search, req_id) =
 
     const daftarBarangs = await db.query(
         `
-            SELECT * FROM ${generateDatabaseName(req_id)}.daftar_barang_tab WHERE name LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
+            SELECT 
+                dbt.*,
+                kbt.name AS kategori_barang_name,
+                jbt.name AS jenis_barang_name,
+                jpbt.name AS jenis_penjualan_barang_name
+            FROM ${generateDatabaseName(req_id)}.daftar_barang_tab dbt 
+            JOIN ${generateDatabaseName(req_id)}.kategori_barang_tab kbt ON kbt.uuid = dbt.kategori_barang 
+            JOIN ${generateDatabaseName(req_id)}.jenis_barang_tab jbt ON jbt.uuid = dbt.jenis_barang 
+            JOIN ${generateDatabaseName(req_id)}.jenis_penjualan_barang_tab jpbt ON jpbt.uuid = dbt.jenis_penjualan_barang 
+            WHERE dbt.name LIKE '%${search}%' 
+            AND dbt.enabled = 1
+            AND kbt.enabled = 1
+            AND jbt.enabled = 1
+            AND jpbt.enabled = 1
+            LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

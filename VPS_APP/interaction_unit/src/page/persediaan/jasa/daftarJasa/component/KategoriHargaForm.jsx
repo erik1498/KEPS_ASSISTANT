@@ -1,35 +1,35 @@
 import { useEffect, useState } from "react"
 import { kodeHargaList } from "../../../../../config/objectList.config"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
-import { apiKategoriHargaBarangCRUD, apiSatuanBarangCRUD } from "../../../../../service/endPointList.api"
+import { apiKategoriHargaJasaCRUD, apiSatuanJasaCRUD } from "../../../../../service/endPointList.api"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaSave } from "react-icons/fa"
-import StokAwalBarangForm from "./StokAwalBarangForm"
+import StokAwalJasaForm from "./StokAwalJasaForm"
 
 const KategoriHargaForm = ({
-    idDaftarbarang
+    idDaftarJasa
 }) => {
     const [openForm, setOpenForm] = useState(false)
-    const [kategoriHargaBarangList, setKategoriHargaBarangList] = useState([])
-    const [satuanBarangList, setSatuanBarangList] = useState([])
-    const [satuanBarang, setSatuanBarang] = useState()
-    const [kodeBarang, setKodeBarang] = useState()
-    const [hargaBarang, setHargaBarang] = useState([])
+    const [kategoriHargaJasaList, setKategoriHargaJasaList] = useState([])
+    const [satuanJasaList, setSatuanJasaList] = useState([])
+    const [satuanJasa, setSatuanJasa] = useState()
+    const [kodeJasa, setKodeJasa] = useState()
+    const [hargaJasa, setHargaJasa] = useState([])
 
-    const _getSatuanBarang = () => {
-        setSatuanBarang(x => x = null)
-        setSatuanBarangList(x => x = [])
+    const _getSatuanJasa = () => {
+        setSatuanJasa(x => x = null)
+        setSatuanJasaList(x => x = [])
         setOpenForm(x => x = false)
-        apiSatuanBarangCRUD
+        apiSatuanJasaCRUD
             .custom(``, "GET")
             .then(resData => {
-                const satuanFixed = resData.data.entry.filter(item => kategoriHargaBarangList.findIndex(x => x.satuan_barang == item.uuid) < 0)
+                const satuanFixed = resData.data.entry.filter(item => kategoriHargaJasaList.findIndex(x => x.satuan_jasa == item.uuid) < 0)
                 if (satuanFixed.length > 0) {
-                    setSatuanBarangList(satuanFixed)
+                    setSatuanJasaList(satuanFixed)
                     setOpenForm(x => x = true)
-                    setSatuanBarang({
+                    setSatuanJasa({
                         label: satuanFixed[0].name,
                         value: satuanFixed[0].uuid,
                     })
@@ -44,30 +44,30 @@ const KategoriHargaForm = ({
         e.preventDefault()
         if (await formValidation(e.target)) {
             let data = {
-                daftar_barang: idDaftarbarang,
-                satuan_barang: satuanBarang.value,
-                kode_barang: kodeBarang
+                daftar_jasa: idDaftarJasa,
+                satuan_jasa: satuanJasa.value,
+                kode_jasa: kodeJasa
             }
 
             kodeHargaList.map((x, i) => {
-                data[`harga_${x.value}`] = hargaBarang[i]
+                data[`harga_${x.value}`] = hargaJasa[i]
             })
 
-            apiKategoriHargaBarangCRUD.custom(``, `POST`, null, {
+            apiKategoriHargaJasaCRUD.custom(``, `POST`, null, {
                 data
             }).then(() => {
-                _getDataKategoriHargaBarang()
+                _getDataKategoriHargaJasa()
             }).catch(err => {
                 showError(err)
             })
         }
     }
 
-    const _getDataKategoriHargaBarang = () => {
-        apiKategoriHargaBarangCRUD
+    const _getDataKategoriHargaJasa = () => {
+        apiKategoriHargaJasaCRUD
             .custom("", "GET")
             .then(resData => {
-                setKategoriHargaBarangList(x => x = resData.data.entry)
+                setKategoriHargaJasaList(x => x = resData.data.entry)
             })
             .catch(err => {
                 showError(err)
@@ -75,11 +75,11 @@ const KategoriHargaForm = ({
     }
 
     useEffect(() => {
-        _getSatuanBarang()
-    }, [kategoriHargaBarangList])
+        _getSatuanJasa()
+    }, [kategoriHargaJasaList])
 
     useEffect(() => {
-        _getDataKategoriHargaBarang()
+        _getDataKategoriHargaJasa()
     }, [])
 
     return <>
@@ -88,26 +88,26 @@ const KategoriHargaForm = ({
             openForm ? <form onSubmit={(e) => _saveKategoriHarga(e)}>
                 <div className="flex gap-x-2">
                     <FormSelectWithLabel
-                        label={"Satuan Barang"}
-                        optionsDataList={satuanBarangList}
+                        label={"Satuan Jasa"}
+                        optionsDataList={satuanJasaList}
                         optionsLabel={"name"}
                         optionsValue={"uuid"}
-                        selectValue={satuanBarang}
+                        selectValue={satuanJasa}
                         onchange={(e) => {
-                            setSatuanBarang(e)
+                            setSatuanJasa(e)
                         }}
-                        selectName={`satuanBarang`}
+                        selectName={`satuanJasa`}
                     />
                     <FormInputWithLabel
-                        label={"Kode Barang"}
+                        label={"Kode Jasa"}
                         type={"text"}
                         onchange={(e) => {
-                            setKodeBarang(e.target.value)
+                            setKodeJasa(e.target.value)
                         }}
                         others={
                             {
-                                value: kodeBarang,
-                                name: "kodeBarang"
+                                value: kodeJasa,
+                                name: "kodeJasa"
                             }
                         }
                     />
@@ -120,14 +120,14 @@ const KategoriHargaForm = ({
                                 type={"text"}
                                 onchange={(e) => {
                                     inputOnlyRupiah(e)
-                                    const hargaBarangCopy = [...hargaBarang]
-                                    hargaBarangCopy[i] = e.target.value
-                                    setHargaBarang(x => x = hargaBarangCopy)
+                                    const hargaJasaCopy = [...hargaJasa]
+                                    hargaJasaCopy[i] = e.target.value
+                                    setHargaJasa(x => x = hargaJasaCopy)
                                 }}
                                 others={
                                     {
-                                        value: hargaBarang[i],
-                                        name: `hargaBarang[${i}]`
+                                        value: hargaJasa[i],
+                                        name: `hargaJasa[${i}]`
                                     }
                                 }
                             />
@@ -141,20 +141,20 @@ const KategoriHargaForm = ({
         <table className="mt-5 table table-sm table-zebra">
             <thead className="py-4 text-black">
                 <th>No</th>
-                <th>Satuan Barang</th>
-                <th>Kode Barang</th>
+                <th>Satuan Jasa</th>
+                <th>Kode Jasa</th>
                 {
                     kodeHargaList.map(x => <th>{x.label}</th>)
                 }
             </thead>
             <tbody>
                 {
-                    kategoriHargaBarangList.map((x, i) => {
+                    kategoriHargaJasaList.map((x, i) => {
                         return <>
                             <tr>
                                 <td>{i + 1}</td>
-                                <td>{x.satuan_barang_name}</td>
-                                <td>{x.kode_barang}</td>
+                                <td>{x.satuan_jasa_name}</td>
+                                <td>{x.kode_jasa}</td>
                                 {
                                     kodeHargaList.map((_, j) => <td>{x[`harga_${j + 1}`]}</td>)
                                 }
@@ -165,9 +165,9 @@ const KategoriHargaForm = ({
             </tbody>
         </table>
         {
-            satuanBarangList.length == 0 ? <StokAwalBarangForm
-                idDaftarBarang={idDaftarbarang}
-                kategoriHargaBarangList={kategoriHargaBarangList}
+            satuanJasaList.length == 0 ? <StokAwalJasaForm
+                idDaftarJasa={idDaftarJasa}
+                kategoriHargaJasaList={kategoriHargaJasaList}
             /> : <></>
         }
     </>

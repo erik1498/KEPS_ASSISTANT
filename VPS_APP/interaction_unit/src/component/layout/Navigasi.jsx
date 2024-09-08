@@ -191,6 +191,9 @@ const Navigasi = () => {
                                         <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan" addClass={"my-1"} label={"Metode Penyusutan"} />
                                     </li>
                                     <li>
+                                        <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/persentasePenyusutan" addClass={"my-1"} label={"Persentase Penyusutan"} />
+                                    </li>
+                                    <li>
                                         <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Hitungan Penyusutan"} />
                                     </li>
                                     <li>

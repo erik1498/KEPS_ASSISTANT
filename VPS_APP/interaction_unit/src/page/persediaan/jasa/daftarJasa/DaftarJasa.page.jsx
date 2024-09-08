@@ -3,34 +3,34 @@ import PageTitle from "../../../../component/general/PageTitle"
 import Wrap from "../../../../component/layout/Wrap"
 import { useDataContext } from "../../../../context/dataContext.context"
 import { useState } from "react"
-import { apiDaftarBarangCRUD } from "../../../../service/endPointList.api"
+import { apiDaftarJasaCRUD } from "../../../../service/endPointList.api"
 import { useEffect } from "react"
 import Pagination from "../../../../component/general/Pagination"
-import DaftarBarangForm from "./component/DaftarBarangForm"
+import DaftarJasaForm from "./component/DaftarJasaForm"
 import { showAlert, showDialog, showError } from "../../../../helper/form.helper"
 import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
-import { DaftarBarangPrint } from "./component/DaftarBarangPrint"
+import { DaftarJasaPrint } from "./component/DaftarJasaPrint"
 import { getBulanByIndex } from "../../../../helper/date.helper"
 
-const DaftarBarangPage = () => {
+const DaftarJasaPage = () => {
 
     const dataContext = useDataContext()
     const { data } = dataContext
 
-    const [daftarBarang, setDaftarBarang] = useState([])
+    const [daftarJasa, setDaftarJasa] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const [addDaftarBarang, setAddDaftarBarang] = useState(false)
-    const [daftarBarangEdit, setDaftarBarangEdit] = useState({
+    const [addDaftarJasa, setAddDaftarJasa] = useState(false)
+    const [daftarJasaEdit, setDaftarJasaEdit] = useState({
         name: ""
     })
 
     const [searchStatus, setSearchStatus] = useState(false)
     const [search, setSearch] = useState("")
 
-    const DaftarBarangPrintRef = useRef();
+    const DaftarJasaPrintRef = useRef();
     const handlePrint = useReactToPrint({
-        content: () => DaftarBarangPrintRef.current,
+        content: () => DaftarJasaPrintRef.current,
     });
 
     const [pagination, setPagination] = useState({
@@ -45,12 +45,12 @@ const DaftarBarangPage = () => {
             setSearch(searchParam)
         }
         setIsLoading(true)
-        apiDaftarBarangCRUD
+        apiDaftarJasaCRUD
             .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
             .then(resData => {
 
                 setSearchStatus(searchParam.length < 1)
-                setDaftarBarang(resData?.data?.entry)
+                setDaftarJasa(resData?.data?.entry)
                 setPagination(resData?.data?.pagination)
                 setIsLoading(false)
             }).catch(err => {
@@ -58,17 +58,17 @@ const DaftarBarangPage = () => {
             })
     }
 
-    const _editDaftarBarang = (i) => {
-        let daftarBarangSelected = daftarBarang[i]
-        setDaftarBarangEdit(daftarBarangSelected)
-        setAddDaftarBarang(!addDaftarBarang)
+    const _editDaftarJasa = (i) => {
+        let daftarJasaSelected = daftarJasa[i]
+        setDaftarJasaEdit(daftarJasaSelected)
+        setAddDaftarJasa(!addDaftarJasa)
     }
 
-    const _deleteDaftarBarang = async (i) => {
+    const _deleteDaftarJasa = async (i) => {
         if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
-            let daftarBarangSelected = daftarBarang[i]
-            apiDaftarBarangCRUD
-                .custom(`/${daftarBarangSelected.uuid}`, "DELETE")
+            let daftarJasaSelected = daftarJasa[i]
+            apiDaftarJasaCRUD
+                .custom(`/${daftarJasaSelected.uuid}`, "DELETE")
                 .then(() => {
                     showAlert("Berhasil", "Data berhasil dihapus")
                     _getData()
@@ -100,13 +100,13 @@ const DaftarBarangPage = () => {
     return <Wrap
         isLoading={isLoading}>
         <div>
-            <PageTitle title="Daftar Barang" />
+            <PageTitle title="Daftar Jasa" />
             {
-                addDaftarBarang ?
-                    <DaftarBarangForm
-                        setAddDaftarBarangEvent={() => setAddDaftarBarang(false)}
+                addDaftarJasa ?
+                    <DaftarJasaForm
+                        setAddDaftarJasaEvent={() => setAddDaftarJasa(false)}
                         getData={_getData}
-                        daftarBarangEdit={daftarBarangEdit}
+                        daftarJasaEdit={daftarJasaEdit}
                     />
                     :
                     <>
@@ -123,14 +123,14 @@ const DaftarBarangPage = () => {
                             <div className="flex gap-x-2 items-center">
                                 <button className="btn btn-sm bg-blue-900 text-white border-none"
                                     onClick={() => {
-                                        setDaftarBarangEdit(null)
-                                        setAddDaftarBarang(!addDaftarBarang)
+                                        setDaftarJasaEdit(null)
+                                        setAddDaftarJasa(!addDaftarJasa)
                                     }}
-                                ><FaPlus /> Tambah Daftar Barang</button>
+                                ><FaPlus /> Tambah Daftar Jasa</button>
                                 <div className="hidden">
-                                    <DaftarBarangPrint
-                                        data={daftarBarang}
-                                        ref={DaftarBarangPrintRef}
+                                    <DaftarJasaPrint
+                                        data={daftarJasa}
+                                        ref={DaftarJasaPrintRef}
                                         bulan={getBulanByIndex(new Date().getMonth())}
                                         tahun={data.tahun}
                                     />
@@ -139,7 +139,7 @@ const DaftarBarangPage = () => {
                                     onClick={handlePrint}
                                     className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
                                 >
-                                    <FaPrint /> Cetak Daftar Barang
+                                    <FaPrint /> Cetak Daftar Jasa
                                 </button>
                             </div>
                         </div>
@@ -149,33 +149,33 @@ const DaftarBarangPage = () => {
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
-                                        <th>Nama Daftar Barang</th>
-                                        <th>Kategori Barang</th>
-                                        <th>Jenis Barang</th>
-                                        <th>Jenis Penjualan Barang</th>
+                                        <th>Nama Daftar Jasa</th>
+                                        <th>Kategori Jasa</th>
+                                        <th>Jenis Jasa</th>
+                                        <th>Jenis Penjualan Jasa</th>
                                         <th>PPN</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        daftarBarang?.map((item, i) => {
+                                        daftarJasa?.map((item, i) => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
                                                     <td>{item.name}</td>
-                                                    <td>{item.kategori_barang_name}</td>
-                                                    <td>{item.jenis_barang_name}</td>
-                                                    <td>{item.jenis_penjualan_barang_name}</td>
+                                                    <td>{item.kategori_jasa_name}</td>
+                                                    <td>{item.jenis_jasa_name}</td>
+                                                    <td>{item.jenis_penjualan_jasa_name}</td>
                                                     <td>{item.ppn == 1 ? "Ya" : "Tidak"}</td>
                                                     <td className="flex gap-x-2">
                                                         <FaPen size={12} className="text-yellow-500 cursor-pointer"
                                                             onClick={() => {
-                                                                _editDaftarBarang(i)
+                                                                _editDaftarJasa(i)
                                                             }} />
                                                         <FaTrash size={12} className="text-red-500 cursor-pointer"
                                                             onClick={() => {
-                                                                _deleteDaftarBarang(i)
+                                                                _deleteDaftarJasa(i)
                                                             }}
                                                         />
                                                     </td>
@@ -192,4 +192,4 @@ const DaftarBarangPage = () => {
         </div>
     </Wrap>
 }
-export default DaftarBarangPage
+export default DaftarJasaPage

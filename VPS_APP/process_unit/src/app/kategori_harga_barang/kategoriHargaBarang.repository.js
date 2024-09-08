@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import KategoriHargaBarangModel from "./kategoriHargaBarang.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
 export const getAllKategoriHargaBarangRepo = async (pageNumber, size, search, req_id) => {
     const kategoriHargaBarangsCount = await db.query(
@@ -58,6 +59,9 @@ export const getKategoriHargaBarangByUuidRepo = async (uuid, req_id) => {
 }
 
 export const createKategoriHargaBarangRepo = async (kategoriHargaBarangData, req_id) => {
+    kategoriHargaBarangData = removeDotInRupiahInput(kategoriHargaBarangData, [
+        "harga_1", "harga_2", "harga_3", "harga_4", "harga_5",
+    ])
     return insertQueryUtil(
         req_id,
         generateDatabaseName(req_id),
@@ -91,6 +95,9 @@ export const deleteKategoriHargaBarangByUuidRepo = async (uuid, req_id) => {
 }
 
 export const updateKategoriHargaBarangByUuidRepo = async (uuid, kategoriHargaBarangData, req_id) => {
+    kategoriHargaBarangData = removeDotInRupiahInput(kategoriHargaBarangData, [
+        "harga_1", "harga_2", "harga_3", "harga_4", "harga_5",
+    ])
     return updateQueryUtil(
         req_id,
         generateDatabaseName(req_id),
