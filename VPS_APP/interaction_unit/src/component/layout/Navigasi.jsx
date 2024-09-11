@@ -102,16 +102,10 @@ const Navigasi = () => {
                                 <p className="font-bold pointer-events-none">Kas & Bank</p>
                                 <ul>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Penerimaan Kas"} />
+                                        <NavigationLink to="/transaksi/kasDanBank/kas" addClass={"my-1"} label={"Transaksi Kas"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Pengeluaran Kas"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Penerimaan Bank"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/perusahaan/pegawai" addClass={"my-1"} label={"Pengeluaran Bank"} />
+                                        <NavigationLink to="/transaksi/kasDanBank/bank" addClass={"my-1"} label={"Transaksi Bank"} />
                                     </li>
                                 </ul>
                             </li>

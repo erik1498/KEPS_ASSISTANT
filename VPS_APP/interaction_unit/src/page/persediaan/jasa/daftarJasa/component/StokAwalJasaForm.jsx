@@ -5,6 +5,7 @@ import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaSave } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiDaftarGudangCRUD, apiStokAwalJasaCRUD } from "../../../../../service/endPointList.api"
+import { parseToRupiahText } from "../../../../../helper/number.helper"
 
 const StokAwalJasaForm = ({
     idDaftarJasa,
@@ -134,7 +135,7 @@ const StokAwalJasaForm = ({
                                 <td>{x.daftar_gudang_name}</td>
                                 <td>{x.kategori_harga_jasa_kode_jasa}</td>
                                 <td>{x.satuan_jasa_name}</td>
-                                <td>{x.jumlah}</td>
+                                <td>{parseToRupiahText(x.jumlah)}</td>
                             </tr>
                         </>
                     })

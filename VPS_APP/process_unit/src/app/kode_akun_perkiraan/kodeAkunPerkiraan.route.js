@@ -5,6 +5,7 @@ import { authTokenMiddleware } from "../../middleware/auth.js"
 const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllKodeAkunPerkiraans)
+router.get("/kas", authTokenMiddleware(), getAllKodeAkunPerkiraans)
 router.get("/:uuid", authTokenMiddleware(), getKodeAkunPerkiraanByUUID)
 router.post("/", authTokenMiddleware(), postCreateKodeAkunPerkiraan)
 router.put("/:uuid", authTokenMiddleware(), updateKodeAkunPerkiraanByUUID)

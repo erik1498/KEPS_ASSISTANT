@@ -1,8 +1,7 @@
 import Wrap from "../../../component/layout/Wrap";
-import { getBulanByIndex, getBulanList, getHariTanggal, statusBulanNow } from "../../../helper/date.helper";
+import { getBulanByIndex, getHariTanggal } from "../../../helper/date.helper";
 import JurnalUmumRow from "./component/JurnalUmumRow";
-import { parseToRupiahText } from "../../../helper/number.helper";
-import { FaCheck, FaDownload, FaPlus, FaPrint, FaSearch, FaTimes } from "react-icons/fa";
+import { FaPlus, FaPrint, FaSearch, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import { useEffect } from "react";
 import { apiJurnalUmumCRUD } from "../../../service/endPointList.api";

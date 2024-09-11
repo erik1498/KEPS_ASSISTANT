@@ -4,7 +4,8 @@ const FormInput = ({
   type,
   onchange = () => { },
   value,
-  other
+  other,
+  addClass
 }) => {
   return (
     <div className="w-full relative">
@@ -12,7 +13,7 @@ const FormInput = ({
         maxLength={200}
         name={name}
         type={type}
-        className={` ${border ? `border-b-2 border-gray-800` : `border-none `} bg-transparent px-3 py-1 input-sm w-full outline-none`}
+        className={`${addClass} ${border ? `border-b-2 border-gray-800` : `border-none `} bg-transparent px-3 py-1 input-sm w-full outline-none`}
         value={value}
         onChange={onchange}
         {...other}

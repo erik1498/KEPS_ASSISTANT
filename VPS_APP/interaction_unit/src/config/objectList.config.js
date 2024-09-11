@@ -420,3 +420,14 @@ export const PPNList = [
         value: 0
     }
 ]
+
+export const TipeTransaksi = [
+    {
+        label: "Masuk",
+        value: 1
+    },
+    {
+        label: "Keluar",
+        value: 0
+    }
+]

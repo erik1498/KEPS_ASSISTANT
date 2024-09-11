@@ -43,7 +43,11 @@ import { getStokAwalJasaRoute } from "../app/stok_awal_jasa/stokAwalJasa.route.j
 import { getSupplierRoute } from "../app/supplier/supplier.route.js";
 import { getSyaratPembayaranRoute } from "../app/syarat_pembayaran/syaratPembayaran.route.js";
 import { getTipePembayaranRoute } from "../app/tipe_pembayaran/tipePembayaran.route.js";
+import { getTransaksiKasRoute } from "../app/transaksi_kas/transaksiKas.route.js";
+import { getTransaksiBankRoute } from "../app/transaksi_bank/transaksiBank.route.js";
 import { getUserRoute } from "../app/user/user.route.js";
+import { getRincianTransaksiKasRoute } from "../app/rincian_transaksi_kas/rincianTransaksiKas.route.js";
+import { getRincianTransaksiBankRoute } from "../app/rincian_transaksi_bank/rincianTransaksiBank.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -92,5 +96,9 @@ export const routerList = new Array()
         getKategoriHargaBarangRoute(),
         getKategoriHargaJasaRoute(),
         getStokAwalBarangRoute(),
-        getStokAwalJasaRoute()
+        getStokAwalJasaRoute(),
+        getTransaksiKasRoute(),
+        getTransaksiBankRoute(),
+        getRincianTransaksiKasRoute(),
+        getRincianTransaksiBankRoute()
     )

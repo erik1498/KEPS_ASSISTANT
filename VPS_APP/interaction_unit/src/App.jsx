@@ -38,6 +38,7 @@ import metodePenyusutanPath from './path/asetTetapDanPerlengkapan/penyusutan/met
 import daftarBarangPath from './path/persediaan/barang/daftarBarang.path';
 import daftarGudangPath from './path/persediaan/gudang/daftarGudang.path';
 import daftarJasaPath from './path/persediaan/jasa/daftarJasa.path';
+import kasPath from './path/transaksi/kasDanBank/kas.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -74,6 +75,7 @@ const MetodePenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerleng
 const DaftarBarangPage = React.lazy(() => import('./page/persediaan/barang/daftarBarang/DaftarBarang.page'))
 const DaftarGudangPage = React.lazy(() => import('./page/persediaan/gudang/daftarGudang/DaftarGudang.page'))
 const DaftarJasaPage = React.lazy(() => import('./page/persediaan/jasa/daftarJasa/DaftarJasa.page'))
+const KasPage = React.lazy(() => import('./page/transaksi/kasDanBank/Kas/KasPage'))
 
 function App() {
   return (
@@ -186,6 +188,9 @@ function App() {
         </Routes>
         <Routes basename={perubahanModalPath.main}>
           <Route path={perubahanModalPath.main} element={<PerubahanModalPage />} />
+        </Routes>
+        <Routes basename={kasPath.main}>
+          <Route path={kasPath.main} element={<KasPage />} />
         </Routes>
       </Suspense>
     </Router>

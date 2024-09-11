@@ -6,6 +6,14 @@ export const SrvLogin = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/user'
 )
 
+export const SrvTransaksiKas = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/transaksi_kas',
+);
+
+export const SrvRincianTransaksiKas = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_transaksi_kas',
+);
+
 export const SrvJurnalUmum = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/jurnal_umum',
 );

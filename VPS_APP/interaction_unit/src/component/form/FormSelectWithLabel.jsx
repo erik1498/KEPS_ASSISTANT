@@ -6,6 +6,8 @@ const FormSelectWithLabel = ({
     optionsLabel,
     optionsValue,
     selectValue,
+    optionsLabelIsArray,
+    optionsDelimiter,
     disabled,
     onchange,
     selectName
@@ -21,6 +23,8 @@ const FormSelectWithLabel = ({
                     optionsLabel={optionsLabel}
                     optionsValue={optionsValue}
                     selectValue={selectValue}
+                    optionsLabelIsArray={optionsLabelIsArray}
+                    optionsDelimiter={optionsDelimiter}
                     onchange={onchange}
                     selectName={selectName}
                     customStyle={

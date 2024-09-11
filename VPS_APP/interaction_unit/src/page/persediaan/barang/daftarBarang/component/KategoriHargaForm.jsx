@@ -7,6 +7,7 @@ import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaSave } from "react-icons/fa"
 import StokAwalBarangForm from "./StokAwalBarangForm"
+import { parseToRupiahText } from "../../../../../helper/number.helper"
 
 const KategoriHargaForm = ({
     idDaftarbarang
@@ -156,7 +157,7 @@ const KategoriHargaForm = ({
                                 <td>{x.satuan_barang_name}</td>
                                 <td>{x.kode_barang}</td>
                                 {
-                                    kodeHargaList.map((_, j) => <td>{x[`harga_${j + 1}`]}</td>)
+                                    kodeHargaList.map((_, j) => <td>{parseToRupiahText(x[`harga_${j + 1}`])}</td>)
                                 }
                             </tr>
                         </>
