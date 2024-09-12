@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createRincianTransaksiBankRepo, deleteRincianTransaksiBankByUuidRepo, getAllRincianTransaksiBankRepo, getRincianTransaksiBankByUuidRepo, updateRincianTransaksiBankByUuidRepo } from "./rincianTransaksiBank.repository.js"
+import { createRincianTransaksiBankRepo, deleteRincianTransaksiBankByUuidRepo, getAllRincianTransaksiBankRepo, getRincianTransaksiBankByTransaksiBankUUIDRepo, getRincianTransaksiBankByUuidRepo, updateRincianTransaksiBankByUuidRepo } from "./rincianTransaksiBank.repository.js"
 
 export const getAllRincianTransaksiBankService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllRincianTransaksiBankService", null, req_identity)
@@ -23,16 +23,15 @@ export const getAllRincianTransaksiBankService = async (query, req_identity) => 
     return generatePaginationResponse(rincianTransaksiBanks.entry, rincianTransaksiBanks.count, rincianTransaksiBanks.pageNumber, rincianTransaksiBanks.size)
 }
 
+export const getRincianTransaksiBankByTransaksiBankUUIDService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getRincianTransaksiBankByTransaksiBankUUIDService [${uuid}]`, null, req_identity)
+    const rincianTransaksiBank = await getRincianTransaksiBankByTransaksiBankUUIDRepo(uuid, req_identity)
+    return rincianTransaksiBank
+}
+
 export const getRincianTransaksiBankByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getRincianTransaksiBankByUuidService [${uuid}]`, null, req_identity)
     const rincianTransaksiBank = await getRincianTransaksiBankByUuidRepo(uuid, req_identity)
-
-    if (!rincianTransaksiBank) {
-        throw Error(JSON.stringify({
-            message: "Data Not Found",
-            field: "error"
-        }))
-    }
     return rincianTransaksiBank
 }
 

@@ -27,9 +27,9 @@ export const transaksiBankValidation = (payload) => {
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        type: Joi.string().required().messages({
-            'string.base': "Harus Berupa Text",
-            "string.empty": "Harus Diisi",
+        type: Joi.number().required().messages({
+            'number.base': "Harus Berupa Number",
+            "number.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
     })

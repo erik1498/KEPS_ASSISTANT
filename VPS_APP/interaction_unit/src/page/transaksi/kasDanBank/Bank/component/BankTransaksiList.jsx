@@ -3,13 +3,13 @@ import FormInput from "../../../../../component/form/FormInput"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
 import FormSelect from "../../../../../component/form/FormSelect"
 import { FaPlus, FaSave, FaTrash } from "react-icons/fa"
-import { apiKodeAkunCRUD, apiRincianTransaksiKasCRUD } from "../../../../../service/endPointList.api"
+import { apiKodeAkunCRUD, apiRincianTransaksiBankCRUD } from "../../../../../service/endPointList.api"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { initialKodeAkunValue } from "../../../../../helper/select.helper"
 
-const KasTransaksiList = ({
-    idTransaksiKas,
+const BankTransaksiList = ({
+    idTransaksiBank,
     nilaiTransaksi = 0,
     type = 1
 }) => {
@@ -54,7 +54,7 @@ const KasTransaksiList = ({
 
     const deleteTransaksiFromArray = async (index) => {
         if (transaksiDeleted[index]) {
-            apiRincianTransaksiKasCRUD
+            apiRincianTransaksiBankCRUD
                 .custom(`/${transaksiDeleted[index].uuid}`, "DELETE")
                 .then(() => {
                     deleteTransaksiFromArray(index += 1)
@@ -66,12 +66,12 @@ const KasTransaksiList = ({
 
     const postTransaksiFromArray = async (index) => {
         if (transaksi[index]) {
-            apiRincianTransaksiKasCRUD
+            apiRincianTransaksiBankCRUD
                 .custom(transaksi[index].uuid ? `/${transaksi[index].uuid}` : ``, transaksi[index].uuid ? "PUT" : "POST", null, {
                     data: {
                         kode_akun_perkiraan: transaksi[index].kodeAkun.value,
                         waktu: transaksi[index].waktu,
-                        transaksi_kas: idTransaksiKas,
+                        transaksi_bank: idTransaksiBank,
                         uraian: transaksi[index].uraian,
                         nilai: transaksi[index].nilai,
                     }
@@ -124,15 +124,15 @@ const KasTransaksiList = ({
 
     const _getDataKodeAkun = (uuid) => {
         apiKodeAkunCRUD
-            .custom("/no_kas", "GET")
+            .custom("/no_bank", "GET")
             .then(resData => {
                 setKodeAkunList(x => x = resData.data.entry)
             })
     }
 
-    const _getRincianTransaksiKas = () => {
-        apiRincianTransaksiKasCRUD
-            .custom(`/${idTransaksiKas}`, "GET")
+    const _getRincianTransaksiBank = () => {
+        apiRincianTransaksiBankCRUD
+            .custom(`/${idTransaksiBank}`, "GET")
             .then(resData => {
                 setTransaksi(x => x = resData.data.map((item) => {
                     const kodeAkunSelected = kodeAkunList.filter(x => x.uuid == item.kode_akun_perkiraan).at(0)
@@ -163,7 +163,7 @@ const KasTransaksiList = ({
     }
 
     useEffect(() => {
-        _getRincianTransaksiKas()
+        _getRincianTransaksiBank()
     }, [kodeAkunList])
 
     useEffect(() => {
@@ -172,40 +172,6 @@ const KasTransaksiList = ({
 
     return <>
         <div className="flex flex-col px-6 mt-6 w-full">
-            {/* <div className="flex gap-x-2 w-max mt-10">
-                <div>
-                    <p className="font-bold">Debet</p>
-                    <FormInput
-                        border={false}
-                        name={`totalDebet`}
-                        type={"text"}
-                        addClass={"font-bold p-0 m-0"}
-                        value={parseToRupiahText(totalDebetKredit.totalDebet)}
-                        other={
-                            {
-                                autoComplete: false,
-                                disabled: true
-                            }
-                        }
-                    />
-                </div>
-                <div>
-                    <p className="font-bold">Kredit</p>
-                    <FormInput
-                        border={false}
-                        name={`totalKredit`}
-                        type={"text"}
-                        addClass={"font-bold"}
-                        value={parseToRupiahText(totalDebetKredit.totalKredit)}
-                        other={
-                            {
-                                autoComplete: false,
-                                disabled: true
-                            }
-                        }
-                    />
-                </div>
-            </div> */}
             <div className="grid grid-cols-7 w-max gap-x-2 items-center">
                 <div className="col-span-1">
                     <label className="form-control w-full bg-white">
@@ -253,7 +219,7 @@ const KasTransaksiList = ({
             <label className="form-control w-full max-w-xs bg-white">
                 <div className="label">
                     <span className="flex items-center gap-x-2 label-text text-gray-800 font-bold mt-4">
-                        <p>Rincian Transaksi Kas</p>
+                        <p>Rincian Transaksi Bank</p>
                     </span>
                 </div>
             </label>
@@ -365,4 +331,4 @@ const KasTransaksiList = ({
         </div>
     </>
 }
-export default KasTransaksiList
+export default BankTransaksiList

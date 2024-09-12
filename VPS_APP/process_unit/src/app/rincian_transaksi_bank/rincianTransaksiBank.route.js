@@ -1,11 +1,11 @@
 import express from "express"
-import { deleteRincianTransaksiBankByUUID, getAllRincianTransaksiBanks, getRincianTransaksiBankByUUID, postCreateRincianTransaksiBank, updateRincianTransaksiBankByUUID } from "./rincianTransaksiBank.handler.js"
+import { deleteRincianTransaksiBankByUUID, getAllRincianTransaksiBanks, getRincianTransaksiBankByTransaksiBankUUID, postCreateRincianTransaksiBank, updateRincianTransaksiBankByUUID } from "./rincianTransaksiBank.handler.js"
 import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllRincianTransaksiBanks)
-router.get("/:uuid", authTokenMiddleware(), getRincianTransaksiBankByUUID)
+router.get("/:uuid", authTokenMiddleware(), getRincianTransaksiBankByTransaksiBankUUID)
 router.post("/", authTokenMiddleware(), postCreateRincianTransaksiBank)
 router.put("/:uuid", authTokenMiddleware(), updateRincianTransaksiBankByUUID)
 router.delete("/:uuid", authTokenMiddleware(), deleteRincianTransaksiBankByUUID)

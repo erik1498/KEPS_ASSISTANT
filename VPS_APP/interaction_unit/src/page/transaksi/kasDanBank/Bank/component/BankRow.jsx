@@ -2,7 +2,7 @@ import { FaArrowDown, FaArrowUp, FaPen, FaTrash } from "react-icons/fa";
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper";
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper";
 
-const KasRow = ({
+const BankRow = ({
     item,
     deleteItem = () => { },
     editItem = () => { },
@@ -61,7 +61,7 @@ const KasRow = ({
                         {
                             item1.data[0][0].type == 1 ? <FaArrowDown /> : <FaArrowUp />
                         }
-                        <h1>Kas {item1.data[0][0].type == 1 ? "Masuk" : "Keluar"}</h1>
+                        <h1>Bank {item1.data[0][0].type == 1 ? "Masuk" : "Keluar"}</h1>
                     </div>
                     {
                         item1.data.map((item2, i) => {
@@ -96,7 +96,7 @@ const KasRow = ({
                                                     !forPrint ? <>
                                                         <div className="text-black text-center col-span-1 flex justify-center gap-x-3">
                                                             {
-                                                                item3.sumber == "TRANSAKSI KAS" && balanceStatus ?
+                                                                item3.sumber == "TRANSAKSI Bank" && balanceStatus ?
                                                                     <>
                                                                         {
                                                                             j > 0 ? <FaTrash size={9} onClick={() => deleteItem(item3.uuid)} className="w-max mt-1 text-red-500 cursor-pointer" /> : <></>
@@ -120,7 +120,7 @@ const KasRow = ({
                                                 <div className="grid grid-cols-12 items-start py-3">
                                                     <div className="col-span-1 px-2 text-black text-center font-bold flex justify-center items-center gap-x-5">
                                                         {
-                                                            item1.sumber == "TRANSAKSI KAS" && balanceStatus ? <>
+                                                            item1.sumber == "TRANSAKSI Bank" && balanceStatus ? <>
                                                                 {
                                                                     forPrint ? <></>
                                                                         :
@@ -159,4 +159,4 @@ const KasRow = ({
     </div>
 };
 
-export default KasRow;
+export default BankRow;

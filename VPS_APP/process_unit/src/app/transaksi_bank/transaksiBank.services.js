@@ -1,26 +1,21 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
-import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createTransaksiBankRepo, deleteTransaksiBankByUuidRepo, getAllTransaksiBankRepo, getTransaksiBankByUuidRepo, updateTransaksiBankByUuidRepo } from "./transaksiBank.repository.js"
 
-export const getAllTransaksiBankService = async (query, req_identity) => {
+export const getAllTransaksiBankService = async (bulan, tahun, query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllTransaksiBankService", null, req_identity)
 
-    let { page, size, search } = query
-    page = page ? page : null
-    size = size ? size : null
-    if (size == "all") {
-        page = null
-        size = null
-    }
+    bulan = parseFloat(bulan) < 10 ? `0${bulan}` : bulan
+
+    let { search } = query
     search = search ? search : ""
-    const pageNumber = (page - 1) * size
 
     LOGGER(logType.INFO, "Pagination", {
-        pageNumber, size, search
+        bulan,
+        tahun,
+        search
     }, req_identity)
     
-    const transaksiBanks = await getAllTransaksiBankRepo(pageNumber, size, search, req_identity)
-    return generatePaginationResponse(transaksiBanks.entry, transaksiBanks.count, transaksiBanks.pageNumber, transaksiBanks.size)
+    return await getAllTransaksiBankRepo(bulan, tahun, search, req_identity)
 }
 
 export const getTransaksiBankByUuidService = async (uuid, req_identity) => {

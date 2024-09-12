@@ -1,20 +1,17 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
-import { FaPlus, FaSave, FaTimes, FaTrash } from "react-icons/fa";
+import { FaSave, FaTimes } from "react-icons/fa";
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel";
-import FormSelect from "../../../../../component/form/FormSelect";
-import FormInput from "../../../../../component/form/FormInput";
 import { getHariTanggalFull } from "../../../../../helper/date.helper";
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper";
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel";
-import { apiKodeAkunCRUD, apiTransaksiKasCRUD } from "../../../../../service/endPointList.api";
+import { apiKodeAkunCRUD, apiTransaksiBankCRUD } from "../../../../../service/endPointList.api";
 import { formValidation, showError } from "../../../../../helper/form.helper";
 import { TipeTransaksi } from "../../../../../config/objectList.config";
-import KasTransaksiList from "./KasTransaksiList";
-import { initialDataFromEditObject } from "../../../../../helper/select.helper";
+import BankTransaksiList from "./BankTransaksiList";
 import { parseToRupiahText } from "../../../../../helper/number.helper";
 
-const KasForm = ({
+const BankForm = ({
     setAddTransaksiEvent,
     transaksiSelected,
     setIsLoadingEvent = () => { },
@@ -25,7 +22,7 @@ const KasForm = ({
         label: TipeTransaksi[0].label,
         value: TipeTransaksi[0].value
     })
-    const [idTransaksiKas, setIdTransaksiKas] = useState(null)
+    const [idTransaksiBank, setIdTransaksiBank] = useState(null)
     const [kodeAkun, setKodeAkun] = useState(null)
     const [hariTanggal, setHariTanggal] = useState(getHariTanggalFull())
     const [buktiTransaksi, setBuktiTransaksi] = useState("")
@@ -36,7 +33,7 @@ const KasForm = ({
 
     const _getDataKodeAkun = (uuid) => {
         apiKodeAkunCRUD
-            .custom("/kas", "GET")
+            .custom("/bank", "GET")
             .then(resData => {
                 setKodeAkunList(resData.data.entry)
                 if (resData.data.entry.length > 0) {
@@ -58,10 +55,10 @@ const KasForm = ({
             })
     }
 
-    const _saveTransaksiKas = async (e) => {
+    const _saveTransaksiBank = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
-            apiTransaksiKasCRUD
+            apiTransaksiBankCRUD
                 .custom(`${transaksiSelected ? "/" + transaksiSelected : ""}`, transaksiSelected ? "PUT" : "POST", null, {
                     data: {
                         tanggal: hariTanggal,
@@ -73,9 +70,9 @@ const KasForm = ({
                     }
                 }).then((resData) => {
                     if (transaksiSelected) {
-                        setIdTransaksiKas(transaksiSelected)
+                        setIdTransaksiBank(transaksiSelected)
                     } else {
-                        setIdTransaksiKas(resData.data.uuid)
+                        setIdTransaksiBank(resData.data.uuid)
                     }
                 }).catch(err => {
                     showError(err)
@@ -84,7 +81,7 @@ const KasForm = ({
     }
 
     const _getDetailTransaksi = () => {
-        apiTransaksiKasCRUD
+        apiTransaksiBankCRUD
             .custom(`/${transaksiSelected}`)
             .then(resData => {
                 setHariTanggal(x => x = resData.data.tanggal)
@@ -122,7 +119,7 @@ const KasForm = ({
                     ><FaTimes /> Batalkan Transaksi
                     </button>
                 </div>
-                <form onSubmit={e => _saveTransaksiKas(e)}>
+                <form onSubmit={e => _saveTransaksiBank(e)}>
                     <div className="flex gap-x-2">
                         <FormInputWithLabel
                             label={"Hari/Tanggal"}
@@ -130,7 +127,7 @@ const KasForm = ({
                             onchange={(e) => {
                                 setHariTanggal(e.target.value)
                             }}
-                            disabled={idTransaksiKas}
+                            disabled={idTransaksiBank}
                             others={
                                 {
                                     value: hariTanggal,
@@ -141,7 +138,7 @@ const KasForm = ({
                         <FormInputWithLabel
                             label={"Bukti Transaksi"}
                             type={"text"}
-                            disabled={idTransaksiKas}
+                            disabled={idTransaksiBank}
                             onchange={(e) => {
                                 setBuktiTransaksi(e.target.value)
                             }}
@@ -158,7 +155,7 @@ const KasForm = ({
                             label={"Tipe Transaksi"}
                             optionsDataList={TipeTransaksi}
                             optionsLabel={"label"}
-                            disabled={idTransaksiKas}
+                            disabled={idTransaksiBank}
                             optionsValue={"value"}
                             selectValue={tipeTransaksi}
                             onchange={(e) => {
@@ -173,7 +170,7 @@ const KasForm = ({
                             optionsValue={"uuid"}
                             optionsLabelIsArray={true}
                             optionsDelimiter={"-"}
-                            disabled={idTransaksiKas}
+                            disabled={idTransaksiBank}
                             selectValue={kodeAkun}
                             onchange={(e) => {
                                 setKodeAkun(e)
@@ -183,7 +180,7 @@ const KasForm = ({
                         <FormInputWithLabel
                             label={"Uraian"}
                             type={"text"}
-                            disabled={idTransaksiKas}
+                            disabled={idTransaksiBank}
                             onchange={(e) => {
                                 setUraian(e.target.value)
                             }}
@@ -201,7 +198,7 @@ const KasForm = ({
                                 inputOnlyRupiah(e)
                                 setNilai(e.target.value)
                             }}
-                            disabled={idTransaksiKas}
+                            disabled={idTransaksiBank}
                             others={
                                 {
                                     value: nilai,
@@ -211,15 +208,15 @@ const KasForm = ({
                         />
                     </div>
                     {
-                        !idTransaksiKas ? <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button> : <></>
+                        !idTransaksiBank ? <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button> : <></>
                     }
                 </form>
             </div>
             {
-                idTransaksiKas ? <>
-                    <KasTransaksiList
+                idTransaksiBank ? <>
+                    <BankTransaksiList
                         kodeAkunList={kodeAkunList}
-                        idTransaksiKas={idTransaksiKas}
+                        idTransaksiBank={idTransaksiBank}
                         nilaiTransaksi={nilai}
                         type={tipeTransaksi.value}
                     />
@@ -229,4 +226,4 @@ const KasForm = ({
     </>
 };
 
-export default KasForm;
+export default BankForm;

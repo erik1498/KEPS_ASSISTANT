@@ -39,6 +39,7 @@ import daftarBarangPath from './path/persediaan/barang/daftarBarang.path';
 import daftarGudangPath from './path/persediaan/gudang/daftarGudang.path';
 import daftarJasaPath from './path/persediaan/jasa/daftarJasa.path';
 import kasPath from './path/transaksi/kasDanBank/kas.path';
+import bankPath from './path/transaksi/kasDanBank/bank.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -76,6 +77,7 @@ const DaftarBarangPage = React.lazy(() => import('./page/persediaan/barang/dafta
 const DaftarGudangPage = React.lazy(() => import('./page/persediaan/gudang/daftarGudang/DaftarGudang.page'))
 const DaftarJasaPage = React.lazy(() => import('./page/persediaan/jasa/daftarJasa/DaftarJasa.page'))
 const KasPage = React.lazy(() => import('./page/transaksi/kasDanBank/Kas/KasPage'))
+const BankPage = React.lazy(() => import('./page/transaksi/kasDanBank/Bank/BankPage'))
 
 function App() {
   return (
@@ -191,6 +193,9 @@ function App() {
         </Routes>
         <Routes basename={kasPath.main}>
           <Route path={kasPath.main} element={<KasPage />} />
+        </Routes>
+        <Routes basename={bankPath.main}>
+          <Route path={bankPath.main} element={<BankPage />} />
         </Routes>
       </Suspense>
     </Router>

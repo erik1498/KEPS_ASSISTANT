@@ -4,16 +4,16 @@ import Wrap from "../../../../component/layout/Wrap"
 import { FaPlus, FaSearch, FaTimes } from "react-icons/fa"
 import BulanSelectedListCard from "../../../../component/card/BulanSelectedListCard"
 import DebetKreditStatusCard from "../../../../component/card/DebetKreditStatusCard"
-import KasRow from "./component/KasRow"
-import { apiRincianTransaksiKasCRUD, apiTransaksiKasCRUD } from "../../../../service/endPointList.api"
+import BankRow from "./component/BankRow"
+import { apiRincianTransaksiBankCRUD, apiTransaksiBankCRUD } from "../../../../service/endPointList.api"
 import { useDataContext } from "../../../../context/dataContext.context"
 import { showAlert, showDialog, showError } from "../../../../helper/form.helper"
-import KasForm from "./component/KasForm"
+import BankForm from "./component/BankForm"
 import { normalizeDataJurnalUmum } from "../../../../helper/jurnalUmum.helper"
 import CheckListBox from "../../../../component/general/CheckListBox"
 import { TipeTransaksi } from "../../../../config/objectList.config"
 
-const KasPage = () => {
+const BankPage = () => {
 
     const dataContext = useDataContext()
     const { data, setData } = dataContext
@@ -27,7 +27,7 @@ const KasPage = () => {
     const [bulan, setBulan] = useState(new Date().getMonth())
 
     const [daftarTransaksi, setDaftarTransaksi] = useState([])
-    const [transaksiKas, setTransaksiKas] = useState([])
+    const [transaksiBank, setTransaksiBank] = useState([])
     const [transaksiSelected, setTransaksiSelected] = useState()
 
     const [debet, setDebet] = useState(0)
@@ -41,7 +41,7 @@ const KasPage = () => {
         if (searchParam == "") {
             setSearch(searchParam)
         }
-        apiTransaksiKasCRUD
+        apiTransaksiBankCRUD
             .custom(`/${bulan + 1}/${data.tahun}?search=${searchParam}`, "GET")
             .then(async (resData) => {
                 setDaftarTransaksi(x => x = resData.data)
@@ -54,7 +54,7 @@ const KasPage = () => {
 
     const _deleteTransaksi = async (uuid) => {
         if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
-            apiRincianTransaksiKasCRUD
+            apiRincianTransaksiBankCRUD
                 .custom(`/${uuid}`, "DELETE")
                 .then((data) => {
                     showAlert("Berhasil", "Transaksi berhasil dihapus")
@@ -68,7 +68,7 @@ const KasPage = () => {
     const _deleteByBuktiTransaksi = async (item) => {
         if (await showDialog("Hapus", "Yakin ingin hapus data di bukti transaksi ini ?")) {
             setIsLoading(true)
-            apiTransaksiKasCRUD
+            apiTransaksiBankCRUD
                 .custom(`/${item.data[0][0].uuid}`, "DELETE")
                 .then(() => {
                     showAlert("Berhasil", "Transaksi berhasil dihapus")
@@ -95,7 +95,7 @@ const KasPage = () => {
             x.tanggal = new Date(x.tanggal).getDate()
             return x
         }))
-        setTransaksiKas(normalizedData.returnData)
+        setTransaksiBank(normalizedData.returnData)
         setDebet(normalizedData.totalDebet)
         setKredit(normalizedData.totalKredit)
     }
@@ -123,7 +123,7 @@ const KasPage = () => {
         <div>
             {
                 addTransaksi ?
-                    <KasForm
+                    <BankForm
                         setAddTransaksiEvent={
                             () => setAddTransaksi(!addTransaksi)
                         }
@@ -132,7 +132,7 @@ const KasPage = () => {
                         setIsLoadingEvent={setIsLoading}
                     /> :
                     <>
-                        <PageTitle title="Transaksi Kas" />
+                        <PageTitle title="Transaksi Bank" />
                         <div className="bg-white py-3 px-6 mb-3 rounded-md flex justify-between shadow-2xl">
                             <label className="input input-sm input-bordered flex items-center gap-2 bg-white">
                                 <input type="text" className="grow bg-transparent" placeholder="Cari" value={search} onChange={(e) => setSearch(e.target.value)} />
@@ -165,13 +165,13 @@ const KasPage = () => {
                                         /> : <></>
                                 }
                                 {/* <div className="hidden">
-                        <TransaksiKasPrint
-                            data={TransaksiKas}
+                        <TransaksiBankPrint
+                            data={TransaksiBank}
                             debet={debet}
                             kredit={kredit}
                             tahun={data.tahun}
                             bulan={getBulanByIndex(bulan)}
-                            ref={TransaksiKasPrintRef}
+                            ref={TransaksiBankPrintRef}
                         />
                     </div>
                     <button
@@ -191,8 +191,8 @@ const KasPage = () => {
                                     />
                                     <div className="flex flex-col h-full overflow-y-scroll no-scrollbar w-full rounded-md">
                                         {
-                                            transaksiKas.map((item, i) => {
-                                                return <KasRow
+                                            transaksiBank.map((item, i) => {
+                                                return <BankRow
                                                     deleteByBuktiTransaksi={_deleteByBuktiTransaksi}
                                                     deleteItem={_deleteTransaksi}
                                                     editItem={_editTransaksi}
@@ -210,4 +210,4 @@ const KasPage = () => {
         </div>
     </Wrap>
 }
-export default KasPage
+export default BankPage

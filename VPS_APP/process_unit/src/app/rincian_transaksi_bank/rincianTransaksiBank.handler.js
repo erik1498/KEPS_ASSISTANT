@@ -1,5 +1,5 @@
 import { rincianTransaksiBankValidation } from "./rincianTransaksiBank.validation.js"
-import { createRincianTransaksiBankService, deleteRincianTransaksiBankByUuidService, getAllRincianTransaksiBankService, getRincianTransaksiBankByUuidService, updateRincianTransaksiBankByUuidService } from "./rincianTransaksiBank.services.js"
+import { createRincianTransaksiBankService, deleteRincianTransaksiBankByUuidService, getAllRincianTransaksiBankService, getRincianTransaksiBankByTransaksiBankUUIDService, updateRincianTransaksiBankByUuidService } from "./rincianTransaksiBank.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -20,13 +20,13 @@ export const getAllRincianTransaksiBanks = async (req, res) => {
     }
 }
 
-export const getRincianTransaksiBankByUUID = async (req, res) => {
-    LOGGER(logType.INFO, "Start getRincianTransaksiBankByUuidController", null, req.identity)
+export const getRincianTransaksiBankByTransaksiBankUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getRincianTransaksiBankByTransaksiBankUUIDController", null, req.identity)
     try {
         const { uuid } = req.params
 
         res.json({
-            data: await getRincianTransaksiBankByUuidService(uuid, req.identity),
+            data: await getRincianTransaksiBankByTransaksiBankUUIDService(uuid, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {

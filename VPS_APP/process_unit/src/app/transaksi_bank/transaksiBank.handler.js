@@ -6,7 +6,7 @@ import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 export const getAllTransaksiBanks = async (req, res) => {
     LOGGER(logType.INFO, "Start getAllTransaksiBankController", null, req.identity)
     try {
-        const transaksiBanks = await getAllTransaksiBankService(req.query, req.identity)
+        const transaksiBanks = await getAllTransaksiBankService(req.params.bulan, req.params.tahun, req.query, req.identity)
         res.json({
             data: transaksiBanks,
             message: "Get Data Success"

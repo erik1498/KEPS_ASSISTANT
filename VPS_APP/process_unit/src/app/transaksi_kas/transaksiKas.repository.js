@@ -34,6 +34,7 @@ export const getAllTransaksiKasRepo = async (bulan, tahun, search, req_id) => {
                     kapt.name AS nama_akun,
                     kapt.type AS type_akun,
                     tkt.uraian,
+                    tkt.type,
                     "TRANSAKSI KAS" AS sumber,
                     tkt.enabled 
                 FROM ${generateDatabaseName(req_id)}.transaksi_kas_tab tkt 
@@ -46,7 +47,7 @@ export const getAllTransaksiKasRepo = async (bulan, tahun, search, req_id) => {
                     0 AS transaksi,
                     CONCAT(DATE(tkt.tanggal), "T", rtkt.waktu, ".000") AS tanggal,
                     CASE 
-                        WHEN tkt.type = 2
+                        WHEN tkt.type = 0
                         THEN rtkt.nilai
                         ELSE 0
                     END AS debet,
@@ -59,6 +60,7 @@ export const getAllTransaksiKasRepo = async (bulan, tahun, search, req_id) => {
                     kapt.name AS nama_akun,
                     kapt.type AS type_akun,
                     rtkt.uraian,
+                    tkt.type,
                     "TRANSAKSI KAS" AS sumber,
                     rtkt.enabled 
                 FROM ${generateDatabaseName(req_id)}.rincian_transaksi_kas_tab rtkt 

@@ -4,7 +4,7 @@ import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
-router.get("/", authTokenMiddleware(), getAllTransaksiBanks)
+router.get("/:bulan/:tahun", authTokenMiddleware(), getAllTransaksiBanks)
 router.get("/:uuid", authTokenMiddleware(), getTransaksiBankByUUID)
 router.post("/", authTokenMiddleware(), postCreateTransaksiBank)
 router.put("/:uuid", authTokenMiddleware(), updateTransaksiBankByUUID)

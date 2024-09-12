@@ -14,6 +14,14 @@ export const SrvRincianTransaksiKas = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/rincian_transaksi_kas',
 );
 
+export const SrvTransaksiBank = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/transaksi_bank',
+);
+
+export const SrvRincianTransaksiBank = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_transaksi_bank',
+);
+
 export const SrvJurnalUmum = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/jurnal_umum',
 );

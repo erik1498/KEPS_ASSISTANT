@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import RincianTransaksiBankModel from "./rincianTransaksiBank.model.js";
-import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { generateDatabaseName, insertQueryUtil, selectAllQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
 export const getAllRincianTransaksiBankRepo = async (pageNumber, size, search, req_id) => {
@@ -28,6 +28,18 @@ export const getAllRincianTransaksiBankRepo = async (pageNumber, size, search, r
         pageNumber: pageNumber == 0 ? pageNumber + 1 : (pageNumber / size) + 1,
         size
     }
+}
+
+export const getRincianTransaksiBankByTransaksiBankUUIDRepo = async (uuid, req_id) => {
+    return selectAllQueryUtil(
+        generateDatabaseName(req_id),
+        RincianTransaksiBankModel,
+        null,
+        {
+            transaksi_bank: uuid,
+            enabled: true
+        }
+    )
 }
 
 export const getRincianTransaksiBankByUuidRepo = async (uuid, req_id) => {
