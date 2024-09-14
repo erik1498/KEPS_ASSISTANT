@@ -16,9 +16,9 @@ const KasRow = ({
                 <div className="text-[28px] font-bold">
                     {
                         balanceStatus ?
-                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md ${item.total.debet == item.total.kredit ? "bg-green-900" : "bg-red-900"}`}>{new Date(item.tanggal).getDate() < 10 ? `0${new Date(item.tanggal).getDate()}` : new Date(item.tanggal).getDate()}</p>
+                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md ${item.total.debet == item.total.kredit ? "bg-green-900" : "bg-red-900"}`}>{parseFloat(item.tanggal) < 10 ? `0${item.tanggal}` : item.tanggal}</p>
                             :
-                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md bg-green-900`}>{new Date(item.tanggal).getDate() < 10 ? `${new Date(item.tanggal).getDate()}` : new Date(item.tanggal).getDate()}</p>
+                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md bg-green-900`}>{parseFloat(item.tanggal) < 10 ? `0${item.tanggal}` : item.tanggal}</p>
                     }
                 </div>
                 <div className="flex flex-col">

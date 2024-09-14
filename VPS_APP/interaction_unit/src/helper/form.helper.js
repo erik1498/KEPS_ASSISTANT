@@ -47,7 +47,7 @@ export const formShowMessage = (errorData) => {
 
 export const showError = (error) => {
     try {
-        let errorMessage = JSON.parse(error.response.data.message)
+        let errorMessage = JSON.parse(error.response.data.errorData)
 
         let alertElement = document.getElementById("alertElement")
         if (alertElement) {

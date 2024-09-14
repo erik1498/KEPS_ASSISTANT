@@ -92,17 +92,131 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = jut.kode_akun_uuid
                     WHERE kapt.enabled = 1 AND jut.enabled = 1
-                    AND (
-                        jut.uraian LIKE :search 
-                        OR jut.bukti_transaksi LIKE :search
-                        OR kapt.code LIKE :search
-                        OR kapt.type LIKE :search
-                        OR kapt.name LIKE :search
-                        OR jut.debet LIKE :search
-                        OR jut.kredit LIKE :search
-                    )
+                    UNION ALL
+                    SELECT 
+                        tkt.uuid,
+                        tkt.bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(tkt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(tkt.tanggal), 2, '0') AS bulan,
+                        YEAR(tkt.tanggal) AS tahun,
+                        TIME(tkt.tanggal) AS waktu,
+                        CASE 
+                            WHEN tkt.type = 1
+                            THEN tkt.nilai
+                            ELSE 0
+                        END AS debet,
+                        CASE 
+                            WHEN tkt.type = 0
+                            THEN tkt.nilai
+                            ELSE 0
+                        END AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        tkt.uraian,
+                        "TRANSAKSI KAS" AS sumber,
+                        tkt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.transaksi_kas_tab tkt 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tkt.kode_akun_perkiraan 
+                    WHERE tkt.enabled = 1
+                    UNION ALL
+                    SELECT 
+                        rtkt.uuid,
+                        tkt.bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(tkt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(tkt.tanggal), 2, '0') AS bulan,
+                        YEAR(tkt.tanggal) AS tahun,
+                        rtkt.waktu,
+                        CASE 
+                            WHEN tkt.type = 0
+                            THEN rtkt.nilai
+                            ELSE 0
+                        END AS debet,
+                        CASE 
+                            WHEN tkt.type = 1
+                            THEN rtkt.nilai
+                            ELSE 0
+                        END AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        rtkt.uraian,
+                        "TRANSAKSI KAS" AS sumber,
+                        rtkt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.rincian_transaksi_kas_tab rtkt 
+                    JOIN ${generateDatabaseName(req_id)}.transaksi_kas_tab tkt ON tkt.uuid = rtkt.transaksi_kas 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = rtkt.kode_akun_perkiraan 
+                    WHERE rtkt.enabled = 1 AND tkt.enabled = 1
+                    UNION ALL
+                    SELECT 
+                        tbt.uuid,
+                        tbt.bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(tbt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(tbt.tanggal), 2, '0') AS bulan,
+                        YEAR(tbt.tanggal) AS tahun,
+                        TIME(tbt.tanggal) AS waktu,
+                        CASE 
+                            WHEN tbt.type = 1
+                            THEN tbt.nilai
+                            ELSE 0
+                        END AS debet,
+                        CASE 
+                            WHEN tbt.type = 0
+                            THEN tbt.nilai
+                            ELSE 0
+                        END AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        tbt.uraian,
+                        "TRANSAKSI BANK" AS sumber,
+                        tbt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.transaksi_bank_tab tbt 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tbt.kode_akun_perkiraan 
+                    WHERE tbt.enabled = 1
+                    UNION ALL
+                    SELECT 
+                        rtbt.uuid,
+                        tbt.bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(tbt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(tbt.tanggal), 2, '0') AS bulan,
+                        YEAR(tbt.tanggal) AS tahun,
+                        rtbt.waktu,
+                        CASE 
+                            WHEN tbt.type = 0
+                            THEN rtbt.nilai
+                            ELSE 0
+                        END AS debet,
+                        CASE 
+                            WHEN tbt.type = 1
+                            THEN rtbt.nilai
+                            ELSE 0
+                        END AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        rtbt.uraian,
+                        "TRANSAKSI BANK" AS sumber,
+                        rtbt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.rincian_transaksi_bank_tab rtbt 
+                    JOIN ${generateDatabaseName(req_id)}.transaksi_bank_tab tbt ON tbt.uuid = rtbt.transaksi_bank 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = rtbt.kode_akun_perkiraan 
+                    WHERE rtbt.enabled = 1 AND tbt.enabled = 1
                 ) AS res
                 WHERE res.bulan = :bulan AND res.tahun = :tahun
+                AND (
+                    res.uraian LIKE :search 
+                    OR res.bukti_transaksi LIKE :search
+                    OR res.kode_akun LIKE :search
+                    OR res.nama_akun LIKE :search
+                    OR res.type_akun LIKE :search
+                    OR res.debet LIKE :search
+                    OR res.kredit LIKE :search
+                )
             ${sorting == "bukti_transaksi" ? 'ORDER BY res.tanggal ASC, res.waktu ASC, res.bukti_transaksi ASC' : 'ORDER BY res.tanggal ASC'}
         `,
         {

@@ -70,6 +70,7 @@ export const formatDate = (dateString, withHours = true) => {
 }
 
 export const convertTo12HoursFormat = (time) => {
+    time = time.slice(0, 8)
     time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
     if (time.length > 1) {

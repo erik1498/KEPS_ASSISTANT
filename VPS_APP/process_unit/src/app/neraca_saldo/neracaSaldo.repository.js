@@ -5,21 +5,99 @@ import { generateDatabaseName } from "../../utils/databaseUtil.js";
 export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) => {
     const neracaSaldo = await db.query(
         `   
-            SELECT
-                jut.kode_akun_uuid,
-                jut.bulan,
-                jut.tahun,
-                SUM(jut.debet) - SUM(jut.kredit) AS sum_result,
+            SELECT 
+                res.kode_akun_perkiraan AS kode_akun_uuid,
+                res.bulan,
+                res.tahun,
+                ROUND(SUM(res.debet) - SUM(res.kredit), 2) AS sum_result,
                 kapt.name AS kode_akun_perkiraan_name,
                 kapt.code AS kode_akun_perkiraan_code,
                 kapt.type AS kode_akun_perkiraan_type
-            FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut 
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = jut.kode_akun_uuid 
-            WHERE jut.enabled = 1
-            AND jut.bulan = "${bulan}" 
-            AND jut.tahun = "${tahun}"
+            FROM (
+                SELECT
+                    jut.kode_akun_uuid AS kode_akun_perkiraan,
+                    jut.bulan,
+                    jut.tahun,
+                    jut.debet,
+                    jut.kredit
+                FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut 
+                WHERE jut.enabled = 1
+                UNION ALL
+                SELECT 
+                    tkt.kode_akun_perkiraan,
+                    LPAD(MONTH(tkt.tanggal), 2, '0') AS bulan,
+                    YEAR(tkt.tanggal) AS tahun,
+                    CASE 
+                        WHEN tkt.type = 1
+                        THEN tkt.nilai
+                        ELSE 0
+                    END AS debet,
+                    CASE 
+                        WHEN tkt.type = 0
+                        THEN tkt.nilai
+                        ELSE 0
+                    END AS kredit
+                FROM ${generateDatabaseName(req_id)}.transaksi_kas_tab tkt 
+                WHERE tkt.enabled = 1
+                UNION ALL
+                SELECT 
+                    rtkt.kode_akun_perkiraan,
+                    LPAD(MONTH(tkt.tanggal), 2, '0') AS bulan,
+                    YEAR(tkt.tanggal) AS tahun,
+                    CASE 
+                        WHEN tkt.type = 1
+                        THEN 0
+                        ELSE rtkt.nilai 
+                    END AS debet,
+                    CASE 
+                        WHEN tkt.type = 0
+                        THEN 0
+                        ELSE rtkt.nilai 
+                    END AS kredit
+                FROM ${generateDatabaseName(req_id)}.rincian_transaksi_kas_tab rtkt 
+                JOIN ${generateDatabaseName(req_id)}.transaksi_kas_tab tkt ON tkt.uuid = rtkt.transaksi_kas 
+                WHERE tkt.enabled = 1 AND rtkt.enabled = 1
+                UNION ALL
+                SELECT 
+                    tbt.kode_akun_perkiraan,
+                    LPAD(MONTH(tbt.tanggal), 2, '0') AS bulan,
+                    YEAR(tbt.tanggal) AS tahun,
+                    CASE 
+                        WHEN tbt.type = 1
+                        THEN tbt.nilai
+                        ELSE 0
+                    END AS debet,
+                    CASE 
+                        WHEN tbt.type = 0
+                        THEN tbt.nilai
+                        ELSE 0
+                    END AS kredit
+                FROM ${generateDatabaseName(req_id)}.transaksi_bank_tab tbt 
+                WHERE tbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    rtbt.kode_akun_perkiraan,
+                    LPAD(MONTH(tbt.tanggal), 2, '0') AS bulan,
+                    YEAR(tbt.tanggal) AS tahun,
+                    CASE 
+                        WHEN tbt.type = 1
+                        THEN 0
+                        ELSE rtbt.nilai 
+                    END AS debet,
+                    CASE 
+                        WHEN tbt.type = 0
+                        THEN 0
+                        ELSE rtbt.nilai 
+                    END AS kredit
+                FROM ${generateDatabaseName(req_id)}.rincian_transaksi_bank_tab rtbt 
+                JOIN ${generateDatabaseName(req_id)}.transaksi_bank_tab tbt ON tbt.uuid = rtbt.transaksi_bank 
+                WHERE tbt.enabled = 1 AND rtbt.enabled = 1
+            ) AS res
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = res.kode_akun_perkiraan
+            AND res.bulan = "${bulan}" 
+            AND res.tahun = "${tahun}"
             ${whereIN != null && whereIN.length > 0 ? `AND kapt.type IN ( "` + whereIN.join(`","`) + `" )` : ""}
-            GROUP BY jut.kode_akun_uuid 
+            GROUP BY res.kode_akun_perkiraan 
             ORDER BY kapt.code ASC
         `,
         { type: Sequelize.QueryTypes.SELECT }
