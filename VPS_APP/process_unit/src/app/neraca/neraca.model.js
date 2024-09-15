@@ -34,7 +34,7 @@ const NeracaModel = db.define("neraca_tab",
                 notEmpty:true
             }
         }
-    }), {
+    }, false), {
         freezeTableName: true
     }
 )

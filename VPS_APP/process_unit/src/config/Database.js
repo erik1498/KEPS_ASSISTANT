@@ -71,7 +71,7 @@ export const connectDatabase = () => {
     })
 }
 
-export const defaultModelBuilder = (attributes) => {
+export const defaultModelBuilder = (attributes, useEnabled = true) => {
 
     attributes.createdBy = {
         type: DataTypes.STRING,
@@ -89,11 +89,13 @@ export const defaultModelBuilder = (attributes) => {
         }
     }
 
-    attributes.enabled = {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        validate: {
-            notEmpty: true,
+    if (useEnabled) {
+        attributes.enabled = {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
         }
     }
 
