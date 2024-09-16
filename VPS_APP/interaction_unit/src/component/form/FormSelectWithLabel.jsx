@@ -10,7 +10,8 @@ const FormSelectWithLabel = ({
     optionsDelimiter,
     disabled,
     onchange,
-    selectName
+    selectName,
+    addClass
 }) => {
     return <>
         <label className={`form-control w-full bg-white relative ${disabled ? "pointer-events-none" : ""}`}>
@@ -19,6 +20,7 @@ const FormSelectWithLabel = ({
             </div>
             <div className="w-full relative">
                 <FormSelect
+                    addClass={addClass}
                     optionsDataList={optionsDataList}
                     optionsLabel={optionsLabel}
                     optionsValue={optionsValue}
