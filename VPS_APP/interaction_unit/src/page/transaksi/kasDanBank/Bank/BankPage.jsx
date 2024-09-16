@@ -94,7 +94,7 @@ const BankPage = () => {
             x.bulan = bulan + 1
             x.tahun = data.tahun
             x.waktu = x.waktu ? x.waktu : x.tanggal.split("T")[1].replace(".000", "")
-            x.tanggal = new Date(x.tanggal).getDate()
+            x.tanggal = x.tanggal.length > 2 ? new Date(x.tanggal).getDate() : x.tanggal
             return x
         }))
         setTransaksiBank(normalizedData.returnData)
