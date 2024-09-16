@@ -40,6 +40,9 @@ import daftarGudangPath from './path/persediaan/gudang/daftarGudang.path';
 import daftarJasaPath from './path/persediaan/jasa/daftarJasa.path';
 import kasPath from './path/transaksi/kasDanBank/kas.path';
 import bankPath from './path/transaksi/kasDanBank/bank.path';
+import pendapatanPegawaiPath from './path/transaksi/payroll/pendapatanPegawai.path';
+import potonganPegawaiPath from './path/transaksi/payroll/potonganPegawai.path';
+import slipGajiPegawaiPath from './path/transaksi/payroll/slipGajiPegawai.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -78,6 +81,9 @@ const DaftarGudangPage = React.lazy(() => import('./page/persediaan/gudang/dafta
 const DaftarJasaPage = React.lazy(() => import('./page/persediaan/jasa/daftarJasa/DaftarJasa.page'))
 const KasPage = React.lazy(() => import('./page/transaksi/kasDanBank/Kas/KasPage'))
 const BankPage = React.lazy(() => import('./page/transaksi/kasDanBank/Bank/BankPage'))
+const PendapatanPegawaiPage = React.lazy(() => import('./page/transaksi/payroll/pendapatanPegawai/PendapatanPegawaiPage'))
+const PotonganPegawaiPage = React.lazy(() => import('./page/transaksi/payroll/potonganPegawai/PotonganPegawaiPage'))
+const SlipGajiPegawaiPage = React.lazy(() => import('./page/transaksi/payroll/slipGajiPegawai/SlipGajiPegawaiPage'))
 
 function App() {
   return (
@@ -196,6 +202,15 @@ function App() {
         </Routes>
         <Routes basename={bankPath.main}>
           <Route path={bankPath.main} element={<BankPage />} />
+        </Routes>
+        <Routes basename={pendapatanPegawaiPath.main}>
+          <Route path={pendapatanPegawaiPath.main} element={<PendapatanPegawaiPage />} />
+        </Routes>
+        <Routes basename={potonganPegawaiPath.main}>
+          <Route path={potonganPegawaiPath.main} element={<PotonganPegawaiPage />} />
+        </Routes>
+        <Routes basename={slipGajiPegawaiPath.main}>
+          <Route path={slipGajiPegawaiPath.main} element={<SlipGajiPegawaiPage />} />
         </Routes>
       </Suspense>
     </Router>

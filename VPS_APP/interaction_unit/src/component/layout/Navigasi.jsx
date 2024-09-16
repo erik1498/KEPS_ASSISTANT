@@ -132,13 +132,13 @@ const Navigasi = () => {
                                 <p className="font-bold pointer-events-none">Payroll</p>
                                 <ul>
                                     <li>
-                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Pendapatan Pegawai"} />
+                                        <NavigationLink to="/transaksi/payroll/pendapatanPegawai" addClass={"my-1"} label={"Pendapatan Pegawai"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Potongan Pegawai"} />
+                                        <NavigationLink to="/transaksi/payroll/potonganPegawai" addClass={"my-1"} label={"Potongan Pegawai"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Slip Gaji Pegawai"} />
+                                        <NavigationLink to="/transaksi/payroll/slipGajiPegawai" addClass={"my-1"} label={"Slip Gaji Pegawai"} />
                                     </li>
                                 </ul>
                             </li>
