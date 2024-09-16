@@ -96,11 +96,9 @@ const KasRow = ({
                                                     !forPrint ? <>
                                                         <div className="text-black text-center col-span-1 flex justify-center gap-x-3">
                                                             {
-                                                                item3.sumber == "TRANSAKSI KAS" && balanceStatus ?
+                                                                item3.transaksi == 1 && balanceStatus ?
                                                                     <>
-                                                                        {
-                                                                            j > 0 ? <FaTrash size={9} onClick={() => deleteItem(item3.uuid)} className="w-max mt-1 text-red-500 cursor-pointer" /> : <></>
-                                                                        }
+                                                                        <FaTrash size={9} onClick={() => deleteItem(item3.uuid)} className="w-max mt-1 text-red-500 cursor-pointer" />
                                                                     </>
                                                                     :
                                                                     <></>

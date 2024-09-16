@@ -126,7 +126,7 @@ const BankTransaksiList = ({
         apiKodeAkunCRUD
             .custom("/no_bank", "GET")
             .then(resData => {
-                setKodeAkunList(x => x = resData.data.entry)
+                setKodeAkunList(x => x = resData.data)
             })
     }
 

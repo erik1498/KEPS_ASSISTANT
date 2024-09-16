@@ -431,3 +431,18 @@ export const TipeTransaksi = [
         value: 0
     }
 ]
+
+export const TipeTransaksiKasBankKodeAkunForm = [
+    {
+        label: "Tidak Keduannya",
+        value: 0
+    },
+    {
+        label: "Kas",
+        value: 1
+    },
+    {
+        label: "Bank",
+        value: 2
+    }
+]

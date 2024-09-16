@@ -5,11 +5,6 @@ import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryU
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
 export const getAllTransaksiKasRepo = async (bulan, tahun, search, req_id) => {
-    console.log("LOGG", {
-        tanggal_mulai: `${tahun}-${bulan}-01`,
-        tanggal_selesai: `${tahun}-${bulan}-31`,
-        search: `%${search}%`
-    })
     return await db.query(
         `
             SELECT 
@@ -44,7 +39,7 @@ export const getAllTransaksiKasRepo = async (bulan, tahun, search, req_id) => {
                 SELECT 
                     rtkt.uuid,
                     tkt.bukti_transaksi,
-                    0 AS transaksi,
+                    1 AS transaksi,
                     CONCAT(DATE(tkt.tanggal), "T", rtkt.waktu, ".000") AS tanggal,
                     CASE 
                         WHEN tkt.type = 0
@@ -78,7 +73,7 @@ export const getAllTransaksiKasRepo = async (bulan, tahun, search, req_id) => {
                 OR res.kredit LIKE :search
             )
             AND res.tanggal >= :tanggal_mulai AND res.tanggal <= :tanggal_selesai
-            ORDER BY res.tanggal ASC, res.bukti_transaksi ASC
+            ORDER BY res.transaksi ASC, res.tanggal ASC, res.bukti_transaksi ASC
         `,
         {
             replacements: {

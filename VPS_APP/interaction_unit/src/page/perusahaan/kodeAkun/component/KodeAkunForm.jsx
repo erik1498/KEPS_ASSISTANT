@@ -3,10 +3,11 @@ import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
 import { useState } from "react"
 import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
 import FormSelect from "../../../../component/form/FormSelect"
-import { KodeAkunType } from "../../../../config/objectList.config"
+import { KodeAkunType, TipeTransaksiKasBankKodeAkunForm } from "../../../../config/objectList.config"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
 import { formShowMessage, formValidation, showAlert } from "../../../../helper/form.helper"
 import { apiKodeAkunCRUD } from "../../../../service/endPointList.api"
+import ToggleBox from "../../../../component/general/ToggleBox"
 
 const KodeAkunForm = ({
     setAddKodeAkunEvent = () => { },
@@ -16,6 +17,7 @@ const KodeAkunForm = ({
     const [namaAkun, setNamaAkun] = useState(kodeAkunEdit?.name ? kodeAkunEdit.name : ``)
     const [kodeAkun, setKodeAkun] = useState(kodeAkunEdit?.code ? kodeAkunEdit.code : ``)
     const [kodeAkunTypeList, setKodeAkunTypeList] = useState(KodeAkunType())
+    const [tipeTransaksiKasBank, setTipeTransaksiKasBank] = useState(kodeAkunEdit?.type_transaksi_kas_bank ? kodeAkunEdit?.type_transaksi_kas_bank : 0)
     const [typeKodeAkun, setTypeKodeAkun] = useState({
         label: kodeAkunEdit?.type ? kodeAkunEdit.type : `Harta`,
         value: kodeAkunEdit?.type ? kodeAkunEdit.type : `Harta`
@@ -30,12 +32,13 @@ const KodeAkunForm = ({
                     data: {
                         type: typeKodeAkun.value,
                         name: namaAkun,
-                        code: kodeAkun
+                        code: kodeAkun,
+                        type_transaksi_kas_bank: tipeTransaksiKasBank,
                     }
                 }).then(() => {
-                    if (kodeAkunEdit) {                
+                    if (kodeAkunEdit) {
                         showAlert("Berhasil", "Data berhasil diupdate")
-                    }else{
+                    } else {
                         showAlert("Berhasil", "Data berhasil disimpan")
                     }
                     setAddKodeAkunEvent()
@@ -95,6 +98,14 @@ const KodeAkunForm = ({
                     optionsValue={"name"}
                     selectName={"kodeAkunType"}
                     selectValue={typeKodeAkun}
+                />
+            </div>
+            <div className="mt-5 flex gap-x-2">
+                <ToggleBox
+                    label="Tipe Untuk Transaksi Kas Dan Bank"
+                    setToggleBox={setTipeTransaksiKasBank}
+                    toggleBox={tipeTransaksiKasBank}
+                    toggleBoxList={TipeTransaksiKasBankKodeAkunForm}
                 />
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"

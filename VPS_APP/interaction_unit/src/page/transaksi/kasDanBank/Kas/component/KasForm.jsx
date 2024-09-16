@@ -38,10 +38,10 @@ const KasForm = ({
         apiKodeAkunCRUD
             .custom("/kas", "GET")
             .then(resData => {
-                setKodeAkunList(resData.data.entry)
-                if (resData.data.entry.length > 0) {
+                setKodeAkunList(resData.data)
+                if (resData.data.length > 0) {
                     if (uuid) {
-                        const kodeAkunGet = resData.data.entry.filter(x => x.uuid == uuid)
+                        const kodeAkunGet = resData.data.filter(x => x.uuid == uuid)
                         if (kodeAkunGet.length > 0) {
                             setKodeAkun({
                                 label: `${kodeAkunGet[0].code} - ${kodeAkunGet[0].name}`,
@@ -50,8 +50,8 @@ const KasForm = ({
                         }
                     } else {
                         setKodeAkun({
-                            label: `${resData.data.entry[0].code} - ${resData.data.entry[0].name}`,
-                            value: resData.data.entry[0].uuid
+                            label: `${resData.data[0].code} - ${resData.data[0].name}`,
+                            value: resData.data[0].uuid
                         })
                     }
                 }

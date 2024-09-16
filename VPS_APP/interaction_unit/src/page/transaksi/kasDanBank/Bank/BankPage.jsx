@@ -61,6 +61,7 @@ const BankPage = () => {
                     _getData()
                 }).catch(err => {
                     showError(err)
+                    _getData()
                 })
         }
     }
@@ -75,6 +76,7 @@ const BankPage = () => {
                     _getData()
                 }).catch(err => {
                     showError(err)
+                    _getData()
                 })
         }
     }

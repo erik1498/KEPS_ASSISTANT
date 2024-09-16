@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import KodeAkunPerkiraanModel from "./kodeAkunPerkiraan.model.js";
-import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { generateDatabaseName, insertQueryUtil, selectAllQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 
 export const getAllKodeAkunPerkiraanRepo = async (pageNumber, size, search, req_id) => {
     const kodeAkunPerkiraansCount = await db.query(
@@ -75,13 +75,14 @@ export const getKodeAkunPerkiraanByUuidSudahDigunakanRepo = async (uuid, req_id)
 
 export const createKodeAkunPerkiraanRepo = async (kodeAkunPerkiraanData, req_id) => {
     return insertQueryUtil(
-        req_id, 
+        req_id,
         generateDatabaseName(req_id),
         KodeAkunPerkiraanModel,
         {
             type: kodeAkunPerkiraanData.type,
             name: kodeAkunPerkiraanData.name,
             code: kodeAkunPerkiraanData.code,
+            type_transaksi_kas_bank: kodeAkunPerkiraanData.type_transaksi_kas_bank,
             enabled: kodeAkunPerkiraanData.enabled
         }
     )
@@ -110,9 +111,25 @@ export const updateKodeAkunPerkiraanByUuidRepo = async (uuid, kodeAkunPerkiraanD
             type: kodeAkunPerkiraanData.type,
             name: kodeAkunPerkiraanData.name,
             code: kodeAkunPerkiraanData.code,
+            type_transaksi_kas_bank: kodeAkunPerkiraanData.type_transaksi_kas_bank,
         },
         {
             uuid
         }
     )
+}
+
+export const getAllKodeAkunPerkiraanWhereInRepo = async (whereIN, req_id) => {
+    const kodeAkunPerkiraans = await db.query(
+        `
+            SELECT 
+                kapt.* 
+            FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt
+            WHERE kapt.enabled = 1 
+            AND kapt.type_transaksi_kas_bank IN ("` + whereIN.join(`","`) + `" )
+            ORDER BY kapt.code ASC
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return kodeAkunPerkiraans
 }

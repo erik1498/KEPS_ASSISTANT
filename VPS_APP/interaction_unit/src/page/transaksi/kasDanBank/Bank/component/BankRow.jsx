@@ -96,11 +96,9 @@ const BankRow = ({
                                                     !forPrint ? <>
                                                         <div className="text-black text-center col-span-1 flex justify-center gap-x-3">
                                                             {
-                                                                item3.sumber == "TRANSAKSI Bank" && balanceStatus ?
+                                                                item3.transaksi == 1 && balanceStatus ?
                                                                     <>
-                                                                        {
-                                                                            j > 0 ? <FaTrash size={9} onClick={() => deleteItem(item3.uuid)} className="w-max mt-1 text-red-500 cursor-pointer" /> : <></>
-                                                                        }
+                                                                        <FaTrash size={9} onClick={() => deleteItem(item3.uuid)} className="w-max mt-1 text-red-500 cursor-pointer" />
                                                                     </>
                                                                     :
                                                                     <></>
@@ -120,7 +118,7 @@ const BankRow = ({
                                                 <div className="grid grid-cols-12 items-start py-3">
                                                     <div className="col-span-1 px-2 text-black text-center font-bold flex justify-center items-center gap-x-5">
                                                         {
-                                                            item1.sumber == "TRANSAKSI Bank" && balanceStatus ? <>
+                                                            item1.sumber == "TRANSAKSI BANK" && balanceStatus ? <>
                                                                 {
                                                                     forPrint ? <></>
                                                                         :

@@ -5,11 +5,6 @@ import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryU
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
 export const getAllTransaksiBankRepo = async (bulan, tahun, search, req_id) => {
-    console.log("LOGG", {
-        tanggal_mulai: `${tahun}-${bulan}-01`,
-        tanggal_selesai: `${tahun}-${bulan}-31`,
-        search: `%${search}%`
-    })
     return await db.query(
         `
             SELECT 
@@ -35,7 +30,7 @@ export const getAllTransaksiBankRepo = async (bulan, tahun, search, req_id) => {
                     kapt.type AS type_akun,
                     tbt.uraian,
                     tbt.type,
-                    "TRANSAKSI Bank" AS sumber,
+                    "TRANSAKSI BANK" AS sumber,
                     tbt.enabled 
                 FROM ${generateDatabaseName(req_id)}.transaksi_bank_tab tbt 
                 JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tbt.kode_akun_perkiraan 
@@ -44,7 +39,7 @@ export const getAllTransaksiBankRepo = async (bulan, tahun, search, req_id) => {
                 SELECT 
                     rtbt.uuid,
                     tbt.bukti_transaksi,
-                    0 AS transaksi,
+                    1 AS transaksi,
                     CONCAT(DATE(tbt.tanggal), "T", rtbt.waktu, ".000") AS tanggal,
                     CASE 
                         WHEN tbt.type = 0
@@ -61,7 +56,7 @@ export const getAllTransaksiBankRepo = async (bulan, tahun, search, req_id) => {
                     kapt.type AS type_akun,
                     rtbt.uraian,
                     tbt.type,
-                    "TRANSAKSI Bank" AS sumber,
+                    "RINCIAN TRANSAKSI BANK" AS sumber,
                     rtbt.enabled 
                 FROM ${generateDatabaseName(req_id)}.rincian_transaksi_bank_tab rtbt 
                 JOIN ${generateDatabaseName(req_id)}.transaksi_bank_tab tbt ON tbt.uuid = rtbt.transaksi_bank 
@@ -78,7 +73,7 @@ export const getAllTransaksiBankRepo = async (bulan, tahun, search, req_id) => {
                 OR res.kredit LIKE :search
             )
             AND res.tanggal >= :tanggal_mulai AND res.tanggal <= :tanggal_selesai
-            ORDER BY res.tanggal ASC, res.bukti_transaksi ASC
+            ORDER BY res.transaksi ASC, res.tanggal ASC, res.bukti_transaksi ASC
         `,
         {
             replacements: {

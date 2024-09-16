@@ -126,7 +126,7 @@ const KasTransaksiList = ({
         apiKodeAkunCRUD
             .custom("/no_kas", "GET")
             .then(resData => {
-                setKodeAkunList(x => x = resData.data.entry)
+                setKodeAkunList(x => x = resData.data)
             })
     }
 
