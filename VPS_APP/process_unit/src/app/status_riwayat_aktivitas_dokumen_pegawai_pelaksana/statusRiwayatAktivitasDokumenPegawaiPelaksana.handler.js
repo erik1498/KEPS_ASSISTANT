@@ -15,7 +15,7 @@ export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanas = async (req, 
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -32,7 +32,7 @@ export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayat
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -50,7 +50,7 @@ export const getStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUUID = async (req
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -76,7 +76,7 @@ export const postCreateStatusRiwayatAktivitasDokumenPegawaiPelaksana = async (re
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -94,7 +94,7 @@ export const deleteStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUUID = async (
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -119,7 +119,7 @@ export const updateStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUUID = async (
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }

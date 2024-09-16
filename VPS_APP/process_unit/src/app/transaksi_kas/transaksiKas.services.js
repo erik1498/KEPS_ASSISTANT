@@ -1,4 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createTransaksiKasRepo, deleteTransaksiKasByUuidRepo, getAllTransaksiKasRepo, getTransaksiKasByUuidRepo, updateTransaksiKasByUuidRepo } from "./transaksiKas.repository.js"
 
 export const getAllTransaksiKasService = async (bulan, tahun, query, req_identity) => {
@@ -35,13 +36,18 @@ export const createTransaksiKasService = async (transaksiKasData, req_identity) 
     LOGGER(logType.INFO, `Start createTransaksiKasService`, transaksiKasData, req_identity)
     transaksiKasData.enabled = 1
 
+    await getNeracaValidasiByTanggalService(transaksiKasData.tanggal, req_identity)
+
     const transaksiKas = await createTransaksiKasRepo(transaksiKasData, req_identity)
     return transaksiKas
 }
 
 export const deleteTransaksiKasByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteTransaksiKasByUuidService [${uuid}]`, null, req_identity)
-    await getTransaksiKasByUuidService(uuid, req_identity)
+    const beforeData = await getTransaksiKasByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
     await deleteTransaksiKasByUuidRepo(uuid, req_identity)
     return true
 }
@@ -49,6 +55,9 @@ export const deleteTransaksiKasByUuidService = async (uuid, req_identity) => {
 export const updateTransaksiKasByUuidService = async (uuid, transaksiKasData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateTransaksiKasByUuidService [${uuid}]`, transaksiKasData, req_identity)
     const beforeData = await getTransaksiKasByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
     const transaksiKas = await updateTransaksiKasByUuidRepo(uuid, transaksiKasData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

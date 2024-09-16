@@ -2,7 +2,7 @@ import { getLabaRugiReport } from "../../utils/labaRugiUtil.js"
 import { getNeracaSaldoReport } from "../../utils/neracaSaldoUtil.js"
 import { getNeracaReport } from "../../utils/neracaUtils.js"
 import { getAllNeracaSaldoByBulanService } from "../neraca_saldo/neracaSaldo.services.js"
-import { createNeracaRepo, deleteNeracaByBulanAndTahun, getNeracaByBulanAndTahun } from "./neraca.repository.js"
+import { createNeracaRepo, deleteNeracaByBulanAndTahun, getNeracaByBulanAndTahun, getNeracaValidasiByTanggalRepo } from "./neraca.repository.js"
 
 export const getNeracaReportService = async (bulan, tahun, validate, whereIN, req_identity) => {
     const data = await getAllNeracaSaldoByBulanService(bulan, tahun, whereIN, req_identity)
@@ -59,4 +59,15 @@ export const getNeracaSaldoByBulanAndTahunServices = async (bulan, tahun, req_id
     bulan = bulan < 10 ? "0" + bulan : bulan
     const returnData = await getNeracaByBulanAndTahun(bulan, tahun, req_identity)
     return returnData
+}
+
+export const getNeracaValidasiByTanggalService = async (tanggal, req_identity) => {
+    const neracaValidasi = await getNeracaValidasiByTanggalRepo(tanggal, req_identity)
+
+    if (neracaValidasi.length > 0 && neracaValidasi[0].count > 0) {
+        throw Error(JSON.stringify({
+            message: `Neraca sudah divalidasi untuk Bulan ${neracaValidasi[0].bulan} Dan Tahun ${neracaValidasi[0].tahun}`,
+            field: "error"
+        }))
+    }
 }

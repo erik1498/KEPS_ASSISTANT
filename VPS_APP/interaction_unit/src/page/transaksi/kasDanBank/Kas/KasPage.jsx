@@ -75,6 +75,7 @@ const KasPage = () => {
                     _getData()
                 }).catch(err => {
                     showError(err)
+                    _getData()
                 })
         }
     }

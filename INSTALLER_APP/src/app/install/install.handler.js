@@ -23,7 +23,7 @@ export const createInstallerKeyController = async (req, res) => {
         console.log(error)
         return res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -39,7 +39,7 @@ export const createKeyGenController = async (req, res) => {
         console.log(error)
         return res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -62,7 +62,7 @@ export const getCURLCommnandController = async (req, res) => {
         console.log(error)
         return res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }

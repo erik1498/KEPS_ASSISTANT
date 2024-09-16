@@ -37,3 +37,19 @@ export const deleteNeracaByBulanAndTahun = async (bulan, tahun, req_id) => {
         { type: Sequelize.QueryTypes.DELETE }
     )
 }
+
+export const getNeracaValidasiByTanggalRepo = async (tanggal, req_id) => {
+    return db.query(
+        `
+            SELECT 
+                COUNT(0) AS count,
+                nt.bulan,
+                nt.tahun
+            FROM ${generateDatabaseName(req_id)}.neraca_tab nt 
+            WHERE nt.bulan = MONTH("${tanggal}") AND nt.tahun = YEAR("${tanggal}")
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
