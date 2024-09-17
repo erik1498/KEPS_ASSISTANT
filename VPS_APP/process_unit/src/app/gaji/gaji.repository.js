@@ -51,23 +51,6 @@ export const getGajiByPegawaiUuidRepo = async (uuid, req_id) => {
     return gajis
 }
 
-export const getGajiWithSamePeriodeRepo = async (pegawai, periode, req_id) => {
-    return await db.query(
-        `
-            SELECT 
-                gt.*
-            FROM ${generateDatabaseName(req_id)}.gaji_tab gt 
-            WHERE gt.pegawai = "${pegawai}"
-            AND gt.periode = ${periode}
-            AND gt.enabled = 1
-            LIMIT 1
-        `,
-        {
-            type: Sequelize.QueryTypes.SELECT
-        }
-    )
-}
-
 export const getGajiByUuidRepo = async (uuid, req_id) => {
     return selectOneQueryUtil(
         generateDatabaseName(req_id),

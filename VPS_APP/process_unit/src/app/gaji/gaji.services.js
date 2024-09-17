@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createGajiRepo, deleteGajiByUuidRepo, getAllGajiRepo, getGajiByPegawaiUuidRepo, getGajiByUuidRepo, getGajiWithSamePeriodeRepo, updateGajiByUuidRepo } from "./gaji.repository.js"
+import { createGajiRepo, deleteGajiByUuidRepo, getAllGajiRepo, getGajiByPegawaiUuidRepo, getGajiByUuidRepo, updateGajiByUuidRepo } from "./gaji.repository.js"
 
 export const getAllGajiService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllGajiService", null, req_identity)
@@ -49,26 +49,10 @@ export const getGajiByPegawaiUUIDService = async (uuid, req_identity) => {
     }
     return gaji
 }
-const getGajiWithSamePeriodeService = async (pegawai, periode, req_identity) => {
-    LOGGER(logType.INFO, `Start getGajiWithSamePeriodeService`, {
-        pegawai,
-        periode
-    }, req_identity)
-    const getGajiWithSamePeriode = await getGajiWithSamePeriodeRepo(pegawai, periode, req_identity)
-
-    if (getGajiWithSamePeriode.length > 0) {
-        throw Error(JSON.stringify({
-            message: "Gaji Dengan Periode Tersebut Sudah Ada",
-            field: "error"
-        }))
-    }
-}
 
 export const createGajiService = async (gajiData, req_identity) => {
     LOGGER(logType.INFO, `Start createGajiService`, gajiData, req_identity)
     gajiData.enabled = 1
-
-    await getGajiWithSamePeriodeService(gajiData.pegawai, gajiData.periode, req_identity)
 
     const gaji = await createGajiRepo(gajiData, req_identity)
     return gaji

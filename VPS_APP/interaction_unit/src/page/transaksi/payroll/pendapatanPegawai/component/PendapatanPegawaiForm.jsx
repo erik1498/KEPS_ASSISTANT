@@ -92,10 +92,22 @@ const PendapatanPegawaiForm = ({
                             kodeAkunList={kodeAkunList}
                             idPegawai={pegawai.value}
                         />
-                        <LemburPegawaiForm />
-                        <TunjanganUangPegawaiForm />
-                        <TunjanganBarangPegawaiForm />
-                        <HadiahPegawaiForm />
+                        <LemburPegawaiForm
+                            kodeAkunList={kodeAkunList}
+                            idPegawai={pegawai.value}
+                        />
+                        <TunjanganUangPegawaiForm
+                            kodeAkunList={kodeAkunList}
+                            idPegawai={pegawai.value}
+                        />
+                        <TunjanganBarangPegawaiForm
+                            kodeAkunList={kodeAkunList}
+                            idPegawai={pegawai.value}
+                        />
+                        <HadiahPegawaiForm
+                            kodeAkunList={kodeAkunList}
+                            idPegawai={pegawai.value}
+                        />
                     </> : <></>
                 }
             </div>

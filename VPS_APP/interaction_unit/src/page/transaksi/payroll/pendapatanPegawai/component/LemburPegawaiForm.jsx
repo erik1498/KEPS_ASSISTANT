@@ -6,17 +6,25 @@ import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaSave, FaTrash } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiLemburCRUD } from "../../../../../service/endPointList.api"
-import { parseToRupiahText } from "../../../../../helper/number.helper"
+import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
 
 const LemburPegawaiForm = ({
     idPegawai,
     kodeAkunList = []
 }) => {
     const [periode, setPeriode] = useState()
-    const [nilai, setNilai] = useState("0")
     const [kodeAkun, setKodeAkun] = useState()
     const [tanggal, setTanggal] = useState(getHariTanggalFull())
     const [buktiTransaksi, setBuktiTransaksi] = useState()
+    const [deskripsiKerja, setDekstripsiKerja] = useState()
+    const [keteranganKerja, setKeteranganKerja] = useState()
+    const [nilaiLemburPerMenit, setNilaiLemburPerMenit] = useState("0")
+    const [waktuMulai, setWaktuMulai] = useState(getHariTanggalFull())
+    const [waktuSelesai, setWaktuSelesai] = useState(getHariTanggalFull())
+
+    const [totalJam, setTotalJam] = useState("0")
+    const [totalMenit, setTotalMenit] = useState("0")
+    const [totalBayaran, setTotalBayaran] = useState("0")
 
     const [lemburList, setLemburList] = useState([])
 
@@ -30,7 +38,14 @@ const LemburPegawaiForm = ({
                     kode_akun_perkiraan: kodeAkun.value,
                     tanggal: tanggal,
                     bukti_transaksi: buktiTransaksi,
-                    nilai: nilai
+                    deskripsi_kerja: deskripsiKerja,
+                    keterangan_kerja: keteranganKerja,
+                    nilai_lembur_per_menit: nilaiLemburPerMenit,
+                    waktu_mulai: waktuMulai,
+                    waktu_selesai: waktuSelesai,
+                    total_jam: totalJam,
+                    total_menit: totalMenit,
+                    total_bayaran: totalBayaran
                 }
             }).then(resData => {
                 _getDaftarLemburPegawai()
@@ -53,6 +68,26 @@ const LemburPegawaiForm = ({
                 _getDaftarLemburPegawai()
             }).catch(err => showError(err))
     }
+
+    const _countTotalMenit = () => {
+
+        const startTime = new Date(waktuMulai)
+        const finishTime = new Date(waktuSelesai)
+        const menitTotal = ((finishTime - startTime) / (1000 * 60))
+        const jam = Math.floor(menitTotal / 60)
+        const menit = Math.round(((menitTotal / 60) - jam) * 60)
+
+        setTotalJam(x => x = parseToRupiahText(jam))
+        setTotalMenit(x => x = parseToRupiahText(menit))
+
+        const payPerMinute = parseRupiahToFloat(nilaiLemburPerMenit)
+
+        setTotalBayaran(parseToRupiahText((payPerMinute * menit) + (payPerMinute * ((jam) * 60))))
+    }
+
+    useEffect(() => {
+        _countTotalMenit()
+    }, [nilaiLemburPerMenit, waktuMulai, waktuSelesai])
 
     useEffect(() => {
         _getDaftarLemburPegawai()
@@ -118,12 +153,12 @@ const LemburPegawaiForm = ({
                     label={"Deskripsi Kerja"}
                     type={"text"}
                     onchange={(e) => {
-                        setBuktiTransaksi(e.target.value)
+                        setDekstripsiKerja(e.target.value)
                     }}
                     others={
                         {
-                            value: buktiTransaksi,
-                            name: "buktiTransaksi"
+                            value: deskripsiKerja,
+                            name: "deskripsiKerja"
                         }
                     }
                 />
@@ -131,12 +166,12 @@ const LemburPegawaiForm = ({
                     label={"Keterangan"}
                     type={"text"}
                     onchange={(e) => {
-                        setBuktiTransaksi(e.target.value)
+                        setKeteranganKerja(e.target.value)
                     }}
                     others={
                         {
-                            value: buktiTransaksi,
-                            name: "buktiTransaksi"
+                            value: keteranganKerja,
+                            name: "keteranganKerja"
                         }
                     }
                 />
@@ -144,38 +179,39 @@ const LemburPegawaiForm = ({
                     label={"Nilai Lembur Per Menit"}
                     type={"text"}
                     onchange={(e) => {
-                        setBuktiTransaksi(e.target.value)
+                        inputOnlyRupiah(e)
+                        setNilaiLemburPerMenit(e.target.value)
                     }}
                     others={
                         {
-                            value: buktiTransaksi,
-                            name: "buktiTransaksi"
+                            value: nilaiLemburPerMenit,
+                            name: "nilaiLemburPerMenit"
                         }
                     }
                 />
                 <FormInputWithLabel
                     label={"Waktu Mulai"}
-                    type={"text"}
+                    type={"datetime-local"}
                     onchange={(e) => {
-                        setBuktiTransaksi(e.target.value)
+                        waktuMulai(e.target.value)
                     }}
                     others={
                         {
-                            value: buktiTransaksi,
-                            name: "buktiTransaksi"
+                            value: waktuMulai,
+                            name: "waktuMulai"
                         }
                     }
                 />
                 <FormInputWithLabel
                     label={"Waktu Selesai"}
-                    type={"text"}
+                    type={"datetime-local"}
                     onchange={(e) => {
-                        setBuktiTransaksi(e.target.value)
+                        setWaktuSelesai(e.target.value)
                     }}
                     others={
                         {
-                            value: buktiTransaksi,
-                            name: "buktiTransaksi"
+                            value: waktuSelesai,
+                            name: "waktuSelesai"
                         }
                     }
                 />
@@ -184,43 +220,34 @@ const LemburPegawaiForm = ({
                 <FormInputWithLabel
                     label={"Total Jam"}
                     type={"text"}
-                    onchange={(e) => {
-                        setBuktiTransaksi(e.target.value)
-                    }}
                     addClassInput="border-none"
                     others={
                         {
-                            value: buktiTransaksi,
-                            name: "buktiTransaksi"
+                            value: totalJam,
+                            name: "totalJam"
                         }
                     }
                 />
                 <FormInputWithLabel
                     label={"Total Menit"}
                     type={"text"}
-                    onchange={(e) => {
-                        setBuktiTransaksi(e.target.value)
-                    }}
                     addClassInput="border-none"
                     others={
                         {
-                            value: buktiTransaksi,
-                            name: "buktiTransaksi"
+                            value: totalMenit,
+                            name: "totalMenit"
                         }
                     }
                 />
                 <FormInputWithLabel
                     label={"Total Bayaran"}
                     type={"text"}
-                    onchange={(e) => {
-                        setBuktiTransaksi(e.target.value)
-                    }}
                     addClassInput="border-none"
                     disabled={true}
                     others={
                         {
-                            value: buktiTransaksi,
-                            name: "buktiTransaksi"
+                            value: totalBayaran,
+                            name: "totalBayaran"
                         }
                     }
                 />
@@ -233,7 +260,11 @@ const LemburPegawaiForm = ({
                 <th>Sumber Dana</th>
                 <th>Tanggal</th>
                 <th>Bukti Transaksi</th>
-                <th>Nilai</th>
+                <th>Waktu Mulai</th>
+                <th>Waktu Selesai</th>
+                <th>Total Jam</th>
+                <th>Total Menit</th>
+                <th>Total Bayaran</th>
                 <th>Aksi</th>
             </thead>
             <tbody>
@@ -245,7 +276,11 @@ const LemburPegawaiForm = ({
                                 <td>{item.kode_akun_perkiraan_code} - {item.kode_akun_perkiraan_name}</td>
                                 <td>{`${item.tanggal.split("T")[0]} ${convertTo12HoursFormat(item.tanggal.split("T")[1])}`}</td>
                                 <td>{item.bukti_transaksi}</td>
-                                <td>{parseToRupiahText(item.nilai)}</td>
+                                <td>{`${item.waktu_mulai.split("T")[0]} ${convertTo12HoursFormat(item.waktu_mulai.split("T")[1])}`}</td>
+                                <td>{`${item.waktu_selesai.split("T")[0]} ${convertTo12HoursFormat(item.waktu_selesai.split("T")[1])}`}</td>
+                                <td>{parseToRupiahText(item.total_jam)}</td>
+                                <td>{parseToRupiahText(item.total_menit)}</td>
+                                <td>{parseToRupiahText(item.total_bayaran)}</td>
                                 <td>
                                     <FaTrash
                                         onClick={() => _deleteLembur(item.uuid)}

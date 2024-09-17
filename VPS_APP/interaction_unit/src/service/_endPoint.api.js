@@ -214,3 +214,11 @@ export const SrvLembur = objectPathEndPointAPI(
 export const SrvTunjanganUang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/tunjangan_uang'
 )
+
+export const SrvTunjanganBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/tunjangan_barang'
+)
+
+export const SrvHadiah = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/hadiah'
+)
