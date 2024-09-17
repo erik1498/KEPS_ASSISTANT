@@ -39,6 +39,25 @@ export const getAllKodeAkunPerkiraansKas = async (req, res) => {
     }
 }
 
+export const getAllKodeAkunPerkiraansKasBank = async (req, res) => {
+    LOGGER(logType.INFO, "Start getAllKodeAkunPerkiraansKasBank", null, req.identity)
+    try {
+        const kodeAkunPerkiraans = await getAllKodeAkunPerkiraanWhereInService([
+            1, 2
+        ], req.identity)
+        res.json({
+            data: kodeAkunPerkiraans,
+            message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
 export const getAllKodeAkunPerkiraansNoKas = async (req, res) => {
     LOGGER(logType.INFO, "Start getAllKodeAkunPerkiraansKas", null, req.identity)
     try {

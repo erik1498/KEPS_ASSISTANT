@@ -2,6 +2,12 @@ export const getBulanList = () => {
     return ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
 }
 
+export const getBulanListForFormSelect = () => {
+    return getBulanList().map((item, i) => {
+        return { label: item, value: i + 1 }
+    })
+}
+
 export const getTanggal = (withBulanTahun = false) => {
     let tgl = []
     for (let index = 0; index < 31; index++) {
@@ -40,7 +46,7 @@ export const formatDate = (dateString, withHours = true) => {
     if (!dateString) {
         return ""
     }
-    
+
     let date = new Date(dateString);
 
     // Mendapatkan komponen tanggal

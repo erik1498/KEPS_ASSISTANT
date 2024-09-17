@@ -48,6 +48,7 @@ import { getTransaksiBankRoute } from "../app/transaksi_bank/transaksiBank.route
 import { getUserRoute } from "../app/user/user.route.js";
 import { getRincianTransaksiKasRoute } from "../app/rincian_transaksi_kas/rincianTransaksiKas.route.js";
 import { getRincianTransaksiBankRoute } from "../app/rincian_transaksi_bank/rincianTransaksiBank.route.js";
+import { getGajiRoute } from "../app/gaji/gaji.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -100,5 +101,6 @@ export const routerList = new Array()
         getTransaksiKasRoute(),
         getTransaksiBankRoute(),
         getRincianTransaksiKasRoute(),
-        getRincianTransaksiBankRoute()
+        getRincianTransaksiBankRoute(),
+        getGajiRoute()
     )

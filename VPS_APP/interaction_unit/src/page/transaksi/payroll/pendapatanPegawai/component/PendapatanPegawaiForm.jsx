@@ -1,7 +1,7 @@
 import { FaCheck, FaSave, FaTimes } from "react-icons/fa"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { useEffect, useState } from "react"
-import { apiPegawaiCRUD } from "../../../../../service/endPointList.api"
+import { apiKodeAkunCRUD, apiPegawaiCRUD } from "../../../../../service/endPointList.api"
 import { showError } from "../../../../../helper/form.helper"
 import GajiPegawaiForm from "./GajiPegawaiForm"
 import LemburPegawaiForm from "./LemburPegawaiForm"
@@ -17,6 +17,8 @@ const PendapatanPegawaiForm = ({
     const [pegawaiList, setPegawaiList] = useState([])
     const [idPegawai, setIdPegawai] = useState()
 
+    const [kodeAkunList, setKodeAkunList] = useState([])
+
     const _getDataPegawai = () => {
         apiPegawaiCRUD
             .custom("", "GET")
@@ -31,8 +33,19 @@ const PendapatanPegawaiForm = ({
             }).catch(err => showError(err))
     }
 
+    const _getDataKodeAkunBankDanKas = () => {
+        apiKodeAkunCRUD
+            .custom("/kas_bank")
+            .then(resData => {
+                setKodeAkunList(resData.data)
+            }).catch(err => {
+                showError(err)
+            })
+    }
+
     useEffect(() => {
         _getDataPegawai()
+        _getDataKodeAkunBankDanKas()
     }, [])
 
     return <>
@@ -75,7 +88,10 @@ const PendapatanPegawaiForm = ({
                 </div>
                 {
                     idPegawai ? <>
-                        <GajiPegawaiForm />
+                        <GajiPegawaiForm
+                            kodeAkunList={kodeAkunList}
+                            idPegawai={pegawai.value}
+                        />
                         <LemburPegawaiForm />
                         <TunjanganUangPegawaiForm />
                         <TunjanganBarangPegawaiForm />

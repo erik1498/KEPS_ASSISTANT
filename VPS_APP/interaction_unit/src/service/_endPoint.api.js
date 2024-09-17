@@ -202,3 +202,15 @@ export const SrvKategoriHargaJasa = objectPathEndPointAPI(
 export const SrvStokAwalJasa = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/stok_awal_jasa'
 )
+
+export const SrvGaji = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/gaji'
+)
+
+export const SrvLembur = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/lembur'
+)
+
+export const SrvTunjanganUang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/tunjangan_uang'
+)
