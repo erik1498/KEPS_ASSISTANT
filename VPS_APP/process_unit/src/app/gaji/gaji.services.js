@@ -37,9 +37,9 @@ export const getGajiByUuidService = async (uuid, req_identity) => {
 }
 
 
-export const getGajiByPegawaiUUIDService = async (uuid, req_identity) => {
-    LOGGER(logType.INFO, `Start getGajiByPegawaiUUIDService [${uuid}]`, null, req_identity)
-    const gaji = await getGajiByPegawaiUuidRepo(uuid, req_identity)
+export const getGajiByPegawaiUUIDService = async (uuid, tahun, req_identity) => {
+    LOGGER(logType.INFO, `Start getGajiByPegawaiUUIDService [${uuid}]`, { tahun }, req_identity)
+    const gaji = await getGajiByPegawaiUuidRepo(uuid, tahun, req_identity)
 
     if (!gaji) {
         throw Error(JSON.stringify({

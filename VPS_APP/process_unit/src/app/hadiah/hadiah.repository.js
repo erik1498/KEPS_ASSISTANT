@@ -42,8 +42,8 @@ export const getHadiahByUuidRepo = async (uuid, req_id) => {
     )
 }
 
-export const getHadiahByPegawaiUuidRepo = async (uuid, req_id) => {
-    const gajis = await db.query(
+export const getHadiahByPegawaiUuidRepo = async (uuid, tahun, req_id) => {
+    const hadiahs = await db.query(
         `
             SELECT 
                 ht.*,
@@ -53,13 +53,14 @@ export const getHadiahByPegawaiUuidRepo = async (uuid, req_id) => {
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ht.kode_akun_perkiraan 
             WHERE ht.pegawai = "${uuid}"
             AND ht.enabled = 1
+            AND YEAR(ht.tanggal) = "${tahun}"
             ORDER BY ht.periode ASC
         `,
         {
             type: Sequelize.QueryTypes.SELECT
         }
     )
-    return gajis
+    return hadiahs
 }
 
 export const createHadiahRepo = async (hadiahData, req_id) => {

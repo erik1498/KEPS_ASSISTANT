@@ -7,11 +7,13 @@ import { FaSave, FaTrash } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiHadiahCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
+import { useDataContext } from "../../../../../context/dataContext.context"
 
 const HadiahPegawaiForm = ({
     idPegawai,
     kodeAkunList = []
 }) => {
+    const { data } = useDataContext()
     const [periode, setPeriode] = useState()
     const [nilai, setNilai] = useState("0")
     const [kodeAkun, setKodeAkun] = useState()
@@ -42,7 +44,7 @@ const HadiahPegawaiForm = ({
 
     const _getDaftarHadiahPegawai = () => {
         apiHadiahCRUD
-            .custom(`/${idPegawai}`, "GET")
+            .custom(`/${idPegawai}/${data.tahun}`, "GET")
             .then(resData => {
                 setHadiahList(resData.data)
             })

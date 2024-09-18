@@ -8,6 +8,7 @@ import LemburPegawaiForm from "./LemburPegawaiForm"
 import TunjanganUangPegawaiForm from "./TunjanganUangPegawaiForm"
 import TunjanganBarangPegawaiForm from "./TunjanganBarangPegawaiForm"
 import HadiahPegawaiForm from "./HadiahPegawaiForm"
+import ToggleBox from "../../../../../component/general/ToggleBox"
 
 const PendapatanPegawaiForm = ({
     pendapatanPegawaiSelected,
@@ -16,6 +17,8 @@ const PendapatanPegawaiForm = ({
     const [pegawai, setPegawai] = useState()
     const [pegawaiList, setPegawaiList] = useState([])
     const [idPegawai, setIdPegawai] = useState()
+
+    const [toggle, setToggle] = useState("Gaji")
 
     const [kodeAkunList, setKodeAkunList] = useState([])
 
@@ -88,26 +91,75 @@ const PendapatanPegawaiForm = ({
                 </div>
                 {
                     idPegawai ? <>
-                        <GajiPegawaiForm
-                            kodeAkunList={kodeAkunList}
-                            idPegawai={pegawai.value}
+                        <ToggleBox
+                            addClass={"mt-5"}
+                            label="Tipe Pendapatan"
+                            setToggleBox={setToggle}
+                            toggleBox={toggle}
+                            textSize="text-sm"
+                            toggleBoxList={[
+                                {
+                                    label: "Gaji Pegawai",
+                                    value: "Gaji"
+                                },
+                                {
+                                    label: "Lembur Pegawai",
+                                    value: "Lembur"
+                                },
+                                {
+                                    label: "Tunjangan Uang Pegawai",
+                                    value: "TunjanganUang"
+                                },
+                                {
+                                    label: "Tunjangan Barang Pegawai",
+                                    value: "TunjanganBarang"
+                                },
+                                {
+                                    label: "Hadiah Pegawai",
+                                    value: "Hadiah"
+                                },
+                            ]}
                         />
-                        <LemburPegawaiForm
-                            kodeAkunList={kodeAkunList}
-                            idPegawai={pegawai.value}
-                        />
-                        <TunjanganUangPegawaiForm
-                            kodeAkunList={kodeAkunList}
-                            idPegawai={pegawai.value}
-                        />
-                        <TunjanganBarangPegawaiForm
-                            kodeAkunList={kodeAkunList}
-                            idPegawai={pegawai.value}
-                        />
-                        <HadiahPegawaiForm
-                            kodeAkunList={kodeAkunList}
-                            idPegawai={pegawai.value}
-                        />
+                        {
+                            toggle == "Gaji" ? <>
+                                <GajiPegawaiForm
+                                    kodeAkunList={kodeAkunList}
+                                    idPegawai={pegawai.value}
+                                />
+                            </> : <></>
+                        }
+                        {
+                            toggle == "Lembur" ? <>
+                                <LemburPegawaiForm
+                                    kodeAkunList={kodeAkunList}
+                                    idPegawai={pegawai.value}
+                                />
+                            </> : <></>
+                        }
+                        {
+                            toggle == "TunjanganUang" ? <>
+                                <TunjanganUangPegawaiForm
+                                    kodeAkunList={kodeAkunList}
+                                    idPegawai={pegawai.value}
+                                />
+                            </> : <></>
+                        }
+                        {
+                            toggle == "TunjanganBarang" ? <>
+                                <TunjanganBarangPegawaiForm
+                                    kodeAkunList={kodeAkunList}
+                                    idPegawai={pegawai.value}
+                                />
+                            </> : <></>
+                        }
+                        {
+                            toggle == "Hadiah" ? <>
+                                <HadiahPegawaiForm
+                                    kodeAkunList={kodeAkunList}
+                                    idPegawai={pegawai.value}
+                                />
+                            </> : <></>
+                        }
                     </> : <></>
                 }
             </div>

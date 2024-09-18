@@ -23,10 +23,10 @@ export const getAllGajis = async (req, res) => {
 export const getGajiByPegawaiUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start getGajiByPegawaiUUIDController", null, req.identity)
     try {
-        const { uuid } = req.params
+        const { uuid, tahun } = req.params
 
         res.json({
-            data: await getGajiByPegawaiUUIDService(uuid, req.identity),
+            data: await getGajiByPegawaiUUIDService(uuid, tahun, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {

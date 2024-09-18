@@ -51,6 +51,7 @@ import { getRincianTransaksiBankRoute } from "../app/rincian_transaksi_bank/rinc
 import { getGajiRoute } from "../app/gaji/gaji.route.js";
 import { getLemburRoute } from "../app/lembur/lembur.route.js";
 import { getHadiahRoute } from "../app/hadiah/hadiah.route.js";
+import { getTunjanganUangRoute } from "../app/tunjangan_uang/tunjanganUang.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -106,5 +107,6 @@ export const routerList = new Array()
         getRincianTransaksiBankRoute(),
         getGajiRoute(),
         getLemburRoute(),
-        getHadiahRoute()
+        getHadiahRoute(),
+        getTunjanganUangRoute()
     )

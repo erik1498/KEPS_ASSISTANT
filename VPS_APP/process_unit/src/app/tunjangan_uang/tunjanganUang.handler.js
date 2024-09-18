@@ -1,74 +1,74 @@
-import { hadiahValidation } from "./hadiah.validation.js"
-import { createHadiahService, deleteHadiahByUuidService, getAllHadiahService, getHadiahByPegawaiUUIDService, updateHadiahByUuidService } from "./hadiah.services.js"
+import { tunjanganUangValidation } from "./tunjanganUang.validation.js"
+import { createTunjanganUangService, deleteTunjanganUangByUuidService, getAllTunjanganUangService, getTunjanganUangByPegawaiUUIDService, updateTunjanganUangByUuidService } from "./tunjanganUang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
-export const getAllHadiahs = async (req, res) => {
-    LOGGER(logType.INFO, "Start getAllHadiahController", null, req.identity)
+export const getAllTunjanganUangs = async (req, res) => {
+    LOGGER(logType.INFO, "Start getAllTunjanganUangController", null, req.identity)
     try {
-        const hadiahs = await getAllHadiahService(req.query, req.identity)
+        const tunjanganUangs = await getAllTunjanganUangService(req.query, req.identity)
         res.json({
-            data: hadiahs,
+            data: tunjanganUangs,
             message: "Get Data Success"
         })
     } catch (error) {    
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            errorData: error.message
+            message: error.message
         })
     }
 }
 
-export const getHadiahByPegawaiUUID = async (req, res) => {
-    LOGGER(logType.INFO, "Start getHadiahByPegawaiUUID", null, req.identity)
+export const getTunjanganUangByPegawaiUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getTunjanganUangByPegawaiUUIDController", null, req.identity)
     try {
         const { uuid, tahun } = req.params
 
         res.json({
-            data: await getHadiahByPegawaiUUIDService(uuid, tahun, req.identity),
+            data: await getTunjanganUangByPegawaiUUIDService(uuid, tahun, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            errorData: error.message
+            message: error.message
         })
     }
 }
 
-export const postCreateHadiah = async (req, res) => {
-    LOGGER(logType.INFO, "Start createHadiahController", null, req.identity)
+export const postCreateTunjanganUang = async (req, res) => {
+    LOGGER(logType.INFO, "Start createTunjanganUangController", null, req.identity)
     try {
-        const hadiahData = req.body
-        const { error, value } = hadiahValidation(hadiahData)
+        const tunjanganUangData = req.body
+        const { error, value } = tunjanganUangValidation(tunjanganUangData)
         if (error) {
             return res.status(400).json({
                 type: "validationError",
                 message: generateValidationMessage(error)
             })
         }
-        const hadiah = await createHadiahService(value, req.identity)
-        LOGGER_MONITOR(req.originalUrl, req.method, hadiah, req.identity)
+        const tunjanganUang = await createTunjanganUangService(value, req.identity)
+        LOGGER_MONITOR(req.originalUrl, req.method, tunjanganUang, req.identity)
         res.json({
-            data: hadiah,
+            data: tunjanganUang,
             message: "Create data Success"
         })
     } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            errorData: error.message
+            message: error.message
         })
     }
 }
 
-export const deleteHadiahByUUID = async (req, res) => {
-    LOGGER(logType.INFO, "Start deleteHadiahByUuidController", null, req.identity)
+export const deleteTunjanganUangByUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start deleteTunjanganUangByUuidController", null, req.identity)
     try {
         const { uuid } = req.params
-        await deleteHadiahByUuidService(uuid, req.identity)
+        await deleteTunjanganUangByUuidService(uuid, req.identity)
         LOGGER_MONITOR(req.originalUrl, req.method, { uuid }, req.identity)
         res.status(200).json({
             message: "Delete Success"
@@ -77,23 +77,23 @@ export const deleteHadiahByUUID = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            errorData: error.message
+            message: error.message
         })
     }
 }
 
-export const updateHadiahByUUID = async (req, res) => {
-    LOGGER(logType.INFO, "Start updateHadiahByUuidController", null, req.identity)
+export const updateTunjanganUangByUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start updateTunjanganUangByUuidController", null, req.identity)
     try {    
-        const hadiahData = req.body
-        const { error, value } = hadiahValidation(hadiahData)
+        const tunjanganUangData = req.body
+        const { error, value } = tunjanganUangValidation(tunjanganUangData)
         if (error) {
             return res.status(400).json({
                 type: "validationError",
                 message: generateValidationMessage(error)
             })
         }
-        await updateHadiahByUuidService(req.params.uuid, value, req.identity, req.originalUrl, req.method)
+        await updateTunjanganUangByUuidService(req.params.uuid, value, req.identity, req.originalUrl, req.method)
         return res.status(200).json({
             message: "Update Success"
         })
@@ -101,7 +101,7 @@ export const updateHadiahByUUID = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            errorData: error.message
+            message: error.message
         })
     }
 }

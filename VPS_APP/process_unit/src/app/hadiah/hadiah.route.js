@@ -4,7 +4,7 @@ import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
-router.get("/:uuid", authTokenMiddleware(), getHadiahByPegawaiUUID)
+router.get("/:uuid/:tahun", authTokenMiddleware(), getHadiahByPegawaiUUID)
 router.post("/", authTokenMiddleware(), postCreateHadiah)
 router.delete("/:uuid", authTokenMiddleware(), deleteHadiahByUUID)
 

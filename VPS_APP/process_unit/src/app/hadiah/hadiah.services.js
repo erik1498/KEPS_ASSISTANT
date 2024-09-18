@@ -36,9 +36,9 @@ export const getHadiahByUuidService = async (uuid, req_identity) => {
     return hadiah
 }
 
-export const getHadiahByPegawaiUUIDService = async (uuid, req_identity) => {
-    LOGGER(logType.INFO, `Start getHadiahByPegawaiUUIDService [${uuid}]`, null, req_identity)
-    const hadiah = await getHadiahByPegawaiUuidRepo(uuid, req_identity)
+export const getHadiahByPegawaiUUIDService = async (uuid, tahun, req_identity) => {
+    LOGGER(logType.INFO, `Start getHadiahByPegawaiUUIDService [${uuid}]`, {tahun}, req_identity)
+    const hadiah = await getHadiahByPegawaiUuidRepo(uuid, tahun, req_identity)
     return hadiah
 }
 

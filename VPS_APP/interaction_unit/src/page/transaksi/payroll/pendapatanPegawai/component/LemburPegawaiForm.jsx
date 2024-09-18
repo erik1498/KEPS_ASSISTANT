@@ -43,9 +43,9 @@ const LemburPegawaiForm = ({
                     nilai_lembur_per_menit: nilaiLemburPerMenit,
                     waktu_mulai: waktuMulai,
                     waktu_selesai: waktuSelesai,
-                    total_jam: totalJam,
-                    total_menit: totalMenit,
-                    total_bayaran: totalBayaran
+                    total_jam: `${totalJam}`,
+                    total_menit: `${totalMenit}`,
+                    total_bayaran: `${totalBayaran}`
                 }
             }).then(resData => {
                 _getDaftarLemburPegawai()
@@ -87,7 +87,14 @@ const LemburPegawaiForm = ({
 
     useEffect(() => {
         _countTotalMenit()
-    }, [nilaiLemburPerMenit, waktuMulai, waktuSelesai])
+    }, [nilaiLemburPerMenit, waktuMulai])
+
+    useEffect(() => {
+        if (waktuSelesai < waktuMulai) {
+            setWaktuSelesai(x => x = waktuMulai)
+        }
+        _countTotalMenit()
+    }, [waktuSelesai])
 
     useEffect(() => {
         _getDaftarLemburPegawai()
@@ -257,11 +264,12 @@ const LemburPegawaiForm = ({
         <table class="table table-sm table-zebra my-6">
             <thead className="font-bold text-md">
                 <th>Periode</th>
-                <th>Sumber Dana</th>
-                <th>Tanggal</th>
+                <th>Deskripsi Kerja / Sumber Dana</th>
+                <th>Keterangan Kerja / Tanggal</th>
                 <th>Bukti Transaksi</th>
                 <th>Waktu Mulai</th>
                 <th>Waktu Selesai</th>
+                <th>Nilai Lembur Per Menit</th>
                 <th>Total Jam</th>
                 <th>Total Menit</th>
                 <th>Total Bayaran</th>
@@ -272,12 +280,22 @@ const LemburPegawaiForm = ({
                     lemburList.map((item) => {
                         return <>
                             <tr>
-                                <td>{getBulanByIndex(item.periode - 1)}</td>
+                                <td rowSpan={2}>{getBulanByIndex(item.periode - 1)}</td>
+                                <td>
+                                    <b>{item.deskripsi_kerja}</b>
+                                </td>
+                                <td
+                                    colSpan={10}>
+                                    <p>{item.keterangan_kerja}</p>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>{item.kode_akun_perkiraan_code} - {item.kode_akun_perkiraan_name}</td>
                                 <td>{`${item.tanggal.split("T")[0]} ${convertTo12HoursFormat(item.tanggal.split("T")[1])}`}</td>
                                 <td>{item.bukti_transaksi}</td>
                                 <td>{`${item.waktu_mulai.split("T")[0]} ${convertTo12HoursFormat(item.waktu_mulai.split("T")[1])}`}</td>
                                 <td>{`${item.waktu_selesai.split("T")[0]} ${convertTo12HoursFormat(item.waktu_selesai.split("T")[1])}`}</td>
+                                <td>{parseToRupiahText(item.nilai_lembur_per_menit)}</td>
                                 <td>{parseToRupiahText(item.total_jam)}</td>
                                 <td>{parseToRupiahText(item.total_menit)}</td>
                                 <td>{parseToRupiahText(item.total_bayaran)}</td>
