@@ -1,0 +1,81 @@
+import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { createPiutangKaryawanRepo, deletePiutangKaryawanByUuidRepo, getAllPiutangKaryawanRepo, getPiutangKaryawanByPegawaiUUIDRepo, getPiutangKaryawanByUuidRepo, updatePiutangKaryawanByUuidRepo } from "./piutangKaryawan.repository.js"
+
+export const getAllPiutangKaryawanService = async (query, req_identity) => {
+    LOGGER(logType.INFO, "Start getAllPiutangKaryawanService", null, req_identity)
+
+    let { page, size, search } = query
+    page = page ? page : null
+    size = size ? size : null
+    if (size == "all") {
+        page = null
+        size = null
+    }
+    search = search ? search : ""
+    const pageNumber = (page - 1) * size
+
+    LOGGER(logType.INFO, "Pagination", {
+        pageNumber, size, search
+    }, req_identity)
+
+    const piutangKaryawans = await getAllPiutangKaryawanRepo(pageNumber, size, search, req_identity)
+    return generatePaginationResponse(piutangKaryawans.entry, piutangKaryawans.count, piutangKaryawans.pageNumber, piutangKaryawans.size)
+}
+
+export const getPiutangKaryawanByUuidService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getPiutangKaryawanByUuidService [${uuid}]`, null, req_identity)
+    const piutangKaryawan = await getPiutangKaryawanByUuidRepo(uuid, req_identity)
+
+    if (!piutangKaryawan) {
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
+    }
+    return piutangKaryawan
+}
+
+export const getPiutangKaryawanByPegawaiUUIDService = async (uuid, periode, tahun, req_identity) => {
+    LOGGER(logType.INFO, `Start getPiutangKaryawanByPegawaiUUIDService [${uuid}]`, {
+        periode,
+        tahun
+    }, req_identity)
+    const piutangKaryawan = await getPiutangKaryawanByPegawaiUUIDRepo(uuid, periode, tahun, req_identity)
+
+    if (!piutangKaryawan) {
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
+    }
+    return piutangKaryawan
+}
+
+export const createPiutangKaryawanService = async (piutangKaryawanData, req_identity) => {
+    LOGGER(logType.INFO, `Start createPiutangKaryawanService`, piutangKaryawanData, req_identity)
+    piutangKaryawanData.enabled = 1
+
+    const piutangKaryawan = await createPiutangKaryawanRepo(piutangKaryawanData, req_identity)
+    return piutangKaryawan
+}
+
+export const deletePiutangKaryawanByUuidService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start deletePiutangKaryawanByUuidService [${uuid}]`, null, req_identity)
+    await getPiutangKaryawanByUuidService(uuid, req_identity)
+    await deletePiutangKaryawanByUuidRepo(uuid, req_identity)
+    return true
+}
+
+export const updatePiutangKaryawanByUuidService = async (uuid, piutangKaryawanData, req_identity, req_original_url, req_method) => {
+    LOGGER(logType.INFO, `Start updatePiutangKaryawanByUuidService [${uuid}]`, piutangKaryawanData, req_identity)
+    const beforeData = await getPiutangKaryawanByUuidService(uuid, req_identity)
+    const piutangKaryawan = await updatePiutangKaryawanByUuidRepo(uuid, piutangKaryawanData, req_identity)
+
+    LOGGER_MONITOR(req_original_url, req_method, {
+        beforeData,
+        piutangKaryawanData
+    }, req_identity)
+
+    return piutangKaryawan
+}

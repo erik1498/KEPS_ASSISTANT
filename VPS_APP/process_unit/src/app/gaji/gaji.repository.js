@@ -45,6 +45,7 @@ export const getGajiByPegawaiUuidRepo = async (uuid, periode, tahun, req_id) => 
             AND YEAR(gt.tanggal) = "${tahun}"
             AND gt.periode = "${periode}"
             ORDER BY gt.periode ASC
+            LIMIT 1
         `,
         {
             type: Sequelize.QueryTypes.SELECT

@@ -1,5 +1,5 @@
 import { _shapeObjectMethodCRUD } from './_config.api';
-import { SrvAktivitasDokumen, SrvCabang, SrvCustomer, SrvDaftarBarang, SrvDaftarGudang, SrvDaftarJasa, SrvDivisi, SrvDokumenKlien, SrvGaji, SrvHadiah, SrvHistoryAkun, SrvJabatan, SrvJenisBarang, SrvJenisGudang, SrvJenisJasa, SrvJenisPenjualanBarang, SrvJenisPenjualanJasa, SrvJurnalUmum, SrvKategoriAset, SrvKategoriBarang, SrvKategoriGudang, SrvKategoriHargaBarang, SrvKategoriHargaJasa, SrvKategoriJasa, SrvKategoriPerlengkapan, SrvKelompokAset, SrvKodeAkun, SrvLabaRugi, SrvLembur, SrvLogin, SrvMetodePenyusutan, SrvNeraca, SrvNeracaSaldo, SrvPayroll, SrvPegawai, SrvPerubahanModal, SrvRincianTransaksiBank, SrvRincianTransaksiKas, SrvRiwayatAktivitasDokumen, SrvRiwayatPembayaranAktivitasDokumen, SrvSatuanBarang, SrvSatuanJasa, SrvStatusRiwayatAktivitasDokumen, SrvStatusRiwayatAktivitasDokumenKeterangan, SrvStatusRiwayatAktivitasDokumenPegawaiPelaksana, SrvStatusTanggungan, SrvStokAwalBarang, SrvStokAwalJasa, SrvSupplier, SrvSyaratPembayaran, SrvTipePembayaran, SrvTransaksiBank, SrvTransaksiKas, SrvTunjanganBarang, SrvTunjanganUang } from './_endPoint.api';
+import { SrvAktivitasDokumen, SrvCabang, SrvCustomer, SrvDaftarBarang, SrvDaftarGudang, SrvDaftarJasa, SrvDivisi, SrvDokumenKlien, SrvGaji, SrvHadiah, SrvHistoryAkun, SrvJabatan, SrvJenisBarang, SrvJenisGudang, SrvJenisJasa, SrvJenisPenjualanBarang, SrvJenisPenjualanJasa, SrvJurnalUmum, SrvKategoriAset, SrvKategoriBarang, SrvKategoriGudang, SrvKategoriHargaBarang, SrvKategoriHargaJasa, SrvKategoriJasa, SrvKategoriPerlengkapan, SrvKelompokAset, SrvKerugian, SrvKodeAkun, SrvLabaRugi, SrvLainLain, SrvLembur, SrvLogin, SrvMetodePenyusutan, SrvNeraca, SrvNeracaSaldo, SrvPayroll, SrvPegawai, SrvPerubahanModal, SrvPiutangKaryawan, SrvPPH2126, SrvRincianTransaksiBank, SrvRincianTransaksiKas, SrvRiwayatAktivitasDokumen, SrvRiwayatPembayaranAktivitasDokumen, SrvSatuanBarang, SrvSatuanJasa, SrvStatusRiwayatAktivitasDokumen, SrvStatusRiwayatAktivitasDokumenKeterangan, SrvStatusRiwayatAktivitasDokumenPegawaiPelaksana, SrvStatusTanggungan, SrvStokAwalBarang, SrvStokAwalJasa, SrvSupplier, SrvSyaratPembayaran, SrvTipePembayaran, SrvTransaksiBank, SrvTransaksiKas, SrvTunjanganBarang, SrvTunjanganUang } from './_endPoint.api';
 
 export const apiLogin = { ..._shapeObjectMethodCRUD(SrvLogin) };
 
@@ -110,3 +110,11 @@ export const apiTunjanganUangCRUD = { ..._shapeObjectMethodCRUD(SrvTunjanganUang
 export const apiTunjanganBarangCRUD = { ..._shapeObjectMethodCRUD(SrvTunjanganBarang) }
 
 export const apiHadiahCRUD = { ..._shapeObjectMethodCRUD(SrvHadiah) }
+
+export const apiPPH2126CRUD = { ..._shapeObjectMethodCRUD(SrvPPH2126) }
+
+export const apiLainLainCRUD = { ..._shapeObjectMethodCRUD(SrvLainLain) }
+
+export const apiKerugianCRUD = { ..._shapeObjectMethodCRUD(SrvKerugian) }
+
+export const apiPiutangKaryawanCRUD = { ..._shapeObjectMethodCRUD(SrvPiutangKaryawan) }

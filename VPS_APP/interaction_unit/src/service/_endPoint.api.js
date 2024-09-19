@@ -222,3 +222,18 @@ export const SrvTunjanganBarang = objectPathEndPointAPI(
 export const SrvHadiah = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/hadiah'
 )
+
+export const SrvPPH2126 = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/pph2126'
+)
+
+export const SrvLainLain = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/lain_lain'
+)
+
+export const SrvKerugian = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/kerugian'
+)
+export const SrvPiutangKaryawan = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/piutang_karyawan'
+)

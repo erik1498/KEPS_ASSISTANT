@@ -52,6 +52,10 @@ import { getGajiRoute } from "../app/gaji/gaji.route.js";
 import { getLemburRoute } from "../app/lembur/lembur.route.js";
 import { getHadiahRoute } from "../app/hadiah/hadiah.route.js";
 import { getTunjanganUangRoute } from "../app/tunjangan_uang/tunjanganUang.route.js";
+import { getPph2126Route } from "../app/pph2126/pph2126.route.js";
+import { getPiutangKaryawanRoute } from "../app/piutang_karyawan/piutangKaryawan.route.js";
+import { getLainLainRoute } from "../app/lain_lain/lainLain.route.js";
+import { getKerugianRoute } from "../app/kerugian/kerugian.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -108,5 +112,9 @@ export const routerList = new Array()
         getGajiRoute(),
         getLemburRoute(),
         getHadiahRoute(),
-        getTunjanganUangRoute()
+        getTunjanganUangRoute(),
+        getPph2126Route(),
+        getPiutangKaryawanRoute(),
+        getLainLainRoute(),
+        getKerugianRoute()
     )
