@@ -37,17 +37,10 @@ export const getGajiByUuidService = async (uuid, req_identity) => {
 }
 
 
-export const getGajiByPegawaiUUIDService = async (uuid, tahun, req_identity) => {
-    LOGGER(logType.INFO, `Start getGajiByPegawaiUUIDService [${uuid}]`, { tahun }, req_identity)
-    const gaji = await getGajiByPegawaiUuidRepo(uuid, tahun, req_identity)
-
-    if (!gaji) {
-        throw Error(JSON.stringify({
-            message: "Data Not Found",
-            field: "error"
-        }))
-    }
-    return gaji
+export const getGajiByPegawaiUUIDService = async (uuid, periode, tahun, req_identity) => {
+    LOGGER(logType.INFO, `Start getGajiByPegawaiUUIDService [${uuid}]`, { periode, tahun }, req_identity)
+    const gaji = await getGajiByPegawaiUuidRepo(uuid, periode, tahun, req_identity)
+    return gaji[0]
 }
 
 export const createGajiService = async (gajiData, req_identity) => {

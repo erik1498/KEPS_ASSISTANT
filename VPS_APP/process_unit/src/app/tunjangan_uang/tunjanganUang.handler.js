@@ -11,7 +11,7 @@ export const getAllTunjanganUangs = async (req, res) => {
             data: tunjanganUangs,
             message: "Get Data Success"
         })
-    } catch (error) {    
+    } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
@@ -23,10 +23,10 @@ export const getAllTunjanganUangs = async (req, res) => {
 export const getTunjanganUangByPegawaiUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start getTunjanganUangByPegawaiUUIDController", null, req.identity)
     try {
-        const { uuid, tahun } = req.params
+        const { uuid, periode, tahun } = req.params
 
         res.json({
-            data: await getTunjanganUangByPegawaiUUIDService(uuid, tahun, req.identity),
+            data: await getTunjanganUangByPegawaiUUIDService(uuid, periode, tahun, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {
@@ -84,7 +84,7 @@ export const deleteTunjanganUangByUUID = async (req, res) => {
 
 export const updateTunjanganUangByUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start updateTunjanganUangByUuidController", null, req.identity)
-    try {    
+    try {
         const tunjanganUangData = req.body
         const { error, value } = tunjanganUangValidation(tunjanganUangData)
         if (error) {

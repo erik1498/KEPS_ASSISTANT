@@ -36,17 +36,17 @@ export const getTunjanganUangByUuidService = async (uuid, req_identity) => {
     return tunjanganUang
 }
 
-export const getTunjanganUangByPegawaiUUIDService = async (uuid, tahun, req_identity) => {
-    LOGGER(logType.INFO, `Start getTunjanganUangByPegawaiUUIDService [${uuid}]`, { tahun }, req_identity)
-    const tunjanganUang = await getTunjanganUangByPegawaiUuidRepo(uuid, tahun, req_identity)
+export const getTunjanganUangByPegawaiUUIDService = async (uuid, periode, tahun, req_identity) => {
+    LOGGER(logType.INFO, `Start getTunjanganUangByPegawaiUUIDService [${uuid}]`, { periode, tahun }, req_identity)
+    const tunjanganUang = await getTunjanganUangByPegawaiUuidRepo(uuid, periode, tahun, req_identity)
 
-    if (!tunjanganUang) {
+    if (tunjanganUang.length == 0) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
             field: "error"
         }))
     }
-    return tunjanganUang
+    return tunjanganUang[0]
 }
 
 export const createTunjanganUangService = async (tunjanganUangData, req_identity) => {

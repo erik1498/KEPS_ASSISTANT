@@ -7,12 +7,14 @@ import { FaSave, FaTrash } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiLemburCRUD } from "../../../../../service/endPointList.api"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
+import { useDataContext } from "../../../../../context/dataContext.context"
 
 const LemburPegawaiForm = ({
     idPegawai,
+    periode,
     kodeAkunList = []
 }) => {
-    const [periode, setPeriode] = useState()
+    const { data } = useDataContext()
     const [kodeAkun, setKodeAkun] = useState()
     const [tanggal, setTanggal] = useState(getHariTanggalFull())
     const [buktiTransaksi, setBuktiTransaksi] = useState()
@@ -55,7 +57,7 @@ const LemburPegawaiForm = ({
 
     const _getDaftarLemburPegawai = () => {
         apiLemburCRUD
-            .custom(`/${idPegawai}`, "GET")
+            .custom(`/${idPegawai}/${periode.value}/${data.tahun}`, "GET")
             .then(resData => {
                 setLemburList(resData.data)
             })
@@ -104,17 +106,6 @@ const LemburPegawaiForm = ({
         <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Lembur Pegawai</h1>
         <form onSubmit={e => _saveLemburPegawai(e)}>
             <div className="flex items-end gap-x-2">
-                <FormSelectWithLabel
-                    label={"Pilih Periode"}
-                    optionsDataList={getBulanListForFormSelect()}
-                    optionsLabel={"label"}
-                    optionsValue={"value"}
-                    selectValue={periode}
-                    onchange={(e) => {
-                        setPeriode(e)
-                    }}
-                    selectName={`periode`}
-                />
                 <FormSelectWithLabel
                     label={"Sumber Dana"}
                     optionsDataList={kodeAkunList}
@@ -262,25 +253,11 @@ const LemburPegawaiForm = ({
             <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
         </form>
         <table class="table table-sm table-zebra my-6">
-            <thead className="font-bold text-md">
-                <th>Periode</th>
-                <th>Deskripsi Kerja / Sumber Dana</th>
-                <th>Keterangan Kerja / Tanggal</th>
-                <th>Bukti Transaksi</th>
-                <th>Waktu Mulai</th>
-                <th>Waktu Selesai</th>
-                <th>Nilai Lembur Per Menit</th>
-                <th>Total Jam</th>
-                <th>Total Menit</th>
-                <th>Total Bayaran</th>
-                <th>Aksi</th>
-            </thead>
             <tbody>
                 {
                     lemburList.map((item) => {
                         return <>
                             <tr>
-                                <td rowSpan={2}>{getBulanByIndex(item.periode - 1)}</td>
                                 <td>
                                     <b>{item.deskripsi_kerja}</b>
                                 </td>

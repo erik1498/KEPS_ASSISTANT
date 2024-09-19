@@ -11,10 +11,10 @@ import { useDataContext } from "../../../../../context/dataContext.context"
 
 const HadiahPegawaiForm = ({
     idPegawai,
+    periode,
     kodeAkunList = []
 }) => {
     const { data } = useDataContext()
-    const [periode, setPeriode] = useState()
     const [nilai, setNilai] = useState("0")
     const [kodeAkun, setKodeAkun] = useState()
     const [tanggal, setTanggal] = useState(getHariTanggalFull())
@@ -44,7 +44,7 @@ const HadiahPegawaiForm = ({
 
     const _getDaftarHadiahPegawai = () => {
         apiHadiahCRUD
-            .custom(`/${idPegawai}/${data.tahun}`, "GET")
+            .custom(`/${idPegawai}/${periode.value}/${data.tahun}`, "GET")
             .then(resData => {
                 setHadiahList(resData.data)
             })
@@ -66,17 +66,6 @@ const HadiahPegawaiForm = ({
         <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Hadiah Pegawai</h1>
         <form onSubmit={e => _saveHadiahPegawai(e)}>
             <div className="flex items-end gap-x-2">
-                <FormSelectWithLabel
-                    label={"Pilih Periode"}
-                    optionsDataList={getBulanListForFormSelect()}
-                    optionsLabel={"label"}
-                    optionsValue={"value"}
-                    selectValue={periode}
-                    onchange={(e) => {
-                        setPeriode(e)
-                    }}
-                    selectName={`periode`}
-                />
                 <FormSelectWithLabel
                     label={"Sumber Dana"}
                     optionsDataList={kodeAkunList}
@@ -148,7 +137,6 @@ const HadiahPegawaiForm = ({
         </form>
         <table class="table table-sm table-zebra my-6">
             <thead className="font-bold text-md">
-                <th>Periode</th>
                 <th>Sumber Dana</th>
                 <th>Tanggal</th>
                 <th>Bukti Transaksi</th>
@@ -161,7 +149,6 @@ const HadiahPegawaiForm = ({
                     hadiahList.map((item) => {
                         return <>
                             <tr>
-                                <td>{getBulanByIndex(item.periode - 1)}</td>
                                 <td>{item.kode_akun_perkiraan_code} - {item.kode_akun_perkiraan_name}</td>
                                 <td>{`${item.tanggal.split("T")[0]} ${convertTo12HoursFormat(item.tanggal.split("T")[1])}`}</td>
                                 <td>{item.bukti_transaksi}</td>

@@ -31,7 +31,7 @@ export const getAllGajiRepo = async (pageNumber, size, search, req_id) => {
 }
 
 
-export const getGajiByPegawaiUuidRepo = async (uuid, tahun, req_id) => {
+export const getGajiByPegawaiUuidRepo = async (uuid, periode, tahun, req_id) => {
     const gajis = await db.query(
         `
             SELECT 
@@ -43,6 +43,7 @@ export const getGajiByPegawaiUuidRepo = async (uuid, tahun, req_id) => {
             WHERE gt.pegawai = "${uuid}"
             AND gt.enabled = 1
             AND YEAR(gt.tanggal) = "${tahun}"
+            AND gt.periode = "${periode}"
             ORDER BY gt.periode ASC
         `,
         {

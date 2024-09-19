@@ -9,6 +9,7 @@ import TunjanganUangPegawaiForm from "./TunjanganUangPegawaiForm"
 import TunjanganBarangPegawaiForm from "./TunjanganBarangPegawaiForm"
 import HadiahPegawaiForm from "./HadiahPegawaiForm"
 import ToggleBox from "../../../../../component/general/ToggleBox"
+import { getBulanListForFormSelect } from "../../../../../helper/date.helper"
 
 const PendapatanPegawaiForm = ({
     pendapatanPegawaiSelected,
@@ -17,6 +18,10 @@ const PendapatanPegawaiForm = ({
     const [pegawai, setPegawai] = useState()
     const [pegawaiList, setPegawaiList] = useState([])
     const [idPegawai, setIdPegawai] = useState()
+    const [periode, setPeriode] = useState({
+        label: getBulanListForFormSelect()[new Date().getMonth()].label,
+        value: getBulanListForFormSelect()[new Date().getMonth()].value
+    })
 
     const [toggle, setToggle] = useState("Gaji")
 
@@ -75,21 +80,46 @@ const PendapatanPegawaiForm = ({
                         }}
                         selectName={`pegawai`}
                     />
-                    {
-                        !idPegawai ? <>
-                            <button
-                                className="btn btn-sm bg-green-800 mt-4 text-white"
-                                onClick={() => setIdPegawai(pegawai.value)}
-                            >
-                                <FaCheck /> Pilih Pegawai
-                            </button>
-                        </> :
-                            <>
-
-                            </>
-                    }
+                    <FormSelectWithLabel
+                        label={"Pilih Periode"}
+                        optionsDataList={getBulanListForFormSelect()}
+                        optionsLabel={"label"}
+                        optionsValue={"value"}
+                        selectValue={periode}
+                        onchange={(e) => {
+                            setPeriode(e)
+                        }}
+                        selectName={`periode`}
+                    />
                 </div>
                 {
+                    !idPegawai ? <>
+                        <button
+                            className="btn btn-sm bg-green-800 mt-4 text-white"
+                            onClick={() => setIdPegawai(pegawai.value)}
+                        >
+                            <FaCheck /> Pilih Pegawai
+                        </button>
+                    </> :
+                        <>
+                            <GajiPegawaiForm
+                                periode={periode}
+                                idPegawai={idPegawai}
+                                kodeAkunList={kodeAkunList}
+                            />
+                            <LemburPegawaiForm
+                                idPegawai={idPegawai}
+                                kodeAkunList={kodeAkunList}
+                                periode={periode}
+                            />
+                            <HadiahPegawaiForm 
+                                idPegawai={idPegawai}
+                                kodeAkunList={kodeAkunList}
+                                periode={periode}
+                            />
+                        </>
+                }
+                {/* {
                     idPegawai ? <>
                         <ToggleBox
                             addClass={"mt-5"}
@@ -161,7 +191,7 @@ const PendapatanPegawaiForm = ({
                             </> : <></>
                         }
                     </> : <></>
-                }
+                } */}
             </div>
         </div>
     </>

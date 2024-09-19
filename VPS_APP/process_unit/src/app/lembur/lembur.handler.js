@@ -23,10 +23,10 @@ export const getAllLemburs = async (req, res) => {
 export const getLemburByPegawaiUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start getLemburByPegawaiUUID", null, req.identity)
     try {
-        const { uuid } = req.params
+        const { uuid, periode, tahun } = req.params
 
         res.json({
-            data: await getLemburByPegawaiUUIDService(uuid, req.identity),
+            data: await getLemburByPegawaiUUIDService(uuid, periode, tahun, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {

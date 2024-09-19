@@ -8,25 +8,28 @@ import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiGajiCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { useDataContext } from "../../../../../context/dataContext.context"
+import TunjanganUangPegawaiForm from "./TunjanganUangPegawaiForm"
 
 const GajiPegawaiForm = ({
     idPegawai,
+    periode,
     kodeAkunList = []
 }) => {
     const { data } = useDataContext()
 
-    const [periode, setPeriode] = useState()
     const [nilai, setNilai] = useState("0")
-    const [kodeAkun, setKodeAkun] = useState()
+    const [kodeAkun, setKodeAkun] = useState(kodeAkunList.length > 0 ? {
+        label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+        value: kodeAkunList[0].uuid
+    } : null)
+    const [gaji, setGaji] = useState(null)
     const [tanggal, setTanggal] = useState(getHariTanggalFull())
     const [buktiTransaksi, setBuktiTransaksi] = useState()
-
-    const [gajiList, setGajiList] = useState([])
 
     const _saveGajiPegawai = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
-            apiGajiCRUD.custom("", "POST", null, {
+            apiGajiCRUD.custom(gaji ? `/${gaji.uuid}` : ``, gaji ? "PUT" : "POST", null, {
                 data: {
                     pegawai: idPegawai,
                     periode: periode.value,
@@ -36,46 +39,41 @@ const GajiPegawaiForm = ({
                     nilai: nilai
                 }
             }).then(resData => {
-                _getDaftarGajiPegawai()
+                if (!gaji) {
+                    setGaji(x => x = resData.data)
+                }
             }).catch(err => showError(err))
         }
     }
 
-    const _getDaftarGajiPegawai = () => {
+    const _getGajiPegawai = () => {
         apiGajiCRUD
-            .custom(`/${idPegawai}/${data.tahun}`, "GET")
+            .custom(`/${idPegawai}/${periode.value}/${data.tahun}`, "GET")
             .then(resData => {
-                setGajiList(resData.data)
+                if (resData.data?.nilai) {
+                    setNilai(parseToRupiahText(resData.data.nilai))
+                    setBuktiTransaksi(resData.data.bukti_transaksi)
+                    setTanggal(resData.data.tanggal)
+                    setGaji(resData.data)
+                    const kodeAkunGet = kodeAkunList.filter(x => x.uuid == resData.data.kode_akun_perkiraan)
+                    if (kodeAkunGet) {
+                        setKodeAkun(x => x = {
+                            label: `${kodeAkunGet[0].code} - ${kodeAkunGet[0].name}`,
+                            value: kodeAkunGet[0].uuid
+                        })
+                    }
+                }
             })
     }
 
-    const _deleteGaji = (uuid) => {
-        apiGajiCRUD
-            .custom(`/${uuid}`, "DELETE")
-            .then(() => {
-                _getDaftarGajiPegawai()
-            }).catch(err => showError(err))
-    }
-
     useEffect(() => {
-        _getDaftarGajiPegawai()
+        _getGajiPegawai()
     }, [idPegawai])
 
     return <div className="my-5">
         <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Gaji Pegawai</h1>
         <form onSubmit={e => _saveGajiPegawai(e)}>
             <div className="flex items-end gap-x-2">
-                <FormSelectWithLabel
-                    label={"Pilih Periode"}
-                    optionsDataList={getBulanListForFormSelect()}
-                    optionsLabel={"label"}
-                    optionsValue={"value"}
-                    selectValue={periode}
-                    onchange={(e) => {
-                        setPeriode(e)
-                    }}
-                    selectName={`periode`}
-                />
                 <FormSelectWithLabel
                     label={"Sumber Dana"}
                     optionsDataList={kodeAkunList}
@@ -132,37 +130,13 @@ const GajiPegawaiForm = ({
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
         </form>
-        <table class="table table-sm table-zebra my-6">
-            <thead className="font-bold text-md">
-                <th>Periode</th>
-                <th>Sumber Dana</th>
-                <th>Tanggal</th>
-                <th>Bukti Transaksi</th>
-                <th>Nilai</th>
-                <th>Aksi</th>
-            </thead>
-            <tbody>
-                {
-                    gajiList.map((item) => {
-                        return <>
-                            <tr>
-                                <td>{getBulanByIndex(item.periode - 1)}</td>
-                                <td>{item.kode_akun_perkiraan_code} - {item.kode_akun_perkiraan_name}</td>
-                                <td>{`${item.tanggal.split("T")[0]} ${convertTo12HoursFormat(item.tanggal.split("T")[1])}`}</td>
-                                <td>{item.bukti_transaksi}</td>
-                                <td>{parseToRupiahText(item.nilai)}</td>
-                                <td>
-                                    <FaTrash
-                                        onClick={() => _deleteGaji(item.uuid)}
-                                        className="text-red-600 hover:cursor-pointer" size={12}
-                                    />
-                                </td>
-                            </tr>
-                        </>
-                    })
-                }
-            </tbody>
-        </table>
+
+        <TunjanganUangPegawaiForm
+            idPegawai={idPegawai}
+            kodeAkunList={kodeAkunList}
+            periode={periode}
+            gaji={gaji}
+        />
     </div>
 }
 export default GajiPegawaiForm

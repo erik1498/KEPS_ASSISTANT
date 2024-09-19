@@ -42,7 +42,7 @@ export const getTunjanganUangByUuidRepo = async (uuid, req_id) => {
     )
 }
 
-export const getTunjanganUangByPegawaiUuidRepo = async (uuid, tahun, req_id) => {
+export const getTunjanganUangByPegawaiUuidRepo = async (uuid, periode, tahun, req_id) => {
     const tunjanganUangs = await db.query(
         `
             SELECT 
@@ -70,7 +70,9 @@ export const getTunjanganUangByPegawaiUuidRepo = async (uuid, tahun, req_id) => 
             AND kapt3.enabled = 1
             AND kapt4.enabled = 1
             AND gt.enabled = 1
+            AND tut.periode = "${periode}"
             AND YEAR(tut.tanggal) = "${tahun}"
+            LIMIT 1
         `,
         {
             type: Sequelize.QueryTypes.SELECT

@@ -30,7 +30,7 @@ export const getAllLemburRepo = async (pageNumber, size, search, req_id) => {
     }
 }
 
-export const getLemburByPegawaiUuidRepo = async (uuid, req_id) => {
+export const getLemburByPegawaiUuidRepo = async (uuid, periode, tahun, req_id) => {
     return await db.query(
         `
             SELECT 
@@ -41,6 +41,8 @@ export const getLemburByPegawaiUuidRepo = async (uuid, req_id) => {
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = lt.kode_akun_perkiraan 
             WHERE lt.pegawai = "${uuid}"
             AND lt.enabled = 1
+            AND lt.periode = "${periode}"
+            AND YEAR(lt.tanggal) = "${tahun}"
             ORDER BY lt.periode ASC
         `,
         {

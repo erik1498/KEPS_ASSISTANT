@@ -36,9 +36,12 @@ export const getLemburByUuidService = async (uuid, req_identity) => {
     return lembur
 }
 
-export const getLemburByPegawaiUUIDService = async (uuid, req_identity) => {
-    LOGGER(logType.INFO, `Start getLemburByPegawaiUUIDService [${uuid}]`, null, req_identity)
-    const lembur = await getLemburByPegawaiUuidRepo(uuid, req_identity)
+export const getLemburByPegawaiUUIDService = async (uuid, periode, tahun, req_identity) => {
+    LOGGER(logType.INFO, `Start getLemburByPegawaiUUIDService [${uuid}]`, {
+        periode,
+        tahun
+    }, req_identity)
+    const lembur = await getLemburByPegawaiUuidRepo(uuid, periode, tahun, req_identity)
     return lembur
 }
 

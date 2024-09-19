@@ -3,10 +3,13 @@ import PageTitle from "../../../../component/general/PageTitle"
 import Wrap from "../../../../component/layout/Wrap"
 import PendapatanPegawaiForm from "./component/PendapatanPegawaiForm"
 import { FaPlus } from "react-icons/fa"
+import { getBulanByIndex } from "../../../../helper/date.helper"
+import BulanSelectedListCard from "../../../../component/card/BulanSelectedListCard"
 
 const PendapatanPegawaiPage = () => {
     const [pendapatanPegawaiForm, setPendapatanPegawaiForm] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [bulan, setBulan] = useState(new Date().getMonth())
 
     const _getData = (searchParam = "") => {
         setIsLoading(true)
@@ -33,6 +36,14 @@ const PendapatanPegawaiPage = () => {
                                 <button className="btn btn-sm bg-blue-900 text-white border-none" onClick={() => {
                                     setPendapatanPegawaiForm(true)
                                 }}><FaPlus /> Tambah Transaksi</button>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-6">
+                            <div className="col-span-1">
+                                <BulanSelectedListCard
+                                    bulan={bulan}
+                                    setBulan={setBulan}
+                                />
                             </div>
                         </div>
                     </>

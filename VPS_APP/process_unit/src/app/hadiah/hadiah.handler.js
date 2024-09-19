@@ -23,10 +23,10 @@ export const getAllHadiahs = async (req, res) => {
 export const getHadiahByPegawaiUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start getHadiahByPegawaiUUID", null, req.identity)
     try {
-        const { uuid, tahun } = req.params
+        const { uuid, periode, tahun } = req.params
 
         res.json({
-            data: await getHadiahByPegawaiUUIDService(uuid, tahun, req.identity),
+            data: await getHadiahByPegawaiUUIDService(uuid, periode, tahun, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {

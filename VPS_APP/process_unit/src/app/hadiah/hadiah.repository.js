@@ -42,7 +42,7 @@ export const getHadiahByUuidRepo = async (uuid, req_id) => {
     )
 }
 
-export const getHadiahByPegawaiUuidRepo = async (uuid, tahun, req_id) => {
+export const getHadiahByPegawaiUuidRepo = async (uuid, periode, tahun, req_id) => {
     const hadiahs = await db.query(
         `
             SELECT 
@@ -53,6 +53,7 @@ export const getHadiahByPegawaiUuidRepo = async (uuid, tahun, req_id) => {
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ht.kode_akun_perkiraan 
             WHERE ht.pegawai = "${uuid}"
             AND ht.enabled = 1
+            AND ht.periode = "${periode}"
             AND YEAR(ht.tanggal) = "${tahun}"
             ORDER BY ht.periode ASC
         `,
