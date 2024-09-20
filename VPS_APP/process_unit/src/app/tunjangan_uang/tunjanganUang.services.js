@@ -1,26 +1,16 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
-import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createTunjanganUangRepo, deleteTunjanganUangByUuidRepo, getAllTunjanganUangRepo, getTunjanganUangByPegawaiUuidRepo, getTunjanganUangByUuidRepo, updateTunjanganUangByUuidRepo } from "./tunjanganUang.repository.js"
 
 export const getAllTunjanganUangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllTunjanganUangService", null, req_identity)
 
-    let { page, size, search } = query
-    page = page ? page : null
-    size = size ? size : null
-    if (size == "all") {
-        page = null
-        size = null
-    }
-    search = search ? search : ""
-    const pageNumber = (page - 1) * size
+    let { bulan, tahun } = query
 
     LOGGER(logType.INFO, "Pagination", {
-        pageNumber, size, search
+        bulan, tahun
     }, req_identity)
 
-    const tunjanganUangs = await getAllTunjanganUangRepo(pageNumber, size, search, req_identity)
-    return generatePaginationResponse(tunjanganUangs.entry, tunjanganUangs.count, tunjanganUangs.pageNumber, tunjanganUangs.size)
+    return await getAllTunjanganUangRepo(bulan, tahun, req_identity)
 }
 
 export const getTunjanganUangByUuidService = async (uuid, req_identity) => {

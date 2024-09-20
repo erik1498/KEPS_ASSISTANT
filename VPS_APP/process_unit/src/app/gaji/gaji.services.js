@@ -1,26 +1,17 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
-import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createGajiRepo, deleteGajiByUuidRepo, getAllGajiRepo, getGajiByPegawaiUuidRepo, getGajiByUuidRepo, updateGajiByUuidRepo } from "./gaji.repository.js"
 
 export const getAllGajiService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllGajiService", null, req_identity)
 
-    let { page, size, search } = query
-    page = page ? page : null
-    size = size ? size : null
-    if (size == "all") {
-        page = null
-        size = null
-    }
-    search = search ? search : ""
-    const pageNumber = (page - 1) * size
+    let { bulan, tahun } = query
 
     LOGGER(logType.INFO, "Pagination", {
-        pageNumber, size, search
+        bulan, tahun
     }, req_identity)
 
-    const gajis = await getAllGajiRepo(pageNumber, size, search, req_identity)
-    return generatePaginationResponse(gajis.entry, gajis.count, gajis.pageNumber, gajis.size)
+    const gajis = await getAllGajiRepo(bulan, tahun, req_identity)
+    return gajis
 }
 
 export const getGajiByUuidService = async (uuid, req_identity) => {

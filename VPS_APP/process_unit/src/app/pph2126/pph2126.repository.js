@@ -4,30 +4,53 @@ import Pph2126Model from "./pph2126.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
-export const getAllPph2126Repo = async (pageNumber, size, search, req_id) => {
-    const pph2126sCount = await db.query(
+export const getAllPph2126Repo = async (bulan, tahun, req_id) => {
+    return await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.pph2126_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                ppt.uuid,
+                ppt.bukti_transaksi,
+                0 AS transaksi,
+                ppt.tanggal,
+                0 AS debet,
+                ppt.nilai AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "PPH 21/26 Pegawai" AS uraian,
+                "PPH 21/26" AS sumber,
+                pt.name AS pegawai_name,
+                ppt.enabled 
+            FROM ${generateDatabaseName(req_id)}.pph2126_tab ppt 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppt.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ppt.pegawai 
+            WHERE pt.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(ppt.tanggal) = ${tahun} AND MONTH(ppt.tanggal) = ${bulan}
+            UNION ALL
+            SELECT 
+                ppt.uuid,
+                ppt.bukti_transaksi,
+                0 AS transaksi,
+                ppt.tanggal,
+                ppt.nilai AS debet,
+                0 AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "PPH 21/26 Pegawai" AS uraian,
+                "PPH 21/26" AS sumber,
+                pt.name AS pegawai_name,
+                ppt.enabled 
+            FROM ${generateDatabaseName(req_id)}.pph2126_tab ppt 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "eadfec72-7d66-4597-998d-8acf959d34b7" 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ppt.pegawai 
+            WHERE pt.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(ppt.tanggal) = ${tahun} AND MONTH(ppt.tanggal) = ${bulan}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
-
-    pageNumber = pageNumber && pageNumber > -1 ? pageNumber : 0
-    size = size ? size : pph2126sCount[0].count
-
-    const pph2126s = await db.query(
-        `
-            SELECT * FROM ${generateDatabaseName(req_id)}.pph2126_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
-        `,
-        { type: Sequelize.QueryTypes.SELECT }
-    )
-
-    return {
-        entry: pph2126s,
-        count: pph2126sCount[0].count,
-        pageNumber: pageNumber == 0 ? pageNumber + 1 : (pageNumber / size) + 1,
-        size
-    }
 }
 
 export const getPph2126ByUuidRepo = async (uuid, req_id) => {

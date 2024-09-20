@@ -1,9 +1,10 @@
 import express from "express"
-import { deletePph2126ByUUID, getPph2126ByPegawaiUUID, postCreatePph2126, updatePph2126ByUUID } from "./pph2126.handler.js"
+import { deletePph2126ByUUID, getAllPph2126s, getPph2126ByPegawaiUUID, postCreatePph2126, updatePph2126ByUUID } from "./pph2126.handler.js"
 import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
+router.get("/", authTokenMiddleware(), getAllPph2126s)
 router.get("/:uuid/:periode/:tahun", authTokenMiddleware(), getPph2126ByPegawaiUUID)
 router.post("/", authTokenMiddleware(), postCreatePph2126)
 router.put("/:uuid", authTokenMiddleware(), updatePph2126ByUUID)

@@ -4,30 +4,347 @@ import TunjanganUangModel from "./tunjanganUang.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
-export const getAllTunjanganUangRepo = async (pageNumber, size, search, req_id) => {
-    const tunjanganUangsCount = await db.query(
+export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
+    return await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                tut.bonus + tut.insentif + tut.thr AS debet,
+                0 AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Tunjangan Uang" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "dc632a24-dba2-4c65-9b42-968de322fe1c"
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                0 AS debet,
+                tut.bonus AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Bonus Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                0 AS debet,
+                tut.insentif AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Insentif Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                0 AS debet,
+                tut.thr AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "THR Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                tut.jp AS debet,
+                0 AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Jaminan Pensiun Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                tut.jht AS debet,
+                0 AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Jaminan Hari Tua Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                tut.jkm AS debet,
+                0 AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Jaminan Kematian Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                tut.jkk AS debet,
+                0 AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Jaminan Keselamatan Kerja Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                0 AS debet,
+                tut.jp AS debet,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Jaminan Pensiun Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                0 AS debet,
+                tut.jht AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Jaminan Hari Tua Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                0 AS debet,
+                tut.jkm AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Jaminan Kematian Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                0 AS debet,
+                tut.jkk AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Jaminan Keselamatan Kerja Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                tut.bpjs_kesehatan AS debet,
+                0 AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "BPJS Kesehatan Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "5555ff3a-9de0-42b5-bdc8-f39c43947496" 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                0 AS debet,
+                tut.bpjs_karyawan AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "BPJS Karyawan" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_bpjs_karyawan 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                0 AS debet,
+                tut.jp_karyawan AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Jaminan Pensiun Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_jp_karyawan
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
+            UNION ALL
+            SELECT 
+                tut.uuid,
+                tut.bukti_transaksi,
+                0 AS transaksi,
+                tut.tanggal,
+                0 AS debet,
+                tut.jht_karyawan AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "Jaminan Hari Tua Pegawai" AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                tut.enabled 
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_jht_karyawan 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+            WHERE tut.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(tut.tanggal) = "${tahun}" AND MONTH(tut.tanggal) = "${bulan}"
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
-
-    pageNumber = pageNumber && pageNumber > -1 ? pageNumber : 0
-    size = size ? size : tunjanganUangsCount[0].count
-
-    const tunjanganUangs = await db.query(
-        `
-            SELECT * FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
-        `,
-        { type: Sequelize.QueryTypes.SELECT }
-    )
-
-    return {
-        entry: tunjanganUangs,
-        count: tunjanganUangsCount[0].count,
-        pageNumber: pageNumber == 0 ? pageNumber + 1 : (pageNumber / size) + 1,
-        size
-    }
 }
 
 export const getTunjanganUangByUuidRepo = async (uuid, req_id) => {

@@ -31,7 +31,7 @@ const PPH2126PegawaiForm = ({
             apiPPH2126CRUD.custom(pph2126 ? `/${pph2126.uuid}` : ``, pph2126 ? "PUT" : "POST", null, {
                 data: {
                     pegawai: idPegawai,
-                    periode: periode.value,
+                    periode: periode,
                     kode_akun_perkiraan: kodeAkun.value,
                     tanggal: tanggal,
                     bukti_transaksi: buktiTransaksi,
@@ -47,7 +47,7 @@ const PPH2126PegawaiForm = ({
 
     const _getPPH2126Pegawai = () => {
         apiPPH2126CRUD
-            .custom(`/${idPegawai}/${periode.value}/${data.tahun}`, "GET")
+            .custom(`/${idPegawai}/${periode}/${data.tahun}`, "GET")
             .then(resData => {
                 if (resData.data?.nilai) {
                     setNilai(parseToRupiahText(resData.data.nilai))
@@ -69,7 +69,7 @@ const PPH2126PegawaiForm = ({
         _getPPH2126Pegawai()
     }, [idPegawai])
 
-    return <div className="my-5">
+    return <div className="my-5 bg-white py-5 px-6 rounded-md">
         <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">PPH 21/26 Pegawai</h1>
         <form onSubmit={e => _savePPH2126Pegawai(e)}>
             <div className="flex items-end gap-x-2">

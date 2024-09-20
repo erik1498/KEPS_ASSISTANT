@@ -1,26 +1,15 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
-import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createKerugianRepo, deleteKerugianByUuidRepo, getAllKerugianRepo, getKerugianByPegawaiUUIDRepo, getKerugianByUuidRepo, updateKerugianByUuidRepo } from "./kerugian.repository.js"
 
 export const getAllKerugianService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllKerugianService", null, req_identity)
 
-    let { page, size, search } = query
-    page = page ? page : null
-    size = size ? size : null
-    if (size == "all") {
-        page = null
-        size = null
-    }
-    search = search ? search : ""
-    const pageNumber = (page - 1) * size
-
+    let { bulan, tahun } = query
     LOGGER(logType.INFO, "Pagination", {
-        pageNumber, size, search
+        bulan, tahun
     }, req_identity)
     
-    const kerugians = await getAllKerugianRepo(pageNumber, size, search, req_identity)
-    return generatePaginationResponse(kerugians.entry, kerugians.count, kerugians.pageNumber, kerugians.size)
+    return await getAllKerugianRepo(bulan, tahun, req_identity)
 }
 
 export const getKerugianByUuidService = async (uuid, req_identity) => {

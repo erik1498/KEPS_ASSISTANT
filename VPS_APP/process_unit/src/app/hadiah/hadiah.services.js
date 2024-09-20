@@ -1,26 +1,16 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
-import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createHadiahRepo, deleteHadiahByUuidRepo, getAllHadiahRepo, getHadiahByUuidRepo, getHadiahByPegawaiUuidRepo, updateHadiahByUuidRepo } from "./hadiah.repository.js"
 
 export const getAllHadiahService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllHadiahService", null, req_identity)
 
-    let { page, size, search } = query
-    page = page ? page : null
-    size = size ? size : null
-    if (size == "all") {
-        page = null
-        size = null
-    }
-    search = search ? search : ""
-    const pageNumber = (page - 1) * size
+    let { bulan, tahun } = query
 
     LOGGER(logType.INFO, "Pagination", {
-        pageNumber, size, search
+        bulan, tahun
     }, req_identity)
 
-    const hadiahs = await getAllHadiahRepo(pageNumber, size, search, req_identity)
-    return generatePaginationResponse(hadiahs.entry, hadiahs.count, hadiahs.pageNumber, hadiahs.size)
+    return await getAllHadiahRepo(bulan, tahun, req_identity)
 }
 
 export const getHadiahByUuidService = async (uuid, req_identity) => {

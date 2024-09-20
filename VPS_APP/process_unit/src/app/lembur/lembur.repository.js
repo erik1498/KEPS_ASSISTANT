@@ -4,30 +4,67 @@ import LemburModel from "./lembur.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
-export const getAllLemburRepo = async (pageNumber, size, search, req_id) => {
-    const lembursCount = await db.query(
+export const getAllLemburRepo = async (bulan, tahun, req_id) => {
+    return await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.lembur_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                lt.uuid,
+                lt.bukti_transaksi,
+                0 AS transaksi,
+                lt.tanggal,
+                0 AS debet,
+                lt.total_bayaran AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "" AS uraian,
+                lt.deskripsi_kerja,
+                lt.keterangan_kerja,
+                "LEMBUR PEGAWAI" AS sumber,
+                lt.waktu_mulai,
+                lt.waktu_selesai,
+                lt.total_jam,
+                lt.total_menit,
+                lt.nilai_lembur_per_menit,
+                pt.name AS pegawai_name,
+                lt.enabled 
+            FROM ${generateDatabaseName(req_id)}.lembur_tab lt 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = lt.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = lt.pegawai 
+            WHERE lt.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(lt.tanggal) = ${tahun} AND MONTH(lt.tanggal) = ${bulan}
+            UNION ALL
+            SELECT 
+                lt.uuid,
+                lt.bukti_transaksi,
+                1 AS transaksi,
+                lt.tanggal,
+                lt.total_bayaran AS debet,
+                0 AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                "" AS uraian,
+                lt.deskripsi_kerja,
+                lt.keterangan_kerja,
+                "LEMBUR PEGAWAI" AS sumber,
+                lt.waktu_mulai,
+                lt.waktu_selesai,
+                lt.total_jam,
+                lt.total_menit,
+                lt.nilai_lembur_per_menit,
+                pt.name AS pegawai_name,
+                lt.enabled 
+            FROM ${generateDatabaseName(req_id)}.lembur_tab lt 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "96dc1c2e-1cd3-42b8-b580-3932ebe1e82d"
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = lt.pegawai 
+            WHERE lt.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(lt.tanggal) = ${tahun} AND MONTH(lt.tanggal) = ${bulan}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
-
-    pageNumber = pageNumber && pageNumber > -1 ? pageNumber : 0
-    size = size ? size : lembursCount[0].count
-
-    const lemburs = await db.query(
-        `
-            SELECT * FROM ${generateDatabaseName(req_id)}.lembur_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
-        `,
-        { type: Sequelize.QueryTypes.SELECT }
-    )
-
-    return {
-        entry: lemburs,
-        count: lembursCount[0].count,
-        pageNumber: pageNumber == 0 ? pageNumber + 1 : (pageNumber / size) + 1,
-        size
-    }
 }
 
 export const getLemburByPegawaiUuidRepo = async (uuid, periode, tahun, req_id) => {

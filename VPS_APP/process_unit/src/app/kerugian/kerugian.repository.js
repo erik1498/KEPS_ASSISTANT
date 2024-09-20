@@ -4,30 +4,53 @@ import KerugianModel from "./kerugian.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
-export const getAllKerugianRepo = async (pageNumber, size, search, req_id) => {
-    const kerugiansCount = await db.query(
+export const getAllKerugianRepo = async (bulan, tahun, req_id) => {
+    return await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.kerugian_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                kt.uuid,
+                kt.bukti_transaksi,
+                0 AS transaksi,
+                kt.tanggal,
+                0 AS debet,
+                kt.nilai AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                kt.keterangan AS uraian,
+                "LAIN - LAIN" AS sumber,
+                pt.name AS pegawai_name,
+                kt.enabled 
+            FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kt.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = kt.pegawai 
+            WHERE kt.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(kt.tanggal) = ${tahun} AND MONTH(kt.tanggal) = ${bulan}
+            UNION ALL
+            SELECT 
+                kt.uuid,
+                kt.bukti_transaksi,
+                0 AS transaksi,
+                kt.tanggal,
+                kt.nilai AS debet,
+                0 AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                kt.keterangan AS uraian,
+                "LAIN - LAIN" AS sumber,
+                pt.name AS pegawai_name,
+                kt.enabled 
+            FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f3eafc29-6a1c-4e57-b789-532b490dac33"
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = kt.pegawai 
+            WHERE kt.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(kt.tanggal) = ${tahun} AND MONTH(kt.tanggal) = ${bulan}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
-
-    pageNumber = pageNumber && pageNumber > -1 ? pageNumber : 0
-    size = size ? size : kerugiansCount[0].count
-
-    const kerugians = await db.query(
-        `
-            SELECT * FROM ${generateDatabaseName(req_id)}.kerugian_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
-        `,
-        { type: Sequelize.QueryTypes.SELECT }
-    )
-
-    return {
-        entry: kerugians,
-        count: kerugiansCount[0].count,
-        pageNumber: pageNumber == 0 ? pageNumber + 1 : (pageNumber / size) + 1,
-        size
-    }
 }
 
 export const getKerugianByPegawaiUUIDRepo = async (uuid, periode, tahun, req_id) => {

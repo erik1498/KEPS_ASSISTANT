@@ -1,9 +1,10 @@
 import express from "express"
-import { deleteLainLainByUUID, getLainLainByPegawaiUUID, postCreateLainLain, updateLainLainByUUID } from "./lainLain.handler.js"
+import { deleteLainLainByUUID, getAllLainLains, getLainLainByPegawaiUUID, postCreateLainLain, updateLainLainByUUID } from "./lainLain.handler.js"
 import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
+router.get("/", authTokenMiddleware(), getAllLainLains)
 router.get("/:uuid/:periode/:tahun", authTokenMiddleware(), getLainLainByPegawaiUUID)
 router.post("/", authTokenMiddleware(), postCreateLainLain)
 router.put("/:uuid", authTokenMiddleware(), updateLainLainByUUID)

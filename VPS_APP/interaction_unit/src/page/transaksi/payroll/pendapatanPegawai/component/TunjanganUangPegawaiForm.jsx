@@ -47,7 +47,7 @@ const TunjanganUangPegawaiForm = ({
             apiTunjanganUangCRUD.custom(tunjanganUang ? `/${tunjanganUang.uuid}` : ``, tunjanganUang ? "PUT" : "POST", null, {
                 data: {
                     pegawai: idPegawai,
-                    periode: periode.value,
+                    periode: periode,
                     gaji: gaji.uuid,
                     kode_akun_perkiraan: kodeAkun.value,
                     tanggal: tanggal,
@@ -83,7 +83,7 @@ const TunjanganUangPegawaiForm = ({
 
     const _getTunjanganUangPegawai = () => {
         apiTunjanganUangCRUD
-            .custom(`/${idPegawai}/${periode.value}/${data.tahun}`, "GET")
+            .custom(`/${idPegawai}/${periode}/${data.tahun}`, "GET")
             .then(resData => {
                 if (resData.data?.bonus) {
                     setBonus(parseToRupiahText(resData.data.bonus))
@@ -148,7 +148,7 @@ const TunjanganUangPegawaiForm = ({
     }, [gaji])
 
     return gaji ? <>
-        <div className="my-5">
+        <div className="my-5 bg-white py-5 px-6 rounded-md">
             <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Tunjangan Uang Pegawai</h1>
             <form onSubmit={e => _saveTunjanganUangPegawai(e)}>
                 <div className="flex items-end gap-x-2">

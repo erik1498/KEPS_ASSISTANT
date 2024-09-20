@@ -36,7 +36,7 @@ const LemburPegawaiForm = ({
             apiLemburCRUD.custom("", "POST", null, {
                 data: {
                     pegawai: idPegawai,
-                    periode: periode.value,
+                    periode: periode,
                     kode_akun_perkiraan: kodeAkun.value,
                     tanggal: tanggal,
                     bukti_transaksi: buktiTransaksi,
@@ -57,7 +57,7 @@ const LemburPegawaiForm = ({
 
     const _getDaftarLemburPegawai = () => {
         apiLemburCRUD
-            .custom(`/${idPegawai}/${periode.value}/${data.tahun}`, "GET")
+            .custom(`/${idPegawai}/${periode}/${data.tahun}`, "GET")
             .then(resData => {
                 setLemburList(resData.data)
             })
@@ -102,7 +102,7 @@ const LemburPegawaiForm = ({
         _getDaftarLemburPegawai()
     }, [idPegawai])
 
-    return <div className="my-5">
+    return <div className="my-5 bg-white py-5 px-6 rounded-md">
         <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Lembur Pegawai</h1>
         <form onSubmit={e => _saveLemburPegawai(e)}>
             <div className="flex items-end gap-x-2">

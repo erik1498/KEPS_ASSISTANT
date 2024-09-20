@@ -1,26 +1,17 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
-import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createLemburRepo, deleteLemburByUuidRepo, getAllLemburRepo, getLemburByPegawaiUuidRepo, getLemburByUuidRepo, updateLemburByUuidRepo } from "./lembur.repository.js"
 
 export const getAllLemburService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllLemburService", null, req_identity)
 
-    let { page, size, search } = query
-    page = page ? page : null
-    size = size ? size : null
-    if (size == "all") {
-        page = null
-        size = null
-    }
-    search = search ? search : ""
-    const pageNumber = (page - 1) * size
+    let { bulan, tahun } = query
 
     LOGGER(logType.INFO, "Pagination", {
-        pageNumber, size, search
+        bulan, tahun
     }, req_identity)
 
-    const lemburs = await getAllLemburRepo(pageNumber, size, search, req_identity)
-    return generatePaginationResponse(lemburs.entry, lemburs.count, lemburs.pageNumber, lemburs.size)
+    const lemburs = await getAllLemburRepo(bulan, tahun, req_identity)
+    return lemburs
 }
 
 export const getLemburByUuidService = async (uuid, req_identity) => {

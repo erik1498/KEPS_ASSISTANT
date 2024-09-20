@@ -26,7 +26,7 @@ const TunjanganBarangPegawaiForm = ({
             apiTunjanganBarangCRUD.custom("", "POST", null, {
                 data: {
                     pegawai: idPegawai,
-                    periode: periode.value,
+                    periode: periode,
                     kode_akun_perkiraan: kodeAkun.value,
                     tanggal: tanggal,
                     bukti_transaksi: buktiTransaksi,

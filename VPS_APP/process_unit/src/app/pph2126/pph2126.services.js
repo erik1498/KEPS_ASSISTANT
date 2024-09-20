@@ -5,22 +5,13 @@ import { createPph2126Repo, deletePph2126ByUuidRepo, getAllPph2126Repo, getPph21
 export const getAllPph2126Service = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPph2126Service", null, req_identity)
 
-    let { page, size, search } = query
-    page = page ? page : null
-    size = size ? size : null
-    if (size == "all") {
-        page = null
-        size = null
-    }
-    search = search ? search : ""
-    const pageNumber = (page - 1) * size
+    let { bulan, tahun } = query
 
     LOGGER(logType.INFO, "Pagination", {
-        pageNumber, size, search
+        bulan, tahun
     }, req_identity)
 
-    const pph2126s = await getAllPph2126Repo(pageNumber, size, search, req_identity)
-    return generatePaginationResponse(pph2126s.entry, pph2126s.count, pph2126s.pageNumber, pph2126s.size)
+    return await getAllPph2126Repo(bulan, tahun, req_identity)
 }
 
 export const getPph2126ByUuidService = async (uuid, req_identity) => {

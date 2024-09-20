@@ -32,7 +32,7 @@ const GajiPegawaiForm = ({
             apiGajiCRUD.custom(gaji ? `/${gaji.uuid}` : ``, gaji ? "PUT" : "POST", null, {
                 data: {
                     pegawai: idPegawai,
-                    periode: periode.value,
+                    periode: periode,
                     kode_akun_perkiraan: kodeAkun.value,
                     tanggal: tanggal,
                     bukti_transaksi: buktiTransaksi,
@@ -48,7 +48,7 @@ const GajiPegawaiForm = ({
 
     const _getGajiPegawai = () => {
         apiGajiCRUD
-            .custom(`/${idPegawai}/${periode.value}/${data.tahun}`, "GET")
+            .custom(`/${idPegawai}/${periode}/${data.tahun}`, "GET")
             .then(resData => {
                 if (resData.data?.nilai) {
                     setNilai(parseToRupiahText(resData.data.nilai))
@@ -70,73 +70,74 @@ const GajiPegawaiForm = ({
         _getGajiPegawai()
     }, [idPegawai])
 
-    return <div className="my-5">
-        <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Gaji Pegawai</h1>
-        <form onSubmit={e => _saveGajiPegawai(e)}>
-            <div className="flex items-end gap-x-2">
-                <FormSelectWithLabel
-                    label={"Sumber Dana"}
-                    optionsDataList={kodeAkunList}
-                    optionsLabel={["code", "name"]}
-                    optionsValue={"uuid"}
-                    optionsLabelIsArray={true}
-                    optionsDelimiter={"-"}
-                    selectValue={kodeAkun}
-                    onchange={(e) => {
-                        setKodeAkun(e)
-                    }}
-                    selectName={`periode`}
-                />
-                <FormInputWithLabel
-                    label={"Tanggal"}
-                    type={"datetime-local"}
-                    onchange={(e) => {
-                        setTanggal(e.target.value)
-                    }}
-                    others={
-                        {
-                            value: tanggal,
-                            name: "tanggal"
+    return <>
+        <div className="my-5 bg-white py-5 px-6 rounded-md">
+            <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Gaji Pegawai</h1>
+            <form onSubmit={e => _saveGajiPegawai(e)}>
+                <div className="flex items-end gap-x-2">
+                    <FormSelectWithLabel
+                        label={"Sumber Dana"}
+                        optionsDataList={kodeAkunList}
+                        optionsLabel={["code", "name"]}
+                        optionsValue={"uuid"}
+                        optionsLabelIsArray={true}
+                        optionsDelimiter={"-"}
+                        selectValue={kodeAkun}
+                        onchange={(e) => {
+                            setKodeAkun(e)
+                        }}
+                        selectName={`periode`}
+                    />
+                    <FormInputWithLabel
+                        label={"Tanggal"}
+                        type={"datetime-local"}
+                        onchange={(e) => {
+                            setTanggal(e.target.value)
+                        }}
+                        others={
+                            {
+                                value: tanggal,
+                                name: "tanggal"
+                            }
                         }
-                    }
-                />
-                <FormInputWithLabel
-                    label={"Bukti Transaksi"}
-                    type={"text"}
-                    onchange={(e) => {
-                        setBuktiTransaksi(e.target.value)
-                    }}
-                    others={
-                        {
-                            value: buktiTransaksi,
-                            name: "buktiTransaksi"
+                    />
+                    <FormInputWithLabel
+                        label={"Bukti Transaksi"}
+                        type={"text"}
+                        onchange={(e) => {
+                            setBuktiTransaksi(e.target.value)
+                        }}
+                        others={
+                            {
+                                value: buktiTransaksi,
+                                name: "buktiTransaksi"
+                            }
                         }
-                    }
-                />
-                <FormInputWithLabel
-                    label={"Nilai"}
-                    type={"text"}
-                    onchange={(e) => {
-                        inputOnlyRupiah(e)
-                        setNilai(e.target.value)
-                    }}
-                    others={
-                        {
-                            value: nilai,
-                            name: "nilai"
+                    />
+                    <FormInputWithLabel
+                        label={"Nilai"}
+                        type={"text"}
+                        onchange={(e) => {
+                            inputOnlyRupiah(e)
+                            setNilai(e.target.value)
+                        }}
+                        others={
+                            {
+                                value: nilai,
+                                name: "nilai"
+                            }
                         }
-                    }
-                />
-            </div>
-            <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
-        </form>
-
+                    />
+                </div>
+                <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
+            </form>
+        </div>
         <TunjanganUangPegawaiForm
             idPegawai={idPegawai}
             kodeAkunList={kodeAkunList}
             periode={periode}
             gaji={gaji}
         />
-    </div>
+    </>
 }
 export default GajiPegawaiForm

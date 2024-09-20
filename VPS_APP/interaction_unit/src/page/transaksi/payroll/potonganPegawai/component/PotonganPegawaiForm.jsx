@@ -8,6 +8,7 @@ import PPH2126PegawaiForm from "./PPH2126PegawaiForm"
 import LainLainPegawaiForm from "./LainLainPegawaiForm"
 import KerugianPegawaiForm from "./KerugianPegawaiForm"
 import PiutangKaryawanPegawaiForm from "./PiutangKaryawanPegawaiForm"
+import ToggleBox from "../../../../../component/general/ToggleBox"
 
 const PotonganPegawaiForm = ({
     potonganPegawaiSelected,
@@ -16,10 +17,7 @@ const PotonganPegawaiForm = ({
     const [pegawai, setPegawai] = useState()
     const [pegawaiList, setPegawaiList] = useState([])
     const [idPegawai, setIdPegawai] = useState()
-    const [periode, setPeriode] = useState({
-        label: getBulanListForFormSelect()[new Date().getMonth()].label,
-        value: getBulanListForFormSelect()[new Date().getMonth()].value
-    })
+    const [periode, setPeriode] = useState(getBulanListForFormSelect()[new Date().getMonth()].value)
 
     const [toggle, setToggle] = useState("Gaji")
 
@@ -55,17 +53,17 @@ const PotonganPegawaiForm = ({
     }, [])
 
     return <>
-        <div className="bg-white rounded-md shadow-2xl h-[70vh] overflow-scroll no-scrollbar relative">
-            <div className="sticky top-0 pt-3 px-6 h-max bg-white w-full z-10">
+        <div className="bg-white rounded-md shadow-2xl h-max py-5 overflow-scroll no-scrollbar relative">
+            <div className="sticky top-0 px-6 h-max bg-white w-full z-10">
                 <div className="mb-3 flex justify-between items-center">
-                    <h1 className="uppercase text-gray-600 font-bold">{potonganPegawaiSelected != null ? "Edit " : "Tambah "} Potongan Pegawai</h1>
+                    <h1 className="uppercase text-gray-600 font-bold">Potongan Pegawai</h1>
                     <button
                         className="btn btn-sm bg-red-900 text-white border-none"
                         onClick={() => setPotonganPegawaiForm()}
                     ><FaTimes /> Batalkan Transaksi
                     </button>
                 </div>
-                <div className="mt-5 flex items-end gap-x-2">
+                <div className="flex items-end gap-x-2">
                     <FormSelectWithLabel
                         label={"Pilih Pegawai"}
                         optionsDataList={pegawaiList}
@@ -78,52 +76,60 @@ const PotonganPegawaiForm = ({
                         }}
                         selectName={`pegawai`}
                     />
-                    <FormSelectWithLabel
-                        label={"Pilih Periode"}
-                        optionsDataList={getBulanListForFormSelect()}
-                        optionsLabel={"label"}
-                        optionsValue={"value"}
-                        selectValue={periode}
-                        onchange={(e) => {
-                            setPeriode(e)
-                        }}
-                        selectName={`periode`}
+                </div>
+                <div className="mt-5 flex gap-x-2">
+                    <ToggleBox
+                        label="Periode"
+                        labelTextSize="text-sm"
+                        toggleBox={periode}
+                        textSize="text-xs"
+                        setToggleBox={setPeriode}
+                        toggleBoxList={getBulanListForFormSelect()}
                     />
                 </div>
                 {
-                    !idPegawai ? <>
+                    idPegawai ?
                         <button
-                            className="btn btn-sm bg-green-800 mt-4 text-white"
+                            className="btn btn-sm bg-red-800 text-white"
+                            onClick={() => setIdPegawai(null)}
+                        >
+                            <FaTimes /> Reset Pegawai Dan Periode
+                        </button>
+                        :
+                        <button
+                            className="btn btn-sm bg-green-800 text-white"
                             onClick={() => setIdPegawai(pegawai.value)}
                         >
-                            <FaCheck /> Pilih Pegawai
+                            <FaCheck /> Pilih Pegawai Dan Periode
                         </button>
-                    </> :
-                        <>
-                            <PPH2126PegawaiForm
-                                periode={periode}
-                                idPegawai={idPegawai}
-                                kodeAkunList={kodeAkunList}
-                            />
-                            <LainLainPegawaiForm 
-                                periode={periode}
-                                idPegawai={idPegawai}
-                                kodeAkunList={kodeAkunList}
-                            />
-                            <KerugianPegawaiForm 
-                                periode={periode}
-                                idPegawai={idPegawai}
-                                kodeAkunList={kodeAkunList}
-                            />
-                            <PiutangKaryawanPegawaiForm 
-                                periode={periode}
-                                idPegawai={idPegawai}
-                                kodeAkunList={kodeAkunList}
-                            />
-                        </>
                 }
             </div>
         </div>
+        {
+            !idPegawai ? <></> :
+                <>
+                    <PPH2126PegawaiForm
+                        periode={periode}
+                        idPegawai={idPegawai}
+                        kodeAkunList={kodeAkunList}
+                    />
+                    <LainLainPegawaiForm
+                        periode={periode}
+                        idPegawai={idPegawai}
+                        kodeAkunList={kodeAkunList}
+                    />
+                    <KerugianPegawaiForm
+                        periode={periode}
+                        idPegawai={idPegawai}
+                        kodeAkunList={kodeAkunList}
+                    />
+                    <PiutangKaryawanPegawaiForm
+                        periode={periode}
+                        idPegawai={idPegawai}
+                        kodeAkunList={kodeAkunList}
+                    />
+                </>
+        }
     </>
 }
 export default PotonganPegawaiForm

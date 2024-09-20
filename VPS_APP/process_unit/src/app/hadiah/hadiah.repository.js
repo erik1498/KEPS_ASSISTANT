@@ -4,30 +4,53 @@ import HadiahModel from "./hadiah.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
-export const getAllHadiahRepo = async (pageNumber, size, search, req_id) => {
-    const hadiahsCount = await db.query(
+export const getAllHadiahRepo = async (bulan, tahun, req_id) => {
+    return await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.hadiah_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                ht.uuid,
+                ht.bukti_transaksi,
+                0 AS transaksi,
+                ht.tanggal,
+                0 AS debet,
+                ht.nilai AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                ht.hadiah AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                ht.enabled 
+            FROM ${generateDatabaseName(req_id)}.hadiah_tab ht 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ht.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ht.pegawai 
+            WHERE ht.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(ht.tanggal) = ${tahun} AND MONTH(ht.tanggal) = ${bulan}
+            UNION ALL 
+            SELECT 
+                ht.uuid,
+                ht.bukti_transaksi,
+                0 AS transaksi,
+                ht.tanggal,
+                ht.nilai AS debet,
+                0 AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                ht.hadiah AS uraian,
+                "HADIAH PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                ht.enabled 
+            FROM ${generateDatabaseName(req_id)}.hadiah_tab ht 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a09a5e0c-9544-4a83-b214-c47cf5c07bdd"
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ht.pegawai 
+            WHERE ht.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(ht.tanggal) = ${tahun} AND MONTH(ht.tanggal) = ${bulan}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
-
-    pageNumber = pageNumber && pageNumber > -1 ? pageNumber : 0
-    size = size ? size : hadiahsCount[0].count
-
-    const hadiahs = await db.query(
-        `
-            SELECT * FROM ${generateDatabaseName(req_id)}.hadiah_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
-        `,
-        { type: Sequelize.QueryTypes.SELECT }
-    )
-
-    return {
-        entry: hadiahs,
-        count: hadiahsCount[0].count,
-        pageNumber: pageNumber == 0 ? pageNumber + 1 : (pageNumber / size) + 1,
-        size
-    }
 }
 
 export const getHadiahByUuidRepo = async (uuid, req_id) => {

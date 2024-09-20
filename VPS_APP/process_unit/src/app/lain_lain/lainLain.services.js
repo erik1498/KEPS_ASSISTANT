@@ -1,26 +1,17 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
-import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createLainLainRepo, deleteLainLainByUuidRepo, getAllLainLainRepo, getLainLainByPegawaiUUIDRepo, getLainLainByUuidRepo, updateLainLainByUuidRepo } from "./lainLain.repository.js"
 
 export const getAllLainLainService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllLainLainService", null, req_identity)
 
-    let { page, size, search } = query
-    page = page ? page : null
-    size = size ? size : null
-    if (size == "all") {
-        page = null
-        size = null
-    }
-    search = search ? search : ""
-    const pageNumber = (page - 1) * size
+    let { bulan, tahun } = query
 
     LOGGER(logType.INFO, "Pagination", {
-        pageNumber, size, search
+        bulan, tahun
     }, req_identity)
 
-    const lainLains = await getAllLainLainRepo(pageNumber, size, search, req_identity)
-    return generatePaginationResponse(lainLains.entry, lainLains.count, lainLains.pageNumber, lainLains.size)
+    const lainLains = await getAllLainLainRepo(bulan, tahun, req_identity)
+    return lainLains
 }
 
 export const getLainLainByUuidService = async (uuid, req_identity) => {

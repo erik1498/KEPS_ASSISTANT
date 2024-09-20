@@ -1,33 +1,56 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import GajiModel from "./gaji.model.js";
-import { generateDatabaseName, insertQueryUtil, selectAllQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
-export const getAllGajiRepo = async (pageNumber, size, search, req_id) => {
-    const gajisCount = await db.query(
+export const getAllGajiRepo = async (bulan, tahun, req_id) => {
+    return await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.gaji_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                gt.uuid,
+                gt.bukti_transaksi,
+                0 AS transaksi,
+                gt.tanggal,
+                0 AS debet,
+                gt.nilai AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                CONCAT("Gaji Pegawai") AS uraian,
+                "GAJI PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                gt.enabled 
+            FROM ${generateDatabaseName(req_id)}.gaji_tab gt 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = gt.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = gt.pegawai 
+            WHERE gt.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(gt.tanggal) = ${tahun} AND MONTH(gt.tanggal) = ${bulan}
+            UNION ALL 
+            SELECT 
+                gt.uuid,
+                gt.bukti_transaksi,
+                0 AS transaksi,
+                gt.tanggal,
+                gt.nilai AS debet,
+                0 AS kredit,
+                kapt.code AS kode_akun,
+                kapt.name AS nama_akun,
+                kapt.type AS type_akun,
+                CONCAT("Gaji Pegawai") AS uraian,
+                "GAJI PEGAWAI" AS sumber,
+                pt.name AS pegawai_name,
+                gt.enabled 
+            FROM ${generateDatabaseName(req_id)}.gaji_tab gt 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "0c0a1c04-ad98-4818-9a63-9be554b2ae55" 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = gt.pegawai 
+            WHERE gt.enabled = 1
+            AND kapt.enabled = 1
+            AND YEAR(gt.tanggal) = ${tahun} AND MONTH(gt.tanggal) = ${bulan}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
-
-    pageNumber = pageNumber && pageNumber > -1 ? pageNumber : 0
-    size = size ? size : gajisCount[0].count
-
-    const gajis = await db.query(
-        `
-            SELECT * FROM ${generateDatabaseName(req_id)}.gaji_tab WHERE pegawai LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
-        `,
-        { type: Sequelize.QueryTypes.SELECT }
-    )
-
-    return {
-        entry: gajis,
-        count: gajisCount[0].count,
-        pageNumber: pageNumber == 0 ? pageNumber + 1 : (pageNumber / size) + 1,
-        size
-    }
 }
 
 

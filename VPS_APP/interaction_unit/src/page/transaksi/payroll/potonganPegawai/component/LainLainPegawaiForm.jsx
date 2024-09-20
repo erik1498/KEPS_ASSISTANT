@@ -32,7 +32,7 @@ const LainLainPegawaiForm = ({
             apiLainLainCRUD.custom("", "POST", null, {
                 data: {
                     pegawai: idPegawai,
-                    periode: periode.value,
+                    periode: periode,
                     kode_akun_perkiraan: kodeAkun.value,
                     tanggal: tanggal,
                     bukti_transaksi: buktiTransaksi,
@@ -55,7 +55,7 @@ const LainLainPegawaiForm = ({
 
     const _getLainLainPegawai = () => {
         apiLainLainCRUD
-            .custom(`/${idPegawai}/${periode.value}/${data.tahun}`, "GET")
+            .custom(`/${idPegawai}/${periode}/${data.tahun}`, "GET")
             .then(resData => {
                 setLainLain(resData.data)
             })
@@ -65,7 +65,7 @@ const LainLainPegawaiForm = ({
         _getLainLainPegawai()
     }, [idPegawai])
 
-    return <div className="my-5">
+    return <div className="my-5 bg-white py-5 px-6 rounded-md">
         <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Lain - Lain Pegawai</h1>
         <form onSubmit={e => _saveLainLainPegawai(e)}>
             <div className="flex items-end gap-x-2">

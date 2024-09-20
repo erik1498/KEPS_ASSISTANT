@@ -1,12 +1,9 @@
-import { FaArrowDown, FaArrowUp, FaPen, FaTrash } from "react-icons/fa";
+import { FaPen, FaTrash } from "react-icons/fa";
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper";
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper";
 
-const BankRow = ({
+const PotonganRow = ({
     item,
-    deleteItem = () => { },
-    editItem = () => { },
-    deleteByBuktiTransaksi = () => { },
     balanceStatus = true,
     forPrint = false
 }) => {
@@ -46,7 +43,6 @@ const BankRow = ({
         {
             item.buktiTransaksi.map(item1 => {
                 return <>
-
                     <div className="grid grid-cols-12 items-center bg-gray-3">
                         <div className=" col-span-12 border-x-4 border-transparent text-gray-900 flex flex-row items-center">
                             {
@@ -57,11 +53,8 @@ const BankRow = ({
                             }
                         </div>
                     </div>
-                    <div className={`flex w-max items-center gap-x-3 py-1 m-1 px-3 text-white font-bold ${item1.data[0][0].type == 1 ? "bg-green-900" : "bg-red-900"}`}>
-                        {
-                            item1.data[0][0].type == 1 ? <FaArrowDown /> : <FaArrowUp />
-                        }
-                        <h1>Bank {item1.data[0][0].type == 1 ? "Masuk" : "Keluar"}</h1>
+                    <div className={`flex w-max items-center gap-x-3 py-1 m-1 px-1 font-bold text-blue-800 rounded-md`}>
+                        <h1>{item1.data[0][0].pegawai_name}</h1>
                     </div>
                     {
                         item1.data.map((item2, i) => {
@@ -79,8 +72,17 @@ const BankRow = ({
                                                 <div className={`col-span-2 text-gray-900 flex flex-col px-2 ${parseRupiahToFloat(item3.kredit) > 0 && item3.uuid != "NERACA" ? "text-right" : ""}`}>
                                                     <p>{item3.kode_akun} - {item3.nama_akun}</p>
                                                 </div>
-                                                <div className={`${forPrint ? `col-span-5` : `col-span-4`} text-gray-900 flex flex-col px-2`}>
+                                                <div className={`col-span-5 text-gray-900 flex flex-col px-2`}>
                                                     <p>{item3.uraian}</p>
+                                                    {
+                                                        item3.waktu_mulai && item3.waktu_selesai && item3.transaksi == 0 ? <>
+                                                            <b>{item3.deskripsi_kerja}</b>
+                                                            <p className="mb-2">{item3.keterangan_kerja}</p>
+                                                            <p>{`${item3.waktu_mulai.split("T")[0]} ${convertTo12HoursFormat(item3.waktu_mulai.split("T")[1])}`} Hingga {`${item3.waktu_selesai.split("T")[0]} ${convertTo12HoursFormat(item3.waktu_selesai.split("T")[1])}`}</p>
+                                                            <p className="font-semibold">Detail</p>
+                                                            <p>{parseToRupiahText(item3.total_jam)} Jam, {parseToRupiahText(item3.total_menit)} Menit. Dengan Nilai Lembur Per Menit {parseToRupiahText(item3.nilai_lembur_per_menit)}</p>
+                                                        </> : <></>
+                                                    }
                                                 </div>
                                                 <div className="text-right px-2 col-span-2 text-gray-900">
                                                     {
@@ -92,23 +94,6 @@ const BankRow = ({
                                                         item3.kredit != "0" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(item3.kredit)}</h1> : <></>
                                                     }
                                                 </div>
-                                                {
-                                                    !forPrint ? <>
-                                                        <div className="text-black text-center col-span-1 flex justify-center gap-x-3">
-                                                            {
-                                                                item3.transaksi == 1 && balanceStatus ?
-                                                                    <>
-                                                                        <FaTrash size={9} onClick={() => deleteItem(item3.uuid)} className="w-max mt-1 text-red-500 cursor-pointer" />
-                                                                    </>
-                                                                    :
-                                                                    <></>
-                                                            }
-                                                        </div>
-                                                    </>
-                                                        :
-                                                        <>
-                                                        </>
-                                                }
                                             </div> : <></>
                                     }
                                     {
@@ -116,27 +101,7 @@ const BankRow = ({
                                             <>
                                                 <hr />
                                                 <div className="grid grid-cols-12 items-start py-3">
-                                                    <div className="col-span-1 px-2 text-black text-center font-bold flex justify-center items-center gap-x-5">
-                                                        {
-                                                            item1.sumber == "TRANSAKSI BANK" && balanceStatus ? <>
-                                                                {
-                                                                    forPrint ? <></>
-                                                                        :
-                                                                        <>
-                                                                            <div className="flex justify-center items-center gap-x-2 pl-3 cursor-pointer" onClick={() => editItem(item1)} >
-                                                                                <FaPen size={9} className="w-max h-full text-yellow-500" />
-                                                                                <h1 className="font-bold text-yellow-500">Edit</h1>
-                                                                            </div>
-                                                                            <div className="flex justify-center items-center gap-x-2 cursor-pointer" onClick={() => deleteByBuktiTransaksi(item1)}>
-                                                                                <FaTrash size={9} className="w-max h-full text-red-500" />
-                                                                                <h1 className="font-bold text-red-500">Hapus</h1>
-                                                                            </div>
-                                                                        </>
-                                                                }
-                                                            </> : <></>
-                                                        }
-                                                    </div>
-                                                    <div className={`${forPrint ? 'col-span-7' : 'col-span-6'}`}></div>
+                                                    <div className={`${forPrint ? 'col-span-7' : 'col-span-8'}`}></div>
                                                     <div className="text-right px-2 col-span-2 text-gray-900">
                                                         <h1 className=" text-green-900 font-bold">{parseToRupiahText(item1.debet)}</h1>
                                                     </div>
@@ -157,4 +122,4 @@ const BankRow = ({
     </div>
 };
 
-export default BankRow;
+export default PotonganRow;
