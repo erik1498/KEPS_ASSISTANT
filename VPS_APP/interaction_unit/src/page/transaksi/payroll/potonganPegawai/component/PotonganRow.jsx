@@ -53,7 +53,7 @@ const PotonganRow = ({
                             }
                         </div>
                     </div>
-                    <div className={`flex w-max items-center gap-x-3 py-1 m-1 px-1 font-bold text-blue-800 rounded-md`}>
+                    <div className={`flex w-max items-center gap-x-3 py-1 m-1 px-1 font-bold rounded-md`}>
                         <h1>{item1.data[0][0].pegawai_name}</h1>
                     </div>
                     {

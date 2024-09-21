@@ -121,7 +121,7 @@ const PotonganPegawaiPage = () => {
                                     </div>
                                 </div>
                                 <ToggleBox
-                                    addClass={"px-6 py-5"}
+                                    addClass={"px-4 py-3"}
                                     label="Tipe Potongan"
                                     setToggleBox={setToggleBox}
                                     toggleBox={toggleBox}

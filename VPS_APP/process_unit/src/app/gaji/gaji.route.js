@@ -1,10 +1,11 @@
 import express from "express"
-import { deleteGajiByUUID, getAllGajis, getGajiByPegawaiUUID, postCreateGaji, updateGajiByUUID } from "./gaji.handler.js"
+import { deleteGajiByUUID, getAllGajis, getGajiByPegawaiUUID, getSlipGajiByPegawaiUUID, postCreateGaji, updateGajiByUUID } from "./gaji.handler.js"
 import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllGajis)
+router.get("/slip_gaji/:uuid", authTokenMiddleware(), getSlipGajiByPegawaiUUID)
 router.get("/:uuid/:periode/:tahun", authTokenMiddleware(), getGajiByPegawaiUUID)
 router.post("/", authTokenMiddleware(), postCreateGaji)
 router.put("/:uuid", authTokenMiddleware(), updateGajiByUUID)

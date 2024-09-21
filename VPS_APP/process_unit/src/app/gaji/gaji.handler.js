@@ -1,5 +1,5 @@
 import { gajiValidation } from "./gaji.validation.js"
-import { createGajiService, deleteGajiByUuidService, getAllGajiService, getGajiByPegawaiUUIDService, updateGajiByUuidService } from "./gaji.services.js"
+import { createGajiService, deleteGajiByUuidService, getAllGajiService, getGajiByPegawaiUUIDService, getSlipGajiByPegawaiUUIDService, updateGajiByUuidService } from "./gaji.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -11,7 +11,25 @@ export const getAllGajis = async (req, res) => {
             data: gajis,
             message: "Get Data Success"
         })
-    } catch (error) {    
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getSlipGajiByPegawaiUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getSlipGajiByPegawaiUUID", null, req.identity)
+    try {
+        const { uuid } = req.params
+        const gajis = await getSlipGajiByPegawaiUUIDService(uuid, req.query, req.identity)
+        res.json({
+            data: gajis,
+            message: "Get Data Success"
+        })
+    } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
@@ -84,7 +102,7 @@ export const deleteGajiByUUID = async (req, res) => {
 
 export const updateGajiByUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start updateGajiByUuidController", null, req.identity)
-    try {    
+    try {
         const gajiData = req.body
         const { error, value } = gajiValidation(gajiData)
         if (error) {

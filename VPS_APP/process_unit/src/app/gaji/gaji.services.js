@@ -1,5 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
-import { createGajiRepo, deleteGajiByUuidRepo, getAllGajiRepo, getGajiByPegawaiUuidRepo, getGajiByUuidRepo, updateGajiByUuidRepo } from "./gaji.repository.js"
+import { createGajiRepo, deleteGajiByUuidRepo, getAllGajiRepo, getGajiByPegawaiUuidRepo, getGajiByUuidRepo, getSlipGajiByPegawaiUUIDRepo, updateGajiByUuidRepo } from "./gaji.repository.js"
 
 export const getAllGajiService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllGajiService", null, req_identity)
@@ -12,6 +12,19 @@ export const getAllGajiService = async (query, req_identity) => {
 
     const gajis = await getAllGajiRepo(bulan, tahun, req_identity)
     return gajis
+}
+
+export const getSlipGajiByPegawaiUUIDService = async (uuid, query, req_identity) => {
+    LOGGER(logType.INFO, `Start getSlipGajiByPegawaiUUIDService [${uuid}]`, null, req_identity)
+
+    let { bulan, tahun } = query
+
+    LOGGER(logType.INFO, "Pagination", {
+        uuid, bulan, tahun
+    }, req_identity)
+
+    const gaji = await getSlipGajiByPegawaiUUIDRepo(uuid, bulan, tahun, req_identity)
+    return gaji
 }
 
 export const getGajiByUuidService = async (uuid, req_identity) => {

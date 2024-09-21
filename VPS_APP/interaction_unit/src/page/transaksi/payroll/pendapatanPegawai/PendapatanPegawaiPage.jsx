@@ -119,7 +119,7 @@ const PendapatanPegawaiPage = () => {
                                     </div>
                                 </div>
                                 <ToggleBox
-                                    addClass={"px-6 py-5"}
+                                    addClass={"px-4 py-3"}
                                     label="Tipe Pendapatan"
                                     setToggleBox={setToggleBox}
                                     toggleBox={toggleBox}
