@@ -1,4 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getJurnalUmumByBuktiTransaski } from "../jurnal_umum/jurnalUmum.services.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createLemburRepo, deleteLemburByUuidRepo, getAllLemburRepo, getLemburByPegawaiUuidRepo, getLemburByUuidRepo, updateLemburByUuidRepo } from "./lembur.repository.js"
 
@@ -42,6 +43,8 @@ export const createLemburService = async (lemburData, req_identity) => {
     lemburData.enabled = 1
 
     await getNeracaValidasiByTanggalService(lemburData.tanggal, req_identity)
+    
+    await getJurnalUmumByBuktiTransaski(lemburData.bukti_transaksi, "EMPTY", req_identity)
 
     const lembur = await createLemburRepo(lemburData, req_identity)
     return lembur
@@ -63,6 +66,8 @@ export const updateLemburByUuidService = async (uuid, lemburData, req_identity, 
     const beforeData = await getLemburByUuidService(uuid, req_identity)
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
+    await getJurnalUmumByBuktiTransaski(lemburData.bukti_transaksi, "EMPTY", req_identity)
 
     const lembur = await updateLemburByUuidRepo(uuid, lemburData, req_identity)
 

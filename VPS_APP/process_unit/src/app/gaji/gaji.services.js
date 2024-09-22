@@ -1,4 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getJurnalUmumByBuktiTransaski } from "../jurnal_umum/jurnalUmum.services.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createGajiRepo, deleteGajiByUuidRepo, getAllGajiRepo, getGajiByPegawaiUuidRepo, getGajiByUuidRepo, getSlipGajiByPegawaiUUIDRepo, updateGajiByUuidRepo } from "./gaji.repository.js"
 
@@ -54,6 +55,8 @@ export const createGajiService = async (gajiData, req_identity) => {
 
     await getNeracaValidasiByTanggalService(gajiData.tanggal, req_identity)
 
+    await getJurnalUmumByBuktiTransaski(gajiData.bukti_transaksi, "EMPTY", req_identity)
+
     const gaji = await createGajiRepo(gajiData, req_identity)
     return gaji
 }
@@ -73,6 +76,8 @@ export const updateGajiByUuidService = async (uuid, gajiData, req_identity, req_
     const beforeData = await getGajiByUuidService(uuid, req_identity)
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
+    await getJurnalUmumByBuktiTransaski(gajiData.bukti_transaksi, "EMPTY", req_identity)
 
     const gaji = await updateGajiByUuidRepo(uuid, gajiData, req_identity)
 

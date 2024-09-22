@@ -38,6 +38,8 @@ export const createTransaksiBankService = async (transaksiBankData, req_identity
 
     await getNeracaValidasiByTanggalService(transaksiBankData.tanggal, req_identity)
 
+    await getJurnalUmumByBuktiTransaski(transaksiBankData.bukti_transaksi, "EMPTY", req_identity)
+
     const transaksiBank = await createTransaksiBankRepo(transaksiBankData, req_identity)
     return transaksiBank
 }

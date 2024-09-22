@@ -1,4 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getJurnalUmumByBuktiTransaski } from "../jurnal_umum/jurnalUmum.services.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createTransaksiKasRepo, deleteTransaksiKasByUuidRepo, getAllTransaksiKasRepo, getTransaksiKasByUuidRepo, updateTransaksiKasByUuidRepo } from "./transaksiKas.repository.js"
 
@@ -36,6 +37,8 @@ export const createTransaksiKasService = async (transaksiKasData, req_identity) 
     LOGGER(logType.INFO, `Start createTransaksiKasService`, transaksiKasData, req_identity)
     transaksiKasData.enabled = 1
 
+    await getJurnalUmumByBuktiTransaski(transaksiKasData.bukti_transaksi, "EMPTY", req_identity)
+
     await getNeracaValidasiByTanggalService(transaksiKasData.tanggal, req_identity)
 
     const transaksiKas = await createTransaksiKasRepo(transaksiKasData, req_identity)
@@ -57,6 +60,8 @@ export const updateTransaksiKasByUuidService = async (uuid, transaksiKasData, re
     const beforeData = await getTransaksiKasByUuidService(uuid, req_identity)
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
+    await getJurnalUmumByBuktiTransaski(transaksiKasData.bukti_transaksi, "EMPTY", req_identity)
 
     const transaksiKas = await updateTransaksiKasByUuidRepo(uuid, transaksiKasData, req_identity)
 

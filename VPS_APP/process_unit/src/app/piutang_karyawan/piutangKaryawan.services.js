@@ -1,4 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getJurnalUmumByBuktiTransaski } from "../jurnal_umum/jurnalUmum.services.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createPiutangKaryawanRepo, deletePiutangKaryawanByUuidRepo, getAllPiutangKaryawanRepo, getPiutangKaryawanByPegawaiUUIDRepo, getPiutangKaryawanByUuidRepo, getTotalPiutangKaryawanRepo, updatePiutangKaryawanByUuidRepo } from "./piutangKaryawan.repository.js"
 
 export const getAllPiutangKaryawanService = async (query, req_identity) => {
@@ -52,13 +54,20 @@ export const createPiutangKaryawanService = async (piutangKaryawanData, req_iden
     LOGGER(logType.INFO, `Start createPiutangKaryawanService`, piutangKaryawanData, req_identity)
     piutangKaryawanData.enabled = 1
 
+    await getNeracaValidasiByTanggalService(piutangKaryawanData.tanggal, req_identity)
+
+    await getJurnalUmumByBuktiTransaski(piutangKaryawanData.bukti_transaksi, "EMPTY", req_identity)
+
     const piutangKaryawan = await createPiutangKaryawanRepo(piutangKaryawanData, req_identity)
     return piutangKaryawan
 }
 
 export const deletePiutangKaryawanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deletePiutangKaryawanByUuidService [${uuid}]`, null, req_identity)
-    await getPiutangKaryawanByUuidService(uuid, req_identity)
+    const beforeData = await getPiutangKaryawanByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    
     await deletePiutangKaryawanByUuidRepo(uuid, req_identity)
     return true
 }
@@ -66,6 +75,11 @@ export const deletePiutangKaryawanByUuidService = async (uuid, req_identity) => 
 export const updatePiutangKaryawanByUuidService = async (uuid, piutangKaryawanData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updatePiutangKaryawanByUuidService [${uuid}]`, piutangKaryawanData, req_identity)
     const beforeData = await getPiutangKaryawanByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
+    await getJurnalUmumByBuktiTransaski(piutangKaryawanData.bukti_transaksi, "EMPTY", req_identity)
+
     const piutangKaryawan = await updatePiutangKaryawanByUuidRepo(uuid, piutangKaryawanData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

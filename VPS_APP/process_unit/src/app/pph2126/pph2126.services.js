@@ -1,5 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getJurnalUmumByBuktiTransaski } from "../jurnal_umum/jurnalUmum.services.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createPph2126Repo, deletePph2126ByUuidRepo, getAllPph2126Repo, getPph2126ByPegawaiUuidRepo, getPph2126ByUuidRepo, updatePph2126ByUuidRepo } from "./pph2126.repository.js"
 
 export const getAllPph2126Service = async (query, req_identity) => {
@@ -47,13 +49,20 @@ export const createPph2126Service = async (pph2126Data, req_identity) => {
     LOGGER(logType.INFO, `Start createPph2126Service`, pph2126Data, req_identity)
     pph2126Data.enabled = 1
 
+    await getNeracaValidasiByTanggalService(pph2126Data.tanggal, req_identity)
+
+    await getJurnalUmumByBuktiTransaski(pph2126Data.bukti_transaksi, "EMPTY", req_identity)
+
     const pph2126 = await createPph2126Repo(pph2126Data, req_identity)
     return pph2126
 }
 
 export const deletePph2126ByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deletePph2126ByUuidService [${uuid}]`, null, req_identity)
-    await getPph2126ByUuidService(uuid, req_identity)
+    const beforeData = await getPph2126ByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
     await deletePph2126ByUuidRepo(uuid, req_identity)
     return true
 }
@@ -61,6 +70,11 @@ export const deletePph2126ByUuidService = async (uuid, req_identity) => {
 export const updatePph2126ByUuidService = async (uuid, pph2126Data, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updatePph2126ByUuidService [${uuid}]`, pph2126Data, req_identity)
     const beforeData = await getPph2126ByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
+    await getJurnalUmumByBuktiTransaski(pph2126Data.bukti_transaksi, "EMPTY", req_identity)
+    
     const pph2126 = await updatePph2126ByUuidRepo(uuid, pph2126Data, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

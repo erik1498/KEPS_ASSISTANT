@@ -1,4 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getJurnalUmumByBuktiTransaski } from "../jurnal_umum/jurnalUmum.services.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createHadiahRepo, deleteHadiahByUuidRepo, getAllHadiahRepo, getHadiahByUuidRepo, getHadiahByPegawaiUuidRepo, updateHadiahByUuidRepo } from "./hadiah.repository.js"
 
@@ -39,13 +40,14 @@ export const createHadiahService = async (hadiahData, req_identity) => {
 
     await getNeracaValidasiByTanggalService(hadiahData.tanggal, req_identity)
 
+    await getJurnalUmumByBuktiTransaski(hadiahData.bukti_transaksi, "EMPTY", req_identity)
+
     const hadiah = await createHadiahRepo(hadiahData, req_identity)
     return hadiah
 }
 
 export const deleteHadiahByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteHadiahByUuidService [${uuid}]`, null, req_identity)
-    
     const beforeData = await getHadiahByUuidService(uuid, req_identity)
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
@@ -59,6 +61,8 @@ export const updateHadiahByUuidService = async (uuid, hadiahData, req_identity, 
     const beforeData = await getHadiahByUuidService(uuid, req_identity)
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
+    await getJurnalUmumByBuktiTransaski(hadiahData.bukti_transaksi, "EMPTY", req_identity)
 
     const hadiah = await updateHadiahByUuidRepo(uuid, hadiahData, req_identity)
 
