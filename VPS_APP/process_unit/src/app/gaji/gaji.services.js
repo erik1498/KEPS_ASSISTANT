@@ -1,4 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createGajiRepo, deleteGajiByUuidRepo, getAllGajiRepo, getGajiByPegawaiUuidRepo, getGajiByUuidRepo, getSlipGajiByPegawaiUUIDRepo, updateGajiByUuidRepo } from "./gaji.repository.js"
 
 export const getAllGajiService = async (query, req_identity) => {
@@ -51,13 +52,18 @@ export const createGajiService = async (gajiData, req_identity) => {
     LOGGER(logType.INFO, `Start createGajiService`, gajiData, req_identity)
     gajiData.enabled = 1
 
+    await getNeracaValidasiByTanggalService(gajiData.tanggal, req_identity)
+
     const gaji = await createGajiRepo(gajiData, req_identity)
     return gaji
 }
 
 export const deleteGajiByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteGajiByUuidService [${uuid}]`, null, req_identity)
-    await getGajiByUuidService(uuid, req_identity)
+    const beforeData = await getGajiByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
     await deleteGajiByUuidRepo(uuid, req_identity)
     return true
 }
@@ -65,6 +71,9 @@ export const deleteGajiByUuidService = async (uuid, req_identity) => {
 export const updateGajiByUuidService = async (uuid, gajiData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateGajiByUuidService [${uuid}]`, gajiData, req_identity)
     const beforeData = await getGajiByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
     const gaji = await updateGajiByUuidRepo(uuid, gajiData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

@@ -1,4 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createHadiahRepo, deleteHadiahByUuidRepo, getAllHadiahRepo, getHadiahByUuidRepo, getHadiahByPegawaiUuidRepo, updateHadiahByUuidRepo } from "./hadiah.repository.js"
 
 export const getAllHadiahService = async (query, req_identity) => {
@@ -36,13 +37,19 @@ export const createHadiahService = async (hadiahData, req_identity) => {
     LOGGER(logType.INFO, `Start createHadiahService`, hadiahData, req_identity)
     hadiahData.enabled = 1
 
+    await getNeracaValidasiByTanggalService(hadiahData.tanggal, req_identity)
+
     const hadiah = await createHadiahRepo(hadiahData, req_identity)
     return hadiah
 }
 
 export const deleteHadiahByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteHadiahByUuidService [${uuid}]`, null, req_identity)
-    await getHadiahByUuidService(uuid, req_identity)
+    
+    const beforeData = await getHadiahByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
     await deleteHadiahByUuidRepo(uuid, req_identity)
     return true
 }
@@ -50,6 +57,9 @@ export const deleteHadiahByUuidService = async (uuid, req_identity) => {
 export const updateHadiahByUuidService = async (uuid, hadiahData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateHadiahByUuidService [${uuid}]`, hadiahData, req_identity)
     const beforeData = await getHadiahByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
     const hadiah = await updateHadiahByUuidRepo(uuid, hadiahData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

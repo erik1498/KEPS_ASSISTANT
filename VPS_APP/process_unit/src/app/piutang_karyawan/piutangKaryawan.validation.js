@@ -12,6 +12,11 @@ export const piutangKaryawanValidation = (payload) => {
             "number.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
+        type: Joi.number().required().messages({
+            'number.base': "Harus Berupa Number",
+            "number.empty": "Harus Diisi",
+            "any.required": "Harus Diisi",
+        }),
         nilai: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",

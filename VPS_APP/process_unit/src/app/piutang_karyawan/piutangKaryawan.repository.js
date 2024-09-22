@@ -12,8 +12,16 @@ export const getAllPiutangKaryawanRepo = async (bulan, tahun, req_id) => {
                 pkt.bukti_transaksi,
                 0 AS transaksi,
                 pkt.tanggal,
-                0 AS debet,
-                pkt.nilai AS kredit,
+                CASE 
+                    WHEN pkt.type = 1
+                    THEN pkt.nilai
+                    ELSE 0
+                END AS debet,
+                CASE 
+                    WHEN pkt.type = 0
+                    THEN pkt.nilai
+                    ELSE 0
+                END AS kredit,
                 kapt.code AS kode_akun,
                 kapt.name AS nama_akun,
                 kapt.type AS type_akun,
@@ -33,8 +41,16 @@ export const getAllPiutangKaryawanRepo = async (bulan, tahun, req_id) => {
                 pkt.bukti_transaksi,
                 0 AS transaksi,
                 pkt.tanggal,
-                pkt.nilai AS debet,
-                0 AS kredit,
+                CASE 
+                    WHEN pkt.type = 0
+                    THEN pkt.nilai
+                    ELSE 0
+                END AS debet,
+                CASE 
+                    WHEN pkt.type = 1
+                    THEN pkt.nilai
+                    ELSE 0
+                END AS kredit,
                 kapt.code AS kode_akun,
                 kapt.name AS nama_akun,
                 kapt.type AS type_akun,
@@ -43,7 +59,7 @@ export const getAllPiutangKaryawanRepo = async (bulan, tahun, req_id) => {
                 pt.name AS pegawai_name,
                 pkt.enabled 
             FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt 
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "eadfec72-7d66-4597-998d-8acf959d34b7"
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f15e2810-c736-42f6-9a80-6d70e03315de"
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = pkt.pegawai 
             WHERE pkt.enabled = 1
             AND kapt.enabled = 1
@@ -61,6 +77,26 @@ export const getPiutangKaryawanByUuidRepo = async (uuid, req_id) => {
         {
             uuid,
             enabled: true
+        }
+    )
+}
+
+export const getTotalPiutangKaryawanRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                SUM(
+                    CASE 
+                        WHEN pkt.type = 1 THEN pkt.nilai * -1
+                        ELSE pkt.nilai 
+                    END
+                ) AS total
+            FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt 
+            WHERE pkt.pegawai = "${uuid}"
+            AND pkt.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
         }
     )
 }
@@ -95,6 +131,7 @@ export const createPiutangKaryawanRepo = async (piutangKaryawanData, req_id) => 
         {
             pegawai: piutangKaryawanData.pegawai,
             periode: piutangKaryawanData.periode,
+            type: piutangKaryawanData.type,
             nilai: piutangKaryawanData.nilai,
             tanggal: piutangKaryawanData.tanggal,
             bukti_transaksi: piutangKaryawanData.bukti_transaksi,
@@ -130,6 +167,7 @@ export const updatePiutangKaryawanByUuidRepo = async (uuid, piutangKaryawanData,
         {
             pegawai: piutangKaryawanData.pegawai,
             periode: piutangKaryawanData.periode,
+            type: piutangKaryawanData.type,
             nilai: piutangKaryawanData.nilai,
             tanggal: piutangKaryawanData.tanggal,
             bukti_transaksi: piutangKaryawanData.bukti_transaksi,

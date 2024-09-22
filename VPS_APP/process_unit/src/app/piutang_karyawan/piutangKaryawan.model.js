@@ -27,6 +27,13 @@ const PiutangKaryawanModel = db.define("piutang_karyawan_tab",
                 notEmpty:true,
             }
         },
+        type: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
         nilai: {
             type: DataTypes.INTEGER,
             allowNull: false,

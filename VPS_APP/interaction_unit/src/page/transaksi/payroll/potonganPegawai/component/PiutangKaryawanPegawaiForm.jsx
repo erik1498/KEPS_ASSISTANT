@@ -8,6 +8,7 @@ import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiPiutangKaryawanCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { useDataContext } from "../../../../../context/dataContext.context"
+import { TipePiutangKaryawan } from "../../../../../config/objectList.config"
 
 const PiutangKaryawanPegawaiForm = ({
     idPegawai,
@@ -16,6 +17,8 @@ const PiutangKaryawanPegawaiForm = ({
 }) => {
     const { data } = useDataContext()
 
+    const [type, setType] = useState(TipePiutangKaryawan[0])
+    const [totalUtangPegawai, setTotalUtangPegawai] = useState(0)
     const [nilai, setNilai] = useState("0")
     const [kodeAkun, setKodeAkun] = useState(kodeAkunList.length > 0 ? {
         label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
@@ -33,6 +36,7 @@ const PiutangKaryawanPegawaiForm = ({
                 data: {
                     pegawai: idPegawai,
                     periode: periode,
+                    type: type.value,
                     kode_akun_perkiraan: kodeAkun.value,
                     tanggal: tanggal,
                     bukti_transaksi: buktiTransaksi,
@@ -59,6 +63,14 @@ const PiutangKaryawanPegawaiForm = ({
             .then(resData => {
                 setPiutangKaryawan(resData.data)
             })
+        apiPiutangKaryawanCRUD
+            .custom(`/total_piutang/${idPegawai}`, "GET")
+            .then(resData => {
+                setTotalUtangPegawai(x => x = 0)
+                if (resData.data.total) {
+                    setTotalUtangPegawai(x => x = resData.data.total)
+                }
+            })
     }
 
     useEffect(() => {
@@ -68,6 +80,8 @@ const PiutangKaryawanPegawaiForm = ({
     return <div className="my-5 bg-white py-5 px-6 rounded-md">
         <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Piutang Pegawai</h1>
         <form onSubmit={e => _savePiutangKaryawanPegawai(e)}>
+            <p className="my-3 mx-1 font-bold text-sm">Total Piutang</p>
+            <p className="my-3 mx-1 font-bold text-xl">Rp. {parseToRupiahText(totalUtangPegawai)}</p>
             <div className="flex items-end gap-x-2">
                 <FormSelectWithLabel
                     label={"Sumber Dana"}
@@ -79,6 +93,17 @@ const PiutangKaryawanPegawaiForm = ({
                     selectValue={kodeAkun}
                     onchange={(e) => {
                         setKodeAkun(e)
+                    }}
+                    selectName={`periode`}
+                />
+                <FormSelectWithLabel
+                    label={"Tipe Piutang Karyawan"}
+                    optionsDataList={TipePiutangKaryawan}
+                    optionsLabel={"label"}
+                    optionsValue={"value"}
+                    selectValue={type}
+                    onchange={(e) => {
+                        setType(e)
                     }}
                     selectName={`periode`}
                 />

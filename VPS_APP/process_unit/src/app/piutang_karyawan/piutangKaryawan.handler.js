@@ -1,5 +1,5 @@
 import { piutangKaryawanValidation } from "./piutangKaryawan.validation.js"
-import { createPiutangKaryawanService, deletePiutangKaryawanByUuidService, getAllPiutangKaryawanService, getPiutangKaryawanByPegawaiUUIDService, updatePiutangKaryawanByUuidService } from "./piutangKaryawan.services.js"
+import { createPiutangKaryawanService, deletePiutangKaryawanByUuidService, getAllPiutangKaryawanService, getPiutangKaryawanByPegawaiUUIDService, getTotalPiutangKaryawanService, updatePiutangKaryawanByUuidService } from "./piutangKaryawan.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -11,7 +11,7 @@ export const getAllPiutangKaryawans = async (req, res) => {
             data: piutangKaryawans,
             message: "Get Data Success"
         })
-    } catch (error) {    
+    } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
@@ -27,6 +27,24 @@ export const getPiutangKaryawanByPegawaiUUID = async (req, res) => {
 
         res.json({
             data: await getPiutangKaryawanByPegawaiUUIDService(uuid, periode, tahun, req.identity),
+            message: "Get Data By UUID Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            message: error.message
+        })
+    }
+}
+
+export const getTotalPiutangKaryawan = async (req, res) => {
+    LOGGER(logType.INFO, "Start getTotalPiutangKaryawan", null, req.identity)
+    try {
+        const { uuid } = req.params
+
+        res.json({
+            data: await getTotalPiutangKaryawanService(uuid, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {
@@ -84,7 +102,7 @@ export const deletePiutangKaryawanByUUID = async (req, res) => {
 
 export const updatePiutangKaryawanByUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start updatePiutangKaryawanByUuidController", null, req.identity)
-    try {    
+    try {
         const piutangKaryawanData = req.body
         const { error, value } = piutangKaryawanValidation(piutangKaryawanData)
         if (error) {

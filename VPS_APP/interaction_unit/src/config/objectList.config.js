@@ -458,3 +458,14 @@ export const JPPersentase = 2 / 100
 export const BPJSKaryawanPersentase = 1 / 100
 export const JHTKaryawanPersentase = 2 / 100
 export const JPKaryawanPersentase = 1 / 100
+
+export const TipePiutangKaryawan = [
+    {
+        label: "Keluar",
+        value: 0
+    },
+    {
+        label: "Masuk",
+        value: 1
+    },
+]

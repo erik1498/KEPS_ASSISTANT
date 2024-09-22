@@ -1,4 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createLemburRepo, deleteLemburByUuidRepo, getAllLemburRepo, getLemburByPegawaiUuidRepo, getLemburByUuidRepo, updateLemburByUuidRepo } from "./lembur.repository.js"
 
 export const getAllLemburService = async (query, req_identity) => {
@@ -40,13 +41,19 @@ export const createLemburService = async (lemburData, req_identity) => {
     LOGGER(logType.INFO, `Start createLemburService`, lemburData, req_identity)
     lemburData.enabled = 1
 
+    await getNeracaValidasiByTanggalService(lemburData.tanggal, req_identity)
+
     const lembur = await createLemburRepo(lemburData, req_identity)
     return lembur
 }
 
 export const deleteLemburByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteLemburByUuidService [${uuid}]`, null, req_identity)
-    await getLemburByUuidService(uuid, req_identity)
+
+    const beforeData = await getLemburByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
     await deleteLemburByUuidRepo(uuid, req_identity)
     return true
 }
@@ -54,6 +61,9 @@ export const deleteLemburByUuidService = async (uuid, req_identity) => {
 export const updateLemburByUuidService = async (uuid, lemburData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateLemburByUuidService [${uuid}]`, lemburData, req_identity)
     const beforeData = await getLemburByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
     const lembur = await updateLemburByUuidRepo(uuid, lemburData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

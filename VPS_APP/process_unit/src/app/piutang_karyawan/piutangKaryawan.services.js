@@ -1,5 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
-import { createPiutangKaryawanRepo, deletePiutangKaryawanByUuidRepo, getAllPiutangKaryawanRepo, getPiutangKaryawanByPegawaiUUIDRepo, getPiutangKaryawanByUuidRepo, updatePiutangKaryawanByUuidRepo } from "./piutangKaryawan.repository.js"
+import { createPiutangKaryawanRepo, deletePiutangKaryawanByUuidRepo, getAllPiutangKaryawanRepo, getPiutangKaryawanByPegawaiUUIDRepo, getPiutangKaryawanByUuidRepo, getTotalPiutangKaryawanRepo, updatePiutangKaryawanByUuidRepo } from "./piutangKaryawan.repository.js"
 
 export const getAllPiutangKaryawanService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPiutangKaryawanService", null, req_identity)
@@ -11,6 +11,12 @@ export const getAllPiutangKaryawanService = async (query, req_identity) => {
     }, req_identity)
 
     return await getAllPiutangKaryawanRepo(bulan, tahun, req_identity)
+}
+
+export const getTotalPiutangKaryawanService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getTotalPiutangKaryawanService [${uuid}]`, null, req_identity)
+    const piutangKaryawan = await getTotalPiutangKaryawanRepo(uuid, req_identity)
+    return piutangKaryawan[0]
 }
 
 export const getPiutangKaryawanByUuidService = async (uuid, req_identity) => {

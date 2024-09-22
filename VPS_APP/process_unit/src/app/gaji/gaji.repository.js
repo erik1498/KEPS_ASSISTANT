@@ -156,7 +156,12 @@ export const getSlipGajiByPegawaiUUIDRepo = async (uuid, bulan, tahun, req_id) =
             AND ht.enabled = 1
             UNION ALL
             SELECT 
-                SUM(pkt.nilai) AS nilai,
+                SUM(
+                    CASE 
+                        WHEN pkt.type = 1 THEN pkt.nilai * -1
+                        ELSE pkt.nilai 
+                    END
+                ) AS nilai,
                 "piutang_karyawan" AS sumber
             FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt 
             WHERE pkt.pegawai = "${uuid}"

@@ -1,4 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createTunjanganUangRepo, deleteTunjanganUangByUuidRepo, getAllTunjanganUangRepo, getTunjanganUangByPegawaiUuidRepo, getTunjanganUangByUuidRepo, updateTunjanganUangByUuidRepo } from "./tunjanganUang.repository.js"
 
 export const getAllTunjanganUangService = async (query, req_identity) => {
@@ -43,20 +44,30 @@ export const createTunjanganUangService = async (tunjanganUangData, req_identity
     LOGGER(logType.INFO, `Start createTunjanganUangService`, tunjanganUangData, req_identity)
     tunjanganUangData.enabled = 1
 
+    await getNeracaValidasiByTanggalService(tunjanganUangData.tanggal, req_identity)
+
     const tunjanganUang = await createTunjanganUangRepo(tunjanganUangData, req_identity)
     return tunjanganUang
 }
 
 export const deleteTunjanganUangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteTunjanganUangByUuidService [${uuid}]`, null, req_identity)
-    await getTunjanganUangByUuidService(uuid, req_identity)
+
+    const beforeData = await getTunjanganUangByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
     await deleteTunjanganUangByUuidRepo(uuid, req_identity)
     return true
 }
 
 export const updateTunjanganUangByUuidService = async (uuid, tunjanganUangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateTunjanganUangByUuidService [${uuid}]`, tunjanganUangData, req_identity)
+    
     const beforeData = await getTunjanganUangByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
     const tunjanganUang = await updateTunjanganUangByUuidRepo(uuid, tunjanganUangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
