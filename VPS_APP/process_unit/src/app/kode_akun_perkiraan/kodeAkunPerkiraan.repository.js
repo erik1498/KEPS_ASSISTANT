@@ -59,14 +59,112 @@ export const getKodeAkunPerkiraanByUuidSudahDigunakanRepo = async (uuid, req_id)
     const jurnalUmumWithKodeAkunByUuid = await db.query(
         `
             SELECT 
-                jut.*
-            FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut 
-            WHERE jut.kode_akun_uuid = "${uuid}" 
-            AND jut.enabled = 1 
-            AND jut.bulan < "${new Date().getMonth()}"
-            AND jut.tahun <= "${new Date().getFullYear()}"
-            ORDER BY jut.tanggal ASC, jut.bulan ASC, jut.tahun 
-            ASC LIMIT 1
+                jut.tanggal,
+                jut.bulan,
+                jut.tahun,
+                jut.bukti_transaksi 
+            FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut
+            WHERE jut.enabled = 1
+            AND jut.kode_akun_uuid = "${uuid}"
+            UNION ALL
+            SELECT
+                DAY(tkt.tanggal) AS tanggal,
+                MONTH(tkt.tanggal) AS bulan,
+                YEAR(tkt.tanggal) AS tahun,
+                tkt.bukti_transaksi
+            FROM ${generateDatabaseName(req_id)}.transaksi_kas_tab tkt 
+            WHERE tkt.enabled = 1
+            AND tkt.kode_akun_perkiraan = "${uuid}"
+            UNION ALL
+            SELECT
+                DAY(tbt.tanggal) AS tanggal,
+                MONTH(tbt.tanggal) AS bulan,
+                YEAR(tbt.tanggal) AS tahun,
+                tbt.bukti_transaksi
+            FROM ${generateDatabaseName(req_id)}.transaksi_bank_tab tbt 
+            WHERE tbt.enabled = 1
+            AND tbt.kode_akun_perkiraan = "${uuid}"
+            UNION ALL
+            SELECT
+                DAY(gt.tanggal) AS tanggal,
+                MONTH(gt.tanggal) AS bulan,
+                YEAR(gt.tanggal) AS tahun,
+                gt.bukti_transaksi
+            FROM ${generateDatabaseName(req_id)}.gaji_tab gt 
+            WHERE gt.enabled = 1
+            AND gt.kode_akun_perkiraan = "${uuid}"
+            UNION ALL
+            SELECT
+                DAY(gt.tanggal) AS tanggal,
+                MONTH(gt.tanggal) AS bulan,
+                YEAR(gt.tanggal) AS tahun,
+                gt.bukti_transaksi
+            FROM ${generateDatabaseName(req_id)}.gaji_tab gt 
+            WHERE gt.enabled = 1
+            AND gt.kode_akun_perkiraan = "${uuid}"
+            UNION ALL
+            SELECT
+                DAY(tut.tanggal) AS tanggal,
+                MONTH(tut.tanggal) AS bulan,
+                YEAR(tut.tanggal) AS tahun,
+                tut.bukti_transaksi
+            FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+            WHERE tut.enabled = 1
+            AND tut.kode_akun_perkiraan = "${uuid}"
+            UNION ALL
+            SELECT
+                DAY(lt.tanggal) AS tanggal,
+                MONTH(lt.tanggal) AS bulan,
+                YEAR(lt.tanggal) AS tahun,
+                lt.bukti_transaksi
+            FROM ${generateDatabaseName(req_id)}.lembur_tab lt
+            WHERE lt.enabled = 1
+            AND lt.kode_akun_perkiraan = "${uuid}"
+            UNION ALL
+            SELECT
+                DAY(ht.tanggal) AS tanggal,
+                MONTH(ht.tanggal) AS bulan,
+                YEAR(ht.tanggal) AS tahun,
+                ht.bukti_transaksi
+            FROM ${generateDatabaseName(req_id)}.hadiah_tab ht
+            WHERE ht.enabled = 1
+            AND ht.kode_akun_perkiraan = "${uuid}"
+            UNION ALL
+            SELECT
+                DAY(pt.tanggal) AS tanggal,
+                MONTH(pt.tanggal) AS bulan,
+                YEAR(pt.tanggal) AS tahun,
+                pt.bukti_transaksi
+            FROM ${generateDatabaseName(req_id)}.pph2126_tab pt
+            WHERE pt.enabled = 1
+            AND pt.kode_akun_perkiraan = "${uuid}"
+            UNION ALL
+            SELECT
+                DAY(ltt.tanggal) AS tanggal,
+                MONTH(ltt.tanggal) AS bulan,
+                YEAR(ltt.tanggal) AS tahun,
+                ltt.bukti_transaksi
+            FROM ${generateDatabaseName(req_id)}.lain_lain_tab ltt
+            WHERE ltt.enabled = 1
+            AND ltt.kode_akun_perkiraan = "${uuid}"
+            UNION ALL
+            SELECT
+                DAY(kt.tanggal) AS tanggal,
+                MONTH(kt.tanggal) AS bulan,
+                YEAR(kt.tanggal) AS tahun,
+                kt.bukti_transaksi
+            FROM ${generateDatabaseName(req_id)}.kerugian_tab kt
+            WHERE kt.enabled = 1
+            AND kt.kode_akun_perkiraan = "${uuid}"
+            UNION ALL
+            SELECT
+                DAY(pkt.tanggal) AS tanggal,
+                MONTH(pkt.tanggal) AS bulan,
+                YEAR(pkt.tanggal) AS tahun,
+                pkt.bukti_transaksi
+            FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt
+            WHERE pkt.enabled = 1
+            AND pkt.kode_akun_perkiraan = "${uuid}"
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
