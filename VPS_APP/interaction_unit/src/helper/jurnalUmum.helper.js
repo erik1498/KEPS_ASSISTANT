@@ -1,5 +1,5 @@
 import { myDays } from "./date.helper";
-import { getSumOfStringValue } from "./number.helper";
+import { getSumOfStringValue, parseRupiahToFloat } from "./number.helper";
 
 
 const getDiffByTransaksi = (data) => {
@@ -47,16 +47,13 @@ export const normalizeDataJurnalUmum = (data) => {
                 totalDebetTanggal = 0
                 totalKreditTanggal = 0
             }
-
-            totalDebetTanggal = getSumOfStringValue([totalDebetTanggal, parseFloat(i.debet)])
-            totalKreditTanggal = getSumOfStringValue([totalKreditTanggal, parseFloat(i.kredit)])
-
-            returnData[`${parseInt(tanggal)}`].total = {
-                debet: totalDebetTanggal,
-                kredit: totalKreditTanggal
-            }
-
+            
             let dataPadaTanggal = data.filter(j => j.tanggal == tanggal)
+            
+            returnData[`${parseInt(tanggal)}`].total = {
+                debet: dataPadaTanggal.reduce((sum, current) => { return sum + parseRupiahToFloat(current.debet) }, 0),
+                kredit: dataPadaTanggal.reduce((sum, current) => { return sum + parseRupiahToFloat(current.kredit) }, 0)
+            }
 
             let listBuktiTransaksi = []
             let listBuktiTransaksiDanDaftarData = []
