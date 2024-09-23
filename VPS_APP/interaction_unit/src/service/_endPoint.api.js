@@ -187,6 +187,10 @@ export const SrvMetodePenyusutan = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/metode_penyusutan'
 )
 
+export const SrvPersentasePenyusutan = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/persentase_penyusutan'
+)
+
 export const SrvKategoriHargaBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kategori_harga_barang'
 )

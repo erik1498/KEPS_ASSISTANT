@@ -35,6 +35,7 @@ import kategoriAsetPath from './path/asetTetapDanPerlengkapan/asetTetap/kategori
 import kelompokAsetPath from './path/asetTetapDanPerlengkapan/asetTetap/kelompokAset.path';
 import kategoriPerlengkapanPath from './path/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan.path';
 import metodePenyusutanPath from './path/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan.path';
+import persentasePenyusutanPath from './path/asetTetapDanPerlengkapan/penyusutan/persentasePenyusutan.path';
 import daftarBarangPath from './path/persediaan/barang/daftarBarang.path';
 import daftarGudangPath from './path/persediaan/gudang/daftarGudang.path';
 import daftarJasaPath from './path/persediaan/jasa/daftarJasa.path';
@@ -75,7 +76,8 @@ const JenisGudangPage = React.lazy(() => import('./page/persediaan/gudang/jenisG
 const KategoriAsetPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/asetTetap/kategoriAset/KategoriAset.page'))
 const KelompokAsetPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/asetTetap/kelompokAset/KelompokAset.page'))
 const KategoriPerlengkapanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan/KategoriPerlengkapan.page'))
-const MetodePenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/penyusutan/kategoriPerlengkapan/MetodePenyusutan.page'))
+const MetodePenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan/MetodePenyusutan.page'))
+const PersentasePenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/penyusutan/persentasePenyusutan/PersentasePenyusutan.page'))
 const DaftarBarangPage = React.lazy(() => import('./page/persediaan/barang/daftarBarang/DaftarBarang.page'))
 const DaftarGudangPage = React.lazy(() => import('./page/persediaan/gudang/daftarGudang/DaftarGudang.page'))
 const DaftarJasaPage = React.lazy(() => import('./page/persediaan/jasa/daftarJasa/DaftarJasa.page'))
@@ -178,6 +180,9 @@ function App() {
         </Routes>
         <Routes basename={metodePenyusutanPath.main}>
           <Route path={metodePenyusutanPath.main} element={<MetodePenyusutanPage />} />
+        </Routes>
+        <Routes basename={persentasePenyusutanPath.main}>
+          <Route path={persentasePenyusutanPath.main} element={<PersentasePenyusutanPage />} />
         </Routes>
         <Routes basename={jurnalUmumPath.main}>
           <Route path={jurnalUmumPath.main} element={<JurnalUmumPage />} />

@@ -56,6 +56,7 @@ import { getPph2126Route } from "../app/pph2126/pph2126.route.js";
 import { getPiutangKaryawanRoute } from "../app/piutang_karyawan/piutangKaryawan.route.js";
 import { getLainLainRoute } from "../app/lain_lain/lainLain.route.js";
 import { getKerugianRoute } from "../app/kerugian/kerugian.route.js";
+import { getPersentasePenyusutanRoute } from "../app/persentase_penyusutan/persentasePenyusutan.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -101,6 +102,7 @@ export const routerList = new Array()
         getKelompokAsetRoute(),
         getKategoriPerlengkapanRoute(),
         getMetodePenyusutanRoute(),
+        getPersentasePenyusutanRoute(),
         getKategoriHargaBarangRoute(),
         getKategoriHargaJasaRoute(),
         getStokAwalBarangRoute(),
