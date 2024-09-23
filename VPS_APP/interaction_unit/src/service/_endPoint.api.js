@@ -171,6 +171,10 @@ export const SrvJenisGudang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/jenis_gudang'
 )
 
+export const SrvDaftarAset = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/daftar_aset'
+)
+
 export const SrvKategoriAset = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kategori_aset'
 )
@@ -179,8 +183,16 @@ export const SrvKelompokAset = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kelompok_aset'
 )
 
+export const SrvDaftarPerlengkapan = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/daftar_perlengkapan'
+)
+
 export const SrvKategoriPerlengkapan = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kategori_perlengkapan'
+)
+
+export const SrvHitunganPenyusutan = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/hitungan_penyusutan'
 )
 
 export const SrvMetodePenyusutan = objectPathEndPointAPI(

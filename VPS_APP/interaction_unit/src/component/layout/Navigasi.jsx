@@ -171,7 +171,7 @@ const Navigasi = () => {
                                 <p className="font-bold pointer-events-none">Perlengkapan</p>
                                 <ul>
                                     <li>
-                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Daftar Perlengkapan"} />
+                                        <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/daftarPerlengkapan" addClass={"my-1"} label={"Daftar Perlengkapan"} />
                                     </li>
                                     <li>
                                         <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan" addClass={"my-1"} label={"Kategori Perlengkapan"} />
@@ -188,7 +188,7 @@ const Navigasi = () => {
                                         <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/persentasePenyusutan" addClass={"my-1"} label={"Persentase Penyusutan"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Hitungan Penyusutan"} />
+                                        <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/hitunganPenyusutan" addClass={"my-1"} label={"Hitungan Penyusutan"} />
                                     </li>
                                     <li>
                                         <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Penyusutan"} />

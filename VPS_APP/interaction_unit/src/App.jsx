@@ -44,6 +44,9 @@ import bankPath from './path/transaksi/kasDanBank/bank.path';
 import pendapatanPegawaiPath from './path/transaksi/payroll/pendapatanPegawai.path';
 import potonganPegawaiPath from './path/transaksi/payroll/potonganPegawai.path';
 import slipGajiPegawaiPath from './path/transaksi/payroll/slipGajiPegawai.path';
+import daftarAsetPath from './path/asetTetapDanPerlengkapan/asetTetap/daftarAset.path';
+import daftarPerlengkapanPath from './path/asetTetapDanPerlengkapan/perlengkapan/daftarPerlengkapan.path';
+import hitunganPenyusutanPath from './path/asetTetapDanPerlengkapan/penyusutan/hitunganPenyusutan.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -73,9 +76,12 @@ const JenisJasaPage = React.lazy(() => import('./page/persediaan/jasa/jenisJasa/
 const JenisPenjualanJasaPage = React.lazy(() => import('./page/persediaan/jasa/jenisPenjualanJasa/JenisPenjualanJasa.page'))
 const KategoriGudangPage = React.lazy(() => import('./page/persediaan/gudang/kategoriGudang/KategoriGudang.page'))
 const JenisGudangPage = React.lazy(() => import('./page/persediaan/gudang/jenisGudang/JenisGudang.page'))
+const DaftarAsetPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/asetTetap/daftarAset/DaftarAset.page'));
 const KategoriAsetPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/asetTetap/kategoriAset/KategoriAset.page'))
 const KelompokAsetPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/asetTetap/kelompokAset/KelompokAset.page'))
+const DaftarPerlengkapanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/perlengkapan/daftarPerlengkapan/DaftarPerlengkapan.page'))
 const KategoriPerlengkapanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan/KategoriPerlengkapan.page'))
+const HitunganPenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/penyusutan/hitunganPenyusutan/HitunganPenyusutanPage'))
 const MetodePenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan/MetodePenyusutan.page'))
 const PersentasePenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/penyusutan/persentasePenyusutan/PersentasePenyusutan.page'))
 const DaftarBarangPage = React.lazy(() => import('./page/persediaan/barang/daftarBarang/DaftarBarang.page'))
@@ -169,17 +175,26 @@ function App() {
         <Routes basename={jenisGudangPath.main}>
           <Route path={jenisGudangPath.main} element={<JenisGudangPage />} />
         </Routes>
+        <Routes basename={daftarAsetPath.main}>
+          <Route path={daftarAsetPath.main} element={<DaftarAsetPage />} />
+        </Routes>
         <Routes basename={kategoriAsetPath.main}>
           <Route path={kategoriAsetPath.main} element={<KategoriAsetPage />} />
         </Routes>
         <Routes basename={kelompokAsetPath.main}>
           <Route path={kelompokAsetPath.main} element={<KelompokAsetPage />} />
         </Routes>
+        <Routes basename={daftarPerlengkapanPath.main}>
+          <Route path={daftarPerlengkapanPath.main} element={<DaftarPerlengkapanPage />} />
+        </Routes>
         <Routes basename={kategoriPerlengkapanPath.main}>
           <Route path={kategoriPerlengkapanPath.main} element={<KategoriPerlengkapanPage />} />
         </Routes>
         <Routes basename={metodePenyusutanPath.main}>
           <Route path={metodePenyusutanPath.main} element={<MetodePenyusutanPage />} />
+        </Routes>
+        <Routes basename={hitunganPenyusutanPath.main}>
+          <Route path={hitunganPenyusutanPath.main} element={<HitunganPenyusutanPage />} />
         </Routes>
         <Routes basename={persentasePenyusutanPath.main}>
           <Route path={persentasePenyusutanPath.main} element={<PersentasePenyusutanPage />} />
