@@ -1014,12 +1014,12 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS deskripsi_kerja,
                         NULL AS keterangan_kerja,
                         "LAIN - LAIN" AS sumber,
-                        pt.name AS pegawai_name,
                         NULL AS waktu_mulai,
                         NULL AS waktu_selesai,
                         NULL AS total_jam,
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
+                        pt.name AS pegawai_name,
                         llt.enabled 
                     FROM ${generateDatabaseName(req_id)}.lain_lain_tab llt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "b7687ceb-6046-4062-979d-bfed5550bd87"
@@ -1044,12 +1044,12 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS deskripsi_kerja,
                         NULL AS keterangan_kerja,
                         "KERUGIAN" AS sumber,
-                        pt.name AS pegawai_name,
                         NULL AS waktu_mulai,
                         NULL AS waktu_selesai,
                         NULL AS total_jam,
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
+                        pt.name AS pegawai_name,
                         kt.enabled 
                     FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kt.kode_akun_perkiraan 
@@ -1074,12 +1074,12 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS deskripsi_kerja,
                         NULL AS keterangan_kerja,
                         "KERUGIAN" AS sumber,
-                        pt.name AS pegawai_name,
                         NULL AS waktu_mulai,
                         NULL AS waktu_selesai,
                         NULL AS total_jam,
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
+                        pt.name AS pegawai_name,
                         kt.enabled 
                     FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f3eafc29-6a1c-4e57-b789-532b490dac33"
