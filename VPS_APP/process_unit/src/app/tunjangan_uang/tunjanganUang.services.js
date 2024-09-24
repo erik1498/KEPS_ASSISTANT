@@ -71,7 +71,7 @@ export const updateTunjanganUangByUuidService = async (uuid, tunjanganUangData, 
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
 
-    await getJurnalUmumByBuktiTransaski(tunjanganUangData.bukti_transaksi, "EMPTY", req_identity)
+    await getJurnalUmumByBuktiTransaski(tunjanganUangData.bukti_transaksi, [`"${uuid}"`], req_identity)
 
     const tunjanganUang = await updateTunjanganUangByUuidRepo(uuid, tunjanganUangData, req_identity)
 

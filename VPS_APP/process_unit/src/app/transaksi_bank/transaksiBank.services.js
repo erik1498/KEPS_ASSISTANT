@@ -1,4 +1,5 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getJurnalUmumByBuktiTransaski } from "../jurnal_umum/jurnalUmum.services.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createTransaksiBankRepo, deleteTransaksiBankByUuidRepo, getAllTransaksiBankRepo, getTransaksiBankByUuidRepo, updateTransaksiBankByUuidRepo } from "./transaksiBank.repository.js"
 
@@ -59,6 +60,8 @@ export const updateTransaksiBankByUuidService = async (uuid, transaksiBankData, 
     const beforeData = await getTransaksiBankByUuidService(uuid, req_identity)
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+
+    await getJurnalUmumByBuktiTransaski(transaksiBankData.bukti_transaksi, [`"${uuid}"`], req_identity)
 
     const transaksiBank = await updateTransaksiBankByUuidRepo(uuid, transaksiBankData, req_identity)
 

@@ -16,7 +16,7 @@ export const getAllTransaksiKasService = async (bulan, tahun, query, req_identit
         tahun,
         search
     }, req_identity)
-    
+
     return await getAllTransaksiKasRepo(bulan, tahun, search, req_identity)
 }
 
@@ -61,7 +61,7 @@ export const updateTransaksiKasByUuidService = async (uuid, transaksiKasData, re
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
 
-    await getJurnalUmumByBuktiTransaski(transaksiKasData.bukti_transaksi, "EMPTY", req_identity)
+    await getJurnalUmumByBuktiTransaski(transaksiKasData.bukti_transaksi, [`"${uuid}"`], req_identity)
 
     const transaksiKas = await updateTransaksiKasByUuidRepo(uuid, transaksiKasData, req_identity)
 

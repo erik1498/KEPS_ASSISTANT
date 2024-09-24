@@ -986,51 +986,61 @@ export const getJurnalUmumByBuktiTransaksiRepo = async (bukti_transaksi, uuidLis
                     COUNT(0) AS count 
                 FROM ${generateDatabaseName(req_id)}.transaksi_kas_tab tkt  
                 WHERE tkt.bukti_transaksi = :bukti_transaksi AND tkt.enabled = 1
+                ${uuidList != "EMPTY" ? `AND tkt.uuid NOT IN(${uuidList})` : ''}
                 UNION ALL
                 SELECT 
                     COUNT(0) AS count 
                 FROM ${generateDatabaseName(req_id)}.transaksi_bank_tab tbt  
                 WHERE tbt.bukti_transaksi = :bukti_transaksi AND tbt.enabled = 1
+                ${uuidList != "EMPTY" ? `AND tbt.uuid NOT IN(${uuidList})` : ''}
                 UNION ALL
                 SELECT 
                     COUNT(0) AS count 
                 FROM ${generateDatabaseName(req_id)}.gaji_tab gt  
                 WHERE gt.bukti_transaksi = :bukti_transaksi AND gt.enabled = 1
+                ${uuidList != "EMPTY" ? `AND gt.uuid NOT IN(${uuidList})` : ''}
                 UNION ALL
                 SELECT 
                     COUNT(0) AS count 
                 FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut  
                 WHERE tut.bukti_transaksi = :bukti_transaksi AND tut.enabled = 1
+                ${uuidList != "EMPTY" ? `AND tut.uuid NOT IN(${uuidList})` : ''}
                 UNION ALL
                 SELECT 
                     COUNT(0) AS count 
                 FROM ${generateDatabaseName(req_id)}.lembur_tab lt  
                 WHERE lt.bukti_transaksi = :bukti_transaksi AND lt.enabled = 1
+                ${uuidList != "EMPTY" ? `AND lt.uuid NOT IN(${uuidList})` : ''}
                 UNION ALL
                 SELECT 
                     COUNT(0) AS count 
                 FROM ${generateDatabaseName(req_id)}.hadiah_tab ht  
                 WHERE ht.bukti_transaksi = :bukti_transaksi AND ht.enabled = 1
+                ${uuidList != "EMPTY" ? `AND ht.uuid NOT IN(${uuidList})` : ''}
                 UNION ALL
                 SELECT 
                     COUNT(0) AS count 
                 FROM ${generateDatabaseName(req_id)}.pph2126_tab pt  
                 WHERE pt.bukti_transaksi = :bukti_transaksi AND pt.enabled = 1
+                ${uuidList != "EMPTY" ? `AND pt.uuid NOT IN(${uuidList})` : ''}
                 UNION ALL
                 SELECT 
                     COUNT(0) AS count 
                 FROM ${generateDatabaseName(req_id)}.lain_lain_tab llt  
                 WHERE llt.bukti_transaksi = :bukti_transaksi AND llt.enabled = 1
+                ${uuidList != "EMPTY" ? `AND llt.uuid NOT IN(${uuidList})` : ''}
                 UNION ALL
                 SELECT 
                     COUNT(0) AS count 
                 FROM ${generateDatabaseName(req_id)}.kerugian_tab kt  
                 WHERE kt.bukti_transaksi = :bukti_transaksi AND kt.enabled = 1
+                ${uuidList != "EMPTY" ? `AND kt.uuid NOT IN(${uuidList})` : ''}
                 UNION ALL
                 SELECT 
                     COUNT(0) AS count 
                 FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt  
                 WHERE pkt.bukti_transaksi = :bukti_transaksi AND pkt.enabled = 1
+                ${uuidList != "EMPTY" ? `AND pkt.uuid NOT IN(${uuidList})` : ''}
             ) AS res
         `,
         {

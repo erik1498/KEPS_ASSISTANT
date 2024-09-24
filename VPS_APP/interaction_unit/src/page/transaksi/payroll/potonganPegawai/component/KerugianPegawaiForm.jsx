@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { convertTo12HoursFormat, getHariTanggalFull } from "../../../../../helper/date.helper"
+import { convertTo12HoursFormat, formatDate, getHariTanggalFull } from "../../../../../helper/date.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
@@ -153,7 +153,7 @@ const KerugianPegawaiForm = ({
                             </tr>
                             <tr>
                                 <td>{item.kode_akun_perkiraan_code} - {item.kode_akun_perkiraan_name}</td>
-                                <td>{`${item.tanggal.split("T")[0]} ${convertTo12HoursFormat(item.tanggal.split("T")[1])}`}</td>
+                                <td>{`${formatDate(item.tanggal.split("T")[0], false)} ${convertTo12HoursFormat(item.tanggal.split("T")[1])}`}</td>
                                 <td>{item.bukti_transaksi}</td>
                                 <td>{parseToRupiahText(item.nilai)}</td>
                                 <td>

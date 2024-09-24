@@ -1,4 +1,4 @@
-import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
+import { convertTo12HoursFormat, formatDate } from "../../../../../helper/date.helper"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
 
 const PendapatanRowData = ({
@@ -6,7 +6,6 @@ const PendapatanRowData = ({
     balanceStatus = true,
     forPrint
 }) => {
-    console.log("PEGAWAI NAME", item1)
     return <>
         <div className="grid grid-cols-12 items-center bg-gray-3">
             <div className=" col-span-12 border-x-4 border-transparent text-gray-900 flex flex-row items-center">
@@ -43,7 +42,7 @@ const PendapatanRowData = ({
                                             item3.waktu_mulai && item3.waktu_selesai && item3.transaksi == 0 ? <>
                                                 <b>{item3.deskripsi_kerja}</b>
                                                 <p className="mb-2">{item3.keterangan_kerja}</p>
-                                                <p>{`${item3.waktu_mulai.split("T")[0]} ${convertTo12HoursFormat(item3.waktu_mulai.split("T")[1])}`} Hingga {`${item3.waktu_selesai.split("T")[0]} ${convertTo12HoursFormat(item3.waktu_selesai.split("T")[1])}`}</p>
+                                                <p>{`${formatDate(item3.waktu_mulai.split("T")[0], false)} ${convertTo12HoursFormat(item3.waktu_mulai.split("T")[1])}`} Hingga {`${formatDate(item3.waktu_selesai.split("T")[0], false)} ${convertTo12HoursFormat(item3.waktu_selesai.split("T")[1])}`}</p>
                                                 <p className="font-semibold">Detail</p>
                                                 <p>{parseToRupiahText(item3.total_jam)} Jam, {parseToRupiahText(item3.total_menit)} Menit. Dengan Nilai Lembur Per Menit {parseToRupiahText(item3.nilai_lembur_per_menit)}</p>
                                             </> : <></>
