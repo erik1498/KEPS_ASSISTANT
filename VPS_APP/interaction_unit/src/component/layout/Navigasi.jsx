@@ -113,10 +113,10 @@ const Navigasi = () => {
                                 <p className="font-bold pointer-events-none">Penjualan</p>
                                 <ul>
                                     <li>
-                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Penjualan Barang"} />
+                                        <NavigationLink to="/transaksi/penjualan/barang" addClass={"my-1"} label={"Barang"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Penjualan Jasa"} />
+                                        <NavigationLink to="/transaksi/penjualan/jasa" addClass={"my-1"} label={"Jasa"} />
                                     </li>
                                 </ul>
                             </li>
@@ -124,7 +124,7 @@ const Navigasi = () => {
                                 <p className="font-bold pointer-events-none">Pembelian</p>
                                 <ul>
                                     <li>
-                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Pembelian Barang"} />
+                                        <NavigationLink to="/transaksi/pembelian/barang" addClass={"my-1"} label={"Barang"} />
                                     </li>
                                 </ul>
                             </li>

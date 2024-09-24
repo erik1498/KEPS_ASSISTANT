@@ -47,6 +47,9 @@ import slipGajiPegawaiPath from './path/transaksi/payroll/slipGajiPegawai.path';
 import daftarAsetPath from './path/asetTetapDanPerlengkapan/asetTetap/daftarAset.path';
 import daftarPerlengkapanPath from './path/asetTetapDanPerlengkapan/perlengkapan/daftarPerlengkapan.path';
 import hitunganPenyusutanPath from './path/asetTetapDanPerlengkapan/penyusutan/hitunganPenyusutan.path';
+import penjualanBarangPath from './path/transaksi/penjualan/penjualanBarang.path';
+import penjualanJasaPath from './path/transaksi/penjualan/penjualanJasa.path';
+import pembelianBarangPath from './path/transaksi/pembelian/pembelianBarang.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -92,6 +95,9 @@ const BankPage = React.lazy(() => import('./page/transaksi/kasDanBank/bank/BankP
 const PendapatanPegawaiPage = React.lazy(() => import('./page/transaksi/payroll/pendapatanPegawai/PendapatanPegawaiPage'))
 const PotonganPegawaiPage = React.lazy(() => import('./page/transaksi/payroll/potonganPegawai/PotonganPegawaiPage'))
 const SlipGajiPegawaiPage = React.lazy(() => import('./page/transaksi/payroll/slipGajiPegawai/SlipGajiPegawaiPage'))
+const PenjualanJasaPage = React.lazy(() => import('./page/transaksi/penjualan/penjualanJasa/PenjualanJasaPage'))
+const PenjualanBarangPage = React.lazy(() => import('./page/transaksi/penjualan/penjualanBarang/PenjualanBarangPage'))
+const PembelianBarangPage = React.lazy(() => import('./page/transaksi/pembelian/pembelianBarang/PembelianBarangPage'))
 
 function App() {
   return (
@@ -222,6 +228,15 @@ function App() {
         </Routes>
         <Routes basename={bankPath.main}>
           <Route path={bankPath.main} element={<BankPage />} />
+        </Routes>
+        <Routes basename={penjualanBarangPath.main}>
+          <Route path={penjualanBarangPath.main} element={<PenjualanBarangPage />} />
+        </Routes>
+        <Routes basename={penjualanJasaPath.main}>
+          <Route path={penjualanJasaPath.main} element={<PenjualanJasaPage />} />
+        </Routes>
+        <Routes basename={pembelianBarangPath.main}>
+          <Route path={pembelianBarangPath.main} element={<PembelianBarangPage />} />
         </Routes>
         <Routes basename={pendapatanPegawaiPath.main}>
           <Route path={pendapatanPegawaiPath.main} element={<PendapatanPegawaiPage />} />
