@@ -18,7 +18,7 @@ export const getAllKerugianRepo = async (bulan, tahun, req_id) => {
                 kapt.name AS nama_akun,
                 kapt.type AS type_akun,
                 kt.keterangan AS uraian,
-                "LAIN - LAIN" AS sumber,
+                "KERUGIAN" AS sumber,
                 pt.name AS pegawai_name,
                 kt.enabled 
             FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
@@ -39,7 +39,7 @@ export const getAllKerugianRepo = async (bulan, tahun, req_id) => {
                 kapt.name AS nama_akun,
                 kapt.type AS type_akun,
                 kt.keterangan AS uraian,
-                "LAIN - LAIN" AS sumber,
+                "KERUGIAN" AS sumber,
                 pt.name AS pegawai_name,
                 kt.enabled 
             FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 

@@ -906,6 +906,262 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ht.pegawai 
                     WHERE ht.enabled = 1
                     AND kapt.enabled = 1
+                    UNION ALL -- PPH2126 START
+                    SELECT 
+                        ppt.uuid,
+                        ppt.bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(ppt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
+                        YEAR(ppt.tanggal) AS tahun,
+                        TIME(ppt.tanggal) AS waktu,
+                        0 AS debet,
+                        ppt.nilai AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        "PPH 21/26 Pegawai" AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "PPH 21/26" AS sumber,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        pt.name AS pegawai_name,
+                        ppt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.pph2126_tab ppt 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppt.kode_akun_perkiraan 
+                    JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ppt.pegawai 
+                    WHERE pt.enabled = 1
+                    AND kapt.enabled = 1
+                    UNION ALL
+                    SELECT 
+                        ppt.uuid,
+                        ppt.bukti_transaksi,
+                        1 AS transaksi,
+                        LPAD(DAY(ppt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
+                        YEAR(ppt.tanggal) AS tahun,
+                        TIME(ppt.tanggal) AS waktu,
+                        ppt.nilai AS debet,
+                        0 AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        "PPH 21/26 Pegawai" AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "PPH 21/26" AS sumber,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        pt.name AS pegawai_name,
+                        ppt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.pph2126_tab ppt 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "eadfec72-7d66-4597-998d-8acf959d34b7" 
+                    JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ppt.pegawai 
+                    WHERE pt.enabled = 1
+                    AND kapt.enabled = 1
+                    UNION ALL -- LAIN LAIN START
+                    SELECT 
+                        llt.uuid,
+                        llt.bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(llt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(llt.tanggal), 2, '0') AS bulan,
+                        YEAR(llt.tanggal) AS tahun,
+                        TIME(llt.tanggal) AS waktu,
+                        0 AS debet,
+                        llt.nilai AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        llt.keterangan AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "LAIN - LAIN" AS sumber,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        pt.name AS pegawai_name,
+                        llt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.lain_lain_tab llt 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = llt.kode_akun_perkiraan 
+                    JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = llt.pegawai 
+                    WHERE llt.enabled = 1
+                    AND kapt.enabled = 1
+                    UNION ALL
+                    SELECT 
+                        llt.uuid,
+                        llt.bukti_transaksi,
+                        1 AS transaksi,
+                        LPAD(DAY(llt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(llt.tanggal), 2, '0') AS bulan,
+                        YEAR(llt.tanggal) AS tahun,
+                        TIME(llt.tanggal) AS waktu,
+                        llt.nilai AS debet,
+                        0 AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        llt.keterangan AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "LAIN - LAIN" AS sumber,
+                        pt.name AS pegawai_name,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        llt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.lain_lain_tab llt 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "b7687ceb-6046-4062-979d-bfed5550bd87"
+                    JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = llt.pegawai 
+                    WHERE llt.enabled = 1
+                    AND kapt.enabled = 1
+                    UNION ALL -- KERUGIAN START
+                    SELECT 
+                        kt.uuid,
+                        kt.bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(kt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(kt.tanggal), 2, '0') AS bulan,
+                        YEAR(kt.tanggal) AS tahun,
+                        TIME(kt.tanggal) AS waktu,
+                        0 AS debet,
+                        kt.nilai AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        kt.keterangan AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "KERUGIAN" AS sumber,
+                        pt.name AS pegawai_name,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        kt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kt.kode_akun_perkiraan 
+                    JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = kt.pegawai 
+                    WHERE kt.enabled = 1
+                    AND kapt.enabled = 1
+                    UNION ALL
+                    SELECT 
+                        kt.uuid,
+                        kt.bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(kt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(kt.tanggal), 2, '0') AS bulan,
+                        YEAR(kt.tanggal) AS tahun,
+                        TIME(kt.tanggal) AS waktu,
+                        kt.nilai AS debet,
+                        0 AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        kt.keterangan AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "KERUGIAN" AS sumber,
+                        pt.name AS pegawai_name,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        kt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f3eafc29-6a1c-4e57-b789-532b490dac33"
+                    JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = kt.pegawai 
+                    WHERE kt.enabled = 1
+                    AND kapt.enabled = 1
+                    UNION ALL -- PIUTANG PEGAWAI START
+                    SELECT 
+                        pkt.uuid,
+                        pkt.bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(pkt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(pkt.tanggal), 2, '0') AS bulan,
+                        YEAR(pkt.tanggal) AS tahun,
+                        TIME(pkt.tanggal) AS waktu,
+                        CASE 
+                            WHEN pkt.type = 1
+                            THEN pkt.nilai
+                            ELSE 0
+                        END AS debet,
+                        CASE 
+                            WHEN pkt.type = 0
+                            THEN pkt.nilai
+                            ELSE 0
+                        END AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        pkt.keterangan AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "PIUTANG KARYAWAN" AS sumber,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        pt.name AS pegawai_name,
+                        pkt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = pkt.kode_akun_perkiraan 
+                    JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = pkt.pegawai 
+                    WHERE pkt.enabled = 1
+                    AND kapt.enabled = 1
+                    UNION ALL
+                    SELECT 
+                        pkt.uuid,
+                        pkt.bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(pkt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(pkt.tanggal), 2, '0') AS bulan,
+                        YEAR(pkt.tanggal) AS tahun,
+                        TIME(pkt.tanggal) AS waktu,
+                        CASE 
+                            WHEN pkt.type = 0
+                            THEN pkt.nilai
+                            ELSE 0
+                        END AS debet,
+                        CASE 
+                            WHEN pkt.type = 1
+                            THEN pkt.nilai
+                            ELSE 0
+                        END AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        pkt.keterangan AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "PIUTANG KARYAWAN" AS sumber,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        pt.name AS pegawai_name,
+                        pkt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f15e2810-c736-42f6-9a80-6d70e03315de"
+                    JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = pkt.pegawai 
+                    WHERE pkt.enabled = 1
+                    AND kapt.enabled = 1
                 ) AS res
                 WHERE res.bulan = :bulan AND res.tahun = :tahun
                 AND (

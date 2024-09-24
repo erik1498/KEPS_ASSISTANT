@@ -4,6 +4,7 @@ import { convertTo12HoursFormat } from "../../../../helper/date.helper";
 import BankRowData from "../../../transaksi/kasDanBank/bank/component/BankRowData";
 import KasRowData from "../../../transaksi/kasDanBank/kas/component/KasRowData";
 import PendapatanRowData from "../../../transaksi/payroll/pendapatanPegawai/component/PendapatanRowData";
+import PotonganRowData from "../../../transaksi/payroll/potonganPegawai/component/PotonganRowData";
 
 const JurnalUmumRow = ({
     item,
@@ -174,6 +175,20 @@ const JurnalUmumRow = ({
                                     ?
                                     <>
                                         <PendapatanRowData
+                                            item1={item1}
+                                            balanceStatus={false}
+                                            forPrint={forPrint}
+                                        />
+                                    </> : <></>
+                            }
+                            {
+                                item1.sumber == "PPH 21/26" ||
+                                    item1.sumber == "LAIN - LAIN" ||
+                                    item1.sumber == "KERUGIAN" ||
+                                    item1.sumber == "PIUTANG KARYAWAN"
+                                    ?
+                                    <>
+                                        <PotonganRowData
                                             item1={item1}
                                             balanceStatus={false}
                                             forPrint={forPrint}
