@@ -1,10 +1,13 @@
-import { FaPen, FaTrash } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaPen, FaTrash } from "react-icons/fa";
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper";
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper";
-import PendapatanRowData from "./PendapatanRowData";
+import BankRowData from "./BankRowData";
 
-const PendapatanRow = ({
+const BankRow = ({
     item,
+    deleteItem = () => { },
+    editItem = () => { },
+    deleteByBuktiTransaksi = () => { },
     balanceStatus = true,
     forPrint = false
 }) => {
@@ -44,10 +47,13 @@ const PendapatanRow = ({
         {
             item.buktiTransaksi.map(item1 => {
                 return <>
-                    <PendapatanRowData
-                        forPrint={forPrint}
+                    <BankRowData
                         item1={item1}
-                        balanceStatus={false}
+                        balanceStatus={balanceStatus}
+                        deleteByBuktiTransaksi={deleteByBuktiTransaksi}
+                        deleteItem={deleteItem}
+                        editItem={editItem}
+                        forPrint={forPrint}
                     />
                 </>
             })
@@ -56,4 +62,4 @@ const PendapatanRow = ({
     </div>
 };
 
-export default PendapatanRow;
+export default BankRow;

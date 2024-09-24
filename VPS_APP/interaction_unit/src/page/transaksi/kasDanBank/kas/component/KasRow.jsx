@@ -1,10 +1,13 @@
-import { FaPen, FaTrash } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaPen, FaTrash } from "react-icons/fa";
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper";
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper";
-import PendapatanRowData from "./PendapatanRowData";
+import KasRowData from "./KasRowData";
 
-const PendapatanRow = ({
+const KasRow = ({
     item,
+    deleteItem = () => { },
+    editItem = () => { },
+    deleteByBuktiTransaksi = () => { },
     balanceStatus = true,
     forPrint = false
 }) => {
@@ -14,9 +17,9 @@ const PendapatanRow = ({
                 <div className="text-[28px] font-bold">
                     {
                         balanceStatus ?
-                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md ${item.total.debet == item.total.kredit ? "bg-green-900" : "bg-red-900"}`}>{item.tanggal}</p>
+                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md ${item.total.debet == item.total.kredit ? "bg-green-900" : "bg-red-900"}`}>{parseFloat(item.tanggal) < 10 ? `0${item.tanggal}` : item.tanggal}</p>
                             :
-                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md bg-green-900`}>{item.tanggal}</p>
+                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md bg-green-900`}>{parseFloat(item.tanggal) < 10 ? `0${item.tanggal}` : item.tanggal}</p>
                     }
                 </div>
                 <div className="flex flex-col">
@@ -44,10 +47,13 @@ const PendapatanRow = ({
         {
             item.buktiTransaksi.map(item1 => {
                 return <>
-                    <PendapatanRowData
+                    <KasRowData
+                        deleteByBuktiTransaksi={deleteByBuktiTransaksi}
+                        deleteItem={deleteItem}
+                        editItem={editItem}
                         forPrint={forPrint}
                         item1={item1}
-                        balanceStatus={false}
+                        balanceStatus={balanceStatus}
                     />
                 </>
             })
@@ -56,4 +62,4 @@ const PendapatanRow = ({
     </div>
 };
 
-export default PendapatanRow;
+export default KasRow;
