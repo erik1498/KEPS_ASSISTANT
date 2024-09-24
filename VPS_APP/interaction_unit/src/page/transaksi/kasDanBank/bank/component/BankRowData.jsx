@@ -21,7 +21,7 @@ const BankRowData = ({
                 }
             </div>
         </div>
-        <div className={`flex w-max items-center gap-x-3 py-1 m-1 px-3 text-white font-bold ${item1.data[0][0].type == 1 ? "bg-green-900" : "bg-red-900"}`}>
+        <div className={`flex w-max items-center gap-x-2 p-1 font-bold ${item1.data[0][0].type == 1 ? "text-green-900" : "text-red-900"}`}>
             {
                 item1.data[0][0].type == 1 ? <FaArrowDown /> : <FaArrowUp />
             }

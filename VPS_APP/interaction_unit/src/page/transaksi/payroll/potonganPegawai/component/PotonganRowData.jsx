@@ -1,3 +1,4 @@
+import { FaUser } from "react-icons/fa"
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
 
@@ -17,8 +18,9 @@ const PotonganRowData = ({
                 }
             </div>
         </div>
-        <div className={`flex w-max items-center gap-x-3 py-1 m-1 px-1 font-bold rounded-md`}>
-            <h1>{item1.data[0][0].pegawai_name}</h1>
+        <div className={`flex w-max items-center gap-x-2 py-1 m-1 font-bold text-green-900`}>
+            <FaUser />
+            <h1>{item1.sumber} - {item1.data[0][0].pegawai_name}</h1>
         </div>
         {
             item1.data.map((item2, i) => {
