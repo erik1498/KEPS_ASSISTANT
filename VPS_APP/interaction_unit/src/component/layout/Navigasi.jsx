@@ -24,6 +24,17 @@ const Navigasi = () => {
         })
         setSideBars(sidebarArr)
     }, [])
+    
+    const _closeAllDetail = (e) => {
+        const elementSelected = e.target.localName == "summary" ? e.target.parentNode : e.target
+        const details = document.getElementsByTagName("details")
+        for (let index = 0; index < details.length; index++) {
+            const element = details[index];
+            if (element != elementSelected) {
+                element.open = false
+            }
+        }
+    }
 
     return <>
         <div className="top-36 h-[40vh] bg-blue-900 rounded-box left-0 right-0 fixed -z-0 shadow-inner">
@@ -45,7 +56,7 @@ const Navigasi = () => {
                     />
                 </li>
                 <li>
-                    <details>
+                    <details onClick={(e) => _closeAllDetail(e)}>
                         <NavigationLinkParent
                             Icon={<FaBuilding size={15} />}
                             parentName={"Perusahaan"}
@@ -91,7 +102,7 @@ const Navigasi = () => {
                     </details>
                 </li>
                 <li>
-                    <details>
+                    <details onClick={(e) => _closeAllDetail(e)}>
                         <NavigationLinkParent
                             Icon={<FaExchangeAlt size={15} />}
                             parentName={"Transaksi"}
@@ -146,7 +157,7 @@ const Navigasi = () => {
                     </details>
                 </li>
                 <li>
-                    <details>
+                    <details onClick={(e) => _closeAllDetail(e)}>
                         <NavigationLinkParent
                             Icon={<FaToolbox size={15} />}
                             parentName={"Aset Tetap Dan Perlengkapan"}
@@ -199,7 +210,7 @@ const Navigasi = () => {
                     </details>
                 </li>
                 <li>
-                    <details>
+                    <details onClick={(e) => _closeAllDetail(e)}>
                         <NavigationLinkParent
                             Icon={<FaToolbox size={15} />}
                             parentName={"Persediaan"}
@@ -281,7 +292,7 @@ const Navigasi = () => {
                     </details>
                 </li>
                 <li>
-                    <details>
+                    <details onClick={(e) => _closeAllDetail(e)}>
                         <NavigationLinkParent
                             Icon={<FaBook size={15} />}
                             parentName={"Buku Besar"}
@@ -298,7 +309,7 @@ const Navigasi = () => {
                     </details>
                 </li>
                 <li>
-                    <details>
+                    <details onClick={(e) => _closeAllDetail(e)}>
                         <NavigationLinkParent
                             Icon={<FaRegChartBar size={15} />}
                             parentName={"Laporan"}
