@@ -1,9 +1,8 @@
-import { FaCheck, FaPlus, FaSave, FaSearch, FaTimes } from "react-icons/fa"
+import { FaCheck, FaSave, FaSearch, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import { apiCustomerCRUD, apiPesananPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
-import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { formValidation } from "../../../../../helper/form.helper"
 import PesananPenjualanBarangList from "./PenjualanBarangList"
 import Pagination from "../../../../../component/general/Pagination"
@@ -16,14 +15,13 @@ const PenjualanBarangForm = ({
     const [nomorPesananPenjualanBarang, setNomorPesananPenjualanBarang] = useState("")
     const [tanggalPesananPenjualanBarang, setTanggalPesananPenjualanBarang] = useState(getHariTanggalFull())
     const [customer, setCustomer] = useState()
-    const [isLoading, setIsLoading] = useState(false)
 
     const [searchStatus, setSearchStatus] = useState(false)
     const [search, setSearch] = useState("")
 
     const [pagination, setPagination] = useState({
         page: 1,
-        size: 10,
+        size: 2,
         count: 118,
         lastPage: 12
     })
@@ -34,14 +32,12 @@ const PenjualanBarangForm = ({
         if (searchParam == "") {
             setSearch(searchParam)
         }
-        setIsLoading(true)
         apiCustomerCRUD
             .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
             .then(resData => {
                 setSearchStatus(searchParam.length < 1)
                 setCustomerList(resData?.data?.entry)
                 setPagination(resData?.data?.pagination)
-                setIsLoading(false)
             }).catch(err => {
                 showError(err)
             })
@@ -99,6 +95,7 @@ const PenjualanBarangForm = ({
                             label={"Nomor Pesanan Penjualan Barang"}
                             type={"text"}
                             disabled={pesananPenjualanBarang}
+                            addClassInput={pesananPenjualanBarang ? "border-none px-1" : ""}
                             onchange={(e) => {
                                 setNomorPesananPenjualanBarang(e.target.value)
                             }}
@@ -117,6 +114,7 @@ const PenjualanBarangForm = ({
                                 setTanggalPesananPenjualanBarang(e.target.value)
                             }}
                             disabled={pesananPenjualanBarang}
+                            addClassInput={pesananPenjualanBarang ? "border-none px-1" : ""}
                             others={
                                 {
                                     value: tanggalPesananPenjualanBarang,
@@ -128,55 +126,52 @@ const PenjualanBarangForm = ({
                     </div>
                     {
                         customer ? <>
-                            <div className="mt-3">
+                            <div className="mt-5 px-3 py-4 border rounded-md relative">
+                                <p className="text-md bg-blue-900 text-white w-max px-2 rounded-md font-bold mb-2">Detail Customer</p>
+                                <p className="text-2xl font-bold">{customer.code} - {customer.name}</p>
+                                <div className="mt-3 flex gap-x-10">
+                                    <div>
+                                        <p className="text-xs font-bold mb-1">Alamat Rumah</p>
+                                        <p className="text-sm">{customer.alamat_rumah}</p>
+                                    </div>
+                                </div>
+                                <div className="mt-5 flex gap-x-5">
+                                    <div>
+                                        <p className="text-xs font-bold mb-1">Alamat Kantor</p>
+                                        <p className="text-sm">{customer.alamat_kantor}</p>
+                                    </div>
+                                </div>
+                                <div className="mt-5 flex gap-x-10">
+                                    <div>
+                                        <p className="text-xs font-bold mb-1">NPWP</p>
+                                        <p className="text-sm">{customer.npwp}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold mb-1">Nomor Telepon</p>
+                                        <p className="text-sm">{customer.no_telp}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold mb-1">Nomor Handphone</p>
+                                        <p className="text-sm">{customer.no_hp}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold mb-1">Kode Harga</p>
+                                        <p className="text-sm">Harga {customer.kode_harga}</p>
+                                    </div>
+                                </div>
                                 {
                                     pesananPenjualanBarang ? <></> : <>
                                         <button
-                                            className="flex py-1 px-2 gap-x-2 items-center font-bold text-sm rounded-xl bg-red-800 text-white"
+                                            className="absolute top-0 right-3 flex mt-3 py-1 px-2 gap-x-2 items-center font-bold text-xs rounded-md bg-red-800 text-white"
                                             onClick={() => {
                                                 setCustomer(null)
                                             }}
                                             type="button"
                                         >
                                             <FaTimes />
-                                            Batalkan Customer
                                         </button>
                                     </>
                                 }
-                                <div className="mt-3">
-                                    <p className="text-sm font-bold mb-2">Detail Customer</p>
-                                    <p className="text-2xl font-bold">{customer.code} - {customer.name}</p>
-                                    <div className="mt-3 flex gap-x-10">
-                                        <div>
-                                            <p className="text-xs font-bold mb-1">Alamat Rumah</p>
-                                            <p className="text-sm">{customer.alamat_rumah}</p>
-                                        </div>
-                                    </div>
-                                    <div className="mt-5 flex gap-x-5">
-                                        <div>
-                                            <p className="text-xs font-bold mb-1">Alamat Kantor</p>
-                                            <p className="text-sm">{customer.alamat_kantor}</p>
-                                        </div>
-                                    </div>
-                                    <div className="mt-5 flex gap-x-10">
-                                        <div>
-                                            <p className="text-xs font-bold mb-1">NPWP</p>
-                                            <p className="text-sm">{customer.npwp}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs font-bold mb-1">Nomor Telepon</p>
-                                            <p className="text-sm">{customer.no_telp}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs font-bold mb-1">Nomor Handphone</p>
-                                            <p className="text-sm">{customer.no_hp}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs font-bold mb-1">Kode Harga</p>
-                                            <p className="text-sm">Harga {customer.kode_harga}</p>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </> : <></>
                     }
@@ -188,7 +183,7 @@ const PenjualanBarangForm = ({
                 {
                     !customer ? <>
                         <div className="mt-5">
-                            <div className="flex w-full gap-x-2 mb-5">
+                            <div className="flex w-full items-center gap-x-2 mb-5">
                                 <FormInput
                                     value={search}
                                     onchange={e => setSearch(e.target.value)}
@@ -237,19 +232,26 @@ const PenjualanBarangForm = ({
                                     }
                                 </tbody>
                             </table>
-                            <Pagination paginateUpdatePage={paginateUpdatePage} paginate={pagination} setSize={setSize} shadow="" />
+                            <Pagination
+                                paginateUpdatePage={paginateUpdatePage}
+                                paginate={pagination}
+                                setSize={setSize}
+                                shadow=""
+                                sizeList={[2, 4, 6]}
+                            />
                         </div>
                     </> : <></>
                 }
             </div>
         </div>
-        {/* {
+        {
             pesananPenjualanBarang ? <>
                 <PesananPenjualanBarangList
                     pesananPenjualanBarang={pesananPenjualanBarang}
+                    customer={customer}
                 />
             </> : <></>
-        } */}
+        }
     </>
 }
 export default PenjualanBarangForm

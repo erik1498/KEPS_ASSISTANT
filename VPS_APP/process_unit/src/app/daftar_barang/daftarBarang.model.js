@@ -3,56 +3,56 @@ import db, { defaultModelBuilder } from "../../config/Database.js";
 
 const { DataTypes } = Sequelize;
 
-const DaftarBarangModel = db.define("daftar_barang_tab", 
+const DaftarBarangModel = db.define("daftar_barang_tab",
     defaultModelBuilder({
         uuid: {
             type: DataTypes.STRING,
             defaultValue: DataTypes.UUIDV4,
             allowNull: false,
-            validate:{
-                notEmpty:true
+            validate: {
+                notEmpty: true
             }
         },
         name: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         kategori_barang: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         jenis_barang: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         jenis_penjualan_barang: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         ppn: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         status: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
     }), {

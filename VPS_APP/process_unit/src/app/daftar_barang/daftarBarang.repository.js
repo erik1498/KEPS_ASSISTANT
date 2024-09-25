@@ -13,7 +13,7 @@ export const getAllDaftarBarangRepo = async (pageNumber, size, search, req_id) =
             JOIN ${generateDatabaseName(req_id)}.jenis_barang_tab jbt ON jbt.uuid = dbt.jenis_barang 
             JOIN ${generateDatabaseName(req_id)}.jenis_penjualan_barang_tab jpbt ON jpbt.uuid = dbt.jenis_penjualan_barang 
             WHERE dbt.name LIKE '%${search}%' 
-            AND dbt.enabled = 1
+            AND dbt.status = 1
             AND kbt.enabled = 1
             AND jbt.enabled = 1
             AND jpbt.enabled = 1
@@ -36,7 +36,7 @@ export const getAllDaftarBarangRepo = async (pageNumber, size, search, req_id) =
             JOIN ${generateDatabaseName(req_id)}.jenis_barang_tab jbt ON jbt.uuid = dbt.jenis_barang 
             JOIN ${generateDatabaseName(req_id)}.jenis_penjualan_barang_tab jpbt ON jpbt.uuid = dbt.jenis_penjualan_barang 
             WHERE dbt.name LIKE '%${search}%' 
-            AND dbt.enabled = 1
+            AND dbt.status = 1
             AND kbt.enabled = 1
             AND jbt.enabled = 1
             AND jpbt.enabled = 1
@@ -51,6 +51,26 @@ export const getAllDaftarBarangRepo = async (pageNumber, size, search, req_id) =
         pageNumber: pageNumber == 0 ? pageNumber + 1 : (pageNumber / size) + 1,
         size
     }
+}
+
+export const getAllDaftarBarangUntukTransaksiRepo = async (req_id) => {
+    const daftarBarangs = await db.query(
+        `
+            SELECT 
+                khbt.*,
+                sbt.name AS satuan_barang_name,
+                dbt.name AS daftar_barang_name,
+                dbt.ppn AS ppn,
+                jbt.code AS jenis_barang_code
+            FROM ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt 
+            JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
+            JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang 
+            JOIN ${generateDatabaseName(req_id)}.jenis_barang_tab jbt ON jbt.uuid = dbt.jenis_barang
+            WHERE dbt.status = true
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return daftarBarangs
 }
 
 export const getDaftarBarangByUuidRepo = async (uuid, req_id) => {
@@ -70,13 +90,13 @@ export const createDaftarBarangRepo = async (daftarBarangData, req_id) => {
         req_id,
         generateDatabaseName(req_id),
         DaftarBarangModel,
-        {   
-        name: daftarBarangData.name,
-        kategori_barang: daftarBarangData.kategori_barang,
-        jenis_barang: daftarBarangData.jenis_barang,
-        jenis_penjualan_barang: daftarBarangData.jenis_penjualan_barang,
-        ppn: daftarBarangData.ppn,
-        status: daftarBarangData.status,
+        {
+            name: daftarBarangData.name,
+            kategori_barang: daftarBarangData.kategori_barang,
+            jenis_barang: daftarBarangData.jenis_barang,
+            jenis_penjualan_barang: daftarBarangData.jenis_penjualan_barang,
+            ppn: daftarBarangData.ppn,
+            status: daftarBarangData.status,
             enabled: daftarBarangData.enabled
         }
     )
@@ -102,12 +122,12 @@ export const updateDaftarBarangByUuidRepo = async (uuid, daftarBarangData, req_i
         generateDatabaseName(req_id),
         DaftarBarangModel,
         {
-        name: daftarBarangData.name,
-        kategori_barang: daftarBarangData.kategori_barang,
-        jenis_barang: daftarBarangData.jenis_barang,
-        jenis_penjualan_barang: daftarBarangData.jenis_penjualan_barang,
-        ppn: daftarBarangData.ppn,
-        status: daftarBarangData.status,
+            name: daftarBarangData.name,
+            kategori_barang: daftarBarangData.kategori_barang,
+            jenis_barang: daftarBarangData.jenis_barang,
+            jenis_penjualan_barang: daftarBarangData.jenis_penjualan_barang,
+            ppn: daftarBarangData.ppn,
+            status: daftarBarangData.status,
         },
         {
             uuid

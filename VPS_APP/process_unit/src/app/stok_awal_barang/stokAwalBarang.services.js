@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
+import { createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getDaftarGudangBarangByKategoriHargaBarangUUIDRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
 
 export const getAllStokAwalBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllStokAwalBarangService", null, req_identity)
@@ -21,6 +21,14 @@ export const getAllStokAwalBarangService = async (query, req_identity) => {
 
     const stokAwalBarangs = await getAllStokAwalBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(stokAwalBarangs.entry, stokAwalBarangs.count, stokAwalBarangs.pageNumber, stokAwalBarangs.size)
+}
+
+export const getDaftarGudangBarangByKategoriHargaBarangUUIDService = async (kategori_harga_barang_uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getDaftarGudangBarangByKategoriHargaBarangUUIDService`, {
+        kategori_harga_barang_uuid
+    }, req_identity)
+    const daftarGudangBarangs = await getDaftarGudangBarangByKategoriHargaBarangUUIDRepo(kategori_harga_barang_uuid, req_identity)
+    return daftarGudangBarangs
 }
 
 export const getStokAwalBarangByBarangUUIDService = async (uuid, req_identity) => {

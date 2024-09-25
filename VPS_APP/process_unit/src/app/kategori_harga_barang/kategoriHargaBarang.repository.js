@@ -10,10 +10,12 @@ export const getAllKategoriHargaBarangRepo = async (pageNumber, size, search, re
             SELECT 
                 COUNT(0) AS count
             FROM ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt 
+            JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang
             JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
             WHERE 
             sbt.name LIKE '%${search}%'
             AND sbt.enabled = 1 
+            AND dbt.status = 1 
             AND khbt.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
@@ -26,12 +28,15 @@ export const getAllKategoriHargaBarangRepo = async (pageNumber, size, search, re
         `
             SELECT 
                 khbt.*,
+                dbt.name AS daftar_barang_name,
                 sbt.name AS satuan_barang_name
             FROM ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt 
+            JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang
             JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
             WHERE 
             sbt.name LIKE '%${search}%'
             AND sbt.enabled = 1 
+            AND dbt.status = 1 
             AND khbt.enabled = 1
             LIMIT ${pageNumber}, ${size}
         `,

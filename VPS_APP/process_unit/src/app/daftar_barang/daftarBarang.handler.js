@@ -1,5 +1,5 @@
 import { daftarBarangValidation } from "./daftarBarang.validation.js"
-import { createDaftarBarangService, deleteDaftarBarangByUuidService, getAllDaftarBarangService, getDaftarBarangByUuidService, updateDaftarBarangByUuidService } from "./daftarBarang.services.js"
+import { createDaftarBarangService, deleteDaftarBarangByUuidService, getAllDaftarBarangService, getAllDaftarBarangUntukTransaksiService, getDaftarBarangByUuidService, updateDaftarBarangByUuidService } from "./daftarBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -11,8 +11,25 @@ export const getAllDaftarBarangs = async (req, res) => {
             data: daftarBarangs,
             message: "Get Data Success"
         })
-    } catch (error) {    
+    } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getAllDaftarBarangUntukTransaksi = async (req, res) => {
+    LOGGER(logType.INFO, "Start getAllDaftarBarangUntukTransaksi", null, req.identity)
+    try {
+        const daftarBarangs = await getAllDaftarBarangUntukTransaksiService(req.identity)
+        res.json({
+            data: daftarBarangs,
+            message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack)
         res.status(500).json({
             type: "internalServerError",
             errorData: error.message
@@ -84,7 +101,7 @@ export const deleteDaftarBarangByUUID = async (req, res) => {
 
 export const updateDaftarBarangByUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start updateDaftarBarangByUuidController", null, req.identity)
-    try {    
+    try {
         const daftarBarangData = req.body
         const { error, value } = daftarBarangValidation(daftarBarangData)
         if (error) {

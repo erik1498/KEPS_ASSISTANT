@@ -5,7 +5,8 @@ const Pagination = ({
     paginate,
     setSize,
     contentBefore,
-    shadow = "shadow-xl"
+    shadow = "shadow-xl",
+    sizeList = [5, 10, 25, 50, 100]
 }) => {
     return <div className="mt-3 flex gap-x-2">
         {contentBefore}
@@ -13,11 +14,13 @@ const Pagination = ({
             Total : {paginate.count}
         </h1>
         <select value={paginate.size} onChange={(e) => setSize(e.target.value)} className={`select select-bordered w-max ${shadow ? "shadow-xl" : ""} font-bold`}>
-            <option>5</option>
-            <option>10</option>
-            <option>25</option>
-            <option>50</option>
-            <option>100</option>
+            {
+                sizeList.map(x => {
+                    return <>
+                        <option>{x}</option>
+                    </>
+                })
+            }
         </select>
         <ReactPaginate
             previousLabel={"< Previous"}

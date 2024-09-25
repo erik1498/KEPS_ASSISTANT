@@ -1,5 +1,5 @@
 import { stokAwalBarangValidation } from "./stokAwalBarang.validation.js"
-import { createStokAwalBarangService, deleteStokAwalBarangByUuidService, getAllStokAwalBarangService, getStokAwalBarangByBarangUUIDService, updateStokAwalBarangByUuidService } from "./stokAwalBarang.services.js"
+import { createStokAwalBarangService, deleteStokAwalBarangByUuidService, getAllStokAwalBarangService, getDaftarGudangBarangByKategoriHargaBarangUUIDService, getStokAwalBarangByBarangUUIDService, updateStokAwalBarangByUuidService } from "./stokAwalBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -11,7 +11,24 @@ export const getAllStokAwalBarangs = async (req, res) => {
             data: stokAwalBarangs,
             message: "Get Data Success"
         })
-    } catch (error) {    
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getDaftarGudangBarangByKategoriHargaBarangUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getDaftarGudangBarangByKategoriHargaBarangUUID", null, req.identity)
+    try {
+        const daftarGudangBarangs = await getDaftarGudangBarangByKategoriHargaBarangUUIDService(req.params.kategori_harga_barang, req.identity)
+        res.json({
+            data: daftarGudangBarangs,
+            message: "Get Data Success"
+        })
+    } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
@@ -84,7 +101,7 @@ export const deleteStokAwalBarangByUUID = async (req, res) => {
 
 export const updateStokAwalBarangByUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start updateStokAwalBarangByUuidController", null, req.identity)
-    try {    
+    try {
         const stokAwalBarangData = req.body
         const { error, value } = stokAwalBarangValidation(stokAwalBarangData)
         if (error) {

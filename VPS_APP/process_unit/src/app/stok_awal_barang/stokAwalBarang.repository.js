@@ -30,6 +30,23 @@ export const getAllStokAwalBarangRepo = async (pageNumber, size, search, req_id)
     }
 }
 
+export const getDaftarGudangBarangByKategoriHargaBarangUUIDRepo = async (kategori_harga_barang_uuid, req_id) => {
+    const daftarGudangBarangs = await db.query(
+        `
+            SELECT 
+                sabt.uuid,
+                dgt.name AS daftar_gudang_name
+            FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt 
+            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
+            WHERE sabt.kategori_harga_barang = "${kategori_harga_barang_uuid}"
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+    return daftarGudangBarangs
+}
+
 export const getStokAwalBarangByBarangUUIDRepo = async (uuid, req_id) => {
     const stokAwalBarangs = await db.query(
         // `
