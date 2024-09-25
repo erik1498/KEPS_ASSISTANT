@@ -17,7 +17,6 @@ export const getAllDaftarBarangRepo = async (pageNumber, size, search, req_id) =
             AND kbt.enabled = 1
             AND jbt.enabled = 1
             AND jpbt.enabled = 1
-            LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

@@ -250,6 +250,11 @@ export const SrvLainLain = objectPathEndPointAPI(
 export const SrvKerugian = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kerugian'
 )
+
 export const SrvPiutangKaryawan = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/piutang_karyawan'
+)
+
+export const SrvPesananPenjualanBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/pesanan_penjualan_barang'
 )

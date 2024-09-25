@@ -59,6 +59,7 @@ import { getKerugianRoute } from "../app/kerugian/kerugian.route.js";
 import { getPersentasePenyusutanRoute } from "../app/persentase_penyusutan/persentasePenyusutan.route.js";
 import { getDaftarAsetRoute } from "../app/daftar_aset/daftarAset.route.js";
 import { getDaftarPerlengkapanRoute } from "../app/daftar_perlengkapan/daftarPerlengkapan.route.js";
+import { getPesananPenjualanBarangRoute } from "../app/pesanan_penjualan_barang/pesananPenjualanBarang.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -122,5 +123,6 @@ export const routerList = new Array()
         getPph2126Route(),
         getPiutangKaryawanRoute(),
         getLainLainRoute(),
-        getKerugianRoute()
+        getKerugianRoute(),
+        getPesananPenjualanBarangRoute()
     )
