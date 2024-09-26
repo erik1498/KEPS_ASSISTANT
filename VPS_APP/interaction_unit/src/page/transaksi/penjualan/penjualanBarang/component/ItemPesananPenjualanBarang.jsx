@@ -1,4 +1,4 @@
-import { FaSave, FaTimes } from "react-icons/fa"
+import { FaSave, FaTimes, FaTrashAlt } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
@@ -7,14 +7,15 @@ import { showError } from "../../../../../helper/form.helper"
 import { apiDaftarBarangCRUD, apiRincianPesananPenjualanBarangCRUD, apiStokAwalBarangCRUD } from "../../../../../service/endPointList.api"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
 import { PPN } from "../../../../../config/objectList.config"
+import FormSelect from "../../../../../component/form/FormSelect"
 
 const ItemPesananPenjualanBarang = ({
     rincianPesananPenjualanBarang,
     _getDataRincianDaftarPasananPenjualan,
-    _hapusnPesanan,
+    _hapusPesanan,
+    kategoriHargaBarangList,
     customer
 }) => {
-    const [kategoriHargaBarangList, setKategoriHargaBarangList] = useState([])
     const [gudangBarangList, setGudangBarangList] = useState([])
     const [kategoriHargaBarangSelected, setKategoriHargaBarangSelected] = useState()
 
@@ -27,14 +28,6 @@ const ItemPesananPenjualanBarang = ({
     const [totalBarang, setTotalBarang] = useState(0)
     const [totalAkhir, setTotalAkhir] = useState(0)
     const [ppnBarang, setPPNBarang] = useState(0)
-
-    const _getDataBarangTransaksi = () => {
-        apiDaftarBarangCRUD
-            .custom("/transaksi", "GET")
-            .then(resData => {
-                setKategoriHargaBarangList(resData.data)
-            }).catch(err => showError(err))
-    }
 
     const _getDataDaftarGudangByKategoriHarga = () => {
         apiStokAwalBarangCRUD
@@ -127,12 +120,32 @@ const ItemPesananPenjualanBarang = ({
     }, [kategoriHargaBarang])
 
     useEffect(() => {
-        _getDataBarangTransaksi()
+        setKategoriHargaBarang({
+            label: `${kategoriHargaBarangList[0].kode_barang} - ${kategoriHargaBarangList[0].daftar_barang_name}`,
+            value: kategoriHargaBarangList[0].uuid
+        })
     }, [])
 
     return <>
-        <div className="grid grid-cols-12 gap-x-2">
-            <div className="col-span-5">
+        {/* <tr>
+            <td>
+                <FormSelect
+                    optionsDataList={kategoriHargaBarangList}
+                    optionsLabel={["kode_barang", "daftar_barang_name"]}
+                    optionsValue={"uuid"}
+                    optionsLabelIsArray={true}
+                    optionsDelimiter={"-"}
+                    selectName={"kategoriHargaBarang"}
+                    selectValue={kategoriHargaBarang}
+                    onchange={(e) => {
+                        setKategoriHargaBarang(e)
+                    }}
+                />
+                <p>{kategoriHargaBarangSelected?.satuan_barang_name}</p>
+            </td>
+        </tr> */}
+        <div className="grid grid-cols-12 gap-x-2 py-3 px-2">
+            <div className="col-span-12">
                 <div className="flex items-end gap-x-2">
                     <FormSelectWithLabel
                         label={"Kode Barang"}
@@ -147,21 +160,19 @@ const ItemPesananPenjualanBarang = ({
                         }}
                         selectName={`kategoriHargaBarang`}
                     />
-                    <FormSelectWithLabel
-                        label={"Gudang Asal"}
-                        optionsDataList={gudangBarangList}
-                        optionsLabel={"daftar_gudang_name"}
-                        optionsValue={"uuid"}
-                        selectValue={gudangBarang}
-                        onchange={(e) => {
-                            setGudangBarang(e)
-                        }}
-                        selectName={`gudangBarang`}
-                    />
-                </div>
-                {
-                    kategoriHargaBarang ? <>
-                        <div className="mt-5 flex gap-x-2">
+                    {
+                        kategoriHargaBarang ? <>
+                            <FormSelectWithLabel
+                                label={"Gudang Asal"}
+                                optionsDataList={gudangBarangList}
+                                optionsLabel={"daftar_gudang_name"}
+                                optionsValue={"uuid"}
+                                selectValue={gudangBarang}
+                                onchange={(e) => {
+                                    setGudangBarang(e)
+                                }}
+                                selectName={`gudangBarang`}
+                            />
                             <FormInputWithLabel
                                 label={"Jumlah"}
                                 type={"text"}
@@ -204,14 +215,14 @@ const ItemPesananPenjualanBarang = ({
                                     }
                                 }
                             />
-                        </div>
-                    </> : <></>
-                }
+                        </> : <></>
+                    }
+                </div>
             </div>
-            <div className="col-span-7">
+            <div className="col-span-12">
                 {
                     kategoriHargaBarang ? <>
-                        <div className="flex gap-x-2">
+                        <div className="mt-5 flex gap-x-2">
                             <FormInputWithLabel
                                 label={"Satuan Barang"}
                                 type={"text"}
@@ -268,13 +279,15 @@ const ItemPesananPenjualanBarang = ({
                     </> : <></>
                 }
             </div>
-        <button
-            className="btn btn-sm bg-red-800 mt-4 text-white"
-            onClick={() => {
-                _hapusnPesanan()
-            }}
-            type="button"
-        ><FaTimes /> Hapus</button>
+            <button
+                className="mt-3 w-max btn btn-sm bg-red-800 text-white"
+                onClick={() => {
+                    _hapusPesanan()
+                }}
+                type="button"
+            >
+                <FaTrashAlt /> Hapus
+            </button>
         </div>
     </>
 }

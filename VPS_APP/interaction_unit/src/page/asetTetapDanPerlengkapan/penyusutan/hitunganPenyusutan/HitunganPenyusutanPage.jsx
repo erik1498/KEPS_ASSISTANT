@@ -34,37 +34,36 @@ const HitunganPenyusutanPage = () => {
         isLoading={isLoading}>
         <div>
             <PageTitle title="Hitungan Penyusutan" />
-            <div className="bg-white rounded-md shadow-2xl h-max py-5 overflow-scroll no-scrollbar relative">
-                <div className="sticky top-0 px-6 h-max bg-white w-full z-10">
-                    <div className="flex items-end gap-x-2 mb-5">
-                        <FormSelectWithLabel
-                            label={"Pilih Aset"}
-                            optionsDataList={asetList}
-                            optionsLabel={"name"}
-                            optionsValue={"uuid"}
-                            selectValue={aset}
-                            onchange={(e) => {
-                                setAset(e)
-                            }}
-                            selectName={`aset`}
-                        />
-                        {
-                            idAset ?
-                                <button
-                                    className="btn btn-sm bg-red-800 text-white"
-                                    onClick={() => setIdAset(null)}
-                                >
-                                    <FaTimes /> Reset Aset
-                                </button>
-                                :
-                                <button
-                                    className="btn btn-sm bg-green-800 text-white"
-                                    onClick={() => setIdAset(aset.value)}
-                                >
-                                    <FaCheck /> Pilih Aset
-                                </button>
-                        }
-                    </div>
+            <div className="bg-white rounded-md shadow-2xl h-max px-6 py-5">
+                <div className="flex items-end gap-x-2 mb-5">
+                    <FormSelectWithLabel
+                        label={"Pilih Aset"}
+                        optionsDataList={asetList}
+                        optionsLabel={"name"}
+                        optionsValue={"uuid"}
+                        disabled={idAset}
+                        selectValue={aset}
+                        onchange={(e) => {
+                            setAset(e)
+                        }}
+                        selectName={`aset`}
+                    />
+                    {
+                        idAset ?
+                            <button
+                                className="btn btn-sm bg-red-800 text-white"
+                                onClick={() => setIdAset(null)}
+                            >
+                                <FaTimes /> Reset Aset
+                            </button>
+                            :
+                            <button
+                                className="btn btn-sm bg-green-800 text-white"
+                                onClick={() => setIdAset(aset.value)}
+                            >
+                                <FaCheck /> Pilih Aset
+                            </button>
+                    }
                 </div>
             </div>
             {

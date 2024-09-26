@@ -24,7 +24,7 @@ export const getAllDaftarBarangService = async (query, req_identity) => {
 }
 
 export const getAllDaftarBarangUntukTransaksiService = async (req_identity) => {
-    LOGGER(logType.INFO, "Start getAllDaftarBarangUntukTransaksiService", req_identity)
+    LOGGER(logType.INFO, "Start getAllDaftarBarangUntukTransaksiService", null, req_identity)
     const daftarBarangs = await getAllDaftarBarangUntukTransaksiRepo(req_identity)
     return daftarBarangs
 }

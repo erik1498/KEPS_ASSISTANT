@@ -79,7 +79,7 @@ const PenjualanBarangForm = ({
     }, [])
 
     return <>
-        <div className="bg-white rounded-md shadow-2xl h-max overflow-scroll no-scrollbar relative">
+        <div className="bg-white rounded-md shadow-sm h-max overflow-scroll no-scrollbar relative">
             <div className="sticky top-0 py-5 px-6 h-max bg-white w-full z-10">
                 <div className="flex justify-between items-center">
                     <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Pesanan Penjualan Barang</h1>
@@ -126,22 +126,19 @@ const PenjualanBarangForm = ({
                     </div>
                     {
                         customer ? <>
-                            <div className="mt-5 relative">
-                                <p className="text-md bg-blue-900 text-white w-max px-2 rounded-md font-bold mb-2">Detail Customer</p>
-                                <p className="text-2xl font-bold">{customer.code} - {customer.name}</p>
+                            <div className="mt-5 relative px-1">
+                                <p className="font-bold text-sm mb-3">Customer Terpilih</p>
+                                {/* <p className="text-md bg-blue-900 text-white w-max px-2 rounded-md font-bold mb-2">Detail Customer</p> */}
+                                <p className="text-xl font-bold">{customer.code} - {customer.name}</p>
                                 <div className="mt-3 flex gap-x-10">
                                     <div>
                                         <p className="text-xs font-bold mb-1">Alamat Rumah</p>
                                         <p className="text-sm">{customer.alamat_rumah}</p>
                                     </div>
-                                </div>
-                                <div className="mt-5 flex gap-x-5">
                                     <div>
                                         <p className="text-xs font-bold mb-1">Alamat Kantor</p>
                                         <p className="text-sm">{customer.alamat_kantor}</p>
                                     </div>
-                                </div>
-                                <div className="mt-5 flex gap-x-10">
                                     <div>
                                         <p className="text-xs font-bold mb-1">NPWP</p>
                                         <p className="text-sm">{customer.npwp}</p>
@@ -203,7 +200,9 @@ const PenjualanBarangForm = ({
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
+                                        <th>Kode Customer</th>
                                         <th>Nama Customer</th>
+                                        <th>Kode Harga</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -213,7 +212,9 @@ const PenjualanBarangForm = ({
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
+                                                    <td width={400}>{item.code}</td>
                                                     <td width={400}>{item.name}</td>
+                                                    <td width={400}>Harga {item.kode_harga}</td>
                                                     <td>
                                                         <button
                                                             className="flex py-1 px-5 gap-x-2 items-center rounded-xl bg-green-800 text-white"

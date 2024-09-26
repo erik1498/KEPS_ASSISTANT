@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { apiRincianPesananPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
+import { apiDaftarBarangCRUD, apiRincianPesananPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
 import { showError } from "../../../../../helper/form.helper"
-import { FaPlus } from "react-icons/fa"
+import { FaPlus, FaSave } from "react-icons/fa"
 import ItemPesananPenjualanBarang from "./ItemPesananPenjualanBarang"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 
@@ -10,12 +10,22 @@ const PesananPenjualanBarangList = ({
     customer
 }) => {
     const [rincianPesananPenjualanBarang, setRincianPesananPenjualanBarang] = useState([])
+    const [kategoriHargaBarangList, setKategoriHargaBarangList] = useState([])
+    const [totalPesanan, setTotalPesanan] = useState(0)
 
     const _getDataRincianDaftarPasananPenjualan = () => {
         apiRincianPesananPenjualanBarangCRUD
             .custom(`/${pesananPenjualanBarang.uuid}`, "GET")
             .then(resData => {
                 setRincianPesananPenjualanBarang(resData.data)
+            }).catch(err => showError(err))
+    }
+
+    const _getDataBarangTransaksi = () => {
+        apiDaftarBarangCRUD
+            .custom("/transaksi", "GET")
+            .then(resData => {
+                setKategoriHargaBarangList(resData.data)
             }).catch(err => showError(err))
     }
 
@@ -34,50 +44,74 @@ const PesananPenjualanBarangList = ({
             total_harga: `${0}`
         })
         setRincianPesananPenjualanBarang(x => x = rincianPesananPenjualanBarangCopy)
+        setTotalPesanan(x => x = x + 10000)
     }
 
     const _removeRincianPesananPenjualanBarang = (index) => {
         const rincianPesananPenjualanBarangCopy = [...rincianPesananPenjualanBarang]
         setRincianPesananPenjualanBarang(x => x = rincianPesananPenjualanBarangCopy.filter((x, i) => i != index))
+        setTotalPesanan(x => x = x - 10000)
     }
 
     useEffect(() => {
+        _getDataBarangTransaksi()
         _getDataRincianDaftarPasananPenjualan()
     }, [])
 
     return <>
-        <div className="bg-white px-4 py-5 mt-6 rounded-md sticky top-0">
-            <div className="gap-x-2 px-1">
-                <p className="font-bold text-sm">Total Biaya Pesanan</p>
-                <p className="font-bold text-5xl">Rp. {parseToRupiahText("100000")}</p>
+        {/* <div className="grid grid-cols-12 gap-y-4">
+            <div className="col-span-3">
+
             </div>
-            <button
-                className="mt-4 btn btn-sm bg-green-800 text-white"
-                onClick={() => _addRincianPesananPenjualanBarang()}
-            ><FaPlus /> Barang Pesanan</button>
-        </div>
-        <div className="grid grid-cols-12 gap-x-2">
-            <div className="col-span-12">
+            <div className="col-span-9"> */}
+        {/* <table className="table table-zebra bg-white rounded-md my-5">
+            <thead>
+                <th>Barang</th>
+                <th>Gudang</th>
+                <th>Detail Pesanan</th>
+            </thead>
+            <tbody> */}
                 {
                     rincianPesananPenjualanBarang.map((x, i) => {
                         return <>
-                            <div className="bg-white mt-6 px-4 rounded-md">
-                                <div className="py-5 rounded-md">
-                                    <ItemPesananPenjualanBarang
-                                        rincianPesananPenjualanBarang={x}
-                                        _getDataRincianDaftarPasananPenjualan={_getDataRincianDaftarPasananPenjualan}
-                                        _hapusnPesanan={() => {
-                                            _removeRincianPesananPenjualanBarang(i)
-                                        }}
-                                        customer={customer}
-                                    />
-                                </div>
+                            <div className="flex flex-col bg-white px-4 py-2 mt-6 rounded-md">
+                            <ItemPesananPenjualanBarang
+                                rincianPesananPenjualanBarang={x}
+                                _getDataRincianDaftarPasananPenjualan={_getDataRincianDaftarPasananPenjualan}
+                                _hapusPesanan={() => {
+                                    _removeRincianPesananPenjualanBarang(i)
+                                }}
+                                kategoriHargaBarangList={kategoriHargaBarangList}
+                                customer={customer}
+                            />
                             </div>
                         </>
                     })
                 }
+            {/* </tbody>
+        </table> */}
+        <div className="bg-blue-900 text-white shadow-2xl px-5 py-5 mt-6 rounded-md sticky bottom-0">
+            <div className="flex gap-x-2 mb-4">
+                <button
+                    className="btn btn-sm bg-white text-black"
+                    onClick={() => _addRincianPesananPenjualanBarang()}
+                >
+                    <FaPlus /> Barang Pesanan
+                </button>
+                <button
+                    className="btn btn-sm bg-green-800 text-white"
+                    onClick={() => _addRincianPesananPenjualanBarang()}
+                >
+                    <FaSave /> Simpan Pesanan
+                </button>
+            </div>
+            <div className="gap-x-2 px-1">
+                <p className="font-bold text-sm">Total Biaya Pesanan</p>
+                <p className="font-bold text-5xl">Rp. {parseToRupiahText(totalPesanan)}</p>
             </div>
         </div>
+        {/* </div>
+        </div> */}
     </>
 }
 export default PesananPenjualanBarangList
