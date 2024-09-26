@@ -30,6 +30,30 @@ export const getAllRincianPesananPenjualanBarangRepo = async (pageNumber, size, 
     }
 }
 
+export const getRincianPesananPenjualanBarangByPesananPenjualanUUIDRepo = async (pesanan_penjualan_barang, req_id) => {
+    const rincianPesananPenjualanBarangs = await db.query(
+        `
+            SELECT 
+                khbt.kode_barang AS kategori_harga_barang_kode_barang,
+                dbt.name AS daftar_barang_name,
+                sbt.name AS satuan_barang_name,
+                jbt.code AS jenis_barang_code,
+                rppbt.*
+            FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
+            JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang 
+            JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 
+            JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
+            JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang 
+            JOIN ${generateDatabaseName(req_id)}.jenis_barang_tab jbt ON jbt.uuid = dbt.jenis_barang 
+            WHERE ppbt.uuid = "${pesanan_penjualan_barang}"
+            AND ppbt.enabled = 1
+            AND rppbt.enabled = 1
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return rincianPesananPenjualanBarangs
+}
+
 export const getRincianPesananPenjualanBarangByUuidRepo = async (uuid, req_id) => {
     return selectOneQueryUtil(
         generateDatabaseName(req_id),

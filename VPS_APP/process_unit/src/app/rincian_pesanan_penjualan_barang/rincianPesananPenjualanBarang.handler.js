@@ -1,5 +1,5 @@
 import { rincianPesananPenjualanBarangValidation } from "./rincianPesananPenjualanBarang.validation.js"
-import { createRincianPesananPenjualanBarangService, deleteRincianPesananPenjualanBarangByUuidService, getAllRincianPesananPenjualanBarangService, getRincianPesananPenjualanBarangByUuidService, updateRincianPesananPenjualanBarangByUuidService } from "./rincianPesananPenjualanBarang.services.js"
+import { createRincianPesananPenjualanBarangService, deleteRincianPesananPenjualanBarangByUuidService, getAllRincianPesananPenjualanBarangService, getRincianPesananPenjualanBarangByPesananPenjualanUUIDService, updateRincianPesananPenjualanBarangByUuidService } from "./rincianPesananPenjualanBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -20,13 +20,13 @@ export const getAllRincianPesananPenjualanBarangs = async (req, res) => {
     }
 }
 
-export const getRincianPesananPenjualanBarangByUUID = async (req, res) => {
-    LOGGER(logType.INFO, "Start getRincianPesananPenjualanBarangByUuidController", null, req.identity)
+export const getRincianPesananPenjualanBarangByPesananPenjualanUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getRincianPesananPenjualanBarangByPesananPenjualanUUIDController", null, req.identity)
     try {
         const { uuid } = req.params
 
         res.json({
-            data: await getRincianPesananPenjualanBarangByUuidService(uuid, req.identity),
+            data: await getRincianPesananPenjualanBarangByPesananPenjualanUUIDService(uuid, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {

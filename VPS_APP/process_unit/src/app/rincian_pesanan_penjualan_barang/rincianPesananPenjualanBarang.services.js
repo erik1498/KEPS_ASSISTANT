@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createRincianPesananPenjualanBarangRepo, deleteRincianPesananPenjualanBarangByUuidRepo, getAllRincianPesananPenjualanBarangRepo, getRincianPesananPenjualanBarangByUuidRepo, updateRincianPesananPenjualanBarangByUuidRepo } from "./rincianPesananPenjualanBarang.repository.js"
+import { createRincianPesananPenjualanBarangRepo, deleteRincianPesananPenjualanBarangByUuidRepo, getAllRincianPesananPenjualanBarangRepo, getRincianPesananPenjualanBarangByPesananPenjualanUUIDRepo, getRincianPesananPenjualanBarangByUuidRepo, updateRincianPesananPenjualanBarangByUuidRepo } from "./rincianPesananPenjualanBarang.repository.js"
 
 export const getAllRincianPesananPenjualanBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllRincianPesananPenjualanBarangService", null, req_identity)
@@ -21,6 +21,12 @@ export const getAllRincianPesananPenjualanBarangService = async (query, req_iden
     
     const rincianPesananPenjualanBarangs = await getAllRincianPesananPenjualanBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(rincianPesananPenjualanBarangs.entry, rincianPesananPenjualanBarangs.count, rincianPesananPenjualanBarangs.pageNumber, rincianPesananPenjualanBarangs.size)
+}
+
+export const getRincianPesananPenjualanBarangByPesananPenjualanUUIDService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getRincianPesananPenjualanBarangByPesananPenjualanUUIDService [${uuid}]`, null, req_identity)
+    const rincianPesananPenjualanBarang = await getRincianPesananPenjualanBarangByPesananPenjualanUUIDRepo(uuid, req_identity)
+    return rincianPesananPenjualanBarang
 }
 
 export const getRincianPesananPenjualanBarangByUuidService = async (uuid, req_identity) => {

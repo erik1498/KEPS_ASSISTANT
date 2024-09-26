@@ -126,7 +126,7 @@ const PenjualanBarangForm = ({
                     </div>
                     {
                         customer ? <>
-                            <div className="mt-5 px-3 py-4 border rounded-md relative">
+                            <div className="mt-5 relative">
                                 <p className="text-md bg-blue-900 text-white w-max px-2 rounded-md font-bold mb-2">Detail Customer</p>
                                 <p className="text-2xl font-bold">{customer.code} - {customer.name}</p>
                                 <div className="mt-3 flex gap-x-10">

@@ -138,6 +138,7 @@ const PotonganPegawaiPage = () => {
                                             return <PotonganRow
                                                 item={item}
                                                 key={i}
+                                                balanceStatus={true}
                                             />
                                         })
                                     }
