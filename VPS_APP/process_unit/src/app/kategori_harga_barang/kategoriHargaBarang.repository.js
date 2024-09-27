@@ -4,7 +4,7 @@ import KategoriHargaBarangModel from "./kategoriHargaBarang.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
-export const getAllKategoriHargaBarangRepo = async (pageNumber, size, search, req_id) => {
+export const getAllKategoriHargaBarangRepo = async (daftar_barang, pageNumber, size, search, req_id) => {
     const kategoriHargaBarangsCount = await db.query(
         `
             SELECT 
@@ -12,11 +12,11 @@ export const getAllKategoriHargaBarangRepo = async (pageNumber, size, search, re
             FROM ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt 
             JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang
             JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
-            WHERE 
-            sbt.name LIKE '%${search}%'
+            WHERE sbt.name LIKE '%${search}%'
             AND sbt.enabled = 1 
             AND dbt.status = 1 
             AND khbt.enabled = 1
+            AND khbt.daftar_barang = "${daftar_barang}"
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -33,11 +33,11 @@ export const getAllKategoriHargaBarangRepo = async (pageNumber, size, search, re
             FROM ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt 
             JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang
             JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
-            WHERE 
-            sbt.name LIKE '%${search}%'
+            WHERE sbt.name LIKE '%${search}%'
             AND sbt.enabled = 1 
             AND dbt.status = 1 
             AND khbt.enabled = 1
+            AND khbt.daftar_barang = "${daftar_barang}"
             LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }

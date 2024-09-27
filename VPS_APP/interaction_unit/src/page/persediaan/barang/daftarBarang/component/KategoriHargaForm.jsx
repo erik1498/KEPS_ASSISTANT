@@ -66,7 +66,7 @@ const KategoriHargaForm = ({
 
     const _getDataKategoriHargaBarang = () => {
         apiKategoriHargaBarangCRUD
-            .custom("", "GET")
+            .custom(`/${idDaftarbarang}`, "GET")
             .then(resData => {
                 setKategoriHargaBarangList(x => x = resData.data.entry)
             })

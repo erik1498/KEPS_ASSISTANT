@@ -13,7 +13,6 @@ const DaftarBarangForm = ({
     daftarBarangEdit,
     getData = () => { }
 }) => {
-
     const [kategoriHargaForm, setKategoriHargaForm] = useState(false)
     const [uuidDaftarBarang, setUuidDaftarBarang] = useState(daftarBarangEdit?.uuid ? daftarBarangEdit.uuid : null)
 
@@ -25,7 +24,7 @@ const DaftarBarangForm = ({
     const [kategoriDaftarBarang, setKategoriDaftarBarang] = useState(daftarBarangEdit?.kategori_barang ? daftarBarangEdit.kategori_barang : ``)
     const [jenisDaftarBarang, setJenisDaftarBarang] = useState(daftarBarangEdit?.jenis_barang ? daftarBarangEdit.jenis_barang : ``)
     const [jenisPenjualanDaftarBarang, setJenisPenjualanDaftarBarang] = useState(daftarBarangEdit?.jenis_penjualan_barang ? daftarBarangEdit.jenis_penjualan_barang : ``)
-    const [ppnDaftarBarang, setppnDaftarBarang] = useState(daftarBarangEdit?.ppn ? {
+    const [ppnDaftarBarang, setppnDaftarBarang] = useState(daftarBarangEdit?.ppn == 0 ? {
         label: PPNList.filter(x => x.value == daftarBarangEdit.ppn).at(0).label,
         value: PPNList.filter(x => x.value == daftarBarangEdit.ppn).at(0).value,
     } : {

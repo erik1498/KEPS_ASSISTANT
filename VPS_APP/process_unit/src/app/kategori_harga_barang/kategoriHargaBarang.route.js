@@ -1,11 +1,10 @@
 import express from "express"
-import { deleteKategoriHargaBarangByUUID, getAllKategoriHargaBarangs, getKategoriHargaBarangByUUID, postCreateKategoriHargaBarang, updateKategoriHargaBarangByUUID } from "./kategoriHargaBarang.handler.js"
+import { deleteKategoriHargaBarangByUUID, getAllKategoriHargaBarangs, postCreateKategoriHargaBarang, updateKategoriHargaBarangByUUID } from "./kategoriHargaBarang.handler.js"
 import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
-router.get("/", authTokenMiddleware(), getAllKategoriHargaBarangs)
-router.get("/:uuid", authTokenMiddleware(), getKategoriHargaBarangByUUID)
+router.get("/:daftar_barang", authTokenMiddleware(), getAllKategoriHargaBarangs)
 router.post("/", authTokenMiddleware(), postCreateKategoriHargaBarang)
 router.put("/:uuid", authTokenMiddleware(), updateKategoriHargaBarangByUUID)
 router.delete("/:uuid", authTokenMiddleware(), deleteKategoriHargaBarangByUUID)

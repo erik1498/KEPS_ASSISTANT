@@ -15,6 +15,7 @@ const ToggleBox = ({
                 toggleBoxList.map((item, i) => {
                     return <>
                         <button
+                            type="button"
                             className={`border ${textSize} ${disabled ? "pointer-events-none" : ""} font-bold px-3 py-1 rounded-md ${i == 0 ? "rounded-r-none" : "border-l-0 rounded-l-none"} ${i < toggleBoxList.length - 1 ? "rounded-r-none" : ""} ${item.value == toggleBox ? "border-blue-900 bg-blue-900 text-white" : ""}`}
                             onClick={() => {
                                 setToggleBox(x => x = item.value)

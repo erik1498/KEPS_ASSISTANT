@@ -12,12 +12,13 @@ const FormSelectWithLabel = ({
     onchange,
     selectName,
     addClass,
-    addSelectStyle
+    addSelectStyle,
+    addLabelStyle,
 }) => {
     return <>
         <label className={`form-control w-full bg-white relative ${disabled ? "pointer-events-none" : ""}`}>
             <div className="label">
-                <span className="label-text text-gray-800 font-bold">{label}</span>
+                <span className={`${addLabelStyle} label-text text-gray-800 font-bold`}>{label}</span>
             </div>
             <div className="w-full relative">
                 <FormSelect
@@ -31,7 +32,7 @@ const FormSelectWithLabel = ({
                     onchange={onchange}
                     selectName={selectName}
                     customStyle={
-                        {   
+                        {
                             ...addSelectStyle,
                             border: 'none',
                             boxShadow: 'none',

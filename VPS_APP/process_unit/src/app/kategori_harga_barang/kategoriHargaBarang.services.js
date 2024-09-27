@@ -2,7 +2,7 @@ import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createKategoriHargaBarangRepo, deleteKategoriHargaBarangByUuidRepo, getAllKategoriHargaBarangRepo, getKategoriHargaBarangByKodeBarangRepo, getKategoriHargaBarangByUuidRepo, updateKategoriHargaBarangByUuidRepo } from "./kategoriHargaBarang.repository.js"
 
-export const getAllKategoriHargaBarangService = async (query, req_identity) => {
+export const getAllKategoriHargaBarangService = async (daftar_barang, query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllKategoriHargaBarangService", null, req_identity)
 
     let { page, size, search } = query
@@ -19,7 +19,7 @@ export const getAllKategoriHargaBarangService = async (query, req_identity) => {
         pageNumber, size, search
     }, req_identity)
     
-    const kategoriHargaBarangs = await getAllKategoriHargaBarangRepo(pageNumber, size, search, req_identity)
+    const kategoriHargaBarangs = await getAllKategoriHargaBarangRepo(daftar_barang, pageNumber, size, search, req_identity)
     return generatePaginationResponse(kategoriHargaBarangs.entry, kategoriHargaBarangs.count, kategoriHargaBarangs.pageNumber, kategoriHargaBarangs.size)
 }
 

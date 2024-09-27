@@ -119,13 +119,6 @@ const StokAwalBarangForm = ({
             </div>
         </form>
         <table className="table table-sm table-zebra">
-            <thead className="py-4 text-black">
-                <th>No</th>
-                <th>Gudang</th>
-                <th>Kode Barang</th>
-                <th>Satuan Barang</th>
-                <th>Jumlah</th>
-            </thead>
             <tbody>
                 {
                     stokAwalBarangList.map((x, i) => {

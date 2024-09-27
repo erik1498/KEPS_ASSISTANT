@@ -26,6 +26,21 @@ const PenjualanBarangForm = ({
         lastPage: 12
     })
 
+    const paginateUpdatePage = ({ selected }) => {
+        let paginateCopy = pagination
+        paginateCopy.page = selected + 1
+        setPagination(paginateCopy)
+        _getDataCustomer()
+    }
+
+    const setSize = (sizeSelected) => {
+        let paginateCopy = pagination
+        paginateCopy.size = sizeSelected
+        paginateCopy.page = 1
+        setPagination(paginateCopy)
+        _getDataCustomer()
+    }
+
     const [pesananPenjualanBarang, setPesananPenjualanBarang] = useState()
 
     const _getDataCustomer = (searchParam = "") => {
@@ -41,21 +56,6 @@ const PenjualanBarangForm = ({
             }).catch(err => {
                 showError(err)
             })
-    }
-
-    const paginateUpdatePage = ({ selected }) => {
-        let paginateCopy = pagination
-        paginateCopy.page = selected + 1
-        setPagination(paginateCopy)
-        _getDataCustomer()
-    }
-
-    const setSize = (sizeSelected) => {
-        let paginateCopy = pagination
-        paginateCopy.size = sizeSelected
-        paginateCopy.page = 1
-        setPagination(paginateCopy)
-        _getDataCustomer()
     }
 
     const _savePesananPenjualan = async (e) => {

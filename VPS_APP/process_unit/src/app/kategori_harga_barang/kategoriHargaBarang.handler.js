@@ -6,30 +6,12 @@ import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 export const getAllKategoriHargaBarangs = async (req, res) => {
     LOGGER(logType.INFO, "Start getAllKategoriHargaBarangController", null, req.identity)
     try {
-        const kategoriHargaBarangs = await getAllKategoriHargaBarangService(req.query, req.identity)
+        const kategoriHargaBarangs = await getAllKategoriHargaBarangService(req.params.daftar_barang, req.query, req.identity)
         res.json({
             data: kategoriHargaBarangs,
             message: "Get Data Success"
         })
     } catch (error) {    
-        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
-        res.status(500).json({
-            type: "internalServerError",
-            errorData: error.message
-        })
-    }
-}
-
-export const getKategoriHargaBarangByUUID = async (req, res) => {
-    LOGGER(logType.INFO, "Start getKategoriHargaBarangByUuidController", null, req.identity)
-    try {
-        const { uuid } = req.params
-
-        res.json({
-            data: await getKategoriHargaBarangByUuidService(uuid, req.identity),
-            message: "Get Data By UUID Success"
-        })
-    } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",

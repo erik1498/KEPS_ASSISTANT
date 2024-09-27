@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { apiDaftarBarangCRUD, apiRincianPesananPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
 import { showError } from "../../../../../helper/form.helper"
-import { FaPlus, FaSave } from "react-icons/fa"
-import ItemPesananPenjualanBarang from "./ItemPesananPenjualanBarang"
+import { FaMoneyBill, FaSortNumericDown } from "react-icons/fa"
+import FormPesananPenjualanBarang from "./FormPesananPenjualanBarang"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 
 const PesananPenjualanBarangList = ({
@@ -11,7 +11,6 @@ const PesananPenjualanBarangList = ({
 }) => {
     const [rincianPesananPenjualanBarang, setRincianPesananPenjualanBarang] = useState([])
     const [kategoriHargaBarangList, setKategoriHargaBarangList] = useState([])
-    const [totalPesanan, setTotalPesanan] = useState(0)
 
     const _getDataRincianDaftarPasananPenjualan = () => {
         apiRincianPesananPenjualanBarangCRUD
@@ -29,24 +28,6 @@ const PesananPenjualanBarangList = ({
             }).catch(err => showError(err))
     }
 
-    const _addRincianPesananPenjualanBarang = () => {
-        const rincianPesananPenjualanBarangCopy = [...rincianPesananPenjualanBarang]
-        rincianPesananPenjualanBarangCopy.push({
-            pesanan_penjualan_barang: pesananPenjualanBarang.uuid,
-            kategori_harga_barang: null,
-            stok_awal_barang: null,
-            kode_harga_customer: customer.kode_harga,
-            jumlah: `${0}`,
-            harga: `${0}`,
-            ppn: `${0}`,
-            diskon_angka: `${0}`,
-            diskon_persentase: `${0}`,
-            total_harga: `${0}`
-        })
-        setRincianPesananPenjualanBarang(x => x = rincianPesananPenjualanBarangCopy)
-        setTotalPesanan(x => x = x + 10000)
-    }
-
     const _removeRincianPesananPenjualanBarang = (index) => {
         const rincianPesananPenjualanBarangCopy = [...rincianPesananPenjualanBarang]
         setRincianPesananPenjualanBarang(x => x = rincianPesananPenjualanBarangCopy.filter((x, i) => i != index))
@@ -59,59 +40,43 @@ const PesananPenjualanBarangList = ({
     }, [])
 
     return <>
-        {/* <div className="grid grid-cols-12 gap-y-4">
-            <div className="col-span-3">
-
-            </div>
-            <div className="col-span-9"> */}
-        {/* <table className="table table-zebra bg-white rounded-md my-5">
-            <thead>
-                <th>Barang</th>
-                <th>Gudang</th>
-                <th>Detail Pesanan</th>
-            </thead>
-            <tbody> */}
+        <div className="grid grid-cols-12 gap-x-2">
+            <div className="col-span-4">
                 {
-                    rincianPesananPenjualanBarang.map((x, i) => {
-                        return <>
-                            <div className="flex flex-col bg-white px-4 py-2 mt-6 rounded-md">
-                            <ItemPesananPenjualanBarang
-                                rincianPesananPenjualanBarang={x}
+                    kategoriHargaBarangList.length > 0 ? <>
+                        <div className="bg-white rounded-md my-4 py-6 px-4 shadow-2xl">
+                            <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Detail Barang Pesanan</h1>
+                            <FormPesananPenjualanBarang
                                 _getDataRincianDaftarPasananPenjualan={_getDataRincianDaftarPasananPenjualan}
-                                _hapusPesanan={() => {
-                                    _removeRincianPesananPenjualanBarang(i)
-                                }}
-                                kategoriHargaBarangList={kategoriHargaBarangList}
+                                _hapusPesanan={() => { }}
                                 customer={customer}
+                                kategoriHargaBarangList={kategoriHargaBarangList}
+                                pesananPenjualanBarang={pesananPenjualanBarang}
                             />
-                            </div>
-                        </>
-                    })
+                        </div>
+                    </> : <></>
                 }
-            {/* </tbody>
-        </table> */}
-        <div className="bg-blue-900 text-white shadow-2xl px-5 py-5 mt-6 rounded-md sticky bottom-0">
-            <div className="flex gap-x-2 mb-4">
-                <button
-                    className="btn btn-sm bg-white text-black"
-                    onClick={() => _addRincianPesananPenjualanBarang()}
-                >
-                    <FaPlus /> Barang Pesanan
-                </button>
-                <button
-                    className="btn btn-sm bg-green-800 text-white"
-                    onClick={() => _addRincianPesananPenjualanBarang()}
-                >
-                    <FaSave /> Simpan Pesanan
-                </button>
             </div>
-            <div className="gap-x-2 px-1">
-                <p className="font-bold text-sm">Total Biaya Pesanan</p>
-                <p className="font-bold text-5xl">Rp. {parseToRupiahText(totalPesanan)}</p>
+            <div className="col-span-8">
+                <div className="bg-white px-4 my-4 rounded-md">
+                    {
+                        rincianPesananPenjualanBarang.reverse().map(x => {
+                            return <>
+                                <div className="gap-x-2 px-2 py-3">
+                                    <p className="text-2xl font-extrabold">[ {x.kategori_harga_barang_kode_barang} ] {x.daftar_barang_name}</p>
+                                    <p className="font-bold mt-2">Harga Barang</p>
+                                    <p className="font-bold mt-1 text-xl">
+                                        Rp. {parseToRupiahText(x.harga)}
+                                    </p>
+                                    <p className="font-bold mb-5 mt-2">PPN Rp. {parseToRupiahText(x.ppn)}</p>
+                                    <p className="font-bold bg-blue-800 px-2 text-white rounded-md w-max mt-2">{x.satuan_barang_name}</p>
+                                </div>
+                            </>
+                        })
+                    }
+                </div>
             </div>
         </div>
-        {/* </div>
-        </div> */}
     </>
 }
 export default PesananPenjualanBarangList
