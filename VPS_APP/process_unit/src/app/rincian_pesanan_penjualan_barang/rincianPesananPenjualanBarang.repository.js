@@ -36,6 +36,7 @@ export const getRincianPesananPenjualanBarangByPesananPenjualanUUIDRepo = async 
             SELECT 
                 khbt.kode_barang AS kategori_harga_barang_kode_barang,
                 dbt.name AS daftar_barang_name,
+                dgt.name AS daftar_gudang_name,
                 sbt.name AS satuan_barang_name,
                 jbt.code AS jenis_barang_code,
                 rppbt.*
@@ -44,10 +45,13 @@ export const getRincianPesananPenjualanBarangByPesananPenjualanUUIDRepo = async 
             JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 
             JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
             JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang 
+            JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt.stok_awal_barang
+            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang 
             JOIN ${generateDatabaseName(req_id)}.jenis_barang_tab jbt ON jbt.uuid = dbt.jenis_barang 
             WHERE ppbt.uuid = "${pesanan_penjualan_barang}"
             AND ppbt.enabled = 1
             AND rppbt.enabled = 1
+            ORDER BY rppbt.id DESC
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -68,7 +72,7 @@ export const getRincianPesananPenjualanBarangByUuidRepo = async (uuid, req_id) =
 
 export const createRincianPesananPenjualanBarangRepo = async (rincianPesananPenjualanBarangData, req_id) => {
     rincianPesananPenjualanBarangData = removeDotInRupiahInput(rincianPesananPenjualanBarangData, [
-        "jumlah", "harga", "ppn", "diskon_angka", "diskon_persentase", "total_harga"
+        "jumlah", "harga", "harga_setelah_diskon", "ppn", "ppn_setelah_diskon", "diskon_angka", "diskon_persentase", "total_harga"
     ])
     return insertQueryUtil(
         req_id,
@@ -81,7 +85,9 @@ export const createRincianPesananPenjualanBarangRepo = async (rincianPesananPenj
             kode_harga_customer: rincianPesananPenjualanBarangData.kode_harga_customer,
             jumlah: rincianPesananPenjualanBarangData.jumlah,
             harga: rincianPesananPenjualanBarangData.harga,
+            harga_setelah_diskon: rincianPesananPenjualanBarangData.harga_setelah_diskon,
             ppn: rincianPesananPenjualanBarangData.ppn,
+            ppn_setelah_diskon: rincianPesananPenjualanBarangData.ppn_setelah_diskon,
             diskon_angka: rincianPesananPenjualanBarangData.diskon_angka,
             diskon_persentase: rincianPesananPenjualanBarangData.diskon_persentase,
             total_harga: rincianPesananPenjualanBarangData.total_harga,
@@ -105,6 +111,9 @@ export const deleteRincianPesananPenjualanBarangByUuidRepo = async (uuid, req_id
 }
 
 export const updateRincianPesananPenjualanBarangByUuidRepo = async (uuid, rincianPesananPenjualanBarangData, req_id) => {
+    rincianPesananPenjualanBarangData = removeDotInRupiahInput(rincianPesananPenjualanBarangData, [
+        "jumlah", "harga", "harga_setelah_diskon", "ppn", "ppn_setelah_diskon", "diskon_angka", "diskon_persentase", "total_harga"
+    ])
     return updateQueryUtil(
         req_id,
         generateDatabaseName(req_id),
@@ -116,10 +125,12 @@ export const updateRincianPesananPenjualanBarangByUuidRepo = async (uuid, rincia
             kode_harga_customer: rincianPesananPenjualanBarangData.kode_harga_customer,
             jumlah: rincianPesananPenjualanBarangData.jumlah,
             harga: rincianPesananPenjualanBarangData.harga,
+            harga_setelah_diskon: rincianPesananPenjualanBarangData.harga_setelah_diskon,
             ppn: rincianPesananPenjualanBarangData.ppn,
+            ppn_setelah_diskon: rincianPesananPenjualanBarangData.ppn_setelah_diskon,
             diskon_angka: rincianPesananPenjualanBarangData.diskon_angka,
             diskon_persentase: rincianPesananPenjualanBarangData.diskon_persentase,
-            total_harga: rincianPesananPenjualanBarangData.total_harga,
+            total_harga: rincianPesananPenjualanBarangData.total_harga
         },
         {
             uuid

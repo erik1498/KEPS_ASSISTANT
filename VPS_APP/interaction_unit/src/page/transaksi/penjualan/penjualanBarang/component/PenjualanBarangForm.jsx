@@ -3,14 +3,19 @@ import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel
 import { useEffect, useState } from "react"
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import { apiCustomerCRUD, apiPesananPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
-import { formValidation } from "../../../../../helper/form.helper"
+import { formValidation, showError } from "../../../../../helper/form.helper"
 import PesananPenjualanBarangList from "./PenjualanBarangList"
 import Pagination from "../../../../../component/general/Pagination"
 import FormInput from "../../../../../component/form/FormInput"
+import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 
 const PenjualanBarangForm = ({
     setAddPenjualanBarang = () => { }
 }) => {
+    const [pilihPesananPenjualanBarang, setPilihPesananPenjualanBarang] = useState(false)
+    const [pesananPenjualanBarangListData, setPesananPenjualanBarangListData] = useState([])
+    const [pesananPenjualanBarangSelected, setPesananPenjualanBarangSelected] = useState(true)
+
     const [customerList, setCustomerList] = useState([])
     const [nomorPesananPenjualanBarang, setNomorPesananPenjualanBarang] = useState("")
     const [tanggalPesananPenjualanBarang, setTanggalPesananPenjualanBarang] = useState(getHariTanggalFull())
@@ -62,17 +67,57 @@ const PenjualanBarangForm = ({
         e.preventDefault()
         if (await formValidation(e.target)) {
             apiPesananPenjualanBarangCRUD
-                .custom("", "POST", null, {
+                .custom(pesananPenjualanBarangSelected ? `/${pesananPenjualanBarangSelected.value}` : "", pesananPenjualanBarangSelected ? "PUT" : `POST`, null, {
                     data: {
                         nomor_pesanan_penjualan_barang: nomorPesananPenjualanBarang,
                         tanggal_pesanan_penjualan_barang: tanggalPesananPenjualanBarang,
                         customer: customer.uuid
                     }
                 }).then(resData => {
-                    setPesananPenjualanBarang(resData.data)
+                    if (pesananPenjualanBarangSelected) {
+                        const pesananPenjualanBarangSelectedGet = pesananPenjualanBarangListData.filter(x => x.uuid == pesananPenjualanBarangSelected.value)
+                        setPesananPenjualanBarang(pesananPenjualanBarangSelectedGet[0])
+                    }else{
+                        setPesananPenjualanBarang(resData.data)
+                    }
                 })
         }
     }
+
+    useEffect(() => {
+        if (pesananPenjualanBarangSelected) {
+            const pesananPenjualanBarangSelectedGet = pesananPenjualanBarangListData.filter(x => x.uuid == pesananPenjualanBarangSelected.value)
+            if (pesananPenjualanBarangSelectedGet.length > 0) {
+                const customerGet = customerList.filter(x => x.uuid == pesananPenjualanBarangSelectedGet[0].customer)
+                if (customerGet.length > 0) {
+                    setCustomer(x => x = customerGet[0])
+                    setTanggalPesananPenjualanBarang(pesananPenjualanBarangSelectedGet[0].tanggal_pesanan_penjualan_barang)
+                    setNomorPesananPenjualanBarang(pesananPenjualanBarangSelectedGet[0].nomor_pesanan_penjualan_barang)
+                }
+            }
+        }
+    }, [pesananPenjualanBarangSelected])
+
+    useEffect(() => {
+        if (pilihPesananPenjualanBarang) {
+            apiPesananPenjualanBarangCRUD
+                .custom("", "GET")
+                .then(resData => {
+                    setPesananPenjualanBarangListData(x => x = resData.data.entry)
+                    if (resData.data.entry.length > 0) {
+                        setPesananPenjualanBarangSelected(x => x = {
+                            label: resData.data.entry[0].nomor_pesanan_penjualan_barang,
+                            value: resData.data.entry[0].uuid
+                        })
+                    }
+                }).catch(err => showError(err))
+        } else {
+            setNomorPesananPenjualanBarang(x => x = "")
+            setPesananPenjualanBarangSelected(x => x = false)
+            setTanggalPesananPenjualanBarang(x => x = getHariTanggalFull())
+            setCustomer(x => x = null)
+        }
+    }, [pilihPesananPenjualanBarang])
 
     useEffect(() => {
         _getDataCustomer()
@@ -91,22 +136,57 @@ const PenjualanBarangForm = ({
                 </div>
                 <form onSubmit={e => _savePesananPenjualan(e)}>
                     <div className="flex items-end gap-x-2">
-                        <FormInputWithLabel
-                            label={"Nomor Pesanan Penjualan Barang"}
-                            type={"text"}
-                            disabled={pesananPenjualanBarang}
-                            addClassInput={pesananPenjualanBarang ? "border-none px-1" : ""}
-                            onchange={(e) => {
-                                setNomorPesananPenjualanBarang(e.target.value)
-                            }}
-                            others={
-                                {
-                                    value: nomorPesananPenjualanBarang,
-                                    name: "nomorPesananPenjualanBarang",
-                                    disabled: pesananPenjualanBarang
-                                }
+                        <div className="flex items-end gap-x-2 w-full">
+                            {
+                                pilihPesananPenjualanBarang && !pesananPenjualanBarang ? <>
+                                    <FormSelectWithLabel
+                                        label={"Nomor Pesanan Penjualan Barang"}
+                                        optionsDataList={pesananPenjualanBarangListData}
+                                        optionsLabel={"nomor_pesanan_penjualan_barang"}
+                                        optionsValue={"uuid"}
+                                        selectValue={pesananPenjualanBarangSelected}
+                                        onchange={(e) => {
+                                            setPesananPenjualanBarangSelected(e)
+                                        }}
+                                        selectName={`pesananPenjualanBarangSelected`}
+                                    />
+                                </> : <>
+                                    <FormInputWithLabel
+                                        label={"Nomor Pesanan Penjualan Barang"}
+                                        type={"text"}
+                                        disabled={pesananPenjualanBarang}
+                                        addClassInput={pesananPenjualanBarang ? "border-none px-1" : ""}
+                                        onchange={(e) => {
+                                            setNomorPesananPenjualanBarang(e.target.value)
+                                        }}
+                                        others={
+                                            {
+                                                value: nomorPesananPenjualanBarang,
+                                                name: "nomorPesananPenjualanBarang",
+                                                disabled: pesananPenjualanBarang
+                                            }
+                                        }
+                                    />
+                                </>
                             }
-                        />
+                            {
+                                pesananPenjualanBarang ? <></> : <>
+                                    <button
+                                        type="button"
+                                        className={`btn btn-sm ${pilihPesananPenjualanBarang ? "bg-red-900" : "bg-blue-900"} text-white border-none`} onClick={() => {
+                                            setPilihPesananPenjualanBarang(x => x = !x)
+                                        }}
+                                    >
+                                        {
+                                            pilihPesananPenjualanBarang ? <FaTimes /> : <FaSearch />
+                                        }
+                                        {
+                                            pilihPesananPenjualanBarang ? "Batal Pesanan Penjualan" : "Pilih Pesanan Penjualan"
+                                        }
+                                    </button>
+                                </>
+                            }
+                        </div>
                         <FormInputWithLabel
                             label={"Tanggal Pesanan Penjualan Barang"}
                             type={"datetime-local"}

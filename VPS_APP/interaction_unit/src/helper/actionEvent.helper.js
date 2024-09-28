@@ -45,8 +45,6 @@ export const inputOnlyNumber = (e, max) => {
         e.target.value = value
       }
     }
-
-
   }
 
   if (e.target.value == "") {

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { apiDaftarBarangCRUD, apiRincianPesananPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
 import { showError } from "../../../../../helper/form.helper"
-import { FaMoneyBill, FaSortNumericDown } from "react-icons/fa"
 import FormPesananPenjualanBarang from "./FormPesananPenjualanBarang"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
+import { FaTrash } from "react-icons/fa"
 
 const PesananPenjualanBarangList = ({
     pesananPenjualanBarang,
@@ -28,10 +28,10 @@ const PesananPenjualanBarangList = ({
             }).catch(err => showError(err))
     }
 
-    const _removeRincianPesananPenjualanBarang = (index) => {
-        const rincianPesananPenjualanBarangCopy = [...rincianPesananPenjualanBarang]
-        setRincianPesananPenjualanBarang(x => x = rincianPesananPenjualanBarangCopy.filter((x, i) => i != index))
-        setTotalPesanan(x => x = x - 10000)
+    const _removeRincianPesananPenjualanBarang = (uuid) => {
+        apiRincianPesananPenjualanBarangCRUD.custom(`/${uuid}`, "DELETE").then(resData => {
+            _getDataRincianDaftarPasananPenjualan()
+        }).catch(err => showError(err))
     }
 
     useEffect(() => {
@@ -58,20 +58,92 @@ const PesananPenjualanBarangList = ({
                 }
             </div>
             <div className="col-span-8">
-                <div className="bg-white px-4 my-4 rounded-md">
+                <div className="bg-white my-4 py-5 px-4 rounded-md">
+                    <p className="font-bold text-sm">Total Pesanan</p>
+                    <p className="font-bold text-4xl">Rp. {parseToRupiahText(rincianPesananPenjualanBarang.reduce((prev, current) => {
+                        return prev + current.total_harga
+                    }, 0))}</p>
+                </div>
+                <div className="bg-white my-4 rounded-md no-scrollbar relative h-[70vh] overflow-y-scroll">
+                    <div className="grid grid-cols-12 text-sm gap-x-2 py-5 font-bold border-t-2 bg-gray-100 px-4 sticky top-0">
+                        <div className="col-span-1">
+                            <p className="text-gray-500">No.</p>
+                        </div>
+                        <div className="col-span-2">
+                            <p className="text-gray-500 text-md">Kode Barang</p>
+                        </div>
+                        <div className="col-span-3">
+                            <p className="text-gray-500 text-md">Nama Barang</p>
+                        </div>
+                        <div className="col-span-3">
+                            <p className="text-gray-500 text-md">Satuan Barang</p>
+                        </div>
+                        <div className="col-span-3">
+                            <p className="text-gray-500 text-md">Harga Barang</p>
+                        </div>
+                    </div>
                     {
-                        rincianPesananPenjualanBarang.reverse().map(x => {
-                            return <>
-                                <div className="gap-x-2 px-2 py-3">
-                                    <p className="text-2xl font-extrabold">[ {x.kategori_harga_barang_kode_barang} ] {x.daftar_barang_name}</p>
-                                    <p className="font-bold mt-2">Harga Barang</p>
-                                    <p className="font-bold mt-1 text-xl">
-                                        Rp. {parseToRupiahText(x.harga)}
-                                    </p>
-                                    <p className="font-bold mb-5 mt-2">PPN Rp. {parseToRupiahText(x.ppn)}</p>
-                                    <p className="font-bold bg-blue-800 px-2 text-white rounded-md w-max mt-2">{x.satuan_barang_name}</p>
+                        rincianPesananPenjualanBarang.map((x, i) => {
+                            return <div>
+                                <div className="grid grid-cols-12 gap-x-2 px-4 py-3 items-center font-bold border-t-2">
+                                    <div className="col-span-1">
+                                        <p className="text-sm">{i + 1}.</p>
+                                    </div>
+                                    <div className="col-span-2">
+                                        <p className="text-sm">{x.kategori_harga_barang_kode_barang}</p>
+                                    </div>
+                                    <div className="col-span-3">
+                                        <p className="text-sm">{x.daftar_barang_name}</p>
+                                    </div>
+                                    <div className="col-span-3">
+                                        <p className="text-sm">{x.satuan_barang_name}</p>
+                                    </div>
+                                    <div className="col-span-3">
+                                        <p className="text-sm">Rp. {parseToRupiahText(x.harga)}</p>
+                                        <p className="text-xs">PPN : Rp. {parseToRupiahText(x.ppn)}</p>
+                                    </div>
                                 </div>
-                            </>
+                                <div className="grid grid-cols-12 gap-x-2 px-4 py-3 text-gray-500 font-bold">
+                                    <div className="col-span-1">
+                                    </div>
+                                    <div className="col-span-2">
+                                        <p>Jumlah : {x.jumlah}</p>
+                                    </div>
+                                    <div className="col-span-3">
+                                        {
+                                            x.diskon_angka > 0 ? <>
+                                                <p>Diskon</p>
+                                                <p>Harga Diskon</p>
+                                                <p>PPN Diskon</p>
+                                            </> : <></>
+                                        }
+                                    </div>
+                                    <div className="col-span-3">
+                                        {
+                                            x.diskon_angka > 0 ? <>
+                                                <p>Rp. Rp. {parseToRupiahText(x.diskon_angka)} ({x.diskon_persentase} % )</p>
+                                                <p>Rp. {parseToRupiahText(x.harga_setelah_diskon)}</p>
+                                                <p>Rp. {parseToRupiahText(x.ppn_setelah_diskon)}</p>
+                                            </> : <></>
+                                        }
+                                    </div>
+                                    <div className="col-span-3">
+                                        Total Harga <p>Rp. {parseToRupiahText(x.total_harga)}</p>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-12 gap-x-2">
+                                    <div className="col-span-1 col-start-2 mb-3">
+                                        <button
+                                            className="btn w-max btn-sm bg-red-700 text-white"
+                                            onClick={e => {
+                                                _removeRincianPesananPenjualanBarang(x.uuid)
+                                            }}
+                                        >
+                                            <FaTrash /> Hapus
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         })
                     }
                 </div>

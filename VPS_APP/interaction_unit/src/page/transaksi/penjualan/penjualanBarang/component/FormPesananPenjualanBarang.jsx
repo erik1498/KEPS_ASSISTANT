@@ -56,7 +56,9 @@ const FormPesananPenjualanBarang = ({
                         kode_harga_customer: customer.kode_harga,
                         jumlah: `${jumlah}`,
                         harga: `${kategoriHargaBarangSelected[`harga_${customer.kode_harga}`]}`,
+                        harga_setelah_diskon: `${hargaBarang}`,
                         ppn: `${kategoriHargaBarangSelected[`harga_${customer.kode_harga}`] * PPN / 100}`,
+                        ppn_setelah_diskon: `${ppnBarang}`,
                         diskon_angka: `${diskonAngka}`,
                         diskon_persentase: `${diskonPersentase}`,
                         total_harga: `${totalAkhir}`
@@ -136,134 +138,135 @@ const FormPesananPenjualanBarang = ({
     }, [])
 
     return <>
-        <form className="grid grid-cols-12 gap-x-2 py-3 px-2" onSubmit={(e) => _savePesananBarang(e)}>
-            <div className="col-span-12">
-                <div className="flex items-end gap-x-2">
-                    <FormSelectWithLabel
-                        label={"Kode Barang"}
-                        optionsDataList={kategoriHargaBarangList}
-                        optionsLabel={"kode_barang"}
-                        optionsValue={"uuid"}
-                        selectValue={kategoriHargaBarang}
-                        onchange={(e) => {
-                            setKategoriHargaBarang(e)
-                        }}
-                        selectName={`kategoriHargaBarang`}
-                    />
-                    <FormSelectWithLabel
-                        label={"Gudang Asal"}
-                        optionsDataList={gudangBarangList}
-                        optionsLabel={"daftar_gudang_name"}
-                        optionsValue={"uuid"}
-                        selectValue={gudangBarang}
-                        onchange={(e) => {
-                            setGudangBarang(e)
-                        }}
-                        selectName={`gudangBarang`}
-                    />
-                </div>
-                {
-                    kategoriHargaBarangSelected ? <>
-                        <div className="gap-x-2 border-b-[3px] border-black px-2 py-3">
-                            <p className="font-bold">Nama Barang</p>
-                            <p className="text-2xl font-extrabold">{kategoriHargaBarangSelected.daftar_barang_name}</p>
-                            <p className="font-bold mt-5">Harga Barang</p>
-                            <p className="font-bold mt-1 text-xl">
-                                Rp. {parseToRupiahText(kategoriHargaBarangSelected[`harga_${customer.kode_harga}`])}
-                            </p>
-                            <p className="font-bold mb-5 mt-2">PPN Rp. {(parseToRupiahText(kategoriHargaBarangSelected[`harga_${customer.kode_harga}`] * PPN / 100))}</p>
-                            <p className="font-bold bg-blue-800 px-2 text-white rounded-md w-max mt-2">{kategoriHargaBarangSelected.satuan_barang_name}</p>
-                        </div>
-                        {
-                            gudangBarang ? <>
-                                <div className="flex gap-x-2">
-                                    <FormInputWithLabel
-                                        addClassInput="w-max"
-                                        label={"Jumlah"}
-                                        type={"text"}
-                                        onchange={(e) => {
-                                            inputOnlyRupiah(e)
-                                            setJumlah(e.target.value)
-                                        }}
-                                        others={
-                                            {
-                                                value: jumlah,
-                                                name: "jumlah",
-                                            }
-                                        }
-                                    />
-                                </div>
-                                <div className="mt-5">
-                                    <ToggleBox
-                                        label="Gunakan Diskon ?"
-                                        setToggleBox={setUseDiskon}
-                                        toggleBox={useDiskon}
-                                        toggleBoxList={[
-                                            {
-                                                label: "Tidak",
-                                                value: 0
-                                            },
-                                            {
-                                                label: "Ya",
-                                                value: 1
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                                {
-                                    useDiskon ? <>
-                                        <div className="mt-5 flex gap-x-2">
-                                            <FormInputWithLabel
-                                                label={"Diskon Angka"}
-                                                type={"text"}
-                                                onchange={(e) => {
-                                                    inputOnlyRupiah(e)
-                                                    setDiskonAngka(e.target.value)
-                                                }}
-                                                others={
-                                                    {
-                                                        value: diskonAngka,
-                                                        name: "diskonAngka",
-                                                    }
-                                                }
-                                            />
-                                            <FormInputWithLabel
-                                                label={"Diskon Persentase"}
-                                                type={"text"}
-                                                onchange={(e) => {
-                                                    inputOnlyRupiah(e)
-                                                    _updateDiskonAngka(e)
-                                                }}
-                                                others={
-                                                    {
-                                                        value: diskonPersentase,
-                                                        name: "diskonPersentase",
-                                                    }
-                                                }
-                                            />
-                                        </div>
-                                        <div className="mt-5 gap-x-2 px-1">
-                                            <p className="font-bold mt-2">Harga Setelah Diskon</p>
-                                            <p className="font-bold mt-2 text-xl">
-                                                Rp. {parseToRupiahText(hargaBarang)}
-                                            </p>
-                                            <p className="font-bold mb-5 mt-2">PPN Rp. {parseToRupiahText(ppnBarang)}</p>
-                                        </div>
-                                    </> : <></>
-                                }
-                                <div className="mt-5 gap-x-2 px-1">
-                                    <p className="font-bold text-sm">Total Harga</p>
-                                    <p className="font-bold text-4xl">Rp. {parseToRupiahText(totalAkhir)}</p>
-                                </div>
-                            </> : <></>
-                        }
-                    </> : <></>
-                }
+        <form className="gap-x-2 py-3 px-2" onSubmit={(e) => _savePesananBarang(e)}>
+            <div className="flex items-end gap-x-2">
+                <FormSelectWithLabel
+                    label={"Kode Barang"}
+                    optionsDataList={kategoriHargaBarangList}
+                    optionsLabel={"kode_barang"}
+                    optionsValue={"uuid"}
+                    selectValue={kategoriHargaBarang}
+                    onchange={(e) => {
+                        setKategoriHargaBarang(e)
+                    }}
+                    selectName={`kategoriHargaBarang`}
+                />
+                <FormSelectWithLabel
+                    label={"Gudang Asal"}
+                    optionsDataList={gudangBarangList}
+                    optionsLabel={"daftar_gudang_name"}
+                    optionsValue={"uuid"}
+                    selectValue={gudangBarang}
+                    onchange={(e) => {
+                        setGudangBarang(e)
+                    }}
+                    selectName={`gudangBarang`}
+                />
             </div>
+            {
+                kategoriHargaBarangSelected ? <>
+                    <div className="gap-x-2 border-b-[2.5px] border-black px-2 py-3">
+                        <p className="text-sm">Nama Barang</p>
+                        <p className="text-xl font-extrabold">{kategoriHargaBarangSelected.daftar_barang_name}</p>
+                        <p className="text-sm mt-5">Harga Barang</p>
+                        <p className="font-bold mt-1 text-xl">
+                            Rp. {parseToRupiahText(kategoriHargaBarangSelected[`harga_${customer.kode_harga}`])}
+                        </p>
+                        <div className="flex gap-x-2 items-end mb-5">
+                            <p className="text-sm">PPN</p>
+                            <p className="font-bold">Rp. {(parseToRupiahText(kategoriHargaBarangSelected[`harga_${customer.kode_harga}`] * PPN / 100))}</p>
+                        </div>
+                        <p className="font-bold bg-blue-800 px-2 text-white rounded-md w-max mt-2">{kategoriHargaBarangSelected.satuan_barang_name}</p>
+                    </div>
+                    {
+                        gudangBarang ? <>
+                            <div className="flex gap-x-2">
+                                <FormInputWithLabel
+                                    addClassInput="w-max"
+                                    label={"Jumlah"}
+                                    type={"text"}
+                                    onchange={(e) => {
+                                        inputOnlyRupiah(e)
+                                        setJumlah(e.target.value)
+                                    }}
+                                    others={
+                                        {
+                                            value: jumlah,
+                                            name: "jumlah",
+                                        }
+                                    }
+                                />
+                            </div>
+                            <div className="mt-5">
+                                <ToggleBox
+                                    label="Gunakan Diskon ?"
+                                    setToggleBox={setUseDiskon}
+                                    toggleBox={useDiskon}
+                                    toggleBoxList={[
+                                        {
+                                            label: "Tidak",
+                                            value: 0
+                                        },
+                                        {
+                                            label: "Ya",
+                                            value: 1
+                                        },
+                                    ]}
+                                />
+                            </div>
+                            {
+                                useDiskon ? <>
+                                    <div className="mt-5 flex gap-x-2">
+                                        <FormInputWithLabel
+                                            label={"Diskon Angka"}
+                                            type={"text"}
+                                            onchange={(e) => {
+                                                inputOnlyRupiah(e)
+                                                setDiskonAngka(e.target.value)
+                                            }}
+                                            others={
+                                                {
+                                                    value: diskonAngka,
+                                                    name: "diskonAngka",
+                                                }
+                                            }
+                                        />
+                                        <FormInputWithLabel
+                                            label={"Diskon Persentase"}
+                                            type={"text"}
+                                            onchange={(e) => {
+                                                inputOnlyRupiah(e)
+                                                _updateDiskonAngka(e)
+                                            }}
+                                            others={
+                                                {
+                                                    value: diskonPersentase,
+                                                    name: "diskonPersentase",
+                                                }
+                                            }
+                                        />
+                                    </div>
+                                    <div className="mt-5 gap-x-2 px-1">
+                                        <p className="font-bold mt-2">Harga Setelah Diskon</p>
+                                        <p className="font-bold mt-2 text-xl">
+                                            Rp. {parseToRupiahText(hargaBarang)}
+                                        </p>
+                                        <p className="font-bold mb-5 mt-2">PPN Rp. {parseToRupiahText(ppnBarang)}</p>
+                                    </div>
+                                </> : <></>
+                            }
+                            <div className="mt-5 gap-x-2 px-1">
+                                <p className="font-bold text-sm">Total Harga</p>
+                                <p className="font-bold text-4xl">Rp. {parseToRupiahText(totalAkhir)}</p>
+                            </div>
+                        </> : <></>
+                    }
+                </> : <></>
+            }
             {
                 gudangBarang ? <>
                     <button
-                        className="mt-3 btn col-span-12 bg-green-800 text-white"
+                        className="mt-3 btn w-full bg-green-800 text-white"
                     >
                         <FaSave /> Simpan Pesanan
                     </button>
