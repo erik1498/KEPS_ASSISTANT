@@ -41,11 +41,18 @@ const PesananPenjualanBarangList = ({
     }, [])
 
     return <>
+        {
+            fakturStatus ? <>
+                <div className="bg-white rounded-md mt-4 py-6 px-6 shadow-2xl">
+                    <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Riwayat Transaksi Penjualan Barang</h1>
+                </div>
+            </> : <></>
+        }
         <div className="grid grid-cols-12 gap-x-2">
             <div className={`${fakturStatus ? "hidden" : "col-span-4"}`}>
                 {
                     kategoriHargaBarangList.length > 0 ? <>
-                        <div className="bg-white rounded-md my-4 py-6 px-4 shadow-2xl">
+                        <div className="bg-white rounded-md my-4 py-6 px-6 shadow-2xl">
                             <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Detail Barang Pesanan</h1>
                             <PesananPenjualanBarangForm
                                 _getDataRincianDaftarPasananPenjualan={_getDataRincianDaftarPasananPenjualan}
@@ -59,14 +66,14 @@ const PesananPenjualanBarangList = ({
                 }
             </div>
             <div className={`${fakturStatus ? "col-span-12" : "col-span-8"}`}>
-                <div className="bg-white my-4 py-5 px-4 rounded-md">
+                <div className="bg-white my-4 py-5 px-6 rounded-md">
                     <p className="font-bold text-sm">Total Pesanan</p>
                     <p className="font-bold text-4xl">Rp. {parseToRupiahText(rincianPesananPenjualanBarang.reduce((prev, current) => {
                         return prev + current.total_harga
                     }, 0))}</p>
                 </div>
                 <div className={`bg-white my-4 rounded-md no-scrollbar relative ${fakturStatus ? "h-max max-h-[40vh]" : "h-[70vh]"} overflow-y-scroll`}>
-                    <div className="grid grid-cols-12 text-sm gap-x-2 py-5 font-bold border-t-2 bg-gray-100 px-4 sticky top-0">
+                    <div className="grid grid-cols-12 text-sm gap-x-2 py-5 font-bold border-t-2 bg-gray-100 px-6 sticky top-0">
                         <div className="col-span-1">
                             <p className="text-gray-500">No.</p>
                         </div>
@@ -86,7 +93,7 @@ const PesananPenjualanBarangList = ({
                     {
                         rincianPesananPenjualanBarang.map((x, i) => {
                             return <div>
-                                <div className="grid grid-cols-12 gap-x-2 px-4 py-3 items-start font-bold border-t-2">
+                                <div className="grid grid-cols-12 gap-x-2 px-6 py-3 items-start font-bold border-t-2">
                                     <div className="col-span-1">
                                         <p className="text-sm">{i + 1}.</p>
                                     </div>
@@ -105,7 +112,7 @@ const PesananPenjualanBarangList = ({
                                         <p className="text-sm font-normal">PPN : Rp. {parseToRupiahText(x.ppn)}</p>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-12 gap-x-2 px-4 py-3 text-gray-500 font-bold">
+                                <div className="grid grid-cols-12 gap-x-2 px-6 py-3 text-gray-500 font-bold">
                                     <div className="col-span-1">
                                     </div>
                                     <div className="col-span-2">
@@ -135,7 +142,7 @@ const PesananPenjualanBarangList = ({
                                 </div>
                                 {
                                     fakturStatus ? <></> : <>
-                                        <div className="grid grid-cols-12 gap-x-2">
+                                        <div className="grid grid-cols-12 gap-x-2 px-6">
                                             <div className="col-span-1 col-start-2 mb-3">
                                                 <button
                                                     className="btn w-max btn-sm bg-red-700 text-white"

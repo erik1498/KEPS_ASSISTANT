@@ -87,7 +87,6 @@ const FakturPenjualanBarangForm = ({
         apiFakturPenjualanBarangCRUD
             .custom(`/pesanan_penjualan_barang/${pesananPenjualanBarang.uuid}`, "GET")
             .then(resData => {
-                console.log(resData.data)
                 if (resData.data) {
                     setNomorFakturPenjualanBarang(x => x = resData.data.nomor_faktur_penjualan_barang)
                     setBuktiTransaksi(x => x = resData.data.bukti_transaksi)
@@ -111,7 +110,7 @@ const FakturPenjualanBarangForm = ({
     }, [fakturStatus])
 
     return <>
-        <div className="bg-white rounded-md mt-4 py-6 px-4 shadow-2xl">
+        <div className="bg-white rounded-md mt-4 py-6 px-6 shadow-2xl">
             <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Faktur Penjualan Barang</h1>
             <form onSubmit={e => _saveFakturPenjualanBarang(e)}>
                 <div className="flex gap-x-2">
