@@ -9,7 +9,7 @@ import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/num
 import { PPN } from "../../../../../config/objectList.config"
 import ToggleBox from "../../../../../component/general/ToggleBox"
 
-const FormPesananPenjualanBarang = ({
+const PesananPenjualanBarangForm = ({
     pesananPenjualanBarang,
     _getDataRincianDaftarPasananPenjualan,
     kategoriHargaBarangList,
@@ -275,4 +275,4 @@ const FormPesananPenjualanBarang = ({
         </form>
     </>
 }
-export default FormPesananPenjualanBarang
+export default PesananPenjualanBarangForm

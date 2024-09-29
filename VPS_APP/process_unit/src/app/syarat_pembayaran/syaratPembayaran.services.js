@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createSyaratPembayaranRepo, deleteSyaratPembayaranByUuidRepo, getAllSyaratPembayaranRepo, getSyaratPembayaranByUuidRepo, updateSyaratPembayaranByUuidRepo } from "./syaratPembayaran.repository.js"
+import { createSyaratPembayaranRepo, deleteSyaratPembayaranByUuidRepo, getAllSyaratPembayaranByTipePembayaranUUIDRepo, getAllSyaratPembayaranRepo, getSyaratPembayaranByUuidRepo, updateSyaratPembayaranByUuidRepo } from "./syaratPembayaran.repository.js"
 
 export const getAllSyaratPembayaranService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllSyaratPembayaranService", null, req_identity)
@@ -18,9 +18,15 @@ export const getAllSyaratPembayaranService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const syaratPembayarans = await getAllSyaratPembayaranRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(syaratPembayarans.entry, syaratPembayarans.count, syaratPembayarans.pageNumber, syaratPembayarans.size)
+}
+
+export const getAllSyaratPembayaranByTipePembayaranUUIDService = async (tipe_pembayaran_uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getAllSyaratPembayaranByTipePembayaranUUIDService`, { tipe_pembayaran_uuid }, req_identity)
+    const syaratPembayaran = await getAllSyaratPembayaranByTipePembayaranUUIDRepo(tipe_pembayaran_uuid, req_identity)
+    return syaratPembayaran
 }
 
 export const getSyaratPembayaranByUuidService = async (uuid, req_identity) => {

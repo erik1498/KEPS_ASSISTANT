@@ -8,10 +8,12 @@ import PesananPenjualanBarangList from "./PenjualanBarangList"
 import Pagination from "../../../../../component/general/Pagination"
 import FormInput from "../../../../../component/form/FormInput"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
+import FakturPenjualanBarangForm from "./FakturPenjualanBarangForm"
 
 const PenjualanBarangForm = ({
     setAddPenjualanBarang = () => { }
 }) => {
+    const [fakturStatus, setFakturStatus] = useState(false)
     const [pilihPesananPenjualanBarang, setPilihPesananPenjualanBarang] = useState(false)
     const [pesananPenjualanBarangListData, setPesananPenjualanBarangListData] = useState([])
     const [pesananPenjualanBarangSelected, setPesananPenjualanBarangSelected] = useState(true)
@@ -77,7 +79,7 @@ const PenjualanBarangForm = ({
                     if (pesananPenjualanBarangSelected) {
                         const pesananPenjualanBarangSelectedGet = pesananPenjualanBarangListData.filter(x => x.uuid == pesananPenjualanBarangSelected.value)
                         setPesananPenjualanBarang(pesananPenjualanBarangSelectedGet[0])
-                    }else{
+                    } else {
                         setPesananPenjualanBarang(resData.data)
                     }
                 })
@@ -127,7 +129,7 @@ const PenjualanBarangForm = ({
         <div className="bg-white rounded-md shadow-sm h-max overflow-scroll no-scrollbar relative">
             <div className="sticky top-0 py-5 px-6 h-max bg-white w-full z-10">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Pesanan Penjualan Barang</h1>
+                    <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-2">Pesanan Penjualan Barang</h1>
                     <button
                         className="btn btn-sm bg-red-900 text-white border-none"
                         onClick={() => setAddPenjualanBarang()}
@@ -208,7 +210,6 @@ const PenjualanBarangForm = ({
                         customer ? <>
                             <div className="mt-5 relative px-1">
                                 <p className="font-bold text-sm mb-3">Customer Terpilih</p>
-                                {/* <p className="text-md bg-blue-900 text-white w-max px-2 rounded-md font-bold mb-2">Detail Customer</p> */}
                                 <p className="text-xl font-bold">{customer.code} - {customer.name}</p>
                                 <div className="mt-3 flex gap-x-10">
                                     <div>
@@ -253,8 +254,26 @@ const PenjualanBarangForm = ({
                         </> : <></>
                     }
                     {
-                        !customer || pesananPenjualanBarang ? <></> :
-                            <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
+                        customer ? <>
+                            {
+                                pesananPenjualanBarang ? <>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setPesananPenjualanBarang(x => x = null)
+                                            setCustomer(x => x = null)
+                                            setPilihPesananPenjualanBarang(x => x = false)
+                                            setFakturStatus(x => x = false)
+                                        }}
+                                        className="btn btn-sm bg-red-800 mt-4 text-white"
+                                    >
+                                        <FaTimes /> Reset Pesanan Penjualan
+                                    </button>
+                                </> : <>
+                                    <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
+                                </>
+                            }
+                        </> : <></>
                     }
                 </form>
                 {
@@ -327,9 +346,15 @@ const PenjualanBarangForm = ({
         </div>
         {
             pesananPenjualanBarang ? <>
+                <FakturPenjualanBarangForm
+                    pesananPenjualanBarang={pesananPenjualanBarang}
+                    setFakturStatus={setFakturStatus}
+                    fakturStatus={fakturStatus}
+                />
                 <PesananPenjualanBarangList
                     pesananPenjualanBarang={pesananPenjualanBarang}
                     customer={customer}
+                    fakturStatus={fakturStatus}
                 />
             </> : <></>
         }

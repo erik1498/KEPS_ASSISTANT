@@ -38,6 +38,20 @@ export const getAllSyaratPembayaranRepo = async (pageNumber, size, search, req_i
     }
 }
 
+export const getAllSyaratPembayaranByTipePembayaranUUIDRepo = async (tipe_pembayaran_uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                syarat_pembayaran_tab.*, 
+                tipe_pembayaran_tab.name AS tipe_pembayaran_name
+            FROM ${generateDatabaseName(req_id)}.syarat_pembayaran_tab 
+            JOIN ${generateDatabaseName(req_id)}.tipe_pembayaran_tab ON syarat_pembayaran_tab.tipe_pembayaran = tipe_pembayaran_tab.uuid
+            WHERE tipe_pembayaran_tab.uuid = '${tipe_pembayaran_uuid}'
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+}
+
 export const getSyaratPembayaranByUuidRepo = async (uuid, req_id) => {
     return selectOneQueryUtil(
         generateDatabaseName(req_id),
