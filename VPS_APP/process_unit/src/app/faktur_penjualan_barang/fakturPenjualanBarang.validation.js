@@ -37,6 +37,11 @@ export const fakturPenjualanBarangValidation = (payload) => {
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
+        nomor_faktur_pajak_penjualan_barang: Joi.string().required().messages({
+            'string.base': "Harus Berupa Text",
+            "string.empty": "Harus Diisi",
+            "any.required": "Harus Diisi",
+        }),
     })
 
     return schema.validate(payload)

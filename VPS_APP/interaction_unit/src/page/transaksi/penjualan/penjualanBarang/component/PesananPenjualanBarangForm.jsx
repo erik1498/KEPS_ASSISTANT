@@ -138,7 +138,7 @@ const PesananPenjualanBarangForm = ({
     }, [])
 
     return <>
-        <form className="gap-x-2 py-3 px-2" onSubmit={(e) => _savePesananBarang(e)}>
+        <form className="gap-x-2 py-3" onSubmit={(e) => _savePesananBarang(e)}>
             <div className="flex items-end gap-x-2">
                 <FormSelectWithLabel
                     label={"Kode Barang"}
@@ -172,10 +172,14 @@ const PesananPenjualanBarangForm = ({
                         <p className="font-bold mt-1 text-xl">
                             Rp. {parseToRupiahText(kategoriHargaBarangSelected[`harga_${customer.kode_harga}`])}
                         </p>
-                        <div className="flex gap-x-2 items-end mb-5">
-                            <p className="text-sm">PPN</p>
-                            <p className="font-bold">Rp. {(parseToRupiahText(kategoriHargaBarangSelected[`harga_${customer.kode_harga}`] * PPN / 100))}</p>
-                        </div>
+                        {
+                            kategoriHargaBarangSelected.ppn == 1 ? <>
+                                <div className="flex gap-x-2 items-end mb-5">
+                                    <p className="text-sm">PPN</p>
+                                    <p className="font-bold">Rp. {(parseToRupiahText(kategoriHargaBarangSelected[`harga_${customer.kode_harga}`] * PPN / 100))}</p>
+                                </div>
+                            </> : <></>
+                        }
                         <p className="font-bold bg-blue-800 px-2 text-white rounded-md w-max mt-2">{kategoriHargaBarangSelected.satuan_barang_name}</p>
                     </div>
                     {
@@ -251,7 +255,11 @@ const PesananPenjualanBarangForm = ({
                                         <p className="font-bold mt-2 text-xl">
                                             Rp. {parseToRupiahText(hargaBarang)}
                                         </p>
-                                        <p className="font-bold mb-5 mt-2">PPN Rp. {parseToRupiahText(ppnBarang)}</p>
+                                        {
+                                            kategoriHargaBarangSelected.ppn == 1 ? <>
+                                                <p className="font-bold mb-5 mt-2">PPN Rp. {parseToRupiahText(ppnBarang)}</p>
+                                            </> : <></>
+                                        }
                                     </div>
                                 </> : <></>
                             }

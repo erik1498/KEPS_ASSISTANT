@@ -14,6 +14,7 @@ const PenjualanBarangForm = ({
     setAddPenjualanBarang = () => { }
 }) => {
     const [fakturStatus, setFakturStatus] = useState(false)
+    const [ppnStatus, setPPNStatus] = useState(false)
     const [pilihPesananPenjualanBarang, setPilihPesananPenjualanBarang] = useState(false)
     const [pesananPenjualanBarangListData, setPesananPenjualanBarangListData] = useState([])
     const [pesananPenjualanBarangSelected, setPesananPenjualanBarangSelected] = useState(true)
@@ -350,11 +351,13 @@ const PenjualanBarangForm = ({
                     pesananPenjualanBarang={pesananPenjualanBarang}
                     setFakturStatus={setFakturStatus}
                     fakturStatus={fakturStatus}
+                    ppnStatus={ppnStatus}
                 />
                 <PesananPenjualanBarangList
                     pesananPenjualanBarang={pesananPenjualanBarang}
                     customer={customer}
                     fakturStatus={fakturStatus}
+                    setPPNStatus={setPPNStatus}
                 />
             </> : <></>
         }

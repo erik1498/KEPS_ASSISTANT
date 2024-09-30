@@ -62,6 +62,13 @@ const FakturPenjualanBarangModel = db.define("faktur_penjualan_barang_tab",
                 notEmpty:true,
             }
         },
+        nomor_faktur_pajak_penjualan_barang: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
     }), {
     freezeTableName: true
 }

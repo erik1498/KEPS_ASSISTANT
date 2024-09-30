@@ -9,7 +9,8 @@ import { formValidation, showError } from "../../../../../helper/form.helper"
 const FakturPenjualanBarangForm = ({
     pesananPenjualanBarang,
     setFakturStatus = () => { },
-    fakturStatus
+    fakturStatus,
+    ppnStatus
 }) => {
     const [tipePembayaranList, setTipePembayaranList] = useState([])
     const [syaratPembayaranList, setSyaratPembayaranList] = useState([])
@@ -20,6 +21,7 @@ const FakturPenjualanBarangForm = ({
     const [tipePembayaran, setTipePembayaran] = useState()
     const [syaratPembayaran, setSyaratPembayaran] = useState()
     const [keteranganFakturPenjualanBarang, setKeteranganFakturPenjualanBarang] = useState()
+    const [nomorFakturPajakFakturPenjualanBarang, setNomorFakturPajakFakturPenjualanBarang] = useState("")
 
     const _getDataTipePembayaran = () => {
         apiTipePembayaranCRUD
@@ -61,7 +63,8 @@ const FakturPenjualanBarangForm = ({
                         bukti_transaksi: buktiTransaksi,
                         tipe_pembayaran: tipePembayaran.value,
                         syarat_pembayaran: syaratPembayaran.value,
-                        keterangan: keteranganFakturPenjualanBarang
+                        keterangan: keteranganFakturPenjualanBarang,
+                        nomor_faktur_pajak_penjualan_barang: nomorFakturPajakFakturPenjualanBarang ? nomorFakturPajakFakturPenjualanBarang : "EMPTY"
                     }
                 }).then(resData => {
                     setFakturStatus(x => x = resData.data.uuid)
@@ -95,6 +98,7 @@ const FakturPenjualanBarangForm = ({
                     setSyaratPembayaran(x => x = resData.data.syarat_pembayaran_name)
                     setKeteranganFakturPenjualanBarang(x => x = resData.data.keterangan)
                     setFakturStatus(x => x = resData.data.uuid)
+                    setNomorFakturPajakFakturPenjualanBarang(x => x = resData.data.nomor_faktur_pajak_penjualan_barang != "EMPTY" ? resData.data.nomor_faktur_pajak_penjualan_barang : "")
                 }
             }).catch(err => {
                 setFakturStatus(x => x = null)
@@ -104,7 +108,7 @@ const FakturPenjualanBarangForm = ({
     useEffect(() => {
         if (fakturStatus != null) {
             _getFakturPenjualan()
-        }else{
+        } else {
             _getDataTipePembayaran()
         }
     }, [fakturStatus])
@@ -234,6 +238,28 @@ const FakturPenjualanBarangForm = ({
                         }
                     />
                 </div>
+                {
+                    ppnStatus ? <>
+                        <div className="flex gap-x-2">
+                            <FormInputWithLabel
+                                label={"Nomor Faktur Pajak"}
+                                type={"text"}
+                                disabled={fakturStatus}
+                                addClassInput={fakturStatus ? "border-none px-1" : ""}
+                                onchange={(e) => {
+                                    setNomorFakturPajakFakturPenjualanBarang(e.target.value)
+                                }}
+                                others={
+                                    {
+                                        value: nomorFakturPajakFakturPenjualanBarang,
+                                        name: "nomorFakturPajakFakturPenjualanBarang",
+                                        disabled: fakturStatus
+                                    }
+                                }
+                            />
+                        </div>
+                    </> : <></>
+                }
                 {
                     fakturStatus ? <>
                         <button

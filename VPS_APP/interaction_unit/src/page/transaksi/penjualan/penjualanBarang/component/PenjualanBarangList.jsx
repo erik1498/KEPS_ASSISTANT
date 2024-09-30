@@ -4,11 +4,14 @@ import { showError } from "../../../../../helper/form.helper"
 import PesananPenjualanBarangForm from "./PesananPenjualanBarangForm"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { FaTrash } from "react-icons/fa"
+import { getHariTanggalFull } from "../../../../../helper/date.helper"
+import RiwayatTransaksiPenjualanBarang from "./RiwayatTransaksiPenjualanBarang"
 
 const PesananPenjualanBarangList = ({
     pesananPenjualanBarang,
     customer,
-    fakturStatus
+    fakturStatus,
+    setPPNStatus = () => { }
 }) => {
     const [rincianPesananPenjualanBarang, setRincianPesananPenjualanBarang] = useState([])
     const [kategoriHargaBarangList, setKategoriHargaBarangList] = useState([])
@@ -17,7 +20,11 @@ const PesananPenjualanBarangList = ({
         apiRincianPesananPenjualanBarangCRUD
             .custom(`/${pesananPenjualanBarang.uuid}`, "GET")
             .then(resData => {
+                setPPNStatus(x => x = false)
                 setRincianPesananPenjualanBarang(resData.data)
+                if (resData.data.filter(x => x.ppn > 0).length > 0) {
+                    setPPNStatus(x => x = true)
+                }
             }).catch(err => showError(err))
     }
 
@@ -43,9 +50,9 @@ const PesananPenjualanBarangList = ({
     return <>
         {
             fakturStatus ? <>
-                <div className="bg-white rounded-md mt-4 py-6 px-6 shadow-2xl">
-                    <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Riwayat Transaksi Penjualan Barang</h1>
-                </div>
+                <RiwayatTransaksiPenjualanBarang
+                
+                />
             </> : <></>
         }
         <div className="grid grid-cols-12 gap-x-2">
@@ -73,7 +80,7 @@ const PesananPenjualanBarangList = ({
                     }, 0))}</p>
                 </div>
                 <div className={`bg-white my-4 rounded-md no-scrollbar relative ${fakturStatus ? "h-max max-h-[40vh]" : "h-[70vh]"} overflow-y-scroll`}>
-                    <div className="grid grid-cols-12 text-sm gap-x-2 py-5 font-bold border-t-2 bg-gray-100 px-6 sticky top-0">
+                    <div className="grid grid-cols-12 text-sm gap-x-2 py-2 font-bold border-t-2 bg-gray-100 px-6 sticky top-0">
                         <div className="col-span-1">
                             <p className="text-gray-500">No.</p>
                         </div>
@@ -109,10 +116,10 @@ const PesananPenjualanBarangList = ({
                                     </div>
                                     <div className="col-span-3">
                                         <p className="text-sm">Rp. {parseToRupiahText(x.harga)}</p>
-                                        <p className="text-sm font-normal">PPN : Rp. {parseToRupiahText(x.ppn)}</p>
+                                        <p className="text-xs font-normal">PPN : Rp. {parseToRupiahText(x.ppn)}</p>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-12 gap-x-2 px-6 py-3 text-gray-500 font-bold">
+                                <div className="grid grid-cols-12 text-xs gap-x-2 px-6 py-3 text-gray-500 font-bold">
                                     <div className="col-span-1">
                                     </div>
                                     <div className="col-span-2">
@@ -130,7 +137,7 @@ const PesananPenjualanBarangList = ({
                                     <div className="col-span-3">
                                         {
                                             x.diskon_angka > 0 ? <>
-                                                <p>Rp. Rp. {parseToRupiahText(x.diskon_angka)} ({x.diskon_persentase} % )</p>
+                                                <p>Rp. {parseToRupiahText(x.diskon_angka)} ({x.diskon_persentase} % )</p>
                                                 <p>Rp. {parseToRupiahText(x.harga_setelah_diskon)}</p>
                                                 <p>Rp. {parseToRupiahText(x.ppn_setelah_diskon)}</p>
                                             </> : <></>

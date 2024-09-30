@@ -71,6 +71,7 @@ export const createFakturPenjualanBarangRepo = async (fakturPenjualanBarangData,
             tipe_pembayaran: fakturPenjualanBarangData.tipe_pembayaran,
             syarat_pembayaran: fakturPenjualanBarangData.syarat_pembayaran,
             keterangan: fakturPenjualanBarangData.keterangan,
+            nomor_faktur_pajak_penjualan_barang: fakturPenjualanBarangData.nomor_faktur_pajak_penjualan_barang,
             enabled: fakturPenjualanBarangData.enabled
         }
     )
@@ -103,6 +104,7 @@ export const updateFakturPenjualanBarangByUuidRepo = async (uuid, fakturPenjuala
             tipe_pembayaran: fakturPenjualanBarangData.tipe_pembayaran,
             syarat_pembayaran: fakturPenjualanBarangData.syarat_pembayaran,
             keterangan: fakturPenjualanBarangData.keterangan,
+            nomor_faktur_pajak_penjualan_barang: fakturPenjualanBarangData.nomor_faktur_pajak_penjualan_barang,
         },
         {
             uuid
