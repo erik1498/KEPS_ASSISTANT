@@ -1,22 +1,24 @@
 import RiwayatTransaksiPelunasanPenjualanBarang from "./RiwayatTransaksiPelunasanPenjualanBarang"
+import RiwayatTransaksiPengembalianDendaPenjualanBarang from "./RiwayatTransaksiPengembalianDendaPenjualanBarang"
 import RiwayatTransaksiReturPenjualanBarang from "./RiwayatTransaksiReturPenjualanBarang"
 
 const RiwayatTransaksiPenjualanBarang = () => {
     return <>
         <div className="bg-white rounded-md mt-4 py-6 px-6 shadow-2xl">
-            <div className="grid grid-cols-12 sticky top-0 bg-white py-2">
-                <div className="px-1 col-span-12 text-black flex items-end">
-                    <p className={`text-4xl py-2 font-bold -ml-1 text-white px-2 rounded-md bg-green-900`}>12</p>
-                    <div className="w-full flex justify-between items-end">
-                        <div className="text-gray-900 flex flex-col justify-end px-2">
-                            <p className="font-bold text-sm">01.2024</p>
-                            <p className="text-xs">Senin</p>
+            <div className="flex flex-col">
+                {
+                    new Array(2).fill(6).map((x, i) => {
+                        return <div className="mb-5">
+                            <p className={`text-sm font-bold bg-blue-900 px-4 py-1 w-max text-gray-100`}>{6 - i} Januari 2024</p>
+                            <div className="">
+                                <RiwayatTransaksiPengembalianDendaPenjualanBarang />
+                                <RiwayatTransaksiReturPenjualanBarang />
+                                <RiwayatTransaksiPelunasanPenjualanBarang />
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    })
+                }
             </div>
-            <RiwayatTransaksiReturPenjualanBarang />
-            <RiwayatTransaksiPelunasanPenjualanBarang />
         </div>
     </>
 }

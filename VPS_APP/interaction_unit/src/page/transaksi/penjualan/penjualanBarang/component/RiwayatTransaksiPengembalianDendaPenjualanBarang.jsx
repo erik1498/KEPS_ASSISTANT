@@ -2,7 +2,7 @@ import { useState } from "react"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"
 
-const RiwayatTransaksiReturPenjualanBarang = () => {
+const RiwayatTransaksiPengembalianDendaPenjualanBarang = () => {
 
     const [listRincian, setListRincian] = useState(false)
     const [detailOpen, setDetailOpen] = useState(false)
@@ -16,7 +16,7 @@ const RiwayatTransaksiReturPenjualanBarang = () => {
         >
             <div className="flex gap-x-4 justify-between items-center border-blue-800 border-l-4 bg-blue-100 py-1 w-6/12 px-4">
                 <div className="flex gap-x-2">
-                    <p className="text-sm font-bold pl-4">Retur Penjualan Barang</p>
+                    <p className="text-sm font-bold pl-4">Pengembalian Denda Penjualan Barang</p>
                 </div>
                 {
                     detailOpen ? <FaChevronUp /> : <FaChevronDown />
@@ -30,7 +30,7 @@ const RiwayatTransaksiReturPenjualanBarang = () => {
                         detailOpen ? <>
                             <table className="w-4/12 text-left text-sm">
                                 <tr>
-                                    <td>Nomor Retur Penjualan Barang</td>
+                                    <td>Nomor Pengembalian Denda Penjualan Barang</td>
                                     <td>:</td>
                                     <td>PPB1290890</td>
                                 </tr>
@@ -45,7 +45,7 @@ const RiwayatTransaksiReturPenjualanBarang = () => {
                                     <td>Kas Besar</td>
                                 </tr>
                                 <tr>
-                                    <td>Total Retur</td>
+                                    <td>Total Pengembalian Denda</td>
                                     <td>:</td>
                                     <td>Rp. {parseToRupiahText(100000)}</td>
                                 </tr>
@@ -58,7 +58,7 @@ const RiwayatTransaksiReturPenjualanBarang = () => {
                                         className="btn btn-sm border-red-500 text-red-500"
                                         onClick={() => setListRincian(x => x = !x)}
                                     >
-                                        Tutup Daftar Retur
+                                        Tutup Daftar Pengembalian Denda
                                     </button>
                                     <div className="overflow-x-auto mt-5 max-h-[20vh] no-scrollbar pb-4">
                                         <table className="table table-sm table-zebra rounded-xl">
@@ -69,8 +69,8 @@ const RiwayatTransaksiReturPenjualanBarang = () => {
                                                 <th>Satuan Barang</th>
                                                 <th>Gudang Asal</th>
                                                 <th>Pelunasan Sudah Dibayar</th>
-                                                <th>Retur</th>
-                                                <th>Nilai Kembali Retur</th>
+                                                <th>Pengembalian Denda</th>
+                                                <th>Nilai Kembali Pengembalian Denda</th>
                                             </thead>
                                             <tbody>
                                                 {
@@ -97,7 +97,7 @@ const RiwayatTransaksiReturPenjualanBarang = () => {
                                         className="btn btn-sm bg-white border-gray-400"
                                         onClick={() => setListRincian(x => x = !x)}
                                     >
-                                        Lihat Daftar Retur
+                                        Lihat Daftar Pengembalian Denda
                                     </button>
                                 </>
                             }
@@ -108,4 +108,4 @@ const RiwayatTransaksiReturPenjualanBarang = () => {
         }
     </>
 }
-export default RiwayatTransaksiReturPenjualanBarang
+export default RiwayatTransaksiPengembalianDendaPenjualanBarang
