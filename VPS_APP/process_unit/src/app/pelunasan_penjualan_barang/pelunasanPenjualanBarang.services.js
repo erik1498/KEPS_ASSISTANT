@@ -1,0 +1,65 @@
+import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { createPelunasanPenjualanBarangRepo, deletePelunasanPenjualanBarangByUuidRepo, getAllPelunasanPenjualanBarangRepo, getPelunasanPenjualanBarangByUuidRepo, updatePelunasanPenjualanBarangByUuidRepo } from "./pelunasanPenjualanBarang.repository.js"
+
+export const getAllPelunasanPenjualanBarangService = async (query, req_identity) => {
+    LOGGER(logType.INFO, "Start getAllPelunasanPenjualanBarangService", null, req_identity)
+
+    let { page, size, search } = query
+    page = page ? page : null
+    size = size ? size : null
+    if (size == "all") {
+        page = null
+        size = null
+    }
+    search = search ? search : ""
+    const pageNumber = (page - 1) * size
+
+    LOGGER(logType.INFO, "Pagination", {
+        pageNumber, size, search
+    }, req_identity)
+    
+    const pelunasanPenjualanBarangs = await getAllPelunasanPenjualanBarangRepo(pageNumber, size, search, req_identity)
+    return generatePaginationResponse(pelunasanPenjualanBarangs.entry, pelunasanPenjualanBarangs.count, pelunasanPenjualanBarangs.pageNumber, pelunasanPenjualanBarangs.size)
+}
+
+export const getPelunasanPenjualanBarangByUuidService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getPelunasanPenjualanBarangByUuidService [${uuid}]`, null, req_identity)
+    const pelunasanPenjualanBarang = await getPelunasanPenjualanBarangByUuidRepo(uuid, req_identity)
+
+    if (!pelunasanPenjualanBarang) {
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
+    }
+    return pelunasanPenjualanBarang
+}
+
+export const createPelunasanPenjualanBarangService = async (pelunasanPenjualanBarangData, req_identity) => {
+    LOGGER(logType.INFO, `Start createPelunasanPenjualanBarangService`, pelunasanPenjualanBarangData, req_identity)
+    pelunasanPenjualanBarangData.enabled = 1
+
+    const pelunasanPenjualanBarang = await createPelunasanPenjualanBarangRepo(pelunasanPenjualanBarangData, req_identity)
+    return pelunasanPenjualanBarang
+}
+
+export const deletePelunasanPenjualanBarangByUuidService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start deletePelunasanPenjualanBarangByUuidService [${uuid}]`, null, req_identity)
+    await getPelunasanPenjualanBarangByUuidService(uuid, req_identity)
+    await deletePelunasanPenjualanBarangByUuidRepo(uuid, req_identity)
+    return true
+}
+
+export const updatePelunasanPenjualanBarangByUuidService = async (uuid, pelunasanPenjualanBarangData, req_identity, req_original_url, req_method) => {
+    LOGGER(logType.INFO, `Start updatePelunasanPenjualanBarangByUuidService [${uuid}]`, pelunasanPenjualanBarangData, req_identity)
+    const beforeData = await getPelunasanPenjualanBarangByUuidService(uuid, req_identity)
+    const pelunasanPenjualanBarang = await updatePelunasanPenjualanBarangByUuidRepo(uuid, pelunasanPenjualanBarangData, req_identity)
+
+    LOGGER_MONITOR(req_original_url, req_method, {
+        beforeData,
+        pelunasanPenjualanBarangData
+    }, req_identity)
+
+    return pelunasanPenjualanBarang
+}

@@ -4,8 +4,6 @@ import { showError } from "../../../../../helper/form.helper"
 import PesananPenjualanBarangForm from "./PesananPenjualanBarangForm"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { FaTrash } from "react-icons/fa"
-import { getHariTanggalFull } from "../../../../../helper/date.helper"
-import RiwayatTransaksiPenjualanBarang from "./RiwayatTransaksiPenjualanBarang"
 
 const PesananPenjualanBarangList = ({
     pesananPenjualanBarang,
@@ -195,12 +193,6 @@ const PesananPenjualanBarangList = ({
                 </div>
             </div>
         </div>
-        {
-            fakturStatus ? <>
-                <RiwayatTransaksiPenjualanBarang
-                />
-            </> : <></>
-        }
     </>
 }
 export default PesananPenjualanBarangList

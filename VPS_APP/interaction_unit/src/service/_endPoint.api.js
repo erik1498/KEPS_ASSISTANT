@@ -266,3 +266,7 @@ export const SrvRincianPesananPenjualanBarang = objectPathEndPointAPI(
 export const SrvFakturPenjualanBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/faktur_penjualan_barang'
 )
+
+export const SrvPelunasanPenjualanBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/pelunasan_penjualan_barang'
+)

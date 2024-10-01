@@ -5,6 +5,9 @@ import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLab
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import { FaSave, FaTimes } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
+import ToggleBox from "../../../../../component/general/ToggleBox"
+import PelunasanPenjualanBarangForm from "./PelunasanPenjualanBarangForm"
+import RiwayatTransaksiPenjualanBarang from "./RiwayatTransaksiPenjualanBarang"
 
 const FakturPenjualanBarangForm = ({
     pesananPenjualanBarang,
@@ -12,6 +15,9 @@ const FakturPenjualanBarangForm = ({
     fakturStatus,
     ppnStatus
 }) => {
+    const [fakturPenjualanBarang, setFakturPnenjualanBarang] = useState()
+    const [toggleBox, setToggleBox] = useState("Pelunasan Penjualan Barang")
+
     const [tipePembayaranList, setTipePembayaranList] = useState([])
     const [syaratPembayaranList, setSyaratPembayaranList] = useState([])
 
@@ -91,6 +97,7 @@ const FakturPenjualanBarangForm = ({
             .custom(`/pesanan_penjualan_barang/${pesananPenjualanBarang.uuid}`, "GET")
             .then(resData => {
                 if (resData.data) {
+                    setFakturPnenjualanBarang(x => x = resData.data)
                     setNomorFakturPenjualanBarang(x => x = resData.data.nomor_faktur_penjualan_barang)
                     setBuktiTransaksi(x => x = resData.data.bukti_transaksi)
                     setTanggalFakturPenjualanBarang(x => x = resData.data.tanggal)
@@ -114,7 +121,7 @@ const FakturPenjualanBarangForm = ({
     }, [fakturStatus])
 
     return <>
-        <div className="bg-white rounded-md mt-4 py-6 px-6 shadow-2xl">
+        <div className="bg-white rounded-md py-6 px-6 shadow-2xl">
             <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Faktur Penjualan Barang</h1>
             <form onSubmit={e => _saveFakturPenjualanBarang(e)}>
                 <div className="flex gap-x-2">
@@ -275,6 +282,43 @@ const FakturPenjualanBarangForm = ({
                 }
             </form>
         </div>
+
+
+        <div className="bg-white rounded-md mt-4 py-6 px-6 shadow-2xl">
+            <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-3">Form Transaksi Penjualan Barang</h1>
+            <ToggleBox
+                addClass={"-mb-0"}
+                setToggleBox={setToggleBox}
+                toggleBox={toggleBox}
+                labelTextSize="text-sm"
+                toggleBoxList={[
+                    {
+                        label: "Pelunasan Penjualan Barang",
+                        value: "Pelunasan Penjualan Barang",
+                    },
+                    {
+                        label: "Retur Penjualan Barang",
+                        value: "Retur Penjualan Barang",
+                    },
+                    {
+                        label: "Pengembalian Denda Penjualan Barang",
+                        value: "Pengembalian Denda Penjualan Barang",
+                    }
+                ]}
+            />
+            {
+                toggleBox == "Pelunasan Penjualan Barang" ? <PelunasanPenjualanBarangForm
+                    fakturPenjualanBarang={fakturPenjualanBarang}
+                /> : <></>
+            }
+        </div>
+
+        {
+            fakturStatus ? <>
+                <RiwayatTransaksiPenjualanBarang
+                />
+            </> : <></>
+        }
     </>
 }
 export default FakturPenjualanBarangForm

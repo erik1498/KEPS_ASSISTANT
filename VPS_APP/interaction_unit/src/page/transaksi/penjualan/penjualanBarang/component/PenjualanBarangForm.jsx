@@ -9,6 +9,7 @@ import Pagination from "../../../../../component/general/Pagination"
 import FormInput from "../../../../../component/form/FormInput"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FakturPenjualanBarangForm from "./FakturPenjualanBarangForm"
+import RiwayatTransaksiPenjualanBarang from "./RiwayatTransaksiPenjualanBarang"
 
 const PenjualanBarangForm = ({
     setAddPenjualanBarang = () => { }
@@ -347,17 +348,17 @@ const PenjualanBarangForm = ({
         </div>
         {
             pesananPenjualanBarang ? <>
-                <FakturPenjualanBarangForm
-                    pesananPenjualanBarang={pesananPenjualanBarang}
-                    setFakturStatus={setFakturStatus}
-                    fakturStatus={fakturStatus}
-                    ppnStatus={ppnStatus}
-                />
                 <PesananPenjualanBarangList
                     pesananPenjualanBarang={pesananPenjualanBarang}
                     customer={customer}
                     fakturStatus={fakturStatus}
                     setPPNStatus={setPPNStatus}
+                />
+                <FakturPenjualanBarangForm
+                    pesananPenjualanBarang={pesananPenjualanBarang}
+                    setFakturStatus={setFakturStatus}
+                    fakturStatus={fakturStatus}
+                    ppnStatus={ppnStatus}
                 />
             </> : <></>
         }

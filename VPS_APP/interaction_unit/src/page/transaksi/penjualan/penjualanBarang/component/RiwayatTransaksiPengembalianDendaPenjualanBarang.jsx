@@ -7,18 +7,18 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = () => {
     const [listRincian, setListRincian] = useState(false)
     const [detailOpen, setDetailOpen] = useState(false)
 
-    return <>
+    return <div className="border-b-2 py-2">
         <div
             className="cursor-pointer"
             onClick={() => {
                 setDetailOpen(x => x = !x)
             }}
         >
-            <div className="flex gap-x-4 justify-between items-center px-4">
-                <div className="flex items-center gap-x-2">
-                    <div className="bg-blue-800 px-1 py-1 h-max rounded-full"></div>
-                    <p className="text-sm pr-2 font-medium">Pengembalian Denda Penjualan Barang</p>
-                </div>
+            <div className="flex items-center gap-x-2 px-4">
+                <p className="text-sm pr-2 font-medium">Pengembalian Denda Penjualan Barang</p>
+                {
+                    detailOpen ? <FaChevronUp size={15} /> : <FaChevronDown size={15} />
+                }
             </div>
         </div>
         {
@@ -109,6 +109,6 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = () => {
                 </div>
             </> : <></>
         }
-    </>
+    </div>
 }
 export default RiwayatTransaksiPengembalianDendaPenjualanBarang
