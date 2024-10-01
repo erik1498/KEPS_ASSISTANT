@@ -14,13 +14,11 @@ const RiwayatTransaksiReturPenjualanBarang = () => {
                 setDetailOpen(x => x = !x)
             }}
         >
-            <div className="flex gap-x-4 justify-between items-center border-blue-800 border-l-4 bg-blue-100 py-1 w-6/12 px-4">
-                <div className="flex gap-x-2">
-                    <p className="text-sm font-bold pl-4">Retur Penjualan Barang</p>
+            <div className="flex gap-x-4 justify-between items-center px-4">
+                <div className="flex items-center gap-x-2">
+                    <div className="bg-blue-800 px-1 py-1 h-max rounded-full"></div>
+                    <p className="text-sm pr-2 font-medium">Retur Penjualan Barang</p>
                 </div>
-                {
-                    detailOpen ? <FaChevronUp /> : <FaChevronDown />
-                }
             </div>
         </div>
         {
@@ -29,6 +27,11 @@ const RiwayatTransaksiReturPenjualanBarang = () => {
                     {
                         detailOpen ? <>
                             <table className="w-4/12 text-left text-sm">
+                                <tr>
+                                    <td>Waktu</td>
+                                    <td>:</td>
+                                    <td>04:15:35 PM</td>
+                                </tr>
                                 <tr>
                                     <td>Nomor Retur Penjualan Barang</td>
                                     <td>:</td>
