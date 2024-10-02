@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createPelunasanPenjualanBarangRepo, deletePelunasanPenjualanBarangByUuidRepo, getAllPelunasanPenjualanBarangRepo, getPelunasanPenjualanBarangByUuidRepo, updatePelunasanPenjualanBarangByUuidRepo } from "./pelunasanPenjualanBarang.repository.js"
+import { createPelunasanPenjualanBarangRepo, deletePelunasanPenjualanBarangByUuidRepo, getAllPelunasanPenjualanBarangRepo, getCekDendaByPelunasanPenjualanUUIDRepo, getPelunasanPenjualanBarangByUuidRepo, updatePelunasanPenjualanBarangByUuidRepo } from "./pelunasanPenjualanBarang.repository.js"
 
 export const getAllPelunasanPenjualanBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPelunasanPenjualanBarangService", null, req_identity)
@@ -21,6 +21,12 @@ export const getAllPelunasanPenjualanBarangService = async (query, req_identity)
     
     const pelunasanPenjualanBarangs = await getAllPelunasanPenjualanBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(pelunasanPenjualanBarangs.entry, pelunasanPenjualanBarangs.count, pelunasanPenjualanBarangs.pageNumber, pelunasanPenjualanBarangs.size)
+}
+
+export const getCekDendaByPelunasanPenjualanUUIDService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getCekDendaByPelunasanPenjualanUUIDService [${uuid}]`, null, req_identity)
+    const cekDenda = await getCekDendaByPelunasanPenjualanUUIDRepo(uuid, req_identity)
+    return cekDenda[0][0]
 }
 
 export const getPelunasanPenjualanBarangByUuidService = async (uuid, req_identity) => {

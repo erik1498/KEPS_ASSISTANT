@@ -29,6 +29,17 @@ export const getAllPelunasanPenjualanBarangRepo = async (pageNumber, size, searc
     }
 }
 
+export const getCekDendaByPelunasanPenjualanUUIDRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
 export const getPelunasanPenjualanBarangByUuidRepo = async (uuid, req_id) => {
     return selectOneQueryUtil(
         generateDatabaseName(req_id),

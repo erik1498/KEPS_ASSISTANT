@@ -65,7 +65,7 @@ const PesananPenjualanBarangList = ({
                 }
             </div>
             <div className={`${fakturStatus ? "col-span-12" : "col-span-8"}`}>
-                <div className={`bg-white my-4 rounded-md no-scrollbar relative ${fakturStatus ? "h-max max-h-[40vh]" : "h-[70vh]"} overflow-y-scroll`}>
+                <div className={`bg-white my-4 rounded-md no-scrollbar relative ${fakturStatus ? "h-max max-h-[60vh]" : "h-[70vh]"} overflow-y-scroll`}>
                     <div className="sticky top-0">
                         <div className="bg-white py-4 px-6 rounded-md">
                             <p className="font-bold text-sm">Total Pesanan</p>

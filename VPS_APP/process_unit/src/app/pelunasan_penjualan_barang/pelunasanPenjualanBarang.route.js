@@ -1,10 +1,11 @@
 import express from "express"
-import { deletePelunasanPenjualanBarangByUUID, getAllPelunasanPenjualanBarangs, getPelunasanPenjualanBarangByUUID, postCreatePelunasanPenjualanBarang, updatePelunasanPenjualanBarangByUUID } from "./pelunasanPenjualanBarang.handler.js"
+import { deletePelunasanPenjualanBarangByUUID, getAllPelunasanPenjualanBarangs, getCekDendaByPelunasanPenjualanUUID, getPelunasanPenjualanBarangByUUID, postCreatePelunasanPenjualanBarang, updatePelunasanPenjualanBarangByUUID } from "./pelunasanPenjualanBarang.handler.js"
 import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllPelunasanPenjualanBarangs)
+router.get("/cek_denda_pelunasan_penjualan/:uuid", authTokenMiddleware(), getCekDendaByPelunasanPenjualanUUID)
 router.get("/:uuid", authTokenMiddleware(), getPelunasanPenjualanBarangByUUID)
 router.post("/", authTokenMiddleware(), postCreatePelunasanPenjualanBarang)
 router.put("/:uuid", authTokenMiddleware(), updatePelunasanPenjualanBarangByUUID)

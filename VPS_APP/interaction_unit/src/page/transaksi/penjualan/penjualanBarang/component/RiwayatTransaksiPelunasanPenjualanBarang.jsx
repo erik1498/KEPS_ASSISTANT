@@ -1,11 +1,47 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"
+import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
+import { apiPelunasanPenjualanBarangCRUD, apiRincianPelunasanPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
+import { showError } from "../../../../../helper/form.helper"
 
-const RiwayatTransaksiPelunasanPenjualanBarang = () => {
+const RiwayatTransaksiPelunasanPenjualanBarang = ({
+    riwayatPelunasanPenjualanBarang
+}) => {
+
+    const [dendaOpen, setDendaOpen] = useState(false)
+    const [listPelunasanPenjualanBarang, setListPelunasanPenjualanBarang] = useState([])
 
     const [listRincian, setListRincian] = useState(false)
     const [detailOpen, setDetailOpen] = useState(false)
+
+    const _cekDendaFakturPenjualan = () => {
+        apiPelunasanPenjualanBarangCRUD
+            .custom(`/cek_denda_pelunasan_penjualan/${riwayatPelunasanPenjualanBarang.uuid}`, "GET")
+            .then(resData => {
+                setDendaOpen(x => x = resData.data)
+            }).catch(err => showError(err))
+    }
+
+    const _getRincianPesananPenjualanBarang = () => {
+        apiRincianPelunasanPenjualanBarangCRUD
+            .custom(`/pesanan/${riwayatPelunasanPenjualanBarang.uuid}`)
+            .then(resData => {
+                setListPelunasanPenjualanBarang(resData.data)
+            }).catch(err => showError(err))
+    }
+
+    useEffect(() => {
+        if (!dendaOpen && listRincian) {
+            _getRincianPesananPenjualanBarang()
+        }
+    }, [dendaOpen])
+
+    useEffect(() => {
+        if (listRincian) {
+            _cekDendaFakturPenjualan()
+        }
+    }, [listRincian])
 
     return <div className="border-b-2 py-2">
         <div
@@ -26,35 +62,35 @@ const RiwayatTransaksiPelunasanPenjualanBarang = () => {
                 <div className="ml-4 py-4 px-4">
                     {
                         detailOpen ? <>
-                            <table className="w-4/12 text-left text-sm">
+                            <table className="text-left text-sm">
                                 <tr>
                                     <td>Waktu</td>
-                                    <td>:</td>
-                                    <td>04:15:35 PM</td>
+                                    <td className="px-5">:</td>
+                                    <td>{convertTo12HoursFormat(riwayatPelunasanPenjualanBarang.tanggal.split("T")[1])}</td>
                                 </tr>
                                 <tr>
                                     <td>Nomor Pelunasan Penjualan Barang</td>
-                                    <td>:</td>
-                                    <td>PPB1290890</td>
+                                    <td className="px-5">:</td>
+                                    <td>{riwayatPelunasanPenjualanBarang.nomor_transaksi}</td>
                                 </tr>
                                 <tr>
                                     <td>Bukti Transaksi</td>
-                                    <td>:</td>
-                                    <td>BTPA01893</td>
+                                    <td className="px-5">:</td>
+                                    <td>{riwayatPelunasanPenjualanBarang.bukti_transaksi}</td>
                                 </tr>
                                 <tr>
                                     <td>Kode Akun</td>
-                                    <td>:</td>
-                                    <td>Kas Besar</td>
+                                    <td className="px-5">:</td>
+                                    <td>{riwayatPelunasanPenjualanBarang.kode_akun_perkiraan_name}</td>
                                 </tr>
                                 <tr>
                                     <td>Total Pelunasan</td>
-                                    <td>:</td>
+                                    <td className="px-5">:</td>
                                     <td>Rp. {parseToRupiahText(100000)}</td>
                                 </tr>
                             </table>
                             <p className="text-sm mt-3">Keterangan</p>
-                            <p className="text-sm mb-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita libero ad quisquam labore beatae aperiam omnis laborum voluptas? Illum, sequi.</p>
+                            <p className="text-sm mb-3">{riwayatPelunasanPenjualanBarang.keterangan}</p>
                             {
                                 listRincian ? <>
                                     <button
@@ -77,7 +113,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = () => {
                                             </thead>
                                             <tbody>
                                                 {
-                                                    new Array(50).fill(10).map((x, i) => {
+                                                    listPelunasanPenjualanBarang.map((x, i) => {
                                                         return <>
                                                             <tr>
                                                                 <td>{i + 1}.</td>

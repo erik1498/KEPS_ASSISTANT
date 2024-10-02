@@ -10,6 +10,8 @@ const PelunasanPenjualanBarangForm = ({
     fakturPenjualanBarang
 }) => {
 
+    const [pelunasanPenjualanBarang, setPelunasanPenjualanBarang] = useState()
+
     const [kodeAkunList, setKodeAkunList] = useState([0])
     const [tanggalPelunasanPenjualanBarang, setTanggalPelunasanPenjualanBarang] = useState(getHariTanggalFull())
     const [buktiTransaksi, setBuktiTransaksi] = useState("")
@@ -30,7 +32,11 @@ const PelunasanPenjualanBarangForm = ({
                         kode_akun_perkiraan: kodeAkunPelunasanPenjualanBarang.value,
                         keterangan: keteranganPelunasanPenjualanBarang
                     }
-                }).catch(err => showError(err))
+                })
+                .then(resData => {
+                    setPelunasanPenjualanBarang(x => x = resData.data)
+                })
+                .catch(err => showError(err))
         }
     }
 
@@ -95,7 +101,7 @@ const PelunasanPenjualanBarangForm = ({
                     }
                 />
                 <FormSelectWithLabel
-                    label={"Kode Akun Perkiraan"}
+                    label={"Kode Akun"}
                     optionsDataList={kodeAkunList}
                     optionsLabel={["code", "name"]}
                     optionsValue={"uuid"}

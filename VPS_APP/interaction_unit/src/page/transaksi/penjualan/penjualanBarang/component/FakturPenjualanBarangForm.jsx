@@ -282,40 +282,10 @@ const FakturPenjualanBarangForm = ({
                 }
             </form>
         </div>
-
-
-        <div className="bg-white rounded-md mt-4 py-6 px-6 shadow-2xl">
-            <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-3">Form Transaksi Penjualan Barang</h1>
-            <ToggleBox
-                addClass={"-mb-0"}
-                setToggleBox={setToggleBox}
-                toggleBox={toggleBox}
-                labelTextSize="text-sm"
-                toggleBoxList={[
-                    {
-                        label: "Pelunasan Penjualan Barang",
-                        value: "Pelunasan Penjualan Barang",
-                    },
-                    {
-                        label: "Retur Penjualan Barang",
-                        value: "Retur Penjualan Barang",
-                    },
-                    {
-                        label: "Pengembalian Denda Penjualan Barang",
-                        value: "Pengembalian Denda Penjualan Barang",
-                    }
-                ]}
-            />
-            {
-                toggleBox == "Pelunasan Penjualan Barang" ? <PelunasanPenjualanBarangForm
-                    fakturPenjualanBarang={fakturPenjualanBarang}
-                /> : <></>
-            }
-        </div>
-
         {
             fakturStatus ? <>
                 <RiwayatTransaksiPenjualanBarang
+                    fakturPenjualanBarang={fakturPenjualanBarang}
                 />
             </> : <></>
         }

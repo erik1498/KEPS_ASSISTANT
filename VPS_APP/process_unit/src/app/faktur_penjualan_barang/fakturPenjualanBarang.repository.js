@@ -29,6 +29,27 @@ export const getAllFakturPenjualanBarangRepo = async (pageNumber, size, search, 
     }
 }
 
+export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo = async (faktur_penjualan_barang_uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                ppbt.uuid AS uuid,
+                ppbt.faktur_penjualan_barang AS faktur_penjualan_barang,
+                ppbt.tanggal AS tanggal ,
+                ppbt.bukti_transaksi AS bukti_transaksi,
+                ppbt.nomor_pelunasan_penjualan_barang AS nomor_transaksi,
+                ppbt.keterangan AS keterangan,
+                ppbt.kode_akun_perkiraan AS kode_akun_perkiraan,
+                kapt.name AS kode_akun_perkiraan_name,
+                "pelunasan_penjualan_barang" AS type 
+            FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppbt.kode_akun_perkiraan 
+            WHERE ppbt.faktur_penjualan_barang = "${faktur_penjualan_barang_uuid}"
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+}
+
 export const getFakturPenjualanBarangByPesananPenjualanBarangUUIDRepo = async (pesanan_penjualan_barang_uuid, req_id) => {
     return await db.query(
         `

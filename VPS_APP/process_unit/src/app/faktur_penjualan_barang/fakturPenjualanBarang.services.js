@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createFakturPenjualanBarangRepo, deleteFakturPenjualanBarangByUuidRepo, getAllFakturPenjualanBarangRepo, getFakturPenjualanBarangByPesananPenjualanBarangUUIDRepo, getFakturPenjualanBarangByUuidRepo, updateFakturPenjualanBarangByUuidRepo } from "./fakturPenjualanBarang.repository.js"
+import { createFakturPenjualanBarangRepo, deleteFakturPenjualanBarangByUuidRepo, getAllFakturPenjualanBarangRepo, getFakturPenjualanBarangByPesananPenjualanBarangUUIDRepo, getFakturPenjualanBarangByUuidRepo, getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo, updateFakturPenjualanBarangByUuidRepo } from "./fakturPenjualanBarang.repository.js"
 
 export const getAllFakturPenjualanBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllFakturPenjualanBarangService", null, req_identity)
@@ -21,6 +21,18 @@ export const getAllFakturPenjualanBarangService = async (query, req_identity) =>
 
     const fakturPenjualanBarangs = await getAllFakturPenjualanBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(fakturPenjualanBarangs.entry, fakturPenjualanBarangs.count, fakturPenjualanBarangs.pageNumber, fakturPenjualanBarangs.size)
+}
+
+export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDService = async (faktur_penjualan_barang_uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDService`, { faktur_penjualan_barang_uuid }, req_identity)
+    const fakturPenjualanBarang = await getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo(faktur_penjualan_barang_uuid, req_identity)
+    if (fakturPenjualanBarang.length == 0) {
+        throw new Error(JSON.stringify({
+            message: "Data Not Found",
+            field: "error"
+        }))
+    }
+    return fakturPenjualanBarang
 }
 
 export const getFakturPenjualanBarangByPesananPenjualanBarangUUIDService = async (pesanan_penjualan_barang_uuid, req_identity) => {
