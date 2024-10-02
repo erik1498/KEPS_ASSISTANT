@@ -7,10 +7,9 @@ import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import { apiKodeAkunCRUD, apiPelunasanPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
 
 const PelunasanPenjualanBarangForm = ({
-    fakturPenjualanBarang
+    fakturPenjualanBarang,
+    _getDaftarRiwayatTransaksi = () => { }
 }) => {
-
-    const [pelunasanPenjualanBarang, setPelunasanPenjualanBarang] = useState()
 
     const [kodeAkunList, setKodeAkunList] = useState([0])
     const [tanggalPelunasanPenjualanBarang, setTanggalPelunasanPenjualanBarang] = useState(getHariTanggalFull())
@@ -32,9 +31,9 @@ const PelunasanPenjualanBarangForm = ({
                         kode_akun_perkiraan: kodeAkunPelunasanPenjualanBarang.value,
                         keterangan: keteranganPelunasanPenjualanBarang
                     }
-                })
-                .then(resData => {
-                    setPelunasanPenjualanBarang(x => x = resData.data)
+                }).then(() => {
+                    _getDaftarRiwayatTransaksi()
+                    setTanggalPelunasanPenjualanBarang(getHariTanggalFull())
                 })
                 .catch(err => showError(err))
         }
@@ -87,6 +86,8 @@ const PelunasanPenjualanBarangForm = ({
                         }
                     }
                 />
+            </div>
+            <div className="mt-5 flex gap-x-2">
                 <FormInputWithLabel
                     label={`Nomor Pelunasan Penjualan Barang`}
                     type={"text"}

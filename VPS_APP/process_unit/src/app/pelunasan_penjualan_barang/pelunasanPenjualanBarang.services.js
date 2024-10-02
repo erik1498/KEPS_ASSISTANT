@@ -26,7 +26,7 @@ export const getAllPelunasanPenjualanBarangService = async (query, req_identity)
 export const getCekDendaByPelunasanPenjualanUUIDService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getCekDendaByPelunasanPenjualanUUIDService [${uuid}]`, null, req_identity)
     const cekDenda = await getCekDendaByPelunasanPenjualanUUIDRepo(uuid, req_identity)
-    return cekDenda[0][0]
+    return 0
 }
 
 export const getPelunasanPenjualanBarangByUuidService = async (uuid, req_identity) => {

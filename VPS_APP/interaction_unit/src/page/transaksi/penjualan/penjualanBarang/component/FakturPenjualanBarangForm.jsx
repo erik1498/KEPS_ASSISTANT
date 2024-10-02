@@ -16,7 +16,7 @@ const FakturPenjualanBarangForm = ({
     ppnStatus
 }) => {
     const [fakturPenjualanBarang, setFakturPnenjualanBarang] = useState()
-    const [toggleBox, setToggleBox] = useState("Pelunasan Penjualan Barang")
+    const [fakturCancel, setFakturCancel] = useState(true)
 
     const [tipePembayaranList, setTipePembayaranList] = useState([])
     const [syaratPembayaranList, setSyaratPembayaranList] = useState([])
@@ -269,13 +269,17 @@ const FakturPenjualanBarangForm = ({
                 }
                 {
                     fakturStatus ? <>
-                        <button
-                            className="btn btn-sm bg-red-800 mt-4 text-white"
-                            type="button"
-                            onClick={() => _deleteFakturPenjualanBarang()}
-                        >
-                            <FaTimes /> Batalkan Faktur
-                        </button>
+                        {
+                            fakturCancel ? <>
+                                <button
+                                    className="btn btn-sm bg-red-800 mt-4 text-white"
+                                    type="button"
+                                    onClick={() => _deleteFakturPenjualanBarang()}
+                                >
+                                    <FaTimes /> Batalkan Faktur
+                                </button>
+                            </> : <></>
+                        }
                     </> : <>
                         <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
                     </>
@@ -286,6 +290,7 @@ const FakturPenjualanBarangForm = ({
             fakturStatus ? <>
                 <RiwayatTransaksiPenjualanBarang
                     fakturPenjualanBarang={fakturPenjualanBarang}
+                    setFakturCancel={setFakturCancel}
                 />
             </> : <></>
         }

@@ -16,6 +16,12 @@ export const getTanggal = (withBulanTahun = false) => {
     return tgl
 }
 
+export const getHariTanggalFormated = (delimiter, dateText) => {
+    dateText = dateText.split(delimiter)
+    dateText[1] = getBulanByIndex(dateText[1] - 1)
+    return dateText.join(" ")
+}
+
 export const getBulanByIndex = (index) => {
     return getBulanList()[index]
 }

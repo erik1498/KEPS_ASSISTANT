@@ -1,19 +1,24 @@
 import { useEffect, useState } from "react"
-import { parseToRupiahText } from "../../../../../helper/number.helper"
-import { FaChevronDown, FaChevronUp } from "react-icons/fa"
+import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
+import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa"
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 import { apiPelunasanPenjualanBarangCRUD, apiRincianPelunasanPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
 import { showError } from "../../../../../helper/form.helper"
+import FormInput from "../../../../../component/form/FormInput"
+import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 
 const RiwayatTransaksiPelunasanPenjualanBarang = ({
-    riwayatPelunasanPenjualanBarang
+    riwayatPelunasanPenjualanBarang,
+    edited,
+    _getDaftarRiwayatTransaksi = () => { }
 }) => {
 
+    const [totalPelunasan, setTotalPelunasan] = useState(riwayatPelunasanPenjualanBarang.total)
     const [dendaOpen, setDendaOpen] = useState(false)
     const [listPelunasanPenjualanBarang, setListPelunasanPenjualanBarang] = useState([])
 
     const [listRincian, setListRincian] = useState(false)
-    const [detailOpen, setDetailOpen] = useState(false)
+    const [detailOpen, setDetailOpen] = useState(edited)
 
     const _cekDendaFakturPenjualan = () => {
         apiPelunasanPenjualanBarangCRUD
@@ -31,8 +36,47 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
             }).catch(err => showError(err))
     }
 
+    const _updateNilaiPelunasan = (value, uuid) => {
+        let listPelunasanPenjualanBarangCopy = listPelunasanPenjualanBarang
+
+        let totalPelunasanCopy = 0
+        listPelunasanPenjualanBarangCopy = listPelunasanPenjualanBarangCopy.map(x => {
+            if (x.uuid == uuid) {
+                x.nilai_pelunasan = value
+            }
+            totalPelunasanCopy += parseRupiahToFloat(x.nilai_pelunasan)
+            return x
+        })
+        setTotalPelunasan(x => x = totalPelunasanCopy)
+        setListPelunasanPenjualanBarang(x => x = listPelunasanPenjualanBarangCopy)
+    }
+
+    const _saveRincianPelunasanPenjualanBarang = async () => {
+        for (let index = 0; index < listPelunasanPenjualanBarang.length; index++) {
+            await apiRincianPelunasanPenjualanBarangCRUD
+                .custom(`${listPelunasanPenjualanBarang[index].rincian_pelunasan_penjualan_barang ? `/${listPelunasanPenjualanBarang[index].rincian_pelunasan_penjualan_barang}` : ""}`, listPelunasanPenjualanBarang[index].rincian_pelunasan_penjualan_barang ? "PUT" : "POST", null, {
+                    data: {
+                        pelunasan_penjualan_barang: riwayatPelunasanPenjualanBarang.uuid,
+                        rincian_pesanan_penjualan_barang: listPelunasanPenjualanBarang[index].uuid,
+                        sudah_dibayar: listPelunasanPenjualanBarang[index].sudah_dibayar,
+                        piutang: listPelunasanPenjualanBarang[index].piutang,
+                        nilai_pelunasan: `${listPelunasanPenjualanBarang[index].nilai_pelunasan}`
+                    }
+                })
+        }
+        _getRincianPesananPenjualanBarang()
+    }
+
+    const _deleteRiwayatPelunasanPenjualan = () => {
+        apiPelunasanPenjualanBarangCRUD
+            .custom("/" + riwayatPelunasanPenjualanBarang.uuid, "DELETE")
+            .then(() => {
+                _getDaftarRiwayatTransaksi()
+            }).catch(err => showError(err))
+    }
+
     useEffect(() => {
-        if (!dendaOpen && listRincian) {
+        if (!dendaOpen) {
             _getRincianPesananPenjualanBarang()
         }
     }, [dendaOpen])
@@ -86,11 +130,17 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                 <tr>
                                     <td>Total Pelunasan</td>
                                     <td className="px-5">:</td>
-                                    <td>Rp. {parseToRupiahText(100000)}</td>
+                                    <td>Rp. {parseToRupiahText(totalPelunasan)}</td>
                                 </tr>
                             </table>
                             <p className="text-sm mt-3">Keterangan</p>
                             <p className="text-sm mb-3">{riwayatPelunasanPenjualanBarang.keterangan}</p>
+                            <button
+                                className="mr-2 btn btn-sm border-red-500 text-red-500"
+                                onClick={() => _deleteRiwayatPelunasanPenjualan()}
+                            >
+                                <FaTrash size={12} />
+                            </button>
                             {
                                 listRincian ? <>
                                     <button
@@ -108,8 +158,8 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                                 <th>Satuan Barang</th>
                                                 <th>Gudang Asal</th>
                                                 <th>Pelunasan Sudah Dibayar</th>
-                                                <th>Pelunasan</th>
-                                                <th>Nilai Kembali Pelunasan</th>
+                                                <th>Piutang</th>
+                                                <th width={200}>Nilai Pelunasan</th>
                                             </thead>
                                             <tbody>
                                                 {
@@ -117,13 +167,32 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                                         return <>
                                                             <tr>
                                                                 <td>{i + 1}.</td>
-                                                                <td>BRG00003</td>
-                                                                <td>KERUPUK PANDA BESAR</td>
-                                                                <td>Pcs</td>
-                                                                <td>Gudang Oepura</td>
-                                                                <td>Rp. 7,814,400</td>
-                                                                <td>1</td>
-                                                                <td>Rp. 7,814,400</td>
+                                                                <td>{x.kategori_harga_barang_kode_barang}</td>
+                                                                <td>{x.daftar_barang_name}</td>
+                                                                <td>{x.satuan_barang_name}</td>
+                                                                <td>{x.daftar_gudang_name}</td>
+                                                                <td>Rp. {parseToRupiahText(x.sudah_dibayar)}</td>
+                                                                <td>Rp. {parseToRupiahText(x.piutang)}</td>
+                                                                <td>
+                                                                    {
+                                                                        edited ? <>
+                                                                            <FormInput
+                                                                                name={"nilai_pelunasan"}
+                                                                                type={"text"}
+                                                                                other={{
+                                                                                    defaultValue: 0
+                                                                                }}
+                                                                                onchange={(e) => {
+                                                                                    inputOnlyRupiah(e)
+                                                                                    _updateNilaiPelunasan(e.target.value, x.uuid)
+                                                                                }}
+                                                                                value={parseToRupiahText(x.nilai_pelunasan)}
+                                                                            />
+                                                                        </> : <>
+                                                                            Rp. {parseToRupiahText(x.nilai_pelunasan)}
+                                                                        </>
+                                                                    }
+                                                                </td>
                                                             </tr>
                                                         </>
                                                     })
@@ -131,6 +200,21 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                             </tbody>
                                         </table>
                                     </div>
+
+                                    {
+                                        edited ? <>
+                                            <div className="flex justify-end">
+                                                <button
+                                                    className="btn btn-sm bg-green-900 text-white"
+                                                    onClick={() => {
+                                                        _saveRincianPelunasanPenjualanBarang()
+                                                    }}
+                                                >
+                                                    Simpan
+                                                </button>
+                                            </div>
+                                        </> : <></>
+                                    }
                                 </> : <>
                                     <button
                                         className="btn btn-sm bg-white border-gray-400"

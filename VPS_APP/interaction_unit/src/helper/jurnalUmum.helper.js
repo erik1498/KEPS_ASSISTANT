@@ -1,6 +1,27 @@
 import { myDays } from "./date.helper";
 import { getSumOfStringValue, parseRupiahToFloat } from "./number.helper";
 
+export const getNormalizedByDate = (data) => {
+    let keys = []
+    data = data.map(x => {
+        x.parent = x.tanggal.split("T")[0]
+
+        if (!keys.includes(x.parent)) {
+            keys.push(x.parent)
+        }
+
+        return x
+    })
+
+    let fixedData = keys.map(x => {
+        let selected = data.filter(y => y.parent == x)
+        return {
+            parent: x,
+            data: selected
+        }
+    })
+    return fixedData
+}
 
 const getDiffByTransaksi = (data) => {
     let jumlahTransaksi = Math.max(...data.map(i => i.transaksi))

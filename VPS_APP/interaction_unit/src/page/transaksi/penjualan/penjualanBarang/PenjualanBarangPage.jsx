@@ -15,12 +15,13 @@ const PenjualanBarangPage = () => {
     >
         <div>
             <PageTitle title="Penjualan Barang" />
-            {
-                addPenjualanBarang ?
+            <PenjualanBarangForm
+                setAddPenjualanBarang={setAddPenjualanBarang}
+            />
+            {/* {
+                !addPenjualanBarang ?
                     <>
-                        <PenjualanBarangForm
-                            setAddPenjualanBarang={setAddPenjualanBarang}
-                        />
+                        
                     </> :
                     <>
                         <div className="bg-white py-3 px-6 mb-3 rounded-md flex justify-between shadow-2xl">
@@ -44,7 +45,7 @@ const PenjualanBarangPage = () => {
                             </div>
                         </div>
                     </>
-            }
+            } */}
         </div>
     </Wrap>
 }
