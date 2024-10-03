@@ -271,6 +271,14 @@ export const SrvPelunasanPenjualanBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/pelunasan_penjualan_barang'
 )
 
+export const SrvReturPenjualanBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/retur_penjualan_barang'
+)
+
 export const SrvRincianPelunasanPenjualanBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/rincian_pelunasan_penjualan_barang'
+)
+
+export const SrvRincianReturPenjualanBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_retur_penjualan_barang'
 )

@@ -56,6 +56,28 @@ export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo =
                 JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppbt.kode_akun_perkiraan 
                 WHERE ppbt.faktur_penjualan_barang = "${faktur_penjualan_barang_uuid}"
                 AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    rpbt.uuid AS uuid,
+                    rpbt.faktur_penjualan_barang AS faktur_penjualan_barang,
+                    rpbt.tanggal AS tanggal ,
+                    rpbt.bukti_transaksi AS bukti_transaksi,
+                    rpbt.nomor_retur_penjualan_barang AS nomor_transaksi,
+                    rpbt.keterangan AS keterangan,
+                    rpbt.kode_akun_perkiraan AS kode_akun_perkiraan,
+                    kapt.name AS kode_akun_perkiraan_name,
+                    IFNULL((
+                        SELECT 
+                            SUM(rrpbt.nilai_retur)
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt
+                        WHERE rrpbt.retur_penjualan_barang = rpbt.uuid
+                        AND rrpbt.enabled = 1
+                    ),0)AS total,
+                    "retur_penjualan_barang" AS type
+                FROM ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = rpbt.kode_akun_perkiraan 
+                WHERE rpbt.faktur_penjualan_barang = "${faktur_penjualan_barang_uuid}"
+                AND rpbt.enabled = 1
             ) AS res
             ORDER BY res.tanggal DESC
         `,

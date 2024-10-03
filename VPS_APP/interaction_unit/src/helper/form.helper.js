@@ -36,6 +36,7 @@ export const formValidation = (formElement) => {
 
 export const formShowMessage = (errorData) => {
     let element = document.getElementsByName(errorData.field)
+
     if (element.length > 0) {
         const divMessage = document.createElement("div")
         divMessage.className = "form-message"
@@ -45,8 +46,29 @@ export const formShowMessage = (errorData) => {
     }
 }
 
-export const showError = (error) => {
+export const deleteAllFormMessage = () => {
+    return new Promise((res, rej) => {
+        const formMessage = document.querySelectorAll(".form-message")
+        formMessage.forEach(item => {
+            item.remove()
+        })
+        res(true)
+    })
+}
+
+export const showError = async (error) => {
     try {
+        if (error.response.data.type == "validationError") {
+            await deleteAllFormMessage()
+            for (let index = 0; index < error.response.data.message.length; index++) {
+                const element = error.response.data.message[index];
+                formShowMessage({
+                    field: element.prop,
+                    message: element.message,
+                })
+            }
+            return
+        }
         let errorMessage = JSON.parse(error.response.data.errorData)
 
         let alertElement = document.getElementById("alertElement")

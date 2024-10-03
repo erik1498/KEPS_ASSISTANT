@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
-import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa"
+import { FaCheck, FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa"
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 import { apiPelunasanPenjualanBarangCRUD, apiRincianPelunasanPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
-import { showError } from "../../../../../helper/form.helper"
+import { deleteAllFormMessage, formValidation, showError } from "../../../../../helper/form.helper"
 import FormInput from "../../../../../component/form/FormInput"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 
 const RiwayatTransaksiPelunasanPenjualanBarang = ({
     riwayatPelunasanPenjualanBarang,
     edited,
-    _getDaftarRiwayatTransaksi = () => { }
+    _getDaftarRiwayatTransaksi = () => { },
 }) => {
+
+    const [nomorPelunasanPenjualanBarang, setNomorPelunasanPenjualanBarang] = useState(riwayatPelunasanPenjualanBarang.nomor_transaksi != "EMPTY" ? riwayatPelunasanPenjualanBarang.nomor_transaksi : "")
+    const [buktiTransaksiPelunasanPenjualanBarang, setBuktiTransaksiPelunasanPenjualanBarang] = useState(riwayatPelunasanPenjualanBarang.bukti_transaksi != "EMPTY" ? riwayatPelunasanPenjualanBarang.bukti_transaksi : "")
+    const [keteranganPelunasanPenjualanBarang, setKeteranganPelunasanPenjualanBarang] = useState(riwayatPelunasanPenjualanBarang.keterangan != "EMPTY" ? riwayatPelunasanPenjualanBarang.keterangan : "Tidak Ada")
 
     const [totalPelunasan, setTotalPelunasan] = useState(riwayatPelunasanPenjualanBarang.total)
     const [dendaOpen, setDendaOpen] = useState(false)
@@ -75,6 +79,24 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
             }).catch(err => showError(err))
     }
 
+    const _updateRiwayatPelunasanPenjualan = async () => {
+        await deleteAllFormMessage()
+
+        if (await formValidation()) {
+            apiPelunasanPenjualanBarangCRUD
+                .custom("/" + riwayatPelunasanPenjualanBarang.uuid, "PUT", null, {
+                    data: {
+                        nomor_pelunasan_penjualan_barang: nomorPelunasanPenjualanBarang,
+                        bukti_transaksi: buktiTransaksiPelunasanPenjualanBarang,
+                        keterangan: keteranganPelunasanPenjualanBarang,
+                        faktur_penjualan_barang: riwayatPelunasanPenjualanBarang.faktur_penjualan_barang,
+                        tanggal: riwayatPelunasanPenjualanBarang.tanggal,
+                        kode_akun_perkiraan: riwayatPelunasanPenjualanBarang.kode_akun_perkiraan,
+                    }
+                }).catch(err => showError(err))
+        }
+    }
+
     useEffect(() => {
         if (!dendaOpen) {
             _getRincianPesananPenjualanBarang()
@@ -108,39 +130,78 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                         detailOpen ? <>
                             <table className="text-left text-sm">
                                 <tr>
-                                    <td>Waktu</td>
-                                    <td className="px-5">:</td>
-                                    <td>{convertTo12HoursFormat(riwayatPelunasanPenjualanBarang.tanggal.split("T")[1])}</td>
+                                    <td className={`${edited ? "pb-3" : ""}`}>Waktu</td>
+                                    <td className={`px-5 ${edited ? "pb-3" : ""}`}>:</td>
+                                    <td className={`${edited ? "pb-3" : ""}`}>{convertTo12HoursFormat(riwayatPelunasanPenjualanBarang.tanggal.split("T")[1])}</td>
                                 </tr>
                                 <tr>
-                                    <td>Nomor Pelunasan Penjualan Barang</td>
-                                    <td className="px-5">:</td>
-                                    <td>{riwayatPelunasanPenjualanBarang.nomor_transaksi}</td>
+                                    <td className={`${edited ? "pb-3" : ""}`}>Nomor Pelunasan Penjualan Barang</td>
+                                    <td className={`px-5 ${edited ? "pb-3" : ""}`}>:</td>
+                                    <td className={`${edited ? "pb-3" : ""}`}>
+                                        {
+                                            edited ? <FormInput
+                                                name={"nomor_pelunasan_penjualan_barang"}
+                                                value={nomorPelunasanPenjualanBarang}
+                                                onchange={(e) => setNomorPelunasanPenjualanBarang(e.target.value)}
+                                            /> : riwayatPelunasanPenjualanBarang.nomor_transaksi
+                                        }
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td>Bukti Transaksi</td>
-                                    <td className="px-5">:</td>
-                                    <td>{riwayatPelunasanPenjualanBarang.bukti_transaksi}</td>
+                                    <td className={`${edited ? "pb-3" : ""}`}>Bukti Transaksi</td>
+                                    <td className={`px-5 ${edited ? "pb-3" : ""}`}>:</td>
+                                    <td className={`${edited ? "pb-3" : ""}`}>
+                                        {
+                                            edited ? <FormInput
+                                                name={"bukti_transaksi"}
+                                                value={buktiTransaksiPelunasanPenjualanBarang}
+                                                onchange={(e) => setBuktiTransaksiPelunasanPenjualanBarang(e.target.value)}
+                                            /> : riwayatPelunasanPenjualanBarang.bukti_transaksi
+                                        }
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td>Kode Akun</td>
-                                    <td className="px-5">:</td>
-                                    <td>{riwayatPelunasanPenjualanBarang.kode_akun_perkiraan_name}</td>
+                                    <td className={`${edited ? "pb-5" : ""}`}>Kode Akun</td>
+                                    <td className={`px-5 ${edited ? "pb-5" : ""}`}>:</td>
+                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatPelunasanPenjualanBarang.kode_akun_perkiraan_name}</td>
                                 </tr>
                                 <tr>
-                                    <td>Total Pelunasan</td>
-                                    <td className="px-5">:</td>
-                                    <td>Rp. {parseToRupiahText(totalPelunasan)}</td>
+                                    <td className={`${edited ? "pb-3" : ""}`}>Total Pelunasan</td>
+                                    <td className={`px-5 ${edited ? "pb-3" : ""}`}>:</td>
+                                    <td className={`${edited ? "pb-3" : ""}`}>Rp. {parseToRupiahText(totalPelunasan)}</td>
                                 </tr>
                             </table>
-                            <p className="text-sm mt-3">Keterangan</p>
-                            <p className="text-sm mb-3">{riwayatPelunasanPenjualanBarang.keterangan}</p>
-                            <button
-                                className="mr-2 btn btn-sm border-red-500 text-red-500"
-                                onClick={() => _deleteRiwayatPelunasanPenjualan()}
-                            >
-                                <FaTrash size={12} />
-                            </button>
+                            <p className={`text-sm mt-3 ${edited ? "mt-5" : ""}`}>Keterangan</p>
+                            <p className="text-sm mb-3">
+                                {
+                                    edited ? <FormInput
+                                        addClass={"my-5"}
+                                        name={"keterangan"}
+                                        value={keteranganPelunasanPenjualanBarang}
+                                        onchange={(e) => setKeteranganPelunasanPenjualanBarang(e.target.value)}
+                                    /> : riwayatPelunasanPenjualanBarang.keterangan
+                                }
+                            </p>
+                            <div className="my-2 flex">
+                                {
+                                    edited ? <>
+                                        <button
+                                            className="mr-2 btn btn-sm bg-green-900 text-white"
+                                            onClick={() => _updateRiwayatPelunasanPenjualan()}
+                                        >
+                                            <FaCheck size={12} />
+                                            Simpan
+                                        </button>
+                                        <button
+                                            className="mr-2 btn btn-sm bg-red-500 text-white"
+                                            onClick={() => _deleteRiwayatPelunasanPenjualan()}
+                                        >
+                                            <FaTrash size={12} />
+                                            Hapus
+                                        </button>
+                                    </> : <></>
+                                }
+                            </div>
                             {
                                 listRincian ? <>
                                     <button
@@ -151,7 +212,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                     </button>
                                     <div className="overflow-x-auto mt-5 max-h-[20vh] no-scrollbar pb-4">
                                         <table className="table table-sm table-zebra rounded-xl">
-                                            <thead className="bg-blue-950 text-white sticky top-0">
+                                            <thead className="bg-blue-950 z-10 text-white sticky top-0">
                                                 <th>No.</th>
                                                 <th>Kode Barang</th>
                                                 <th>Nama Barang</th>
@@ -183,7 +244,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                                                                     defaultValue: 0
                                                                                 }}
                                                                                 onchange={(e) => {
-                                                                                    inputOnlyRupiah(e)
+                                                                                    inputOnlyRupiah(e, x.piutang)
                                                                                     _updateNilaiPelunasan(e.target.value, x.uuid)
                                                                                 }}
                                                                                 value={parseToRupiahText(x.nilai_pelunasan)}

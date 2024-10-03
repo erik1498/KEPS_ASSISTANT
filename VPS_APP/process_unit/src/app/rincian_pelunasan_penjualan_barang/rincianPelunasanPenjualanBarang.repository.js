@@ -35,7 +35,7 @@ export const getAllRincianPesananPenjualanBarangByPelunasanPenjualanRepo = async
         `
             SELECT 
                 (res.sudah_dibayar - res.kembali_pelunasan) AS sudah_dibayar,
-                (res.harga * (res.jumlah - res.retur)) + (res.ppn * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.kembali_pelunasan) AS piutang,
+                ((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.kembali_pelunasan) AS piutang,
                 (res.jumlah - res.retur) AS jumlah,
                 (
                     (res.diskon_angka / res.jumlah) * (res.jumlah - res.retur)
@@ -80,11 +80,12 @@ export const getAllRincianPesananPenjualanBarangByPelunasanPenjualanRepo = async
                     dbt.name AS daftar_barang_name,
                     dgt.name AS daftar_gudang_name,
                     sbt.name AS satuan_barang_name,
-                    rppbt.harga,
-                    rppbt.ppn,
+                    rppbt.harga_setelah_diskon,
+                    rppbt.ppn_setelah_diskon,
                     rppbt.jumlah,
                     rppbt.diskon_angka,
-                    rppbt.diskon_persentase
+                    rppbt.diskon_persentase,
+                    rppbt.id
                 FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
                 JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 
                 JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt.stok_awal_barang 
@@ -97,6 +98,7 @@ export const getAllRincianPesananPenjualanBarangByPelunasanPenjualanRepo = async
                 )
                 AND rppbt.enabled = 1
             ) AS res
+            ORDER BY res.id DESC
         `,
         {
             type: Sequelize.QueryTypes.SELECT

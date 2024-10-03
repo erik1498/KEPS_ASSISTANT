@@ -13,11 +13,31 @@ export const eventChange = (event = () => { }) => {
   return { name, value, isChecked };
 };
 
-export const inputOnlyRupiah = (e) => {
+export const inputOnlyRupiah = (e, max) => {
+
+  let rupiah = parseToRupiahText(e.target.value.replace(/[^\d.,]+|(?<=\..*)\./g, ''))
+  e.target.value = rupiah
+
+  if (max) {
+    let value = e.target.value
+    if (!value.endsWith('.')) {
+      value = parseRupiahToFloat(value)
+      // Jika hasilnya bukan angka, tetapkan 0
+      if (isNaN(value)) {
+        value = 0;
+      }
+      // Pastikan nilai tidak melebihi max
+      if (value > max) {
+        value = max;
+      }
+      e.target.value = value
+    }
+  }
+
   if (e.target.value == "") {
     return e.target.value = 0;
   }
-  let rupiah = parseToRupiahText(e.target.value.replace(/[^\d.,]+|(?<=\..*)\./g, ''))
+  rupiah = parseToRupiahText(e.target.value.replace(/[^\d.,]+|(?<=\..*)\./g, ''))
   e.target.value = rupiah
   let split = rupiah.split(".")
   if (split.length == 2) {
@@ -38,12 +58,12 @@ export const inputOnlyNumber = (e, max) => {
       // Jika hasilnya bukan angka, tetapkan 0
       if (isNaN(value)) {
         value = 0;
-        // Pastikan nilai tidak melebihi max
-        if (value > max) {
-          value = max;
-        }
-        e.target.value = value
       }
+      // Pastikan nilai tidak melebihi max
+      if (value > max) {
+        value = max;
+      }
+      e.target.value = value
     }
   }
 
@@ -51,7 +71,7 @@ export const inputOnlyNumber = (e, max) => {
     return e.target.value = 0;
   }
   let number = e.target.value.replace(/[^\d.]+|(?<=\..*)\./g, '')
-  
+
   // Kemudian, hapus angka 0 di depan (leading zero), kecuali angka tersebut adalah 0 atau 0.xx
   number = number.replace(/^0+(?=\d)/, '');
 
