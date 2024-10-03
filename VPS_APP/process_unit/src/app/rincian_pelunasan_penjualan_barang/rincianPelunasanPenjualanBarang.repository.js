@@ -35,7 +35,11 @@ export const getAllRincianPesananPenjualanBarangByPelunasanPenjualanRepo = async
         `
             SELECT 
                 (res.sudah_dibayar - res.kembali_pelunasan) AS sudah_dibayar,
-                ((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.kembali_pelunasan) AS piutang,
+                CASE
+                    WHEN ((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.kembali_pelunasan) > 0
+                    THEN ((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.kembali_pelunasan)
+                    ELSE 0
+                END AS piutang,
                 (res.jumlah - res.retur) AS jumlah,
                 (
                     (res.diskon_angka / res.jumlah) * (res.jumlah - res.retur)
@@ -43,7 +47,18 @@ export const getAllRincianPesananPenjualanBarangByPelunasanPenjualanRepo = async
                 res.*
             FROM (
                 SELECT 
-                    0 AS retur,
+                    IFNULL((
+                        SELECT 
+                            SUM(rrpbt.retur) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+                        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_penjualan_barang 
+                        WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
+                        AND rrpbt.enabled = 1
+                        AND rpbt.enabled = 1
+                        AND rpbt.tanggal < (
+                            SELECT ppbt3.tanggal FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt3 WHERE ppbt3.uuid = "${uuid}"
+                        )
+                    ), 0) AS retur,
                     0 AS kembali_pelunasan,
                     (
                         SELECT 

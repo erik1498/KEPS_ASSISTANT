@@ -57,7 +57,7 @@ const PesananPenjualanBarangForm = ({
                         jumlah: `${jumlah}`,
                         harga: `${kategoriHargaBarangSelected[`harga_${customer.kode_harga}`]}`,
                         harga_setelah_diskon: `${hargaBarang}`,
-                        ppn: `${kategoriHargaBarangSelected[`harga_${customer.kode_harga}`] * PPN / 100}`,
+                        ppn: `${kategoriHargaBarangSelected.ppn == 1 ? kategoriHargaBarangSelected[`harga_${customer.kode_harga}`] * PPN / 100 : 0}`,
                         ppn_setelah_diskon: `${ppnBarang}`,
                         diskon_angka: `${diskonAngka}`,
                         diskon_persentase: `${diskonPersentase}`,
@@ -103,7 +103,7 @@ const PesananPenjualanBarangForm = ({
 
         setHargaBarang(x => x = hargaBarangGet)
 
-        const ppnBarangGet = ((hargaBarangGet * PPN) / 100)
+        const ppnBarangGet = kategoriHargaBarangSelected.ppn == 1 ? ((hargaBarangGet * PPN) / 100) : 0
         setPPNBarang(x => x = ppnBarangGet)
 
         const total = (jumlahFloat * hargaBarangGet) + (ppnBarangGet * jumlahFloat)

@@ -39,7 +39,11 @@ const RiwayatTransaksiReturPenjualanBarang = ({
         listReturPenjualanBarangCopy = listReturPenjualanBarangCopy.map(x => {
             if (x.uuid == uuid) {
                 x.retur = value
-                x.nilai_retur = (x.harga_setelah_diskon + x.ppn_setelah_diskon)
+                x.nilai_retur = (x.harga_setelah_diskon + x.ppn_setelah_diskon) * parseRupiahToFloat(value)
+
+                if (x.nilai_retur > x.sudah_dibayar_fix) {
+                    x.nilai_retur = x.sudah_dibayar_fix
+                }
             }
             totalReturCopy += parseRupiahToFloat(x.nilai_retur)
             return x
@@ -55,9 +59,11 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                     data: {
                         retur_penjualan_barang: riwayatReturPenjualanBarang.uuid,
                         rincian_pesanan_penjualan_barang: listReturPenjualanBarang[index].uuid,
-                        sudah_dibayar: `0`,
+                        sudah_dibayar: `${listReturPenjualanBarang[index].sudah_dibayar_fix}`,
                         retur: `${listReturPenjualanBarang[index].retur}`,
-                        nilai_retur: `${listReturPenjualanBarang[index].nilai_retur}`
+                        nilai_retur: `${listReturPenjualanBarang[index].nilai_retur}`,
+                        retur_sebelum: `${listReturPenjualanBarang[index].retur_sebelum}`,
+                        nilai_retur_sebelum: `${listReturPenjualanBarang[index].nilai_retur_sebelum}`
                     }
                 })
         }
@@ -104,8 +110,11 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                 setDetailOpen(x => x = !x)
             }}
         >
-            <div className="flex items-center gap-x-2 px-4">
-                <p className="text-sm pr-2 font-medium">Retur Penjualan Barang</p>
+            <div className="flex items-center justify-between gap-x-2 px-4">
+                <div className="flex items-center gap-x-2">
+                    <p className="text-sm pr-2 font-medium">{convertTo12HoursFormat(riwayatReturPenjualanBarang.tanggal.split("T")[1])}</p>
+                    <p className="text-sm pr-2 font-medium px-4 border-l-2 border-black">Retur Penjualan Barang</p>
+                </div>
                 {
                     detailOpen ? <FaChevronUp size={15} /> : <FaChevronDown size={15} />
                 }
@@ -118,16 +127,12 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                         detailOpen ? <>
                             <table className="text-left text-sm">
                                 <tr>
-                                    <td className={`${edited ? "pb-3" : ""}`}>Waktu</td>
-                                    <td className={`px-5 ${edited ? "pb-3" : ""}`}>:</td>
-                                    <td className={`${edited ? "pb-3" : ""}`}>{convertTo12HoursFormat(riwayatReturPenjualanBarang.tanggal.split("T")[1])}</td>
-                                </tr>
-                                <tr>
                                     <td className={`${edited ? "pb-3" : ""}`}>Nomor Retur Penjualan Barang</td>
                                     <td className={`px-5 ${edited ? "pb-3" : ""}`}>:</td>
                                     <td className={`${edited ? "pb-3" : ""}`}>
                                         {
                                             edited ? <FormInput
+                                                addClass={"px-0"}
                                                 name={"nomor_retur_penjualan_barang"}
                                                 value={nomorReturPenjualanBarang}
                                                 onchange={(e) => setNomorReturPenjualanBarang(e.target.value)}
@@ -141,6 +146,7 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                                     <td className={`${edited ? "pb-3" : ""}`}>
                                         {
                                             edited ? <FormInput
+                                                addClass={"px-0"}
                                                 name={"bukti_transaksi"}
                                                 value={buktiTransaksiReturPenjualanBarang}
                                                 onchange={(e) => setBuktiTransaksiReturPenjualanBarang(e.target.value)}
@@ -163,41 +169,54 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                             <p className="text-sm mb-3">
                                 {
                                     edited ? <FormInput
-                                        addClass={"my-5"}
+                                        addClass={"mt-5"}
                                         name={"keterangan"}
                                         value={keteranganReturPenjualanBarang}
                                         onchange={(e) => setKeteranganReturPenjualanBarang(e.target.value)}
                                     /> : riwayatReturPenjualanBarang.keterangan
                                 }
                             </p>
-                            <div className="my-2 flex">
+                            <div className="my-2 flex justify-between">
+                                <div>
+                                    {
+                                        edited ? <>
+                                            <button
+                                                className="mr-2 btn btn-sm bg-green-900 text-white"
+                                                onClick={() => _updateRiwayatReturPenjualan()}
+                                            >
+                                                <FaCheck size={12} />
+                                                Simpan
+                                            </button>
+                                            <button
+                                                className="mr-2 btn btn-sm bg-red-500 text-white"
+                                                onClick={() => _deleteRiwayatReturPenjualan()}
+                                            >
+                                                <FaTrash size={12} />
+                                                Hapus
+                                            </button>
+                                        </> : <></>
+                                    }
+                                </div>
                                 {
-                                    edited ? <>
+                                    listRincian ? <>
                                         <button
-                                            className="mr-2 btn btn-sm bg-green-900 text-white"
-                                            onClick={() => _updateRiwayatReturPenjualan()}
+                                            className="btn btn-sm border-red-500 text-red-500"
+                                            onClick={() => setListRincian(x => x = !x)}
                                         >
-                                            <FaCheck size={12} />
-                                            Simpan
+                                            Tutup Daftar Retur
                                         </button>
+                                    </> : <>
                                         <button
-                                            className="mr-2 btn btn-sm bg-red-500 text-white"
-                                            onClick={() => _deleteRiwayatReturPenjualan()}
+                                            className="btn btn-sm bg-white border-gray-400"
+                                            onClick={() => setListRincian(x => x = !x)}
                                         >
-                                            <FaTrash size={12} />
-                                            Hapus
+                                            Lihat Daftar Retur
                                         </button>
-                                    </> : <></>
+                                    </>
                                 }
                             </div>
                             {
                                 listRincian ? <>
-                                    <button
-                                        className="btn btn-sm border-red-500 text-red-500"
-                                        onClick={() => setListRincian(x => x = !x)}
-                                    >
-                                        Tutup Daftar Retur
-                                    </button>
                                     <div className="overflow-x-auto mt-5 max-h-[20vh] no-scrollbar pb-4">
                                         <table className="table table-sm table-zebra rounded-xl">
                                             <thead className="bg-blue-950 z-10 text-white sticky top-0">
@@ -206,7 +225,8 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                                                 <th>Nama Barang</th>
                                                 <th>Satuan Barang</th>
                                                 <th>Gudang Asal</th>
-                                                <th>Retur Sudah Dibayar</th>
+                                                <th>Pelunasan Sudah Dibayar</th>
+                                                <th width={150}>Retur Sebelumnya</th>
                                                 <th width={150}>Retur</th>
                                                 <th>Nilai Retur</th>
                                             </thead>
@@ -220,7 +240,8 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                                                                 <td>{x.daftar_barang_name}</td>
                                                                 <td>{x.satuan_barang_name}</td>
                                                                 <td>{x.daftar_gudang_name}</td>
-                                                                <td>Rp. {parseToRupiahText(x.sudah_dibayar)}</td>
+                                                                <td>Rp. {parseToRupiahText(x.sudah_dibayar_fix)}</td>
+                                                                <td>{parseToRupiahText(x.retur_sebelum)} {x.satuan_barang_name}</td>
                                                                 <td>
                                                                     {
                                                                         edited ? <>
@@ -231,13 +252,13 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                                                                                     defaultValue: 0
                                                                                 }}
                                                                                 onchange={(e) => {
-                                                                                    inputOnlyRupiah(e, x.jumlah)
+                                                                                    inputOnlyRupiah(e, x.jumlah_fix)
                                                                                     _updateNilaiRetur(e.target.value, x.uuid)
                                                                                 }}
                                                                                 value={parseToRupiahText(x.retur)}
                                                                             />
                                                                         </> : <>
-                                                                            Rp. {parseToRupiahText(x.retur)}
+                                                                            {parseToRupiahText(x.retur)} {x.satuan_barang_name}
                                                                         </>
                                                                     }
                                                                 </td>
@@ -264,14 +285,7 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                                             </div>
                                         </> : <></>
                                     }
-                                </> : <>
-                                    <button
-                                        className="btn btn-sm bg-white border-gray-400"
-                                        onClick={() => setListRincian(x => x = !x)}
-                                    >
-                                        Lihat Daftar Retur
-                                    </button>
-                                </>
+                                </> : <></>
                             }
                         </> : <></>
                     }

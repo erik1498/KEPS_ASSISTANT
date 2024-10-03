@@ -128,15 +128,15 @@ const PenjualanBarangForm = ({
     }, [])
 
     return <>
-        <div className="bg-white rounded-md shadow-sm h-max overflow-scroll no-scrollbar relative">
-            <div className="sticky top-0 py-5 px-6 h-max bg-white w-full z-10">
+        <div className="bg-white rounded-md shadow-sm h-max">
+            <div className="py-5 px-6 h-max w-full z-10">
                 <div className="flex justify-between items-center">
                     <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-2">Pesanan Penjualan Barang</h1>
-                    <button
+                    {/* <button
                         className="btn btn-sm bg-red-900 text-white border-none"
                         onClick={() => setAddPenjualanBarang()}
                     ><FaTimes /> Batalkan Transaksi
-                    </button>
+                    </button> */}
                 </div>
                 <form onSubmit={e => _savePesananPenjualan(e)}>
                     <div className="flex items-end gap-x-2">

@@ -39,7 +39,7 @@ const Navigasi = () => {
     return <>
         <div className="top-36 h-[40vh] bg-blue-900 rounded-box left-0 right-0 fixed -z-0 shadow-inner">
         </div>
-        <div className="sticky top-0 z-50">
+        <div className="sticky top-0 z-[100]">
             <div className="bg-white px-8 py-5 grid grid-cols-2">
                 <div className="uppercase text-blue-900">
                     <h1 className="text-xl font-bold">Keps Assistant</h1>

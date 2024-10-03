@@ -34,7 +34,21 @@ const RincianReturPenjualanBarangModel = db.define("rincian_retur_penjualan_bara
                 notEmpty:true,
             }
         },
+        retur_sebelum: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
         retur: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
+        nilai_retur_sebelum: {
             type: DataTypes.INTEGER,
             allowNull: false,
             validate:{

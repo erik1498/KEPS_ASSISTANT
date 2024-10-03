@@ -99,7 +99,7 @@ const RiwayatTransaksiPenjualanBarang = ({
     return <>
         <div className="bg-white rounded-md mt-4 py-6 px-6 shadow-2xl">
             <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Riwayat Transaksi Penjualan Barang</h1>
-            <form className="mb-5" onSubmit={(e) => _saveRiwayatTransaksi(e)}>
+            <form className="mb-5 border-[3px] rounded-md py-2 px-3" onSubmit={(e) => _saveRiwayatTransaksi(e)}>
                 <div className="flex gap-x-2">
                     <FormInputWithLabel
                         label={"Tanggal"}
@@ -155,7 +155,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                         {
                             riwayatTransaksi.map((x, i) => {
                                 return <div className="mb-5">
-                                    <p className="font-bold mb-3 sticky top-0 bg-gray-300 p-2 rounded-md z-40">{getHariTanggalFormated("/", formatDate(x.parent, false))}</p>
+                                    <p className="font-bold mb-3 sticky top-0 bg-gray-300 p-2 z-40">{getHariTanggalFormated("/", formatDate(x.parent, false))}</p>
                                     <div className="flex flex-col">
                                         {
                                             x.data.map((y, j) => {

@@ -116,8 +116,11 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                 setDetailOpen(x => x = !x)
             }}
         >
-            <div className="flex items-center gap-x-2 px-4">
-                <p className="text-sm pr-2 font-medium">Pelunasan Penjualan Barang</p>
+            <div className="flex items-center justify-between gap-x-2 px-4">
+                <div className="flex items-center gap-x-2">
+                    <p className="text-sm pr-2 font-medium">{convertTo12HoursFormat(riwayatPelunasanPenjualanBarang.tanggal.split("T")[1])}</p>
+                    <p className="text-sm pr-2 font-medium px-3 border-l-2 border-black">Pelunasan Penjualan Barang</p>
+                </div>
                 {
                     detailOpen ? <FaChevronUp size={15} /> : <FaChevronDown size={15} />
                 }
@@ -130,16 +133,12 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                         detailOpen ? <>
                             <table className="text-left text-sm">
                                 <tr>
-                                    <td className={`${edited ? "pb-3" : ""}`}>Waktu</td>
-                                    <td className={`px-5 ${edited ? "pb-3" : ""}`}>:</td>
-                                    <td className={`${edited ? "pb-3" : ""}`}>{convertTo12HoursFormat(riwayatPelunasanPenjualanBarang.tanggal.split("T")[1])}</td>
-                                </tr>
-                                <tr>
                                     <td className={`${edited ? "pb-3" : ""}`}>Nomor Pelunasan Penjualan Barang</td>
                                     <td className={`px-5 ${edited ? "pb-3" : ""}`}>:</td>
                                     <td className={`${edited ? "pb-3" : ""}`}>
                                         {
                                             edited ? <FormInput
+                                                addClass={"px-0"}
                                                 name={"nomor_pelunasan_penjualan_barang"}
                                                 value={nomorPelunasanPenjualanBarang}
                                                 onchange={(e) => setNomorPelunasanPenjualanBarang(e.target.value)}
@@ -153,6 +152,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                     <td className={`${edited ? "pb-3" : ""}`}>
                                         {
                                             edited ? <FormInput
+                                                addClass={"px-0"}
                                                 name={"bukti_transaksi"}
                                                 value={buktiTransaksiPelunasanPenjualanBarang}
                                                 onchange={(e) => setBuktiTransaksiPelunasanPenjualanBarang(e.target.value)}
@@ -175,41 +175,54 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                             <p className="text-sm mb-3">
                                 {
                                     edited ? <FormInput
-                                        addClass={"my-5"}
+                                        addClass={"mt-5"}
                                         name={"keterangan"}
                                         value={keteranganPelunasanPenjualanBarang}
                                         onchange={(e) => setKeteranganPelunasanPenjualanBarang(e.target.value)}
                                     /> : riwayatPelunasanPenjualanBarang.keterangan
                                 }
                             </p>
-                            <div className="my-2 flex">
+                            <div className="my-2 flex justify-between">
+                                <div>
+                                    {
+                                        edited ? <>
+                                            <button
+                                                className="mr-2 btn btn-sm bg-green-900 text-white"
+                                                onClick={() => _updateRiwayatPelunasanPenjualan()}
+                                            >
+                                                <FaCheck size={12} />
+                                                Simpan
+                                            </button>
+                                            <button
+                                                className="mr-2 btn btn-sm bg-red-500 text-white"
+                                                onClick={() => _deleteRiwayatPelunasanPenjualan()}
+                                            >
+                                                <FaTrash size={12} />
+                                                Hapus
+                                            </button>
+                                        </> : <></>
+                                    }
+                                </div>
                                 {
-                                    edited ? <>
+                                    listRincian ? <>
                                         <button
-                                            className="mr-2 btn btn-sm bg-green-900 text-white"
-                                            onClick={() => _updateRiwayatPelunasanPenjualan()}
+                                            className="btn btn-sm border-red-500 text-red-500"
+                                            onClick={() => setListRincian(x => x = !x)}
                                         >
-                                            <FaCheck size={12} />
-                                            Simpan
+                                            Tutup Daftar Pelunasan
                                         </button>
+                                    </> : <>
                                         <button
-                                            className="mr-2 btn btn-sm bg-red-500 text-white"
-                                            onClick={() => _deleteRiwayatPelunasanPenjualan()}
+                                            className="btn btn-sm bg-white border-gray-400"
+                                            onClick={() => setListRincian(x => x = !x)}
                                         >
-                                            <FaTrash size={12} />
-                                            Hapus
+                                            Lihat Daftar Pelunasan
                                         </button>
-                                    </> : <></>
+                                    </>
                                 }
                             </div>
                             {
                                 listRincian ? <>
-                                    <button
-                                        className="btn btn-sm border-red-500 text-red-500"
-                                        onClick={() => setListRincian(x => x = !x)}
-                                    >
-                                        Tutup Daftar Pelunasan
-                                    </button>
                                     <div className="overflow-x-auto mt-5 max-h-[20vh] no-scrollbar pb-4">
                                         <table className="table table-sm table-zebra rounded-xl">
                                             <thead className="bg-blue-950 z-10 text-white sticky top-0">
@@ -261,7 +274,6 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                             </tbody>
                                         </table>
                                     </div>
-
                                     {
                                         edited ? <>
                                             <div className="flex justify-end">
@@ -276,14 +288,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                             </div>
                                         </> : <></>
                                     }
-                                </> : <>
-                                    <button
-                                        className="btn btn-sm bg-white border-gray-400"
-                                        onClick={() => setListRincian(x => x = !x)}
-                                    >
-                                        Lihat Daftar Pelunasan
-                                    </button>
-                                </>
+                                </> : <></>
                             }
                         </> : <></>
                     }

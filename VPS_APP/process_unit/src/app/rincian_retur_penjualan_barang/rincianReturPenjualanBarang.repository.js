@@ -32,62 +32,97 @@ export const getAllRincianReturPenjualanBarangRepo = async (pageNumber, size, se
 export const getAllRincianPesananPenjualanBarangByReturPenjualanRepo = async (uuid, req_id) => {
     return await db.query(
         `
-            SELECT 
-                khbt.kode_barang AS kategori_harga_barang_kode_barang,
-                dbt.name AS daftar_barang_name,
-                sbt.name AS satuan_barang_name,
-                dgt.name AS daftar_gudang_name,
-                IFNULL((
-                    SELECT 
-                        SUM(rppbt2.nilai_pelunasan)
-                    FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt2 
-                    JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt2.pelunasan_penjualan_barang
-                    WHERE rppbt2.rincian_pesanan_penjualan_barang = rppbt.uuid 
-                    AND ppbt.tanggal < rpbt.tanggal
-                ),0) AS sudah_dibayar,
-                (
-                    ( rppbt.jumlah * rppbt.harga ) + ( rppbt.ppn * rppbt.jumlah ) - rppbt.diskon_angka 
-                ) AS total,
-                IFNULL((
-                    SELECT 
-                        SUM(rrpbt.retur) 
-                    FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
-                    JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt2 On rpbt2.uuid = rrpbt.retur_penjualan_barang
-                    WHERE rrpbt.retur_penjualan_barang = rpbt.uuid 
-                    AND rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
-                    AND rpbt2.tanggal = rpbt.tanggal
-                ), 0 ) AS retur,
-                0 AS kembali_pelunasan,
-                0 AS kembali_denda,
-                0 AS total_denda,
-                IFNULL((
-                    SELECT 
-                        SUM(rrpbt2.retur)
-                    FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt2 
-                    JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt2 ON rpbt2.uuid = rrpbt2.retur_penjualan_barang
-                    WHERE rrpbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
-                    AND rpbt2.tanggal < rpbt.tanggal 
-                ), 0) AS retur_sebelumnya,
-                0 AS kembali_pelunasan_sebelumnya,
-                (
-                    SELECT 
-                        rrpbt2.uuid 
-                    FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt2
-                    WHERE rrpbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
-                    AND rrpbt2.retur_penjualan_barang = rpbt.uuid
-                ) AS rincian_retur_penjualan_barang,
-                rppbt.*
-            FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
-            JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang 
-            JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt.uuid 
-            JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.faktur_penjualan_barang = fpbt.uuid 
-            JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 
-            JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang
-            JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
-            JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt.stok_awal_barang 
-            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang 
-            WHERE rpbt.uuid = "${uuid}"
-            AND rppbt.enabled = 1
+            SELECT
+                res.sudah_dibayar - res.nilai_retur_sebelum AS sudah_dibayar_fix,
+                res.jumlah - res.retur_sebelum AS jumlah_fix,
+                res.*
+            FROM (
+                SELECT 
+                    khbt.kode_barang AS kategori_harga_barang_kode_barang,
+                    dbt.name AS daftar_barang_name,
+                    sbt.name AS satuan_barang_name,
+                    dgt.name AS daftar_gudang_name,
+                    IFNULL((
+                        SELECT 
+                            rppbt2.sudah_dibayar + rppbt2.nilai_pelunasan
+                        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt2 
+                        JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt2.pelunasan_penjualan_barang 
+                        WHERE rppbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
+                        AND ppbt.enabled = 1
+                        AND rppbt2.enabled = 1
+                        ORDER BY ppbt.tanggal DESC 
+                        LIMIT 1
+                    ), 0) AS sudah_dibayar,
+                    IFNULL((
+                        SELECT 
+                            rrpbt.retur
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+                        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt2 ON rpbt2.uuid = rrpbt.retur_penjualan_barang 
+                        WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
+                        AND rpbt2.uuid = rpbt.uuid
+                    ), 0 ) AS retur,
+                    IFNULL((
+                        SELECT 
+                            rrpbt.retur_sebelum 
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+                        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt2 ON rpbt2.uuid = rrpbt.retur_penjualan_barang 
+                        WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
+                        AND rpbt2.uuid = rpbt.uuid
+                    ),  IFNULL((
+                        SELECT 
+                            SUM(rrpbt.retur) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+                        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt2 ON rpbt2.uuid = rrpbt.retur_penjualan_barang 
+                        WHERE rpbt2.enabled = 1
+                        AND rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid 
+                        AND rpbt2.tanggal < rpbt.tanggal
+                    ), 0)) AS retur_sebelum,
+                    IFNULL((
+                        SELECT 
+                            SUM(rrpbt.nilai_retur) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+                        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt2 ON rpbt2.uuid = rrpbt.retur_penjualan_barang
+                        WHERE rrpbt.retur_penjualan_barang = rpbt.uuid 
+                        AND rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
+                        AND rpbt2.uuid = rpbt.uuid
+                    ), 0 ) AS nilai_retur,
+                    IFNULL((
+                        SELECT 
+                            rrpbt.nilai_retur_sebelum 
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+                        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt2 ON rpbt2.uuid = rrpbt.retur_penjualan_barang 
+                        WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
+                        AND rpbt2.uuid = rpbt.uuid
+                    ),  IFNULL((
+                        SELECT 
+                            SUM(rrpbt.nilai_retur) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+                        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt2 ON rpbt2.uuid = rrpbt.retur_penjualan_barang 
+                        WHERE rpbt2.enabled = 1
+                        AND rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid 
+                        AND rpbt2.tanggal < rpbt.tanggal
+                    ), 0)) AS nilai_retur_sebelum,
+                    (
+                        SELECT 
+                            rrpbt2.uuid 
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt2
+                        WHERE rrpbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
+                        AND rrpbt2.retur_penjualan_barang = rpbt.uuid
+                    ) AS rincian_retur_penjualan_barang,
+                    rppbt.*
+                FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang 
+                JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt.uuid 
+                JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.faktur_penjualan_barang = fpbt.uuid 
+                JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 
+                JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
+                JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt.stok_awal_barang 
+                JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang 
+                WHERE rpbt.uuid = "${uuid}"
+                AND rppbt.enabled = 1
+            ) AS res
+            ORDER BY res.id DESC
         `,
         {
             type: Sequelize.QueryTypes.SELECT
@@ -118,6 +153,8 @@ export const createRincianReturPenjualanBarangRepo = async (rincianReturPenjuala
             sudah_dibayar: rincianReturPenjualanBarangData.sudah_dibayar,
             retur: rincianReturPenjualanBarangData.retur,
             nilai_retur: rincianReturPenjualanBarangData.nilai_retur,
+            retur_sebelum: rincianReturPenjualanBarangData.retur_sebelum,
+            nilai_retur_sebelum: rincianReturPenjualanBarangData.nilai_retur_sebelum,
             enabled: rincianReturPenjualanBarangData.enabled
         }
     )
@@ -148,6 +185,8 @@ export const updateRincianReturPenjualanBarangByUuidRepo = async (uuid, rincianR
             sudah_dibayar: rincianReturPenjualanBarangData.sudah_dibayar,
             retur: rincianReturPenjualanBarangData.retur,
             nilai_retur: rincianReturPenjualanBarangData.nilai_retur,
+            retur_sebelum: rincianReturPenjualanBarangData.retur_sebelum,
+            nilai_retur_sebelum: rincianReturPenjualanBarangData.nilai_retur_sebelum,
         },
         {
             uuid
