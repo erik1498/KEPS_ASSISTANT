@@ -44,14 +44,12 @@ export const getAllRincianPesananPenjualanBarangByReturPenjualanRepo = async (uu
                     dgt.name AS daftar_gudang_name,
                     IFNULL((
                         SELECT 
-                            rppbt2.sudah_dibayar + rppbt2.nilai_pelunasan
-                        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt2 
-                        JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt2.pelunasan_penjualan_barang 
+                            SUM(rppbt2.nilai_pelunasan) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt2
+                        JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pelunasan_penjualan_barang
                         WHERE rppbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
-                        AND ppbt.enabled = 1
-                        AND rppbt2.enabled = 1
-                        ORDER BY ppbt.tanggal DESC 
-                        LIMIT 1
+                        AND ppbt2.enabled = 1
+                        AND ppbt2.tanggal < rpbt.tanggal
                     ), 0) AS sudah_dibayar,
                     IFNULL((
                         SELECT 

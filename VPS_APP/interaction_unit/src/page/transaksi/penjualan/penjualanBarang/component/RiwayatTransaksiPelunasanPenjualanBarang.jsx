@@ -90,7 +90,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                         total_denda: listPelunasanPenjualanDendaBarang[index].total_denda,
                         denda_sudah_dibayar: listPelunasanPenjualanDendaBarang[index].denda_sudah_dibayar,
                         piutang_denda: listPelunasanPenjualanDendaBarang[index].total_denda - listPelunasanPenjualanDendaBarang[index].denda_sudah_dibayar,
-                        nilai_pelunasan: listPelunasanPenjualanDendaBarang[index].nilai_pelunasan,
+                        nilai_pelunasan: `${listPelunasanPenjualanDendaBarang[index].nilai_pelunasan}`,
                     }
                 })
         }
@@ -278,8 +278,8 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                                             <th>Nama Barang</th>
                                                             <th>Satuan Barang</th>
                                                             <th>Gudang Asal</th>
-                                                            <th>Total Denda</th>
                                                             <th>Hari Terlewat</th>
+                                                            <th>Total Denda</th>
                                                             <th>Denda Sudah Dibayar</th>
                                                             <th>Piutang Denda</th>
                                                             <th width={200}>Nilai Pelunasan</th>
