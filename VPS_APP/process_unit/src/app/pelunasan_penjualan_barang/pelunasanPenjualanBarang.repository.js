@@ -32,7 +32,105 @@ export const getAllPelunasanPenjualanBarangRepo = async (pageNumber, size, searc
 export const getCekDendaByPelunasanPenjualanUUIDRepo = async (uuid, req_id) => {
     return await db.query(
         `
-            SELECT 1
+            SELECT
+                CASE 
+                    WHEN SUM(res.pelunasan_sudah_dibayar) = SUM(res.total)
+                    THEN 0
+                    ELSE (
+                        CASE
+                            WHEN SUM(
+                                CASE 
+                                    WHEN ((res.total * res.syarat_penjualan_denda) / 100) * res.hari_terlewat_pembayaran_terakhir = res.denda_sudah_dibayar
+                                    THEN 
+                                        CASE
+                                            WHEN res.perbedaan_hari_bayar_denda_terakhir = 0
+                                            THEN 0
+                                            ELSE ((res.total * res.syarat_penjualan_denda) / 100) * res.hari_terlewat
+                                        END
+                                    ELSE ((res.total * res.syarat_penjualan_denda) / 100) * res.hari_terlewat
+                                END
+                            ) > 0
+                            THEN 1
+                            ELSE 0
+                        END
+                    )
+                END AS denda
+            FROM (
+                SELECT 
+                (
+                    DATEDIFF(
+                        ( 
+                            SELECT 
+                                ppbt2.tanggal 
+                            FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 
+                            WHERE ppbt2.uuid = "${uuid}"
+                        ),
+                        ( ADDDATE( fpbt.tanggal, INTERVAL spt.hari_kadaluarsa DAY ) )
+                    )
+                ) AS hari_terlewat,
+                (
+                    SELECT 
+                        IFNULL(SUM(rppdbt.nilai_pelunasan), 0) 
+                    FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt
+                    JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppdbt.pelunasan_penjualan_barang
+                    WHERE rppdbt.rincian_pesanan_penjualan_barang = rppbt.uuid
+                    AND ppbt.tanggal < (
+                        SELECT 
+                            ppbt2.tanggal 
+                        FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 
+                        WHERE ppbt2.uuid = "${uuid}"
+                    )
+                ) AS denda_sudah_dibayar,
+                (
+                    SELECT 
+                        DATEDIFF(MAX(ppbt.tanggal), (
+                        SELECT 
+                            ppbt2.tanggal 
+                        FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 
+                        WHERE ppbt2.uuid = "${uuid}"
+                    )) 
+                    FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt
+                    JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppdbt.pelunasan_penjualan_barang
+                ) AS perbedaan_hari_bayar_denda_terakhir,
+                (
+                    DATEDIFF(
+                        (
+                            SELECT 
+                                MAX(ppbt3.tanggal)
+                            FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt2
+                            JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt3 ON ppbt3.uuid = rppdbt2.pelunasan_penjualan_barang 
+                            WHERE rppdbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
+                        ),
+                        ( ADDDATE( fpbt.tanggal, INTERVAL spt.hari_kadaluarsa DAY ) )
+                    )
+                ) AS hari_terlewat_pembayaran_terakhir,
+                (
+                    (rppbt.harga * rppbt.jumlah) + (rppbt.ppn * rppbt.jumlah) - rppbt.diskon_angka
+                ) AS total,
+                (
+                    SELECT SUM(rppbt2.nilai_pelunasan) FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt2 
+                    JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt2.pelunasan_penjualan_barang
+                    WHERE rppbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
+                    AND ppbt.tanggal < (
+                        SELECT 
+                            ppbt2.tanggal 
+                        FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 
+                        WHERE ppbt2.uuid = "${uuid}"
+                    )
+                ) AS pelunasan_sudah_dibayar,
+                spt.denda AS syarat_penjualan_denda,
+                rppbt.*
+                FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang 
+                JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt.uuid 
+                JOIN ${generateDatabaseName(req_id)}.syarat_pembayaran_tab spt ON spt.uuid = fpbt.syarat_pembayaran 
+                WHERE fpbt.uuid = (
+                        SELECT 
+                            ppbt2.faktur_penjualan_barang 
+                        FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 
+                        WHERE ppbt2.uuid = "${uuid}"
+                    )
+            ) AS res
         `,
         {
             type: Sequelize.QueryTypes.SELECT

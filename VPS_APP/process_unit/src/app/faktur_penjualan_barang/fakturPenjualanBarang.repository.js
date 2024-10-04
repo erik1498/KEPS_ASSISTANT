@@ -50,7 +50,15 @@ export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo =
                         FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt
                         WHERE rppbt.pelunasan_penjualan_barang = ppbt.uuid
                         AND rppbt.enabled = 1
-                    ),0)AS total,
+                    ), 0) 
+                    + 
+                    IFNULL((
+                        SELECT 
+                            SUM(rppdbt.nilai_pelunasan)
+                        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt
+                        WHERE rppdbt.pelunasan_penjualan_barang = ppbt.uuid
+                        AND rppdbt.enabled = 1
+                    ), 0) AS total,
                     "pelunasan_penjualan_barang" AS type
                 FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt 
                 JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppbt.kode_akun_perkiraan 

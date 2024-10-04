@@ -119,7 +119,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                         addClass={"z-50"}
                         optionsDataList={tipeTransaksiPenjualanBarang.map(x => {
                             return {
-                                label: x,
+                                label: x.replace("_", " "),
                                 value: x
                             }
                         })}
