@@ -275,6 +275,10 @@ export const SrvReturPenjualanBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/retur_penjualan_barang'
 )
 
+export const SrvPengembalianDendaPenjualanBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/pengembalian_denda_penjualan_barang'
+)
+
 export const SrvRincianPelunasanPenjualanBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/rincian_pelunasan_penjualan_barang'
 )
@@ -285,4 +289,8 @@ export const SrvRincianPelunasanPenjualanDendaBarang = objectPathEndPointAPI(
 
 export const SrvRincianReturPenjualanBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/rincian_retur_penjualan_barang'
+)
+
+export const SrvRincianPengembalianDendaPenjualanBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_pengembalian_denda_penjualan_barang'
 )

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import RiwayatTransaksiPelunasanPenjualanBarang from "./RiwayatTransaksiPelunasanPenjualanBarang"
-import { apiFakturPenjualanBarangCRUD, apiKodeAkunCRUD, apiPelunasanPenjualanBarangCRUD, apiReturPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
+import { apiFakturPenjualanBarangCRUD, apiKodeAkunCRUD, apiPelunasanPenjualanBarangCRUD, apiPengembalianDendaPenjualanBarangCRUD, apiReturPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
 import { getNormalizedByDate } from "../../../../../helper/jurnalUmum.helper"
 import { formatDate, getHariTanggalFormated, getHariTanggalFull } from "../../../../../helper/date.helper"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
@@ -8,6 +8,7 @@ import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLab
 import { FaSave } from "react-icons/fa"
 import { formValidation } from "../../../../../helper/form.helper"
 import RiwayatTransaksiReturPenjualanBarang from "./RiwayatTransaksiReturPenjualanBarang"
+import RiwayatTransaksiPengembalianDendaPenjualanBarang from "./RiwayatTransaksiPengembalianDendaPenjualanBarang"
 
 const RiwayatTransaksiPenjualanBarang = ({
     fakturPenjualanBarang,
@@ -51,7 +52,7 @@ const RiwayatTransaksiPenjualanBarang = ({
             }
 
             if (tipeTransaksi.value == "Pengembalian_Denda") {
-
+                apiCall = apiPengembalianDendaPenjualanBarangCRUD
             }
 
             const data = {
@@ -168,10 +169,20 @@ const RiwayatTransaksiPenjualanBarang = ({
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>
-                                                    }{
+                                                    }
+                                                    {
                                                         y.type == "retur_penjualan_barang" ? <>
                                                             <RiwayatTransaksiReturPenjualanBarang
                                                                 riwayatReturPenjualanBarang={y}
+                                                                edited={i == 0 && j == 0}
+                                                                _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
+                                                            />
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        y.type == "pengembalian_denda_penjualan_barang" ? <>
+                                                            <RiwayatTransaksiPengembalianDendaPenjualanBarang
+                                                                riwayatPengembalianDendaPenjualanBarang={y}
                                                                 edited={i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />

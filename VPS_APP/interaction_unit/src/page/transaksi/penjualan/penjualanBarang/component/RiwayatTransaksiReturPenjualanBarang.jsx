@@ -59,6 +59,8 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                     data: {
                         retur_penjualan_barang: riwayatReturPenjualanBarang.uuid,
                         rincian_pesanan_penjualan_barang: listReturPenjualanBarang[index].uuid,
+                        jumlah: `${listReturPenjualanBarang[index].jumlah_fix}`,
+                        denda_sudah_dibayar: `${listReturPenjualanBarang[index].denda_sudah_dibayar}`,
                         sudah_dibayar: `${listReturPenjualanBarang[index].sudah_dibayar_fix}`,
                         retur: `${listReturPenjualanBarang[index].retur}`,
                         nilai_retur: `${listReturPenjualanBarang[index].nilai_retur}`,

@@ -44,6 +44,15 @@ export const getAllRincianPesananPenjualanBarangByReturPenjualanRepo = async (uu
                     dgt.name AS daftar_gudang_name,
                     IFNULL((
                         SELECT 
+                            SUM(rppdbt2.nilai_pelunasan) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt2
+                        JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppdbt2.pelunasan_penjualan_barang
+                        WHERE rppdbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
+                        AND ppbt2.enabled = 1
+                        AND ppbt2.tanggal < rpbt.tanggal
+                    ), 0) AS denda_sudah_dibayar,
+                    IFNULL((
+                        SELECT 
                             SUM(rppbt2.nilai_pelunasan) 
                         FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt2
                         JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pelunasan_penjualan_barang
@@ -149,6 +158,8 @@ export const createRincianReturPenjualanBarangRepo = async (rincianReturPenjuala
             retur_penjualan_barang: rincianReturPenjualanBarangData.retur_penjualan_barang,
             rincian_pesanan_penjualan_barang: rincianReturPenjualanBarangData.rincian_pesanan_penjualan_barang,
             sudah_dibayar: rincianReturPenjualanBarangData.sudah_dibayar,
+            jumlah: rincianReturPenjualanBarangData.jumlah,
+            denda_sudah_dibayar: rincianReturPenjualanBarangData.denda_sudah_dibayar,
             retur: rincianReturPenjualanBarangData.retur,
             nilai_retur: rincianReturPenjualanBarangData.nilai_retur,
             retur_sebelum: rincianReturPenjualanBarangData.retur_sebelum,
@@ -181,6 +192,8 @@ export const updateRincianReturPenjualanBarangByUuidRepo = async (uuid, rincianR
             retur_penjualan_barang: rincianReturPenjualanBarangData.retur_penjualan_barang,
             rincian_pesanan_penjualan_barang: rincianReturPenjualanBarangData.rincian_pesanan_penjualan_barang,
             sudah_dibayar: rincianReturPenjualanBarangData.sudah_dibayar,
+            jumlah: rincianReturPenjualanBarangData.jumlah,
+            denda_sudah_dibayar: rincianReturPenjualanBarangData.denda_sudah_dibayar,
             retur: rincianReturPenjualanBarangData.retur,
             nilai_retur: rincianReturPenjualanBarangData.nilai_retur,
             retur_sebelum: rincianReturPenjualanBarangData.retur_sebelum,

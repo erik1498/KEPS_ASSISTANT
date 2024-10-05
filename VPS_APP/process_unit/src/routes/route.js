@@ -67,6 +67,8 @@ import { getReturPenjualanBarangRoute } from "../app/retur_penjualan_barang/retu
 import { getRincianPelunasanPenjualanBarangRoute } from "../app/rincian_pelunasan_penjualan_barang/rincianPelunasanPenjualanBarang.route.js";
 import { getRincianReturPenjualanBarangRoute } from "../app/rincian_retur_penjualan_barang/rincianReturPenjualanBarang.route.js";
 import { getRincianPelunasanPenjualanDendaBarangRoute } from "../app/rincian_pelunasan_penjualan_denda_barang/rincianPelunasanPenjualanDendaBarang.route.js";
+import { getPengembalianDendaPenjualanBarangRoute } from "../app/pengembalian_denda_penjualan_barang/pengembalianDendaPenjualanBarang.route.js";
+import { getRincianPengembalianDendaPenjualanBarangRoute } from "../app/rincian_pengembalian_denda_penjualan_barang/rincianPengembalianDendaPenjualanBarang.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -139,4 +141,6 @@ export const routerList = new Array()
         getRincianPelunasanPenjualanDendaBarangRoute(),
         getReturPenjualanBarangRoute(),
         getRincianReturPenjualanBarangRoute(),
+        getPengembalianDendaPenjualanBarangRoute(),
+        getRincianPengembalianDendaPenjualanBarangRoute()
     )
