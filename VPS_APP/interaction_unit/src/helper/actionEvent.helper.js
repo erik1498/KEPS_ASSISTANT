@@ -18,7 +18,7 @@ export const inputOnlyRupiah = (e, max) => {
   let rupiah = parseToRupiahText(e.target.value.replace(/[^\d.,]+|(?<=\..*)\./g, ''))
   e.target.value = rupiah
 
-  if (max) {
+  if (max != null) {
     let value = e.target.value
     if (!value.endsWith('.')) {
       value = parseRupiahToFloat(value)
@@ -51,7 +51,7 @@ export const inputOnlyRupiah = (e, max) => {
 }
 
 export const inputOnlyNumber = (e, max) => {
-  if (max) {
+  if (max != null) {
     let value = e.target.value
     if (!value.endsWith('.')) {
       value = parseRupiahToFloat(value)

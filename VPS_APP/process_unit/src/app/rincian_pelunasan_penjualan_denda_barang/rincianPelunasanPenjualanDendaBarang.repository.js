@@ -81,16 +81,15 @@ export const getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanRepo = 
                         IFNULL((
                             SELECT 
                                 SUM(rppdbt.nilai_pelunasan)
-            --                     - IFNULL((
-            --                         SELECT 
-            --                             SUM(rrpbt.kembali_denda) 
-            --                         FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_penjualan_barang_tab rpdpbt 
-            --                         JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_penjualan_barang
-            --                         JOIN ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt ON rrpbt.uuid = rpdpbt.rincian_retur_penjualan_barang 
-            --                         WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
-            --                  	   AND rpdpbt.enabled = 1
-            --                     	   AND pdpbt.enabled = 1
-            --                     ), 0) 
+                                - IFNULL((
+                                    SELECT 
+                                        SUM(rpdpbt.denda_yang_dikembalikan) 
+                                    FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_penjualan_barang_tab rpdpbt 
+                                    JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_penjualan_barang
+                                    WHERE rpdpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
+                                    AND pdpbt.enabled = 1
+                                    AND rpdpbt.enabled = 1
+                                ), 0) 
                             FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt
                             JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppdbt.pelunasan_penjualan_barang
                             WHERE rppdbt.rincian_pesanan_penjualan_barang = rppbt.uuid

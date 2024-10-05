@@ -41,7 +41,16 @@ export const getRincianPengembalianDendaPenjualanBarangByFakturPenjualanBarangUU
                 dgt.name AS daftar_gudang_name,
                 IFNULL((
                     SELECT 
-                        ROUND(SUM((rrpbt.denda_sudah_dibayar / rrpbt.jumlah) * rrpbt.retur), 0)
+                        ROUND(SUM((rrpbt.denda_sudah_dibayar / rrpbt.jumlah) * rrpbt.retur), 0) 
+                        - IFNULL((
+                            SELECT 
+                                SUM(rpdpbt.denda_yang_dikembalikan) 
+                            FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_penjualan_barang_tab rpdpbt 
+                            JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_penjualan_barang
+                            WHERE rpdpbt.rincian_pesanan_penjualan_barang = rrpbt.rincian_pesanan_penjualan_barang
+                            AND pdpbt.enabled = 1
+                            AND rpdpbt.enabled = 1
+                        ), 0) 
                     FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
                     JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_penjualan_barang
                     WHERE rpbt.enabled = 1

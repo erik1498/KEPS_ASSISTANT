@@ -202,7 +202,7 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = ({
                                                 <th>Nama Barang</th>
                                                 <th>Satuan Barang</th>
                                                 <th>Gudang Asal</th>
-                                                <th>Denda Sudah Dibayar</th>
+                                                <th>Denda Yang Dikembalikan</th>
                                             </thead>
                                             <tbody>
                                                 {
@@ -232,37 +232,3 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = ({
     </div>
 }
 export default RiwayatTransaksiPengembalianDendaPenjualanBarang
-
-
-{/* <div className="overflow-x-auto mt-5 max-h-[20vh] no-scrollbar pb-4">
-    <table className="table table-sm table-zebra rounded-xl">
-        <thead className="bg-blue-950 text-white sticky top-0">
-            <th>No.</th>
-            <th>Kode Barang</th>
-            <th>Nama Barang</th>
-            <th>Satuan Barang</th>
-            <th>Gudang Asal</th>
-            <th>PengembalianDenda Sudah Dibayar</th>
-            <th>Pengembalian Denda</th>
-            <th>Nilai Kembali Pengembalian Denda</th>
-        </thead>
-        <tbody>
-            {
-                new Array(50).fill(10).map((x, i) => {
-                    return <>
-                        <tr>
-                            <td>{i + 1}.</td>
-                            <td>BRG00003</td>
-                            <td>KERUPUK PANDA BESAR</td>
-                            <td>Pcs</td>
-                            <td>Gudang Oepura</td>
-                            <td>Rp. 7,814,400</td>
-                            <td>1</td>
-                            <td>Rp. 7,814,400</td>
-                        </tr>
-                    </>
-                })
-            }
-        </tbody>
-    </table>
-</div> */}
