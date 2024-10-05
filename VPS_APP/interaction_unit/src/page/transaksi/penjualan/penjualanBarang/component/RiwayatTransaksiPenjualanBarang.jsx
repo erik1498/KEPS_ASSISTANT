@@ -20,7 +20,7 @@ const RiwayatTransaksiPenjualanBarang = ({
         label: "Pelunasan",
         value: "Pelunasan"
     })
-    const [tipeTransaksiPenjualanBarang, setTipeTransaksiPenjualanBarang] = useState(["Pelunasan", "Retur", "Pengembalian_Denda"])
+    const tipeTransaksiPenjualanBarang = ["Pelunasan", "Retur", "Pengembalian_Denda"]
     const [kodeAkun, setKodeAkun] = useState()
     const [kodeAkunList, setKodeAkunList] = useState([])
 
