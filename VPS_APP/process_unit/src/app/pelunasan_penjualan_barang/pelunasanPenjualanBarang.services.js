@@ -1,6 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getJumlahRincianTransaksiDendaOnTableByTanggalService, getJumlahRincianTransaksiOnTableByTanggalService, getTanggalTransaksiTerakhirByFakturPenjualanService } from "../faktur_penjualan_barang/fakturPenjualanBarang.services.js"
+import { getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanService } from "../rincian_pelunasan_penjualan_denda_barang/rincianPelunasanPenjualanDendaBarang.services.js"
 import { createPelunasanPenjualanBarangRepo, deletePelunasanPenjualanBarangByUuidRepo, getAllPelunasanPenjualanBarangRepo, getCekDendaByPelunasanPenjualanUUIDRepo, getPelunasanPenjualanBarangByUuidRepo, updatePelunasanPenjualanBarangByUuidRepo } from "./pelunasanPenjualanBarang.repository.js"
 
 export const getAllPelunasanPenjualanBarangService = async (query, req_identity) => {
@@ -26,8 +27,8 @@ export const getAllPelunasanPenjualanBarangService = async (query, req_identity)
 
 export const getCekDendaByPelunasanPenjualanUUIDService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getCekDendaByPelunasanPenjualanUUIDService [${uuid}]`, null, req_identity)
-    const cekDenda = await getCekDendaByPelunasanPenjualanUUIDRepo(uuid, req_identity)
-    return cekDenda[0].denda
+    const rincianPelunasanPenjualanBarangDenda = await getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanService(uuid, true, req_identity)
+    return rincianPelunasanPenjualanBarangDenda[0].denda_status > 0 ? 1 : 0
 }
 
 export const getPelunasanPenjualanBarangByUuidService = async (uuid, req_identity) => {

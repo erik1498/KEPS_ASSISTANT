@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react"
-import { apiDaftarBarangCRUD, apiRincianPesananPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
+import { apiDaftarBarangCRUD, apiRincianPelunasanPenjualanBarangCRUD, apiRincianPesananPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
 import { showError } from "../../../../../helper/form.helper"
 import PesananPenjualanBarangForm from "./PesananPenjualanBarangForm"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
-import { FaTrash } from "react-icons/fa"
+import { FaCheck, FaTimes, FaTrash } from "react-icons/fa"
+import { getHariTanggalFull } from "../../../../../helper/date.helper"
 
 const PesananPenjualanBarangList = ({
     pesananPenjualanBarang,
     customer,
     fakturStatus,
-    setPPNStatus = () => { }
+    setPPNStatus = () => { },
+    tanggalTransaksiAkhir
 }) => {
     const [rincianPesananPenjualanBarang, setRincianPesananPenjualanBarang] = useState([])
     const [kategoriHargaBarangList, setKategoriHargaBarangList] = useState([])
     const [listPesanan, setListPesanan] = useState(false)
+    const [totalPiutang, setTotalPiutang] = useState(0)
 
     const _getDataRincianDaftarPasananPenjualan = () => {
         apiRincianPesananPenjualanBarangCRUD
@@ -41,10 +44,30 @@ const PesananPenjualanBarangList = ({
         }).catch(err => showError(err))
     }
 
+    const _getDataRincianDaftarPasananPenjualanStatusLunas = () => {
+        apiRincianPelunasanPenjualanBarangCRUD
+            .custom("/pesanan_by_tanggal", "POST", null, {
+                data: {
+                    faktur_penjualan_barang: fakturStatus,
+                    tanggal: tanggalTransaksiAkhir
+                }
+            }).then(resData => {
+                setRincianPesananPenjualanBarang(x => x = resData.data)
+                const totalPiutangGet = resData.data.reduce((prev, current) => {
+                    return prev + parseFloat(current.piutang)
+                }, 0)
+                setTotalPiutang(x => x = totalPiutangGet)
+            })
+    }
+
     useEffect(() => {
         _getDataBarangTransaksi()
-        _getDataRincianDaftarPasananPenjualan()
-    }, [])
+        if (fakturStatus) {
+            _getDataRincianDaftarPasananPenjualanStatusLunas()
+        } else {
+            _getDataRincianDaftarPasananPenjualan()
+        }
+    }, [fakturStatus, tanggalTransaksiAkhir, listPesanan])
 
     return <>
         <div className="grid grid-cols-12 gap-x-2">
@@ -70,9 +93,24 @@ const PesananPenjualanBarangList = ({
                         <div className="bg-white py-4 px-6 rounded-md">
                             <p className="font-bold text-sm">Total Pesanan</p>
                             <p className="font-bold text-4xl">Rp. {parseToRupiahText(rincianPesananPenjualanBarang.reduce((prev, current) => {
-                                return prev + current.total_harga
+                                return prev + parseFloat(current.total_harga)
                             }, 0))}
                             </p>
+                            {
+                                fakturStatus ? <>
+                                    {
+                                        totalPiutang > 0 ? <div className="flex items-center gap-x-2 w-max my-2 px-2 py-1 rounded-md border-2 border-red-800">
+                                            <FaTimes className="text-red-800" size={13} />
+                                            <p className="mb-0 text-red-800 font-bold">Belum Lunas</p>
+                                        </div> : <div className="flex items-center gap-x-2 w-max my-2 px-2 py-1 rounded-md border-2 border-green-800">
+                                            <FaCheck className="text-green-800" size={13} />
+                                            <p className="mb-0 text-green-800 font-bold">Lunas</p>
+                                        </div>
+                                    }
+                                </>
+                                    :
+                                    <></>
+                            }
                             {
                                 fakturStatus ? <>
                                     {
@@ -145,7 +183,12 @@ const PesananPenjualanBarangList = ({
                                             <div className="col-span-1">
                                             </div>
                                             <div className="col-span-2">
-                                                <p>Jumlah : {x.jumlah}</p>
+                                                <p>Jumlah : {parseToRupiahText(x.jumlah)}</p>
+                                                {
+                                                    fakturStatus ? <>
+                                                        <p>Retur : {parseToRupiahText(x.retur)}</p>
+                                                    </> : <></>
+                                                }
                                             </div>
                                             <div className="col-span-3">
                                                 {
@@ -167,6 +210,11 @@ const PesananPenjualanBarangList = ({
                                             </div>
                                             <div className="col-span-3">
                                                 Total Harga <p>Rp. {parseToRupiahText(x.total_harga)}</p>
+                                                {
+                                                    fakturStatus ? <>
+                                                        Status <p>{x.piutang != "0" ? `Belum Lunas ( Rp. ${parseToRupiahText(x.piutang)} )` : "Sudah Lunas"}</p>
+                                                    </> : <></>
+                                                }
                                             </div>
                                         </div>
                                         {

@@ -320,14 +320,17 @@ export const getJumlahRincianTransaksiDendaOnTableByTanggalRepo = async (table_n
                 (
                     SELECT 
                         COUNT(0) 
-                    FROM ${generateDatabaseName(req_id)}.rincian_${table_name}_denda_tab rppt 
+                    FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppt 
                     WHERE rppt.${table_name} = ppt.uuid 
+                    AND ppt.enabled = 1
+                    AND rppt.enabled = 1
                 ) AS rincian_denda_count,
                 (
                     SELECT 
                         COUNT(0) 
                     FROM ${generateDatabaseName(req_id)}.${table_name}_tab ppt 
                     WHERE ppt.faktur_penjualan_barang = ppt.faktur_penjualan_barang 
+                    AND ppt.enabled = 1
                 ) AS ${table_name}_denda_count
             FROM ${generateDatabaseName(req_id)}.${table_name}_tab ppt WHERE ppt.tanggal = "${tanggal}"
         `,

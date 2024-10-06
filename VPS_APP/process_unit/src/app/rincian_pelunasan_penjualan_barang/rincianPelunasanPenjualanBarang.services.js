@@ -18,14 +18,20 @@ export const getAllRincianPelunasanPenjualanBarangService = async (query, req_id
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const rincianPelunasanPenjualanBarangs = await getAllRincianPelunasanPenjualanBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(rincianPelunasanPenjualanBarangs.entry, rincianPelunasanPenjualanBarangs.count, rincianPelunasanPenjualanBarangs.pageNumber, rincianPelunasanPenjualanBarangs.size)
 }
 
+export const getAllRincianPesananPenjualanBarangByTanggalService = async (tanggal, faktur_penjualan_barang, req_identity) => {
+    LOGGER(logType.INFO, `Start getAllRincianPesananPenjualanBarangByTanggalService`, { tanggal, faktur_penjualan_barang }, req_identity)
+    const rincianPesananPenjualanBarang = await getAllRincianPesananPenjualanBarangByPelunasanPenjualanRepo(null, tanggal, faktur_penjualan_barang, req_identity)
+    return rincianPesananPenjualanBarang
+}
+
 export const getAllRincianPesananPenjualanBarangByPelunasanPenjualanService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getAllRincianPesananPenjualanBarangByPelunasanPenjualanService [${uuid}]`, null, req_identity)
-    const rincianPesananPenjualanBarang = await getAllRincianPesananPenjualanBarangByPelunasanPenjualanRepo(uuid, req_identity)
+    const rincianPesananPenjualanBarang = await getAllRincianPesananPenjualanBarangByPelunasanPenjualanRepo(uuid, null, null, req_identity)
     return rincianPesananPenjualanBarang
 }
 

@@ -79,6 +79,7 @@ const PotonganPegawaiForm = ({
                 </div>
                 <div className="mt-5 flex gap-x-2">
                     <ToggleBox
+                        disabled={idPegawai}
                         label="Periode"
                         labelTextSize="text-sm"
                         toggleBox={periode}

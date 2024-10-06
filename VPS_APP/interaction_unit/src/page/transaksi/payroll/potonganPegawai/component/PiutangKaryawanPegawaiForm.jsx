@@ -84,7 +84,7 @@ const PiutangKaryawanPegawaiForm = ({
             <p className="my-3 mx-1 font-bold text-xl">Rp. {parseToRupiahText(totalUtangPegawai)}</p>
             <div className="flex items-end gap-x-2">
                 <FormSelectWithLabel
-                    label={"Sumber Dana"}
+                    label={"Kode Akun"}
                     optionsDataList={kodeAkunList}
                     optionsLabel={["code", "name"]}
                     optionsValue={"uuid"}

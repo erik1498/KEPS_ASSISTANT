@@ -5,15 +5,14 @@ import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLab
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import { FaSave, FaTimes } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
-import ToggleBox from "../../../../../component/general/ToggleBox"
-import PelunasanPenjualanBarangForm from "./PelunasanPenjualanBarangForm"
 import RiwayatTransaksiPenjualanBarang from "./RiwayatTransaksiPenjualanBarang"
 
 const FakturPenjualanBarangForm = ({
     pesananPenjualanBarang,
     setFakturStatus = () => { },
     fakturStatus,
-    ppnStatus
+    ppnStatus,
+    setTanggalTransaksiAkhir = () => { }
 }) => {
     const [fakturPenjualanBarang, setFakturPnenjualanBarang] = useState()
     const [fakturCancel, setFakturCancel] = useState(true)
@@ -291,6 +290,7 @@ const FakturPenjualanBarangForm = ({
                 <RiwayatTransaksiPenjualanBarang
                     fakturPenjualanBarang={fakturPenjualanBarang}
                     setFakturCancel={setFakturCancel}
+                    setTanggalTransaksiAkhir={setTanggalTransaksiAkhir}
                 />
             </> : <></>
         }

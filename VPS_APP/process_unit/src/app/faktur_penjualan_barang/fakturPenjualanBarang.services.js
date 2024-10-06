@@ -86,7 +86,7 @@ export const getJumlahRincianTransaksiOnTableByTanggalService = async (table_nam
 export const getJumlahRincianTransaksiDendaOnTableByTanggalService = async (table_name, tanggal, check_on_myself, req_identity) => {
     LOGGER(logType.INFO, `Start getJumlahRincianTransaksiDendaOnTableByTanggalService`, { table_name, tanggal }, req_identity)
 
-    const jumlahTransaksi = await getJumlahRincianTransaksiDendaOnTableByTanggalRepo(table_name, tanggal);
+    const jumlahTransaksi = await getJumlahRincianTransaksiDendaOnTableByTanggalRepo(table_name, tanggal, req_identity);
 
     if (!check_on_myself) {
         if (jumlahTransaksi.length > 0 && jumlahTransaksi[0].rincian_count == 0) {

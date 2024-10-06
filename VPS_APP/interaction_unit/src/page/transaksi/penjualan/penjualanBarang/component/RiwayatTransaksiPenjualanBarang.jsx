@@ -12,7 +12,8 @@ import RiwayatTransaksiPengembalianDendaPenjualanBarang from "./RiwayatTransaksi
 
 const RiwayatTransaksiPenjualanBarang = ({
     fakturPenjualanBarang,
-    setFakturCancel = () => { }
+    setFakturCancel = () => { },
+    setTanggalTransaksiAkhir = () => { }
 }) => {
 
     const [tanggal, setTanggal] = useState(getHariTanggalFull())
@@ -36,6 +37,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                 .then(resData => {
                     if (resData.data.length > 0) {
                         setFakturCancel(x => x = false)
+                        setTanggalTransaksiAkhir(x => x = resData.data[0].tanggal)
                     }
                     setRiwayatTransaksi(x => x = getNormalizedByDate(resData.data))
                 })

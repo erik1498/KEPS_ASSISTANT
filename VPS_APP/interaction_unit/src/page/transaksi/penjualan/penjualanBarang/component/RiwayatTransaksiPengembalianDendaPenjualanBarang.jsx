@@ -37,7 +37,7 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = ({
                     data: {
                         pengembalian_denda_penjualan_barang: riwayatPengembalianDendaPenjualanBarang.uuid,
                         rincian_pesanan_penjualan_barang: listPengembalianDendaPenjualanBarang[index].uuid,
-                        denda_yang_dikembalikan: listPengembalianDendaPenjualanBarang[index].denda_yang_dikembalikan,
+                        denda_yang_dikembalikan: `${listPengembalianDendaPenjualanBarang[index].denda_yang_dikembalikan}`,
                     }
                 })
         }

@@ -1,5 +1,5 @@
 import { rincianPelunasanPenjualanBarangValidation } from "./rincianPelunasanPenjualanBarang.validation.js"
-import { createRincianPelunasanPenjualanBarangService, deleteRincianPelunasanPenjualanBarangByUuidService, getAllRincianPelunasanPenjualanBarangService, getAllRincianPesananPenjualanBarangByPelunasanPenjualanService, getRincianPelunasanPenjualanBarangByUuidService, updateRincianPelunasanPenjualanBarangByUuidService } from "./rincianPelunasanPenjualanBarang.services.js"
+import { createRincianPelunasanPenjualanBarangService, deleteRincianPelunasanPenjualanBarangByUuidService, getAllRincianPelunasanPenjualanBarangService, getAllRincianPesananPenjualanBarangByPelunasanPenjualanService, getAllRincianPesananPenjualanBarangByTanggalService, getRincianPelunasanPenjualanBarangByUuidService, updateRincianPelunasanPenjualanBarangByUuidService } from "./rincianPelunasanPenjualanBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -11,7 +11,25 @@ export const getAllRincianPelunasanPenjualanBarangs = async (req, res) => {
             data: rincianPelunasanPenjualanBarangs,
             message: "Get Data Success"
         })
-    } catch (error) {    
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getAllRincianPesananPenjualanBarangByTanggal = async (req, res) => {
+    LOGGER(logType.INFO, "Start getAllRincianPesananPenjualanBarangByTanggal", null, req.identity)
+    try {
+        const { tanggal, faktur_penjualan_barang } = req.body
+
+        res.json({
+            data: await getAllRincianPesananPenjualanBarangByTanggalService(tanggal, faktur_penjualan_barang, req.identity),
+            message: "Get Data By UUID Success"
+        })
+    } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
@@ -102,7 +120,7 @@ export const deleteRincianPelunasanPenjualanBarangByUUID = async (req, res) => {
 
 export const updateRincianPelunasanPenjualanBarangByUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start updateRincianPelunasanPenjualanBarangByUuidController", null, req.identity)
-    try {    
+    try {
         const rincianPelunasanPenjualanBarangData = req.body
         const { error, value } = rincianPelunasanPenjualanBarangValidation(rincianPelunasanPenjualanBarangData)
         if (error) {

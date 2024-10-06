@@ -1096,12 +1096,12 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         YEAR(pkt.tanggal) AS tahun,
                         TIME(pkt.tanggal) AS waktu,
                         CASE 
-                            WHEN pkt.type = 1
+                            WHEN pkt.type = 0
                             THEN pkt.nilai
                             ELSE 0
                         END AS debet,
                         CASE 
-                            WHEN pkt.type = 0
+                            WHEN pkt.type = 1
                             THEN pkt.nilai
                             ELSE 0
                         END AS kredit,
@@ -1134,12 +1134,12 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         YEAR(pkt.tanggal) AS tahun,
                         TIME(pkt.tanggal) AS waktu,
                         CASE 
-                            WHEN pkt.type = 0
+                            WHEN pkt.type = 1
                             THEN pkt.nilai
                             ELSE 0
                         END AS debet,
                         CASE 
-                            WHEN pkt.type = 1
+                            WHEN pkt.type = 0
                             THEN pkt.nilai
                             ELSE 0
                         END AS kredit,

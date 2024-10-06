@@ -18,14 +18,14 @@ export const getAllRincianPelunasanPenjualanDendaBarangService = async (query, r
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const rincianPelunasanPenjualanDendaBarangs = await getAllRincianPelunasanPenjualanDendaBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(rincianPelunasanPenjualanDendaBarangs.entry, rincianPelunasanPenjualanDendaBarangs.count, rincianPelunasanPenjualanDendaBarangs.pageNumber, rincianPelunasanPenjualanDendaBarangs.size)
 }
 
-export const getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanService = async (uuid, req_identity) => {
-    LOGGER(logType.INFO, `Start getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanService [${uuid}]`, null, req_identity)
-    const rincianPesananPenjualanBarang = await getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanRepo(uuid, req_identity)
+export const getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanService = async (uuid, denda_status, req_identity) => {
+    LOGGER(logType.INFO, `Start getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanService [${uuid}]`, { denda_status }, req_identity)
+    const rincianPesananPenjualanBarang = await getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanRepo(uuid, denda_status, req_identity)
     return rincianPesananPenjualanBarang
 }
 

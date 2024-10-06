@@ -13,12 +13,12 @@ export const getAllPiutangKaryawanRepo = async (bulan, tahun, req_id) => {
                 0 AS transaksi,
                 pkt.tanggal,
                 CASE 
-                    WHEN pkt.type = 1
+                    WHEN pkt.type = 0
                     THEN pkt.nilai
                     ELSE 0
                 END AS debet,
                 CASE 
-                    WHEN pkt.type = 0
+                    WHEN pkt.type = 1
                     THEN pkt.nilai
                     ELSE 0
                 END AS kredit,
@@ -42,12 +42,12 @@ export const getAllPiutangKaryawanRepo = async (bulan, tahun, req_id) => {
                 0 AS transaksi,
                 pkt.tanggal,
                 CASE 
-                    WHEN pkt.type = 0
+                    WHEN pkt.type = 1
                     THEN pkt.nilai
                     ELSE 0
                 END AS debet,
                 CASE 
-                    WHEN pkt.type = 1
+                    WHEN pkt.type = 0
                     THEN pkt.nilai
                     ELSE 0
                 END AS kredit,

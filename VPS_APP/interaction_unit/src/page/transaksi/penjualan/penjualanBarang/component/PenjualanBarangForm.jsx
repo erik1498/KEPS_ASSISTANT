@@ -9,11 +9,11 @@ import Pagination from "../../../../../component/general/Pagination"
 import FormInput from "../../../../../component/form/FormInput"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FakturPenjualanBarangForm from "./FakturPenjualanBarangForm"
-import RiwayatTransaksiPenjualanBarang from "./RiwayatTransaksiPenjualanBarang"
 
 const PenjualanBarangForm = ({
     setAddPenjualanBarang = () => { }
 }) => {
+    const [tanggalTransaksiAkhir, setTanggalTransaksiAkhir] = useState(getHariTanggalFull())
     const [fakturStatus, setFakturStatus] = useState(false)
     const [ppnStatus, setPPNStatus] = useState(false)
     const [pilihPesananPenjualanBarang, setPilihPesananPenjualanBarang] = useState(false)
@@ -353,12 +353,14 @@ const PenjualanBarangForm = ({
                     customer={customer}
                     fakturStatus={fakturStatus}
                     setPPNStatus={setPPNStatus}
+                    tanggalTransaksiAkhir={tanggalTransaksiAkhir}
                 />
                 <FakturPenjualanBarangForm
                     pesananPenjualanBarang={pesananPenjualanBarang}
                     setFakturStatus={setFakturStatus}
                     fakturStatus={fakturStatus}
                     ppnStatus={ppnStatus}
+                    setTanggalTransaksiAkhir={setTanggalTransaksiAkhir}
                 />
             </> : <></>
         }

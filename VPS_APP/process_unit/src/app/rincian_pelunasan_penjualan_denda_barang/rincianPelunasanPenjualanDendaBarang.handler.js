@@ -26,7 +26,7 @@ export const getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualan = asyn
         const { uuid } = req.params
 
         res.json({
-            data: await getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanService(uuid, req.identity),
+            data: await getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanService(uuid, false, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {

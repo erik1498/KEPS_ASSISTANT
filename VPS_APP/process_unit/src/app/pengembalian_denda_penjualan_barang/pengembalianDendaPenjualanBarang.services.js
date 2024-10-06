@@ -75,7 +75,7 @@ export const updatePengembalianDendaPenjualanBarangByUuidService = async (uuid, 
     LOGGER(logType.INFO, `Start updatePengembalianDendaPenjualanBarangByUuidService [${uuid}]`, pengembalianDendaPenjualanBarangData, req_identity)
     const beforeData = await getPengembalianDendaPenjualanBarangByUuidService(uuid, req_identity)
 
-    await getTanggalTransaksiTerakhirByFakturPenjualanService(beforeData.faktur_penjualan_barang, beforeData.tanggal, returPenjualanBarangData.tanggal, true, req_identity);
+    await getTanggalTransaksiTerakhirByFakturPenjualanService(beforeData.faktur_penjualan_barang, beforeData.tanggal, pengembalianDendaPenjualanBarangData.tanggal, true, req_identity);
 
     const pengembalianDendaPenjualanBarang = await updatePengembalianDendaPenjualanBarangByUuidRepo(uuid, pengembalianDendaPenjualanBarangData, req_identity)
 

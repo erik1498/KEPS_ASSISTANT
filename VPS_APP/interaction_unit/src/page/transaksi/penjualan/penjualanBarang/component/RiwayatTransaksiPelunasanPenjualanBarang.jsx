@@ -82,7 +82,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
     const _saveRincianPelunasanPenjualanDendaBarang = async () => {
         for (let index = 0; index < listPelunasanPenjualanDendaBarang.length; index++) {
             await apiRincianPelunasanPenjualanDendaBarangCRUD
-                .custom(`${listPelunasanPenjualanDendaBarang[index].rincian_pelunasan_denda_penjualan_barang ? `/${listPelunasanPenjualanDendaBarang[index].rincian_pelunasan_denda_penjualan_barang}` : ""}`, listPelunasanPenjualanDendaBarang[index].rincian_pelunasan_denda_penjualan_barang ? "PUT" : "POST", null, {
+                .custom(`${listPelunasanPenjualanDendaBarang[index].rincian_pelunasan_penjualan_denda_barang ? `/${listPelunasanPenjualanDendaBarang[index].rincian_pelunasan_penjualan_denda_barang}` : ""}`, listPelunasanPenjualanDendaBarang[index].rincian_pelunasan_penjualan_denda_barang ? "PUT" : "POST", null, {
                     data: {
                         pelunasan_penjualan_barang: riwayatPelunasanPenjualanBarang.uuid,
                         rincian_pesanan_penjualan_barang: listPelunasanPenjualanDendaBarang[index].uuid,
@@ -297,7 +297,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                                                             <td>{x.hari_terlewat} Hari</td>
                                                                             <td>Rp. {parseToRupiahText(x.total_denda)}</td>
                                                                             <td>Rp. {parseToRupiahText(x.denda_sudah_dibayar)}</td>
-                                                                            <td>Rp. {parseToRupiahText((x.total_denda - x.denda_sudah_dibayar))}</td>
+                                                                            <td>Rp. {parseToRupiahText((x.piutang_denda))}</td>
                                                                             <td>
                                                                                 {
                                                                                     edited ? <>
@@ -308,7 +308,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                                                                                 defaultValue: 0
                                                                                             }}
                                                                                             onchange={(e) => {
-                                                                                                inputOnlyRupiah(e, x.total_denda - x.denda_sudah_dibayar)
+                                                                                                inputOnlyRupiah(e, x.piutang_denda)
                                                                                                 _updateNilaiPelunasanDenda(e.target.value, x.uuid)
                                                                                             }}
                                                                                             value={parseToRupiahText(x.nilai_pelunasan)}
