@@ -43,8 +43,9 @@ export const getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanRepo = 
             FROM (
                 SELECT 
                     res.*,
+                    (res.total - res.diskon_angka) AS total_diskon_angka,
                     CASE 
-                        WHEN res.sudah_dibayar < (res.total - res.diskon_angka)
+                        WHEN res.sudah_dibayar < res.total
                         THEN res.hari_terlewat * (
                             (res.syarat_pembayaran_denda * (((res.jumlah - res.retur) * res.harga_setelah_diskon) + ((res.jumlah - res.retur) * res.ppn_setelah_diskon) - res.diskon_angka)) / 100
                         )

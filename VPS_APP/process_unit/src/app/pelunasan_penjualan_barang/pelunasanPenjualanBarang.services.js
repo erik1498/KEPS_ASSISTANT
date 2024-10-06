@@ -1,5 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getJumlahRincianTransaksiDendaOnTableByTanggalService, getJumlahRincianTransaksiOnTableByTanggalService, getTanggalTransaksiTerakhirByFakturPenjualanService } from "../faktur_penjualan_barang/fakturPenjualanBarang.services.js"
 import { createPelunasanPenjualanBarangRepo, deletePelunasanPenjualanBarangByUuidRepo, getAllPelunasanPenjualanBarangRepo, getCekDendaByPelunasanPenjualanUUIDRepo, getPelunasanPenjualanBarangByUuidRepo, updatePelunasanPenjualanBarangByUuidRepo } from "./pelunasanPenjualanBarang.repository.js"
 
 export const getAllPelunasanPenjualanBarangService = async (query, req_identity) => {
@@ -18,7 +19,7 @@ export const getAllPelunasanPenjualanBarangService = async (query, req_identity)
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const pelunasanPenjualanBarangs = await getAllPelunasanPenjualanBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(pelunasanPenjualanBarangs.entry, pelunasanPenjualanBarangs.count, pelunasanPenjualanBarangs.pageNumber, pelunasanPenjualanBarangs.size)
 }
@@ -46,6 +47,27 @@ export const createPelunasanPenjualanBarangService = async (pelunasanPenjualanBa
     LOGGER(logType.INFO, `Start createPelunasanPenjualanBarangService`, pelunasanPenjualanBarangData, req_identity)
     pelunasanPenjualanBarangData.enabled = 1
 
+    const tanggalValid = await getTanggalTransaksiTerakhirByFakturPenjualanService(pelunasanPenjualanBarangData.faktur_penjualan_barang, pelunasanPenjualanBarangData.tanggal, pelunasanPenjualanBarangData.tanggal, false, req_identity)
+
+    if (tanggalValid.table_source) {
+        const pelunasanPenjualanAllowAdd = await getJumlahRincianTransaksiOnTableByTanggalService(tanggalValid.table_source, tanggalValid.tanggal_valid, tanggalValid.table_source == "pelunasan_penjualan_barang", req_identity)
+
+        if (pelunasanPenjualanAllowAdd.length > 0 && pelunasanPenjualanAllowAdd[0].rincian_count == 0) {
+            if (pelunasanPenjualanAllowAdd[0][`pelunasan_penjualan_barang_count`] > 0) {
+                const pelunasanPenjualanDendaAllowAdd = await getJumlahRincianTransaksiDendaOnTableByTanggalService("pelunasan_penjualan_barang", tanggalValid.tanggal_valid, true, req_identity)
+                if (pelunasanPenjualanDendaAllowAdd.length > 0 && pelunasanPenjualanDendaAllowAdd[0].rincian_denda_count == 0) {
+                    if (pelunasanPenjualanDendaAllowAdd[0][`pelunasan_penjualan_barang_denda_count`] > 0) {
+                        throw Error(JSON.stringify({
+                            message: "Perintah Ditolak",
+                            field: "error"
+                        }))
+                    }
+                }
+
+            }
+        }
+    }
+
     const pelunasanPenjualanBarang = await createPelunasanPenjualanBarangRepo(pelunasanPenjualanBarangData, req_identity)
     return pelunasanPenjualanBarang
 }
@@ -60,6 +82,9 @@ export const deletePelunasanPenjualanBarangByUuidService = async (uuid, req_iden
 export const updatePelunasanPenjualanBarangByUuidService = async (uuid, pelunasanPenjualanBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updatePelunasanPenjualanBarangByUuidService [${uuid}]`, pelunasanPenjualanBarangData, req_identity)
     const beforeData = await getPelunasanPenjualanBarangByUuidService(uuid, req_identity)
+
+    await getTanggalTransaksiTerakhirByFakturPenjualanService(beforeData.faktur_penjualan_barang, beforeData.tanggal, pelunasanPenjualanBarangData.tanggal, true, req_identity)
+
     const pelunasanPenjualanBarang = await updatePelunasanPenjualanBarangByUuidRepo(uuid, pelunasanPenjualanBarangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

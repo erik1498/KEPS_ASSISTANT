@@ -1,6 +1,39 @@
 import { parseToRupiahText } from "./numberParsingUtil.js"
 import { convertByPlusMinusValue } from "./validateKreditDebetTypeUtil.js"
 
+export const formatDate = (dateString, withHours = true) => {
+    if (!dateString) {
+        return ""
+    }
+
+    let date = new Date(dateString);
+
+    // Mendapatkan komponen tanggal
+    let day = date.getDate().toString().padStart(2, '0');
+    let month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() dimulai dari 0
+    let year = date.getFullYear();
+
+    let formattedDate = day + '/' + month + '/' + year;
+
+    if (withHours) {
+
+        // Mendapatkan komponen waktu
+        let hours = date.getHours();
+        let minutes = date.getMinutes().toString().padStart(2, '0');
+        let seconds = date.getSeconds().toString().padStart(2, '0');
+
+        // Mengatur format 12 jam
+        let ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // Ubah 0 jam menjadi 12
+        let formattedTime = hours.toString().padStart(2, '0') + ':' + minutes + ':' + seconds + ' ' + ampm;
+        return formattedDate + ' ' + formattedTime;
+
+    }
+
+    return formattedDate;
+}
+
 export const renderDataJurnalUmum = (data) => {
     return new Promise((res, rej) => {
         let dataReturn = []

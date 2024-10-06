@@ -15,7 +15,7 @@ export const getAllRincianPengembalianDendaPenjualanBarangs = async (req, res) =
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -33,7 +33,7 @@ export const getRincianPengembalianDendaPenjualanBarangByFakturPenjualanBarangUU
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -59,7 +59,7 @@ export const postCreateRincianPengembalianDendaPenjualanBarang = async (req, res
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -77,7 +77,7 @@ export const deleteRincianPengembalianDendaPenjualanBarangByUUID = async (req, r
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -101,7 +101,7 @@ export const updateRincianPengembalianDendaPenjualanBarangByUUID = async (req, r
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }

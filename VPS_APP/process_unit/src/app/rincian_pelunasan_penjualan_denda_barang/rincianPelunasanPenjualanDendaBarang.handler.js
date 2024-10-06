@@ -15,7 +15,7 @@ export const getAllRincianPelunasanPenjualanDendaBarangs = async (req, res) => {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -33,7 +33,7 @@ export const getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualan = asyn
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -51,7 +51,7 @@ export const getRincianPelunasanPenjualanDendaBarangByUUID = async (req, res) =>
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -77,7 +77,7 @@ export const postCreateRincianPelunasanPenjualanDendaBarang = async (req, res) =
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -95,7 +95,7 @@ export const deleteRincianPelunasanPenjualanDendaBarangByUUID = async (req, res)
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }
@@ -119,7 +119,7 @@ export const updateRincianPelunasanPenjualanDendaBarangByUUID = async (req, res)
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
-            message: error.message
+            errorData: error.message
         })
     }
 }

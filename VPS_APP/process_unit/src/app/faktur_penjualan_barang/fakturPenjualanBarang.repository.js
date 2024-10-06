@@ -191,3 +191,148 @@ export const updateFakturPenjualanBarangByUuidRepo = async (uuid, fakturPenjuala
         }
     )
 }
+
+export const getTanggalTransaksiTerakhirByFakturPenjualanRepo = async (faktur_penjualan, tanggal_lama, tanggal_baru, req_id) => {
+    const fakturPenjualans = await db.query(
+        `
+            SELECT 
+                res.*,
+                (
+                    SELECT 
+                        "pelunasan_penjualan_barang"
+                    FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppt WHERE ppt.tanggal = res.tanggal_valid
+                    AND ppt.enabled = 1
+                    UNION ALL 
+                    SELECT 
+                        "retur_penjualan_barang"
+                    FROM ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpt WHERE rpt.tanggal = res.tanggal_valid
+                    AND rpt.enabled = 1
+                    UNION ALL 
+                    SELECT 
+                        "pengembalian_denda_penjualan_barang"
+                    FROM ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpt WHERE pdpt.tanggal = res.tanggal_valid
+                    AND pdpt.enabled = 1
+                ) AS table_source
+            FROM (
+                SELECT 
+                    res.*,
+                    CASE 
+                        WHEN res.tanggal_terakhir_transaksi = "${tanggal_lama}" AND res.tanggal_terakhir_transaksi_lewati_tanggal_baru <= "${tanggal_baru}"
+                        THEN 1
+                        ELSE 0
+                    END allowToEdit,
+                    CASE
+                        WHEN res.tanggal_terakhir_transaksi > res.tanggal_terakhir_transaksi_lewati_tanggal_baru
+                        THEN 
+                            CASE 
+                                WHEN res.tanggal_terakhir_transaksi < "${tanggal_lama}"
+                                THEN 1
+                                ELSE 0
+                            END
+                        ELSE 
+                            CASE 
+                                WHEN res.tanggal_terakhir_transaksi_lewati_tanggal_baru < "${tanggal_lama}"
+                                THEN 1
+                                ELSE 0
+                            END
+                    END AS allowToAdd,
+                    CASE
+                        WHEN res.tanggal_terakhir_transaksi > res.tanggal_terakhir_transaksi_lewati_tanggal_baru
+                        THEN res.tanggal_terakhir_transaksi
+                        ELSE res.tanggal_terakhir_transaksi_lewati_tanggal_baru
+                    END AS tanggal_valid
+                FROM (
+                    SELECT
+                        GREATEST(
+                            fpbt.tanggal,
+                            IFNULL((
+                                SELECT MAX(ppbt2.tanggal) FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 WHERE ppbt2.faktur_penjualan_barang = fpbt.uuid 
+                                AND ppbt2.enabled = 1
+                            ), fpbt.tanggal),
+                            IFNULL((
+                                SELECT MAX(rpt.tanggal) FROM ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpt WHERE rpt.faktur_penjualan_barang = fpbt.uuid 
+                                AND rpt.enabled = 1
+                            ), fpbt.tanggal),
+                            IFNULL((
+                                SELECT MAX(pdpt.tanggal) FROM ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpt WHERE pdpt.faktur_penjualan_barang = fpbt.uuid
+                                AND pdpt.enabled = 1
+                            ), fpbt.tanggal) 
+                        ) AS tanggal_terakhir_transaksi,
+                        GREATEST(
+                            fpbt.tanggal,
+                            IFNULL((
+                                SELECT MAX(ppbt2.tanggal) FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 WHERE ppbt2.faktur_penjualan_barang = fpbt.uuid AND ppbt2.tanggal >= "${tanggal_baru}" AND ppbt2.tanggal < "${tanggal_lama}"
+                                AND ppbt2.enabled = 1
+                            ), fpbt.tanggal),
+                            IFNULL((
+                                SELECT MAX(rpt.tanggal) FROM ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpt WHERE rpt.faktur_penjualan_barang = fpbt.uuid AND rpt.tanggal >= "${tanggal_baru}" AND rpt.tanggal < "${tanggal_lama}"
+                                AND rpt.enabled = 1
+                            ), fpbt.tanggal),
+                            IFNULL((
+                                SELECT MAX(pdpt.tanggal) FROM ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpt WHERE pdpt.faktur_penjualan_barang = fpbt.uuid AND pdpt.tanggal >= "${tanggal_baru}" AND pdpt.tanggal < "${tanggal_lama}"
+                                AND pdpt.enabled = 1
+                            ), fpbt.tanggal) 
+                        ) AS tanggal_terakhir_transaksi_lewati_tanggal_baru
+                    FROM ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt
+                    JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppt ON ppt.uuid = fpbt.pesanan_penjualan_barang 
+                    WHERE fpbt.uuid = "${faktur_penjualan}"
+                ) AS res
+            ) AS res
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+
+    return fakturPenjualans
+}
+
+export const getJumlahRincianTransaksiOnTableByTanggalRepo = async (table_name, tanggal, req_id) => {
+    const fakturPenjualans = await db.query(
+        `
+            SELECT 
+                (
+                    SELECT 
+                        COUNT(0) 
+                    FROM ${generateDatabaseName(req_id)}.rincian_${table_name}_tab rppt 
+                    WHERE rppt.${table_name} = ppt.uuid 
+                    AND ppt.enabled = 1
+                    AND rppt.enabled = 1
+                ) AS rincian_count,
+                (
+                    SELECT 
+                        COUNT(0) 
+                    FROM ${generateDatabaseName(req_id)}.${table_name}_tab ppt 
+                    WHERE ppt.faktur_penjualan_barang = ppt.faktur_penjualan_barang 
+                    AND ppt.enabled = 1
+                ) AS ${table_name}_count
+            FROM ${generateDatabaseName(req_id)}.${table_name}_tab ppt WHERE ppt.tanggal = "${tanggal}"
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+
+    return fakturPenjualans
+}
+
+
+export const getJumlahRincianTransaksiDendaOnTableByTanggalRepo = async (table_name, tanggal, req_id) => {
+    const fakturPenjualans = await db.query(
+        `
+            SELECT 
+                (
+                    SELECT 
+                        COUNT(0) 
+                    FROM ${generateDatabaseName(req_id)}.rincian_${table_name}_denda_tab rppt 
+                    WHERE rppt.${table_name} = ppt.uuid 
+                ) AS rincian_denda_count,
+                (
+                    SELECT 
+                        COUNT(0) 
+                    FROM ${generateDatabaseName(req_id)}.${table_name}_tab ppt 
+                    WHERE ppt.faktur_penjualan_barang = ppt.faktur_penjualan_barang 
+                ) AS ${table_name}_denda_count
+            FROM ${generateDatabaseName(req_id)}.${table_name}_tab ppt WHERE ppt.tanggal = "${tanggal}"
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+
+    return fakturPenjualans
+}
