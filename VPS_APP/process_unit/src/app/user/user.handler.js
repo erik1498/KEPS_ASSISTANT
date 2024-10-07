@@ -85,7 +85,6 @@ export const loginUser = async (req, res) => {
 
         const token = jwt.sign({
             userId: user.uuid,
-            userRole: user.role,
             userKey: user.serial_key,
             macAddr: user.mac_address
         }, getEnv("JWT_SECRET"), {
@@ -162,7 +161,6 @@ export const refreshToken = async (req, res) => {
 
         const token = jwt.sign({
             userId: user.uuid,
-            userRole: user.role,
             userKey: user.serial_key,
             macAddr: user.mac_address
         }, getEnv("JWT_SECRET"), {

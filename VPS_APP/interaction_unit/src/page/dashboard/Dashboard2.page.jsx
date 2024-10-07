@@ -6,11 +6,11 @@ import Pembelian from "./types/Pembelian"
 import Biaya from "./types/Biaya"
 import { useEffect } from "react"
 import { useDataContext } from "../../context/dataContext.context"
-import { getCookie, setCookie } from "../../helper/cookies.helper"
+import { getCookie, getRolesInCookie, setCookie } from "../../helper/cookies.helper"
 import AktivitasDokumen from "./types/AktivitasDokumen"
 
 const Dashboard2Page = () => {
-    const [type, setType] = useState("overview")
+    const [type, setType] = useState("")
 
     const { _getDataKodeAkun } = useDataContext()
 
@@ -19,6 +19,7 @@ const Dashboard2Page = () => {
             _getDataKodeAkun()
             setCookie("loadedKodeAkun", true)
         }
+        setType(x => x = getRolesInCookie("Dashboard_Overview") ? "overview" : "")
     }, [])
     return <Wrap
         isLoading={false}
@@ -27,11 +28,31 @@ const Dashboard2Page = () => {
             <div className="col-span-12">
                 <h1 className="font-bold text-2xl my-5 uppercase text-white">{type.replace("_", " ")}</h1>
                 <div className="flex my-3 gap-x-2">
-                    <button onClick={() => setType("overview")} className={`btn-sm ${type == "overview" ? `bg-white text-blue-900 font-bold` : `text-white`} border rounded-box border-white`}>Overview</button>
-                    <button onClick={() => setType("penjualan")} className={`btn-sm ${type == "penjualan" ? `bg-white text-blue-900 font-bold` : `text-white`} border rounded-box border-white`}>Penjualan</button>
-                    <button onClick={() => setType("pembelian")} className={`btn-sm ${type == "pembelian" ? `bg-white text-blue-900 font-bold` : `text-white`} border rounded-box border-white`}>Pembelian</button>
-                    <button onClick={() => setType("biaya")} className={`btn-sm ${type == "biaya" ? `bg-white text-blue-900 font-bold` : `text-white`} border rounded-box border-white`}>Biaya</button>
-                    <button onClick={() => setType("aktivitas_dokumen")} className={`btn-sm ${type == "aktivitas_dokumen" ? `bg-white text-blue-900 font-bold` : `text-white`} border rounded-box border-white`}>Aktivitas Dokumen</button>
+                    {
+                        getRolesInCookie("Dashboard_Overview") ? <>
+                            <button onClick={() => setType("overview")} className={`btn-sm ${type == "overview" ? `bg-white text-blue-900 font-bold` : `text-white`} border rounded-box border-white`}>Overview</button>
+                        </> : <></>
+                    }
+                    {
+                        getRolesInCookie("Dashboard_Penjualan") ? <>
+                            <button onClick={() => setType("penjualan")} className={`btn-sm ${type == "penjualan" ? `bg-white text-blue-900 font-bold` : `text-white`} border rounded-box border-white`}>Penjualan</button>
+                        </> : <></>
+                    }
+                    {
+                        getRolesInCookie("Dashboard_Pembelian") ? <>
+                            <button onClick={() => setType("pembelian")} className={`btn-sm ${type == "pembelian" ? `bg-white text-blue-900 font-bold` : `text-white`} border rounded-box border-white`}>Pembelian</button>
+                        </> : <></>
+                    }
+                    {
+                        getRolesInCookie("Dashboard_Biaya") ? <>
+                            <button onClick={() => setType("biaya")} className={`btn-sm ${type == "biaya" ? `bg-white text-blue-900 font-bold` : `text-white`} border rounded-box border-white`}>Biaya</button>
+                        </> : <></>
+                    }
+                    {
+                        getRolesInCookie("Dashboard_AktivitasDokumen") ? <>
+                            <button onClick={() => setType("aktivitas_dokumen")} className={`btn-sm ${type == "aktivitas_dokumen" ? `bg-white text-blue-900 font-bold` : `text-white`} border rounded-box border-white`}>Aktivitas Dokumen</button>
+                        </> : <></>
+                    }
                 </div>
             </div>
         </div>

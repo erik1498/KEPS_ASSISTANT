@@ -35,7 +35,7 @@ const UserModel = db.define("user_tab",
             }
         },
         role: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false,
             validate: {
                 notEmpty: true,

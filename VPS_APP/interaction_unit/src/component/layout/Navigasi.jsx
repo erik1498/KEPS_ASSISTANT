@@ -69,41 +69,85 @@ const Navigasi = () => {
                                     sideBars={sideBars[0]}
                                 />
                                 <ul className="menu bg-base-200 rounded-box w-56">
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Master</p>
-                                        <ul>
+                                    {
+                                        getRolesInCookie("Perusahaan_Master") ? <>
                                             <li>
-                                                <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Kode Akun"} />
+                                                <p className="font-bold pointer-events-none">Master</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("Perusahaan_Master_KodeAkun") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Kode Akun"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Perusahaan_Master_Customer") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/perusahaan/customer" addClass={"my-1"} label={"Data Customer"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Perusahaan_Master_Supplier") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Data Supplier"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Perusahaan_Master_Pegawai") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/perusahaan/pegawai" addClass={"my-1"} label={"Data Pegawai"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
                                             </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Perusahaan_Cabang") ? <>
                                             <li>
-                                                <NavigationLink to="/perusahaan/customer" addClass={"my-1"} label={"Data Customer"} />
+                                                <NavigationLink to="/perusahaan/cabang" addClass={"my-1"} label={"Cabang"} />
                                             </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Perusahaan_Divisi") ? <>
                                             <li>
-                                                <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Data Supplier"} />
+                                                <NavigationLink to="/perusahaan/divisi" addClass={"my-1"} label={"Divisi"} />
                                             </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Perusahaan_Jabatan") ? <>
                                             <li>
-                                                <NavigationLink to="/perusahaan/pegawai" addClass={"my-1"} label={"Data Pegawai"} />
+                                                <NavigationLink to="/perusahaan/jabatan" addClass={"my-1"} label={"Jabatan"} />
                                             </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/perusahaan/cabang" addClass={"my-1"} label={"Cabang"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/perusahaan/divisi" addClass={"my-1"} label={"Divisi"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/perusahaan/jabatan" addClass={"my-1"} label={"Jabatan"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/perusahaan/tipePembayaran" addClass={"my-1"} label={"Tipe Pembayaran"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/perusahaan/syaratPembayaran" addClass={"my-1"} label={"Syarat Pembayaran"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/perusahaan/statusTanggungan" addClass={"my-1"} label={"Status Tanggungan"} />
-                                    </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Perusahaan_TipePembayaran") ? <>
+                                            <li>
+                                                <NavigationLink to="/perusahaan/tipePembayaran" addClass={"my-1"} label={"Tipe Pembayaran"} />
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Perusahaan_SyaratPembayaran") ? <>
+                                            <li>
+                                                <NavigationLink to="/perusahaan/syaratPembayaran" addClass={"my-1"} label={"Syarat Pembayaran"} />
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Perusahaan_StatusTanggungan") ? <>
+                                            <li>
+                                                <NavigationLink to="/perusahaan/statusTanggungan" addClass={"my-1"} label={"Status Tanggungan"} />
+                                            </li>
+                                        </> : <></>
+                                    }
                                 </ul>
                             </details>
                         </li>
@@ -119,50 +163,90 @@ const Navigasi = () => {
                                     sideBars={sideBars[0]}
                                 />
                                 <ul className="menu bg-base-200 rounded-box w-56">
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Kas & Bank</p>
-                                        <ul>
+                                    {
+                                        getRolesInCookie("Transaksi_KasDanBank") ? <>
                                             <li>
-                                                <NavigationLink to="/transaksi/kasDanBank/kas" addClass={"my-1"} label={"Transaksi Kas"} />
+                                                <p className="font-bold pointer-events-none">Kas & Bank</p>
+                                                <ul>
+                                                    <li>
+                                                        <NavigationLink to="/transaksi/kasDanBank/kas" addClass={"my-1"} label={"Transaksi Kas"} />
+                                                    </li>
+                                                    <li>
+                                                        <NavigationLink to="/transaksi/kasDanBank/bank" addClass={"my-1"} label={"Transaksi Bank"} />
+                                                    </li>
+                                                </ul>
                                             </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Transaksi_Penjualan") ? <>
                                             <li>
-                                                <NavigationLink to="/transaksi/kasDanBank/bank" addClass={"my-1"} label={"Transaksi Bank"} />
+                                                <p className="font-bold pointer-events-none">Penjualan</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("Transaksi_Penjualan_Barang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/transaksi/penjualan/barang" addClass={"my-1"} label={"Barang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Transaksi_Penjualan_Jasa") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/transaksi/penjualan/jasa" addClass={"my-1"} label={"Jasa"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
                                             </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Penjualan</p>
-                                        <ul>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Transaksi_Pembelian") ? <>
                                             <li>
-                                                <NavigationLink to="/transaksi/penjualan/barang" addClass={"my-1"} label={"Barang"} />
+                                                <p className="font-bold pointer-events-none">Pembelian</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("Transaksi_Pembelian_Barang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/transaksi/pembelian/barang" addClass={"my-1"} label={"Barang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
                                             </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Transaksi_Payroll") ? <>
                                             <li>
-                                                <NavigationLink to="/transaksi/penjualan/jasa" addClass={"my-1"} label={"Jasa"} />
+                                                <p className="font-bold pointer-events-none">Payroll</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("Transaksi_Payroll_PendapatanPegawai") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/transaksi/payroll/pendapatanPegawai" addClass={"my-1"} label={"Pendapatan Pegawai"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Transaksi_Payroll_PotonganPegawai") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/transaksi/payroll/potonganPegawai" addClass={"my-1"} label={"Potongan Pegawai"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Transaksi_Payroll_SlipGajiPegawai") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/transaksi/payroll/slipGajiPegawai" addClass={"my-1"} label={"Slip Gaji Pegawai"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
                                             </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Pembelian</p>
-                                        <ul>
-                                            <li>
-                                                <NavigationLink to="/transaksi/pembelian/barang" addClass={"my-1"} label={"Barang"} />
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Payroll</p>
-                                        <ul>
-                                            <li>
-                                                <NavigationLink to="/transaksi/payroll/pendapatanPegawai" addClass={"my-1"} label={"Pendapatan Pegawai"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/transaksi/payroll/potonganPegawai" addClass={"my-1"} label={"Potongan Pegawai"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/transaksi/payroll/slipGajiPegawai" addClass={"my-1"} label={"Slip Gaji Pegawai"} />
-                                            </li>
-                                        </ul>
-                                    </li>
+                                        </> : <></>
+                                    }
                                 </ul>
                             </details>
                         </li>
@@ -178,48 +262,97 @@ const Navigasi = () => {
                                     sideBars={sideBars[0]}
                                 />
                                 <ul className="menu bg-base-200 rounded-box w-56">
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Aset Tetap</p>
-                                        <ul>
+                                    {
+                                        getRolesInCookie("AsetTetapDanPerlengkapan_Aset") ? <>
                                             <li>
-                                                <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/daftarAset" addClass={"my-1"} label={"Daftar Aset"} />
+                                                <p className="font-bold pointer-events-none">Aset Tetap</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("AsetTetapDanPerlengkapan_Aset_DaftarAset") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/daftarAset" addClass={"my-1"} label={"Daftar Aset"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("AsetTetapDanPerlengkapan_Aset_KategoriAset") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/kategoriAset" addClass={"my-1"} label={"Kategori Aset"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("AsetTetapDanPerlengkapan_Aset_KelompokAset") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/kelompokAset" addClass={"my-1"} label={"Kelompok Aset"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
                                             </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("AsetTetapDanPerlengkapan_Perlengkapan") ? <>
                                             <li>
-                                                <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/kategoriAset" addClass={"my-1"} label={"Kategori Aset"} />
+                                                <p className="font-bold pointer-events-none">Perlengkapan</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("AsetTetapDanPerlengkapan_Perlengkapan_DaftarPerlengkapan") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/daftarPerlengkapan" addClass={"my-1"} label={"Daftar Perlengkapan"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("AsetTetapDanPerlengkapan_Perlengkapan_KategoriPerlengkapan") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan" addClass={"my-1"} label={"Kategori Perlengkapan"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
                                             </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("AsetTetapDanPerlengkapan_Penyusutan") ? <>
                                             <li>
-                                                <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/kelompokAset" addClass={"my-1"} label={"Kelompok Aset"} />
+                                                <p className="font-bold pointer-events-none">Penyusutan</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("AsetTetapDanPerlengkapan_Penyusutan_MetodePenyusutan") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan" addClass={"my-1"} label={"Metode Penyusutan"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("AsetTetapDanPerlengkapan_Penyusutan_PersentasePenyusutan") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/persentasePenyusutan" addClass={"my-1"} label={"Persentase Penyusutan"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("AsetTetapDanPerlengkapan_Penyusutan_HitunganPenyusutan") ? <>
+
+                                                            <li>
+                                                                <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/hitunganPenyusutan" addClass={"my-1"} label={"Hitungan Penyusutan"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("AsetTetapDanPerlengkapan_Penyusutan_JurnalPenyusutan") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Penyusutan"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
                                             </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Perlengkapan</p>
-                                        <ul>
-                                            <li>
-                                                <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/daftarPerlengkapan" addClass={"my-1"} label={"Daftar Perlengkapan"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan" addClass={"my-1"} label={"Kategori Perlengkapan"} />
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Penyusutan</p>
-                                        <ul>
-                                            <li>
-                                                <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan" addClass={"my-1"} label={"Metode Penyusutan"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/persentasePenyusutan" addClass={"my-1"} label={"Persentase Penyusutan"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/hitunganPenyusutan" addClass={"my-1"} label={"Hitungan Penyusutan"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Penyusutan"} />
-                                            </li>
-                                        </ul>
-                                    </li>
+                                        </> : <></>
+                                    }
                                 </ul>
                             </details>
                         </li>
@@ -235,77 +368,161 @@ const Navigasi = () => {
                                     sideBars={sideBars[0]}
                                 />
                                 <ul className="menu bg-base-200 rounded-box w-max max-h-[80vh] no-scrollbar">
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Barang</p>
-                                        <ul>
+                                    {
+                                        getRolesInCookie("Persediaan_Barang") ? <>
                                             <li>
-                                                <NavigationLink to="/persediaan/barang/daftarBarang" addClass={"my-1"} label={"Daftar Barang"} />
+                                                <p className="font-bold pointer-events-none">Barang</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("Persediaan_Barang_DaftarBarang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/barang/daftarBarang" addClass={"my-1"} label={"Daftar Barang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Barang_SatuanBarang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/barang/satuanBarang" addClass={"my-1"} label={"Satuan Barang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Barang_KategoriBarang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/barang/kategoriBarang" addClass={"my-1"} label={"Kategori Barang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Barang_Jenis_Barang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/barang/jenisBarang" addClass={"my-1"} label={"Jenis Barang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Barang_JenisPenjualanBarang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/barang/jenisPenjualanBarang" addClass={"my-1"} label={"Jenis Penjualan"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Barang_TransferBarang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/barang/transferBarang" addClass={"my-1"} label={"Transfer Barang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Barang_KonversiBarang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/barang/konversiBarang" addClass={"my-1"} label={"Konversi Penjualan"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
                                             </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Persediaan_Jasa") ? <>
                                             <li>
-                                                <NavigationLink to="/persediaan/barang/satuanBarang" addClass={"my-1"} label={"Satuan Barang"} />
+                                                <p className="font-bold pointer-events-none">Jasa</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("Persediaan_Jasa_DaftarJasa") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/jasa/daftarJasa" addClass={"my-1"} label={"Daftar Jasa"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Jasa_SatuanJasa") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/jasa/satuanJasa" addClass={"my-1"} label={"Satuan Jasa"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Jasa_KategoriJasa") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/jasa/kategoriJasa" addClass={"my-1"} label={"Kategori Jasa"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Jasa_JenisJasa") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/jasa/jenisJasa" addClass={"my-1"} label={"Jenis Jasa"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Jasa_JenisPenjualanJasa") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/jasa/jenisPenjualanJasa" addClass={"my-1"} label={"Jenis Penjualan"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
                                             </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Persediaan_Opname") ? <>
                                             <li>
-                                                <NavigationLink to="/persediaan/barang/kategoriBarang" addClass={"my-1"} label={"Kategori Barang"} />
+                                                <p className="font-bold pointer-events-none">Opname</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("Persediaan_Opname_PerinahStokOpname") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Perintah Stok Opname"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Opname_JurnalStokOpname") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Stok Opname"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
                                             </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Persediaan_Gudang") ? <>
                                             <li>
-                                                <NavigationLink to="/persediaan/barang/jenisBarang" addClass={"my-1"} label={"Jenis Barang"} />
+                                                <p className="font-bold pointer-events-none">Gudang</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("Persediaan_Gudang_DaftarGudang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/gudang/daftarGudang" addClass={"my-1"} label={"Daftar Gudang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Gudang_JenisGudang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/gudang/jenisGudang" addClass={"my-1"} label={"Jenis Gudang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Gudang_KategoriGudang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/gudang/kategoriGudang" addClass={"my-1"} label={"Kategori Gudang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
                                             </li>
-                                            <li>
-                                                <NavigationLink to="/persediaan/barang/jenisPenjualanBarang" addClass={"my-1"} label={"Jenis Penjualan"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/persediaan/barang/transferBarang" addClass={"my-1"} label={"Transfer Barang"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/persediaan/barang/konversiBarang" addClass={"my-1"} label={"Konversi Penjualan"} />
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Jasa</p>
-                                        <ul>
-                                            <li>
-                                                <NavigationLink to="/persediaan/jasa/daftarJasa" addClass={"my-1"} label={"Daftar Jasa"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/persediaan/jasa/satuanJasa" addClass={"my-1"} label={"Satuan Jasa"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/persediaan/jasa/kategoriJasa" addClass={"my-1"} label={"Kategori Jasa"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/persediaan/jasa/jenisJasa" addClass={"my-1"} label={"Jenis Jasa"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/persediaan/jasa/jenisPenjualanJasa" addClass={"my-1"} label={"Jenis Penjualan"} />
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Opname</p>
-                                        <ul>
-                                            <li>
-                                                <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Perintah Stok Opname"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Stok Opname"} />
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <p className="font-bold pointer-events-none">Gudang</p>
-                                        <ul>
-                                            <li>
-                                                <NavigationLink to="/persediaan/gudang/daftarGudang" addClass={"my-1"} label={"Daftar Gudang"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/persediaan/gudang/jenisGudang" addClass={"my-1"} label={"Jenis Gudang"} />
-                                            </li>
-                                            <li>
-                                                <NavigationLink to="/persediaan/gudang/kategoriGudang" addClass={"my-1"} label={"Kategori Gudang"} />
-                                            </li>
-                                        </ul>
-                                    </li>
+                                        </> : <></>
+                                    }
                                 </ul>
                             </details>
                         </li>
@@ -321,12 +538,20 @@ const Navigasi = () => {
                                     sideBars={sideBars[0]}
                                 />
                                 <ul className="bg-white rounded-md w-full">
-                                    <li>
-                                        <NavigationLink to="/bukuBesar/jurnalUmum" addClass={"my-1"} label={"Jurnal Umum"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/bukuBesar/historyAkun" addClass={"my-1"} label={"History Akun"} />
-                                    </li>
+                                    {
+                                        getRolesInCookie("BukuBesar_JurnalUmum") ? <>
+                                            <li>
+                                                <NavigationLink to="/bukuBesar/jurnalUmum" addClass={"my-1"} label={"Jurnal Umum"} />
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("BukuBesar_HistoryAkun") ? <>
+                                            <li>
+                                                <NavigationLink to="/bukuBesar/historyAkun" addClass={"my-1"} label={"History Akun"} />
+                                            </li>
+                                        </> : <></>
+                                    }
                                 </ul>
                             </details>
                         </li>
@@ -342,18 +567,34 @@ const Navigasi = () => {
                                     sideBars={sideBars[0]}
                                 />
                                 <ul className="bg-white rounded-md w-max">
-                                    <li>
-                                        <NavigationLink to="/laporan/neracaSaldo" addClass={"my-1"} label={"Neraca Saldo"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/laporan/labaRugi" addClass={"my-1"} label={"Laba Rugi"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/laporan/neraca" addClass={"my-1"} label={"Neraca"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/laporan/perubahanModal" addClass={"my-1"} label={"Perubahan Modal"} />
-                                    </li>
+                                    {
+                                        getRolesInCookie("Laporan_NeracaSaldo") ? <>
+                                            <li>
+                                                <NavigationLink to="/laporan/neracaSaldo" addClass={"my-1"} label={"Neraca Saldo"} />
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Laporan_LabaRugi") ? <>
+                                            <li>
+                                                <NavigationLink to="/laporan/labaRugi" addClass={"my-1"} label={"Laba Rugi"} />
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Laporan_Neraca") ? <>
+                                            <li>
+                                                <NavigationLink to="/laporan/neraca" addClass={"my-1"} label={"Neraca"} />
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Laporan_PerubahanModal") ? <>
+                                            <li>
+                                                <NavigationLink to="/laporan/perubahanModal" addClass={"my-1"} label={"Perubahan Modal"} />
+                                            </li>
+                                        </> : <></>
+                                    }
                                 </ul>
                             </details>
                         </li>
