@@ -28,7 +28,7 @@ const RincianPengembalianDendaPenjualanBarangModel = db.define("rincian_pengemba
             }
         },
         denda_yang_dikembalikan: {
-            type: DataTypes.STRING,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,

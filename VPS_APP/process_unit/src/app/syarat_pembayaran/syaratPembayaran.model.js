@@ -35,7 +35,7 @@ const SyaratPembayaranModel = db.define("syarat_pembayaran_tab",
             }
         },
         denda: {
-            type: DataTypes.STRING,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,

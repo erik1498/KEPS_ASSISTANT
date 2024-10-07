@@ -49,49 +49,49 @@ const RincianPesananPenjualanBarangModel = db.define("rincian_pesanan_penjualan_
             }
         },
         harga: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         harga_setelah_diskon: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         ppn: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         ppn_setelah_diskon: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         diskon_angka: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         diskon_persentase: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         total_harga: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,

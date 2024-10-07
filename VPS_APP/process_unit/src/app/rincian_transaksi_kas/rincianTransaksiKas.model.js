@@ -35,7 +35,7 @@ const RincianTransaksiKasModel = db.define("rincian_transaksi_kas_tab",
             }
         },
         nilai: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,

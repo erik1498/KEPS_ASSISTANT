@@ -35,7 +35,7 @@ const RincianTransaksiBankModel = db.define("rincian_transaksi_bank_tab",
             }
         },
         nilai: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,

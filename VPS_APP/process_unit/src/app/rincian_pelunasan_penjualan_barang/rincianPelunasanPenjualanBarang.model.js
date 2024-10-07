@@ -28,21 +28,21 @@ const RincianPelunasanPenjualanBarangModel = db.define("rincian_pelunasan_penjua
             }
         },
         sudah_dibayar: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         piutang: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         nilai_pelunasan: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,

@@ -35,14 +35,14 @@ const RincianReturPenjualanBarangModel = db.define("rincian_retur_penjualan_bara
             }
         },
         denda_sudah_dibayar: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate: {
                 notEmpty: true,
             }
         },
         sudah_dibayar: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate: {
                 notEmpty: true,
@@ -63,14 +63,14 @@ const RincianReturPenjualanBarangModel = db.define("rincian_retur_penjualan_bara
             }
         },
         nilai_retur_sebelum: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate: {
                 notEmpty: true,
             }
         },
         nilai_retur: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate: {
                 notEmpty: true,

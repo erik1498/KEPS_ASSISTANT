@@ -35,28 +35,28 @@ const RincianPelunasanPenjualanDendaBarangModel = db.define("rincian_pelunasan_p
             }
         },
         total_denda: {
-            type: DataTypes.STRING,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate: {
                 notEmpty: true,
             }
         },
         denda_sudah_dibayar: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate: {
                 notEmpty: true,
             }
         },
         piutang_denda: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate: {
                 notEmpty: true,
             }
         },
         nilai_pelunasan: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate: {
                 notEmpty: true,
