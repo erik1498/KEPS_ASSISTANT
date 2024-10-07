@@ -109,6 +109,7 @@ export const loginUser = async (req, res) => {
         res.status(200).json({
             token: tokenEncrypt,
             refreshToken: refreshTokenEncrypt,
+            role: user.role,
             tokenExpired
         });
     } catch (error) {
@@ -183,6 +184,7 @@ export const refreshToken = async (req, res) => {
         res.status(200).json({
             token: tokenEncrypt,
             refreshToken: refreshTokenEncrypt,
+            role: user.role,
             tokenExpired
         })
     } catch (error) {

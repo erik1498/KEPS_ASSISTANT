@@ -3,7 +3,7 @@ import NavigationLink from "./NavigationLink";
 import { useEffect } from "react";
 import { useState } from "react";
 import NavigationLinkParent from "./NavigationLinkParent";
-import { eraseCookie, getCookie } from "../../helper/cookies.helper";
+import { eraseCookie, getCookie, getRolesInCookie } from "../../helper/cookies.helper";
 import { useNavigate } from "react-router-dom";
 import FormSelect from "../form/FormSelect";
 import { useDataContext } from "../../context/dataContext.context";
@@ -24,7 +24,7 @@ const Navigasi = () => {
         })
         setSideBars(sidebarArr)
     }, [])
-    
+
     const _closeAllDetail = (e) => {
         const elementSelected = e.target.localName == "summary" ? e.target.parentNode : e.target
         const details = document.getElementsByTagName("details")
@@ -47,298 +47,330 @@ const Navigasi = () => {
                 </div>
             </div>
             <ul className="menu menu-horizontal bg-white text-blue-900 px-2 w-full border-t-2 border-blue-900 shadow-2xl">
-                <li>
-                    <NavigationLink
-                        icon={<FaThLarge />}
-                        label={"Dashboard"}
-                        to={"/dashboard"}
-                        addClass={"mr-2 ml-6"}
-                    />
-                </li>
-                <li>
-                    <details onClick={(e) => _closeAllDetail(e)}>
-                        <NavigationLinkParent
-                            Icon={<FaBuilding size={15} />}
-                            parentName={"Perusahaan"}
-                            sideBars={sideBars[0]}
-                        />
-                        <ul className="menu bg-base-200 rounded-box w-56">
-                            <li>
-                                <p className="font-bold pointer-events-none">Master</p>
-                                <ul>
+                {
+                    getRolesInCookie("Dashboard") ? <>
+                        <li>
+                            <NavigationLink
+                                icon={<FaThLarge />}
+                                label={"Dashboard"}
+                                to={"/dashboard"}
+                                addClass={"mr-2 ml-6"}
+                            />
+                        </li>
+                    </> : <></>
+                }
+                {
+                    getRolesInCookie("Perusahaan") ? <>
+                        <li>
+                            <details onClick={(e) => _closeAllDetail(e)}>
+                                <NavigationLinkParent
+                                    Icon={<FaBuilding size={15} />}
+                                    parentName={"Perusahaan"}
+                                    sideBars={sideBars[0]}
+                                />
+                                <ul className="menu bg-base-200 rounded-box w-56">
                                     <li>
-                                        <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Kode Akun"} />
+                                        <p className="font-bold pointer-events-none">Master</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/perusahaan/kodeAkun" addClass={"my-1"} label={"Kode Akun"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/perusahaan/customer" addClass={"my-1"} label={"Data Customer"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Data Supplier"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/perusahaan/pegawai" addClass={"my-1"} label={"Data Pegawai"} />
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/customer" addClass={"my-1"} label={"Data Customer"} />
+                                        <NavigationLink to="/perusahaan/cabang" addClass={"my-1"} label={"Cabang"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/supplier" addClass={"my-1"} label={"Data Supplier"} />
+                                        <NavigationLink to="/perusahaan/divisi" addClass={"my-1"} label={"Divisi"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/pegawai" addClass={"my-1"} label={"Data Pegawai"} />
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <NavigationLink to="/perusahaan/cabang" addClass={"my-1"} label={"Cabang"} />
-                            </li>
-                            <li>
-                                <NavigationLink to="/perusahaan/divisi" addClass={"my-1"} label={"Divisi"} />
-                            </li>
-                            <li>
-                                <NavigationLink to="/perusahaan/jabatan" addClass={"my-1"} label={"Jabatan"} />
-                            </li>
-                            <li>
-                                <NavigationLink to="/perusahaan/tipePembayaran" addClass={"my-1"} label={"Tipe Pembayaran"} />
-                            </li>
-                            <li>
-                                <NavigationLink to="/perusahaan/syaratPembayaran" addClass={"my-1"} label={"Syarat Pembayaran"} />
-                            </li>
-                            <li>
-                                <NavigationLink to="/perusahaan/statusTanggungan" addClass={"my-1"} label={"Status Tanggungan"} />
-                            </li>
-                        </ul>
-                    </details>
-                </li>
-                <li>
-                    <details onClick={(e) => _closeAllDetail(e)}>
-                        <NavigationLinkParent
-                            Icon={<FaExchangeAlt size={15} />}
-                            parentName={"Transaksi"}
-                            sideBars={sideBars[0]}
-                        />
-                        <ul className="menu bg-base-200 rounded-box w-56">
-                            <li>
-                                <p className="font-bold pointer-events-none">Kas & Bank</p>
-                                <ul>
-                                    <li>
-                                        <NavigationLink to="/transaksi/kasDanBank/kas" addClass={"my-1"} label={"Transaksi Kas"} />
+                                        <NavigationLink to="/perusahaan/jabatan" addClass={"my-1"} label={"Jabatan"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/transaksi/kasDanBank/bank" addClass={"my-1"} label={"Transaksi Bank"} />
+                                        <NavigationLink to="/perusahaan/tipePembayaran" addClass={"my-1"} label={"Tipe Pembayaran"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/syaratPembayaran" addClass={"my-1"} label={"Syarat Pembayaran"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/perusahaan/statusTanggungan" addClass={"my-1"} label={"Status Tanggungan"} />
                                     </li>
                                 </ul>
-                            </li>
-                            <li>
-                                <p className="font-bold pointer-events-none">Penjualan</p>
-                                <ul>
+                            </details>
+                        </li>
+                    </> : <></>
+                }
+                {
+                    getRolesInCookie("Transaksi") ? <>
+                        <li>
+                            <details onClick={(e) => _closeAllDetail(e)}>
+                                <NavigationLinkParent
+                                    Icon={<FaExchangeAlt size={15} />}
+                                    parentName={"Transaksi"}
+                                    sideBars={sideBars[0]}
+                                />
+                                <ul className="menu bg-base-200 rounded-box w-56">
                                     <li>
-                                        <NavigationLink to="/transaksi/penjualan/barang" addClass={"my-1"} label={"Barang"} />
+                                        <p className="font-bold pointer-events-none">Kas & Bank</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/transaksi/kasDanBank/kas" addClass={"my-1"} label={"Transaksi Kas"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/transaksi/kasDanBank/bank" addClass={"my-1"} label={"Transaksi Bank"} />
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <NavigationLink to="/transaksi/penjualan/jasa" addClass={"my-1"} label={"Jasa"} />
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <p className="font-bold pointer-events-none">Pembelian</p>
-                                <ul>
-                                    <li>
-                                        <NavigationLink to="/transaksi/pembelian/barang" addClass={"my-1"} label={"Barang"} />
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <p className="font-bold pointer-events-none">Payroll</p>
-                                <ul>
-                                    <li>
-                                        <NavigationLink to="/transaksi/payroll/pendapatanPegawai" addClass={"my-1"} label={"Pendapatan Pegawai"} />
+                                        <p className="font-bold pointer-events-none">Penjualan</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/transaksi/penjualan/barang" addClass={"my-1"} label={"Barang"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/transaksi/penjualan/jasa" addClass={"my-1"} label={"Jasa"} />
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <NavigationLink to="/transaksi/payroll/potonganPegawai" addClass={"my-1"} label={"Potongan Pegawai"} />
+                                        <p className="font-bold pointer-events-none">Pembelian</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/transaksi/pembelian/barang" addClass={"my-1"} label={"Barang"} />
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <NavigationLink to="/transaksi/payroll/slipGajiPegawai" addClass={"my-1"} label={"Slip Gaji Pegawai"} />
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </details>
-                </li>
-                <li>
-                    <details onClick={(e) => _closeAllDetail(e)}>
-                        <NavigationLinkParent
-                            Icon={<FaToolbox size={15} />}
-                            parentName={"Aset Tetap Dan Perlengkapan"}
-                            sideBars={sideBars[0]}
-                        />
-                        <ul className="menu bg-base-200 rounded-box w-56">
-                            <li>
-                                <p className="font-bold pointer-events-none">Aset Tetap</p>
-                                <ul>
-                                    <li>
-                                        <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/daftarAset" addClass={"my-1"} label={"Daftar Aset"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/kategoriAset" addClass={"my-1"} label={"Kategori Aset"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/kelompokAset" addClass={"my-1"} label={"Kelompok Aset"} />
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <p className="font-bold pointer-events-none">Perlengkapan</p>
-                                <ul>
-                                    <li>
-                                        <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/daftarPerlengkapan" addClass={"my-1"} label={"Daftar Perlengkapan"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan" addClass={"my-1"} label={"Kategori Perlengkapan"} />
+                                        <p className="font-bold pointer-events-none">Payroll</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/transaksi/payroll/pendapatanPegawai" addClass={"my-1"} label={"Pendapatan Pegawai"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/transaksi/payroll/potonganPegawai" addClass={"my-1"} label={"Potongan Pegawai"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/transaksi/payroll/slipGajiPegawai" addClass={"my-1"} label={"Slip Gaji Pegawai"} />
+                                            </li>
+                                        </ul>
                                     </li>
                                 </ul>
-                            </li>
-                            <li>
-                                <p className="font-bold pointer-events-none">Penyusutan</p>
-                                <ul>
+                            </details>
+                        </li>
+                    </> : <></>
+                }
+                {
+                    getRolesInCookie("AsetTetapDanPerlengkapan") ? <>
+                        <li>
+                            <details onClick={(e) => _closeAllDetail(e)}>
+                                <NavigationLinkParent
+                                    Icon={<FaToolbox size={15} />}
+                                    parentName={"Aset Tetap Dan Perlengkapan"}
+                                    sideBars={sideBars[0]}
+                                />
+                                <ul className="menu bg-base-200 rounded-box w-56">
                                     <li>
-                                        <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan" addClass={"my-1"} label={"Metode Penyusutan"} />
+                                        <p className="font-bold pointer-events-none">Aset Tetap</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/daftarAset" addClass={"my-1"} label={"Daftar Aset"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/kategoriAset" addClass={"my-1"} label={"Kategori Aset"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/asetTetapDanPerlengkapan/asetTetap/kelompokAset" addClass={"my-1"} label={"Kelompok Aset"} />
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/persentasePenyusutan" addClass={"my-1"} label={"Persentase Penyusutan"} />
+                                        <p className="font-bold pointer-events-none">Perlengkapan</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/daftarPerlengkapan" addClass={"my-1"} label={"Daftar Perlengkapan"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/kategoriPerlengkapan" addClass={"my-1"} label={"Kategori Perlengkapan"} />
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/hitunganPenyusutan" addClass={"my-1"} label={"Hitungan Penyusutan"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Penyusutan"} />
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </details>
-                </li>
-                <li>
-                    <details onClick={(e) => _closeAllDetail(e)}>
-                        <NavigationLinkParent
-                            Icon={<FaToolbox size={15} />}
-                            parentName={"Persediaan"}
-                            sideBars={sideBars[0]}
-                        />
-                        <ul className="menu bg-base-200 rounded-box w-max max-h-[80vh] no-scrollbar">
-                            <li>
-                                <p className="font-bold pointer-events-none">Barang</p>
-                                <ul>
-                                    <li>
-                                        <NavigationLink to="/persediaan/barang/daftarBarang" addClass={"my-1"} label={"Daftar Barang"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/persediaan/barang/satuanBarang" addClass={"my-1"} label={"Satuan Barang"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/persediaan/barang/kategoriBarang" addClass={"my-1"} label={"Kategori Barang"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/persediaan/barang/jenisBarang" addClass={"my-1"} label={"Jenis Barang"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/persediaan/barang/jenisPenjualanBarang" addClass={"my-1"} label={"Jenis Penjualan"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/persediaan/barang/transferBarang" addClass={"my-1"} label={"Transfer Barang"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/persediaan/barang/konversiBarang" addClass={"my-1"} label={"Konversi Penjualan"} />
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <p className="font-bold pointer-events-none">Jasa</p>
-                                <ul>
-                                    <li>
-                                        <NavigationLink to="/persediaan/jasa/daftarJasa" addClass={"my-1"} label={"Daftar Jasa"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/persediaan/jasa/satuanJasa" addClass={"my-1"} label={"Satuan Jasa"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/persediaan/jasa/kategoriJasa" addClass={"my-1"} label={"Kategori Jasa"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/persediaan/jasa/jenisJasa" addClass={"my-1"} label={"Jenis Jasa"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/persediaan/jasa/jenisPenjualanJasa" addClass={"my-1"} label={"Jenis Penjualan"} />
+                                        <p className="font-bold pointer-events-none">Penyusutan</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan" addClass={"my-1"} label={"Metode Penyusutan"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/persentasePenyusutan" addClass={"my-1"} label={"Persentase Penyusutan"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/hitunganPenyusutan" addClass={"my-1"} label={"Hitungan Penyusutan"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Penyusutan"} />
+                                            </li>
+                                        </ul>
                                     </li>
                                 </ul>
-                            </li>
-                            <li>
-                                <p className="font-bold pointer-events-none">Opname</p>
-                                <ul>
+                            </details>
+                        </li>
+                    </> : <></>
+                }
+                {
+                    getRolesInCookie("Persediaan") ? <>
+                        <li>
+                            <details onClick={(e) => _closeAllDetail(e)}>
+                                <NavigationLinkParent
+                                    Icon={<FaToolbox size={15} />}
+                                    parentName={"Persediaan"}
+                                    sideBars={sideBars[0]}
+                                />
+                                <ul className="menu bg-base-200 rounded-box w-max max-h-[80vh] no-scrollbar">
                                     <li>
-                                        <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Perintah Stok Opname"} />
+                                        <p className="font-bold pointer-events-none">Barang</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/persediaan/barang/daftarBarang" addClass={"my-1"} label={"Daftar Barang"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/barang/satuanBarang" addClass={"my-1"} label={"Satuan Barang"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/barang/kategoriBarang" addClass={"my-1"} label={"Kategori Barang"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/barang/jenisBarang" addClass={"my-1"} label={"Jenis Barang"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/barang/jenisPenjualanBarang" addClass={"my-1"} label={"Jenis Penjualan"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/barang/transferBarang" addClass={"my-1"} label={"Transfer Barang"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/barang/konversiBarang" addClass={"my-1"} label={"Konversi Penjualan"} />
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Stok Opname"} />
+                                        <p className="font-bold pointer-events-none">Jasa</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/persediaan/jasa/daftarJasa" addClass={"my-1"} label={"Daftar Jasa"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/jasa/satuanJasa" addClass={"my-1"} label={"Satuan Jasa"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/jasa/kategoriJasa" addClass={"my-1"} label={"Kategori Jasa"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/jasa/jenisJasa" addClass={"my-1"} label={"Jenis Jasa"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/jasa/jenisPenjualanJasa" addClass={"my-1"} label={"Jenis Penjualan"} />
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p className="font-bold pointer-events-none">Opname</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Perintah Stok Opname"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Stok Opname"} />
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p className="font-bold pointer-events-none">Gudang</p>
+                                        <ul>
+                                            <li>
+                                                <NavigationLink to="/persediaan/gudang/daftarGudang" addClass={"my-1"} label={"Daftar Gudang"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/gudang/jenisGudang" addClass={"my-1"} label={"Jenis Gudang"} />
+                                            </li>
+                                            <li>
+                                                <NavigationLink to="/persediaan/gudang/kategoriGudang" addClass={"my-1"} label={"Kategori Gudang"} />
+                                            </li>
+                                        </ul>
                                     </li>
                                 </ul>
-                            </li>
-                            <li>
-                                <p className="font-bold pointer-events-none">Gudang</p>
-                                <ul>
+                            </details>
+                        </li>
+                    </> : <></>
+                }
+                {
+                    getRolesInCookie("BukuBesar") ? <>
+                        <li>
+                            <details onClick={(e) => _closeAllDetail(e)}>
+                                <NavigationLinkParent
+                                    Icon={<FaBook size={15} />}
+                                    parentName={"Buku Besar"}
+                                    sideBars={sideBars[0]}
+                                />
+                                <ul className="bg-white rounded-md w-full">
                                     <li>
-                                        <NavigationLink to="/persediaan/gudang/daftarGudang" addClass={"my-1"} label={"Daftar Gudang"} />
+                                        <NavigationLink to="/bukuBesar/jurnalUmum" addClass={"my-1"} label={"Jurnal Umum"} />
                                     </li>
                                     <li>
-                                        <NavigationLink to="/persediaan/gudang/jenisGudang" addClass={"my-1"} label={"Jenis Gudang"} />
-                                    </li>
-                                    <li>
-                                        <NavigationLink to="/persediaan/gudang/kategoriGudang" addClass={"my-1"} label={"Kategori Gudang"} />
+                                        <NavigationLink to="/bukuBesar/historyAkun" addClass={"my-1"} label={"History Akun"} />
                                     </li>
                                 </ul>
-                            </li>
-                        </ul>
-                    </details>
-                </li>
-                <li>
-                    <details onClick={(e) => _closeAllDetail(e)}>
-                        <NavigationLinkParent
-                            Icon={<FaBook size={15} />}
-                            parentName={"Buku Besar"}
-                            sideBars={sideBars[0]}
-                        />
-                        <ul className="bg-white rounded-md w-full">
-                            <li>
-                                <NavigationLink to="/bukuBesar/jurnalUmum" addClass={"my-1"} label={"Jurnal Umum"} />
-                            </li>
-                            <li>
-                                <NavigationLink to="/bukuBesar/historyAkun" addClass={"my-1"} label={"History Akun"} />
-                            </li>
-                        </ul>
-                    </details>
-                </li>
-                <li>
-                    <details onClick={(e) => _closeAllDetail(e)}>
-                        <NavigationLinkParent
-                            Icon={<FaRegChartBar size={15} />}
-                            parentName={"Laporan"}
-                            sideBars={sideBars[0]}
-                        />
-                        <ul className="bg-white rounded-md w-max">
-                            <li>
-                                <NavigationLink to="/laporan/neracaSaldo" addClass={"my-1"} label={"Neraca Saldo"} />
-                            </li>
-                            <li>
-                                <NavigationLink to="/laporan/labaRugi" addClass={"my-1"} label={"Laba Rugi"} />
-                            </li>
-                            <li>
-                                <NavigationLink to="/laporan/neraca" addClass={"my-1"} label={"Neraca"} />
-                            </li>
-                            <li>
-                                <NavigationLink to="/laporan/perubahanModal" addClass={"my-1"} label={"Perubahan Modal"} />
-                            </li>
-                        </ul>
-                    </details>
-                </li>
-                <li>
-                    <NavigationLink
-                        icon={<FaFileCsv />}
-                        label={"Aktivitas Dokumen"}
-                        to={"/aktivitasDokumen"}
-                        addClass={"ml-2"}
-                    />
-                </li>
+                            </details>
+                        </li>
+                    </> : <></>
+                }
+                {
+                    getRolesInCookie("Laporan") ? <>
+                        <li>
+                            <details onClick={(e) => _closeAllDetail(e)}>
+                                <NavigationLinkParent
+                                    Icon={<FaRegChartBar size={15} />}
+                                    parentName={"Laporan"}
+                                    sideBars={sideBars[0]}
+                                />
+                                <ul className="bg-white rounded-md w-max">
+                                    <li>
+                                        <NavigationLink to="/laporan/neracaSaldo" addClass={"my-1"} label={"Neraca Saldo"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/laporan/labaRugi" addClass={"my-1"} label={"Laba Rugi"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/laporan/neraca" addClass={"my-1"} label={"Neraca"} />
+                                    </li>
+                                    <li>
+                                        <NavigationLink to="/laporan/perubahanModal" addClass={"my-1"} label={"Perubahan Modal"} />
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+                    </> : <></>
+                }
+                {
+                    getRolesInCookie("AktivitasDokumen") ? <>
+                        <li>
+                            <NavigationLink
+                                icon={<FaFileCsv />}
+                                label={"Aktivitas Dokumen"}
+                                to={"/aktivitasDokumen"}
+                                addClass={"ml-2"}
+                            />
+                        </li>
+                    </> : <></>
+                }
             </ul>
             <div className="flex justify-between  py-3 px-8 bg-blue-900">
                 <div className="text-sm text-white breadcrumbs">

@@ -34,6 +34,7 @@ const LoginPage = () => {
                     setCookie("refreshToken", resData.refreshToken, 1)
                     setCookie("tokenExpired", resData.tokenExpired)
                     setCookie("login", "true")
+                    setCookie("role", resData.role, 1)
                     navigate("/dashboard")
                 }).catch(err => {
                     formShowMessage(JSON.parse(err.response.data.errorData))
