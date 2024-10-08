@@ -17,10 +17,12 @@ const PotonganRowData = ({
                 }
             </div>
         </div>
-        <div className={`flex w-max items-center gap-x-2 py-1 m-1 font-bold text-green-900`}>
-            <h1>{item1.sumber} PERIODE {getBulanByIndex(item1.data[0][0].periode - 1).toUpperCase()}</h1>
+        <div className="px-1">
+            <div className={`flex w-max items-center gap-x-2 py-1 m-1 font-bold text-green-900`}>
+                <h1>{item1.sumber} PERIODE {getBulanByIndex(item1.data[0][0].periode - 1).toUpperCase()}</h1>
+            </div>
+            <p className="px-1 pb-2 font-bold">{item1.data[0][0].pegawai_name}</p>
         </div>
-        <p className="px-1 pb-2 font-bold">{item1.data[0][0].pegawai_name}</p>
         {
             item1.data.map((item2, i) => {
                 return item2.map((item3, j) => {

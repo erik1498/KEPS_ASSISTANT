@@ -71,7 +71,7 @@ export const updateKerugianByUuidService = async (uuid, kerugianData, req_identi
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
 
-    await getJurnalUmumByBuktiTransaski(kerugianData.bukti_transaksi, "EMPTY", req_identity)
+    await getJurnalUmumByBuktiTransaski(kerugianData.bukti_transaksi, [`"${beforeData.uuid}"`], req_identity)
 
     const kerugian = await updateKerugianByUuidRepo(uuid, kerugianData, req_identity)
 

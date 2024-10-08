@@ -3,7 +3,7 @@ import { convertTo12HoursFormat, getBulanByIndex, getBulanList, getBulanListForF
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
-import { FaSave, FaTrash } from "react-icons/fa"
+import { FaPen, FaSave, FaTimes, FaTrash } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiHadiahCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
@@ -15,6 +15,8 @@ const HadiahPegawaiForm = ({
     kodeAkunList = []
 }) => {
     const { data } = useDataContext()
+
+    const [idHadiah, setIdHadiah] = useState(null)
     const [nilai, setNilai] = useState("0")
     const [kodeAkun, setKodeAkun] = useState()
     const [tanggal, setTanggal] = useState(getHariTanggalFull())
@@ -26,7 +28,7 @@ const HadiahPegawaiForm = ({
     const _saveHadiahPegawai = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
-            apiHadiahCRUD.custom("", "POST", null, {
+            apiHadiahCRUD.custom(idHadiah ? `/${idHadiah.uuid}` : "", idHadiah ? "PUT" : "POST", "", {
                 data: {
                     pegawai: idPegawai,
                     periode: periode,
@@ -38,6 +40,7 @@ const HadiahPegawaiForm = ({
                 }
             }).then(resData => {
                 _getDaftarHadiahPegawai()
+                setIdHadiah(null)
             }).catch(err => showError(err))
         }
     }
@@ -57,6 +60,32 @@ const HadiahPegawaiForm = ({
                 _getDaftarHadiahPegawai()
             }).catch(err => showError(err))
     }
+
+    const _editHadiah = (item) => {
+        setIdHadiah(item)
+    }
+
+    useEffect(() => {
+        if (idHadiah) {
+            setHadiah(idHadiah.hadiah)
+            setKodeAkun({
+                label: `${idHadiah.kode_akun_perkiraan_code} - ${idHadiah.kode_akun_perkiraan_name}`,
+                value: idHadiah.kode_akun_perkiraan
+            })
+            setBuktiTransaksi(idHadiah.bukti_transaksi)
+            setNilai(parseToRupiahText(idHadiah.nilai))
+            setTanggal(idHadiah.tanggal)
+        } else {
+            setHadiah("")
+            setKodeAkun({
+                label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+                value: kodeAkunList[0].uuid
+            })
+            setBuktiTransaksi("")
+            setNilai(0)
+            setTanggal(getHariTanggalFull())
+        }
+    }, [idHadiah])
 
     useEffect(() => {
         _getDaftarHadiahPegawai()
@@ -134,6 +163,9 @@ const HadiahPegawaiForm = ({
                 />
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
+            {
+                idHadiah ? <button type="button" onClick={() => setIdHadiah(null)} className="btn btn-sm bg-red-800 mt-4 text-white"><FaTimes /> Batal Edit</button> : <></>
+            }
         </form>
         <table class="table table-sm table-zebra my-6">
             <thead className="font-bold text-md">
@@ -155,10 +187,20 @@ const HadiahPegawaiForm = ({
                                 <td>{item.hadiah}</td>
                                 <td>{parseToRupiahText(item.nilai)}</td>
                                 <td>
-                                    <FaTrash
-                                        onClick={() => _deleteHadiah(item.uuid)}
-                                        className="text-red-600 hover:cursor-pointer" size={12}
-                                    />
+                                    <div className="flex gap-x-2">
+                                        <FaPen
+                                            onClick={() => _editHadiah(item)}
+                                            className="text-yellow-600 hover:cursor-pointer" size={12}
+                                        />
+                                        {
+                                            idHadiah ? <></> : <>
+                                                <FaTrash
+                                                    onClick={() => _deleteHadiah(item.uuid)}
+                                                    className="text-red-600 hover:cursor-pointer" size={12}
+                                                />
+                                            </>
+                                        }
+                                    </div>
                                 </td>
                             </tr>
                         </>

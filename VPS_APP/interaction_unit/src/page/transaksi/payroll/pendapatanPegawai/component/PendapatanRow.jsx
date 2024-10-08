@@ -14,9 +14,9 @@ const PendapatanRow = ({
                 <div className="text-[28px] font-bold">
                     {
                         balanceStatus ?
-                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md ${item.total.debet == item.total.kredit ? "bg-green-900" : "bg-red-900"}`}>{item.tanggal}</p>
+                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md ${item.total.debet == item.total.kredit ? "bg-green-900" : "bg-red-900"}`}>{item.tanggal < 10 ? `0${item.tanggal}` : item.tanggal}</p>
                             :
-                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md bg-green-900`}>{item.tanggal}</p>
+                            <p className={`text-[45px] -ml-1 text-white px-2 rounded-md bg-green-900`}>{item.tanggal < 10 ? `0${item.tanggal}` : item.tanggal}</p>
                     }
                 </div>
                 <div className="flex flex-col">

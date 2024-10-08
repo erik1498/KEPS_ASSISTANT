@@ -43,7 +43,7 @@ export const createLemburService = async (lemburData, req_identity) => {
     lemburData.enabled = 1
 
     await getNeracaValidasiByTanggalService(lemburData.tanggal, req_identity)
-    
+
     await getJurnalUmumByBuktiTransaski(lemburData.bukti_transaksi, "EMPTY", req_identity)
 
     const lembur = await createLemburRepo(lemburData, req_identity)
@@ -67,7 +67,7 @@ export const updateLemburByUuidService = async (uuid, lemburData, req_identity, 
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
 
-    await getJurnalUmumByBuktiTransaski(lemburData.bukti_transaksi, "EMPTY", req_identity)
+    await getJurnalUmumByBuktiTransaski(lemburData.bukti_transaksi, [`"${beforeData.uuid}"`], req_identity)
 
     const lembur = await updateLemburByUuidRepo(uuid, lemburData, req_identity)
 

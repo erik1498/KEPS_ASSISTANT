@@ -1,22 +1,21 @@
 import React from "react";
-import { formatDate, getBulanByIndex, getHariTanggalFull } from "../../../../../helper/date.helper";
+import { getBulanByIndex } from "../../../../../helper/date.helper";
 import PendapatanPegawai from "./PendapatanPegawai";
 import PotonganPegawai from "./PotonganPegawai";
 import { keTerbilang, parseToRupiahText } from "../../../../../helper/number.helper";
-import { getCookie } from "../../../../../helper/cookies.helper";
+import PDFHeader from "../../../../../component/general/PDFHeader";
 
 export const SlipGajiPrint = React.forwardRef((props, ref) => {
     return (
         <div
             ref={ref}
         >
-            <div className="px-3">
-                <h1 className="text-2xl font-bold">{getCookie("perusahaan")}</h1>
-                <h1 className="text-6xl font-bold">Slip Gaji Pegawai</h1>
-                <h1 className="text-2xl font-bold">{props.bulan} {props.tahun}</h1>
-                <p className="mb-5">Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
-            </div>
-            <div className="px-3 mt-16">
+            <PDFHeader
+                bulan={props.bulan}
+                tahun={props.tahun}
+                title={"Slip Gaji Pegawai"}
+            />
+            <div className="mt-16">
                 <div className="grid grid-cols-12">
                     <p className="col-span-3">Nama</p>
                     <p className="col-span-9">:&nbsp;&nbsp;&nbsp;{props.pegawai.name}</p>
@@ -56,11 +55,11 @@ export const SlipGajiPrint = React.forwardRef((props, ref) => {
                     forPrint={true}
                 />
             </div>
-            <div className="flex justify-between text-2xl font-bold px-3 mt-3 border-t-2 border-gray-200 pt-4 pb-2">
+            <div className="flex justify-between text-2xl font-bold mt-3 border-t-2 border-gray-200 pt-4 pb-2">
                 <p>Jumlah Diterima</p>
                 <p>Rp. {parseToRupiahText(props.takeHomePay)}</p>
             </div>
-            <p className="px-3 text-right mt-5"><b>TERBILANG</b> : {keTerbilang(props.takeHomePay).toUpperCase()}</p>
+            <p className="text-right mt-5"><b>TERBILANG</b> : {keTerbilang(props.takeHomePay).toUpperCase()}</p>
         </div>
     );
 });

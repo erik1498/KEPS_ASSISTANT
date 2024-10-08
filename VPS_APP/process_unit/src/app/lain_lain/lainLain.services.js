@@ -67,7 +67,7 @@ export const updateLainLainByUuidService = async (uuid, lainLainData, req_identi
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
 
-    await getJurnalUmumByBuktiTransaski(lainLainData.bukti_transaksi, "EMPTY", req_identity)
+    await getJurnalUmumByBuktiTransaski(lainLainData.bukti_transaksi,  [`"${beforeData.uuid}"`], req_identity)
     
     const lainLain = await updateLainLainByUuidRepo(uuid, lainLainData, req_identity)
 

@@ -73,7 +73,7 @@ export const updatePph2126ByUuidService = async (uuid, pph2126Data, req_identity
 
     await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
 
-    await getJurnalUmumByBuktiTransaski(pph2126Data.bukti_transaksi, "EMPTY", req_identity)
+    await getJurnalUmumByBuktiTransaski(pph2126Data.bukti_transaksi,  [`"${beforeData.uuid}"`], req_identity)
     
     const pph2126 = await updatePph2126ByUuidRepo(uuid, pph2126Data, req_identity)
 

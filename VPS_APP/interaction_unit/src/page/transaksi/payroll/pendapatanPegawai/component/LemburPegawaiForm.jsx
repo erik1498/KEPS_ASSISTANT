@@ -3,7 +3,7 @@ import { convertTo12HoursFormat, getBulanByIndex, getBulanList, getBulanListForF
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
-import { FaSave, FaTrash } from "react-icons/fa"
+import { FaPen, FaSave, FaTimes, FaTrash } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiLemburCRUD } from "../../../../../service/endPointList.api"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
@@ -15,6 +15,8 @@ const LemburPegawaiForm = ({
     kodeAkunList = []
 }) => {
     const { data } = useDataContext()
+
+    const [idLembur, setIdLembur] = useState(null)
     const [kodeAkun, setKodeAkun] = useState()
     const [tanggal, setTanggal] = useState(getHariTanggalFull())
     const [buktiTransaksi, setBuktiTransaksi] = useState()
@@ -33,7 +35,7 @@ const LemburPegawaiForm = ({
     const _saveLemburPegawai = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
-            apiLemburCRUD.custom("", "POST", null, {
+            apiLemburCRUD.custom(idLembur ? `/${idLembur.uuid}` : "", idLembur ? "PUT" : "POST", "", {
                 data: {
                     pegawai: idPegawai,
                     periode: periode,
@@ -86,6 +88,38 @@ const LemburPegawaiForm = ({
 
         setTotalBayaran(parseToRupiahText((payPerMinute * menit) + (payPerMinute * ((jam) * 60))))
     }
+
+    const _editLembur = (item) => {
+        setIdLembur(item)
+    }
+
+    useEffect(() => {
+        if (idLembur) {
+            setKodeAkun({
+                label: `${idLembur.kode_akun_perkiraan_code} - ${idLembur.kode_akun_perkiraan_name}`,
+                value: idLembur.kode_akun_perkiraan
+            })
+            setTanggal(idLembur.tanggal)
+            setBuktiTransaksi(idLembur.bukti_transaksi)
+            setDekstripsiKerja(idLembur.deskripsi_kerja)
+            setKeteranganKerja(idLembur.keterangan_kerja)
+            setNilaiLemburPerMenit(idLembur.nilai_lembur_per_menit)
+            setWaktuMulai(idLembur.waktu_mulai)
+            setWaktuSelesai(idLembur.waktu_selesai)
+        } else {
+            setKodeAkun({
+                label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+                value: kodeAkunList[0].uuid
+            })
+            setTanggal(getHariTanggalFull())
+            setBuktiTransaksi("")
+            setDekstripsiKerja("")
+            setKeteranganKerja("")
+            setNilaiLemburPerMenit(0)
+            setWaktuMulai(getHariTanggalFull())
+            setWaktuSelesai(getHariTanggalFull())
+        }
+    }, [idLembur])
 
     useEffect(() => {
         _countTotalMenit()
@@ -251,6 +285,9 @@ const LemburPegawaiForm = ({
                 />
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
+            {
+                idLembur ? <button type="button" onClick={() => setIdLembur(null)} className="btn btn-sm bg-red-800 mt-4 text-white"><FaTimes /> Batal Edit</button> : <></>
+            }
         </form>
         <table class="table table-sm table-zebra my-6">
             <tbody>
@@ -277,10 +314,20 @@ const LemburPegawaiForm = ({
                                 <td>{parseToRupiahText(item.total_menit)}</td>
                                 <td>{parseToRupiahText(item.total_bayaran)}</td>
                                 <td>
-                                    <FaTrash
-                                        onClick={() => _deleteLembur(item.uuid)}
-                                        className="text-red-600 hover:cursor-pointer" size={12}
-                                    />
+                                    <div className="flex gap-x-2">
+                                        <FaPen
+                                            onClick={() => _editLembur(item)}
+                                            className="text-yellow-600 hover:cursor-pointer" size={12}
+                                        />
+                                        {
+                                            idLembur ? <></> : <>
+                                                <FaTrash
+                                                    onClick={() => _deleteLembur(item.uuid)}
+                                                    className="text-red-600 hover:cursor-pointer" size={12}
+                                                />
+                                            </>
+                                        }
+                                    </div>
                                 </td>
                             </tr>
                         </>

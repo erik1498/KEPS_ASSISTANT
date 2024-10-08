@@ -6,7 +6,7 @@ const PotonganPegawai = ({
     forPrint
 }) => {
     return <div className={`bg-white rounded-md col-span-6`}>
-        <div className={`mt-7 flex flex-col justify-between pb-6 h-full ${forPrint ? "px-3" : "px-6"}`}>
+        <div className={`mt-7 flex flex-col justify-between pb-6 h-full ${forPrint ? "" : "px-6"}`}>
             <div>
                 <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Rincian Potongan Pegawai</h1>
                 <div className={`${forPrint ? "" : "px-3"}`}>

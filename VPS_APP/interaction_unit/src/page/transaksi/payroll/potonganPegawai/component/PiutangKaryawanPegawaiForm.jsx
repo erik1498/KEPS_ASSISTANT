@@ -3,7 +3,7 @@ import { convertTo12HoursFormat, formatDate, getHariTanggalFull } from "../../..
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
-import { FaSave, FaTrash } from "react-icons/fa"
+import { FaEdit, FaPen, FaSave, FaTimes, FaTrash } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiPiutangKaryawanCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
@@ -17,6 +17,7 @@ const PiutangKaryawanPegawaiForm = ({
 }) => {
     const { data } = useDataContext()
 
+    const [idPiutangKaryawan, setIdPiutangKaryawan] = useState("")
     const [type, setType] = useState(TipePiutangKaryawan[0])
     const [totalUtangPegawai, setTotalUtangPegawai] = useState(0)
     const [nilai, setNilai] = useState("0")
@@ -32,7 +33,7 @@ const PiutangKaryawanPegawaiForm = ({
     const _savePiutangKaryawanPegawai = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
-            apiPiutangKaryawanCRUD.custom("", "POST", null, {
+            apiPiutangKaryawanCRUD.custom(idPiutangKaryawan ? `/${idPiutangKaryawan.uuid}` : "", idPiutangKaryawan ? "PUT" : "POST", "", {
                 data: {
                     pegawai: idPegawai,
                     periode: periode,
@@ -45,8 +46,13 @@ const PiutangKaryawanPegawaiForm = ({
                 }
             }).then(resData => {
                 _getPiutangKaryawanPegawai()
+                setIdPiutangKaryawan(null)
             }).catch(err => showError(err))
         }
+    }
+
+    const _editPiutangKaryawan = (item) => {
+        setIdPiutangKaryawan(item)
     }
 
     const _deletePiutangKaryawan = (uuid) => {
@@ -72,6 +78,34 @@ const PiutangKaryawanPegawaiForm = ({
                 }
             })
     }
+
+    useEffect(() => {
+        if (idPiutangKaryawan) {
+            const TipePiutangKaryawanCopy = TipePiutangKaryawan.filter(x => x.value == idPiutangKaryawan.type)
+            setType(x => x = {
+                label: TipePiutangKaryawanCopy[0].label,
+                value: TipePiutangKaryawanCopy[0].value
+            })
+            setKodeAkun({
+                label: `${idPiutangKaryawan.kode_akun_perkiraan_code} - ${idPiutangKaryawan.kode_akun_perkiraan_name}`,
+                value: idPiutangKaryawan.kode_akun_perkiraan
+            })
+            setBuktiTransaksi(idPiutangKaryawan.bukti_transaksi)
+            setNilai(parseToRupiahText(idPiutangKaryawan.nilai))
+            setKeterangan(idPiutangKaryawan.keterangan)
+            setTanggal(idPiutangKaryawan.tanggal)
+        } else {
+            setType(x => x = TipePiutangKaryawan[0])
+            setKodeAkun({
+                label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+                value: kodeAkunList[0].uuid
+            })
+            setBuktiTransaksi("")
+            setNilai(0)
+            setKeterangan("")
+            setTanggal(getHariTanggalFull())
+        }
+    }, [idPiutangKaryawan])
 
     useEffect(() => {
         _getPiutangKaryawanPegawai()
@@ -164,6 +198,9 @@ const PiutangKaryawanPegawaiForm = ({
                 />
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
+            {
+                idPiutangKaryawan ? <button type="button" onClick={() => setIdPiutangKaryawan(null)} className="btn btn-sm bg-red-800 mt-4 text-white"><FaTimes /> Batal Edit</button> : <></>
+            }
         </form>
         <table class="table table-sm table-zebra my-6">
             <tbody>
@@ -182,10 +219,20 @@ const PiutangKaryawanPegawaiForm = ({
                                 <td>{item.bukti_transaksi}</td>
                                 <td>{parseToRupiahText(item.nilai)}</td>
                                 <td>
-                                    <FaTrash
-                                        onClick={() => _deletePiutangKaryawan(item.uuid)}
-                                        className="text-red-600 hover:cursor-pointer" size={12}
-                                    />
+                                    <div className="flex gap-x-2">
+                                        <FaPen
+                                            onClick={() => _editPiutangKaryawan(item)}
+                                            className="text-yellow-600 hover:cursor-pointer" size={12}
+                                        />
+                                        {
+                                            idPiutangKaryawan ? <></> : <>
+                                                <FaTrash
+                                                    onClick={() => _deletePiutangKaryawan(item.uuid)}
+                                                    className="text-red-600 hover:cursor-pointer" size={12}
+                                                />
+                                            </>
+                                        }
+                                    </div>
                                 </td>
                             </tr>
                         </>

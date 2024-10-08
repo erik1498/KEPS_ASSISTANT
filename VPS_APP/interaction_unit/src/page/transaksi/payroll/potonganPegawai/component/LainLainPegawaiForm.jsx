@@ -3,7 +3,7 @@ import { convertTo12HoursFormat, formatDate, getHariTanggalFull } from "../../..
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
-import { FaSave, FaTrash } from "react-icons/fa"
+import { FaPen, FaSave, FaTimes, FaTrash } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiLainLainCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
@@ -16,6 +16,7 @@ const LainLainPegawaiForm = ({
 }) => {
     const { data } = useDataContext()
 
+    const [idLainLainPegawai, setIdLainLainPegawai] = useState(null)
     const [nilai, setNilai] = useState("0")
     const [kodeAkun, setKodeAkun] = useState(kodeAkunList.length > 0 ? {
         label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
@@ -29,7 +30,7 @@ const LainLainPegawaiForm = ({
     const _saveLainLainPegawai = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
-            apiLainLainCRUD.custom("", "POST", null, {
+            apiLainLainCRUD.custom(idLainLainPegawai ? `/${idLainLainPegawai.uuid}` : "", idLainLainPegawai ? "PUT" : "POST", "", {
                 data: {
                     pegawai: idPegawai,
                     periode: periode,
@@ -37,15 +38,16 @@ const LainLainPegawaiForm = ({
                     tanggal: tanggal,
                     bukti_transaksi: buktiTransaksi,
                     keterangan: keterangan,
-                    nilai: nilai
+                    nilai: `${nilai}`
                 }
             }).then(resData => {
                 _getLainLainPegawai()
+                setIdLainLainPegawai(null)
             }).catch(err => showError(err))
         }
     }
 
-    const _deleteLainLain = (uuid) => {
+    const _deleteLainLainPegawai = (uuid) => {
         apiLainLainCRUD
             .custom(`/${uuid}`, "DELETE")
             .then(() => {
@@ -60,6 +62,32 @@ const LainLainPegawaiForm = ({
                 setLainLain(resData.data)
             })
     }
+
+    const _editLainLainPegawai = (item) => {
+        setIdLainLainPegawai(item)
+    }
+
+    useEffect(() => {
+        if (idLainLainPegawai) {
+            setKodeAkun({
+                label: `${idLainLainPegawai.kode_akun_perkiraan_code} - ${idLainLainPegawai.kode_akun_perkiraan_name}`,
+                value: idLainLainPegawai.kode_akun_perkiraan
+            })
+            setBuktiTransaksi(idLainLainPegawai.bukti_transaksi)
+            setNilai(parseToRupiahText(idLainLainPegawai.nilai))
+            setKeterangan(idLainLainPegawai.keterangan)
+            setTanggal(idLainLainPegawai.tanggal)
+        } else {
+            setKodeAkun({
+                label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+                value: kodeAkunList[0].uuid
+            })
+            setBuktiTransaksi("")
+            setNilai(0)
+            setKeterangan("")
+            setTanggal(getHariTanggalFull())
+        }
+    }, [idLainLainPegawai])
 
     useEffect(() => {
         _getLainLainPegawai()
@@ -139,6 +167,9 @@ const LainLainPegawaiForm = ({
                 />
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
+            {
+                idLainLainPegawai ? <button type="button" onClick={() => setIdLainLainPegawai(null)} className="btn btn-sm bg-red-800 mt-4 text-white"><FaTimes /> Batal Edit</button> : <></>
+            }
         </form>
         <table class="table table-sm table-zebra my-6">
             <tbody>
@@ -157,10 +188,20 @@ const LainLainPegawaiForm = ({
                                 <td>{item.bukti_transaksi}</td>
                                 <td>{parseToRupiahText(item.nilai)}</td>
                                 <td>
-                                    <FaTrash
-                                        onClick={() => _deleteLainLain(item.uuid)}
-                                        className="text-red-600 hover:cursor-pointer" size={12}
-                                    />
+                                    <div className="flex gap-x-2">
+                                        <FaPen
+                                            onClick={() => _editLainLainPegawai(item)}
+                                            className="text-yellow-600 hover:cursor-pointer" size={12}
+                                        />
+                                        {
+                                            idLainLainPegawai ? <></> : <>
+                                                <FaTrash
+                                                    onClick={() => _deleteLainLainPegawai(item.uuid)}
+                                                    className="text-red-600 hover:cursor-pointer" size={12}
+                                                />
+                                            </>
+                                        }
+                                    </div>
                                 </td>
                             </tr>
                         </>
