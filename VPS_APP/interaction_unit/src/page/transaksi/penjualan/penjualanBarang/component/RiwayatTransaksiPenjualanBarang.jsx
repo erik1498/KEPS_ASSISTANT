@@ -90,9 +90,32 @@ const RiwayatTransaksiPenjualanBarang = ({
             })
     }
 
+    const _getKodeAkunPiutangUsaha = () => {
+        apiKodeAkunCRUD
+            .custom("/piutang_usaha", "GET")
+            .then(resData => {
+                const data = [resData.data]
+                setKodeAkunList(x => x = data)
+                if (data.length > 0) {
+                    setKodeAkun({
+                        label: `${data[0].code} - ${data[0].name}`,
+                        value: data[0].uuid
+                    })
+                }
+            })
+    }
+
     useEffect(() => {
         setReloadRiwayat(x => x = true)
     }, [riwayatTransaksi])
+
+    useEffect(() => {
+        if (tipeTransaksi.value == "Retur" && riwayatTransaksi.length == 0) {
+            setKodeAkunList(x => x = [])
+            setKodeAkun(x => x = null)
+            _getKodeAkunPiutangUsaha()
+        }
+    }, [tipeTransaksi])
 
     useEffect(() => {
         _getDaftarRiwayatTransaksi()
@@ -139,6 +162,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                         optionsDataList={kodeAkunList}
                         optionsLabel={["code", "name"]}
                         optionsValue={"uuid"}
+                        addClass={"z-50"}
                         optionsLabelIsArray={true}
                         optionsDelimiter={"-"}
                         selectValue={kodeAkun}
@@ -158,7 +182,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                         {
                             riwayatTransaksi.map((x, i) => {
                                 return <div className="mb-5">
-                                    <p className="font-bold mb-3 sticky top-0 bg-gray-300 p-2 z-40">{getHariTanggalFormated("/", formatDate(x.parent, false))}</p>
+                                    <p className="font-bold mb-3 sticky top-0 bg-gray-300 p-2 z-20">{getHariTanggalFormated("/", formatDate(x.parent, false))}</p>
                                     <div className="flex flex-col">
                                         {
                                             x.data.map((y, j) => {

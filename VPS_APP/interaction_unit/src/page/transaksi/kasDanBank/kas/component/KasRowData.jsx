@@ -1,4 +1,4 @@
-import { FaArrowDown, FaArrowUp, FaPen, FaTrash } from "react-icons/fa"
+import { FaPen, FaTrash } from "react-icons/fa"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 
@@ -22,10 +22,7 @@ const KasRowData = ({
             </div>
         </div>
         <div className={`flex w-max items-center gap-x-2 p-1 font-bold ${item1.data[0][0].type == 1 ? "text-green-900" : "text-red-900"}`}>
-            {
-                item1.data[0][0].type == 1 ? <FaArrowDown /> : <FaArrowUp />
-            }
-            <h1>Kas {item1.data[0][0].type == 1 ? "Masuk" : "Keluar"}</h1>
+            <h1>KAS {item1.data[0][0].type == 1 ? "MASUK" : "KELUAR"}</h1>
         </div>
         {
             item1.data.map((item2, i) => {

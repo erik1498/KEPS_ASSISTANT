@@ -1,16 +1,19 @@
-import { FaBook, FaBuilding, FaClipboardList, FaCog, FaExchangeAlt, FaFileCsv, FaListOl, FaMicrochip, FaMoneyBill, FaRegChartBar, FaSignOutAlt, FaThLarge, FaToolbox } from "react-icons/fa";
+import { FaBook, FaBuilding, FaExchangeAlt, FaFileCsv, FaRegChartBar, FaThLarge, FaToolbox } from "react-icons/fa";
 import NavigationLink from "./NavigationLink";
 import { useEffect } from "react";
 import { useState } from "react";
 import NavigationLinkParent from "./NavigationLinkParent";
-import { eraseCookie, getCookie, getRolesInCookie } from "../../helper/cookies.helper";
-import { useNavigate } from "react-router-dom";
+import { getRolesInCookie } from "../../helper/cookies.helper";
 import FormSelect from "../form/FormSelect";
 import { useDataContext } from "../../context/dataContext.context";
 import { yearList } from "../../config/objectList.config";
 import { getBulanList } from "../../helper/date.helper";
 
-const Navigasi = () => {
+const Navigasi = ({
+    setNavigateOpen = () => { },
+    navigateOpen,
+    closeAllDetailByParent = () => { }
+}) => {
 
     const { data, setData } = useDataContext()
 
@@ -25,13 +28,25 @@ const Navigasi = () => {
         setSideBars(sidebarArr)
     }, [])
 
-    const _closeAllDetail = (e) => {
-        const elementSelected = e.target.localName == "summary" ? e.target.parentNode : e.target
+    const _closeAllDetail = (e, isDetails) => {
+        let elementSelected = e
+        if (!isDetails) {
+            elementSelected = e.target.localName == "summary" ? e.target.parentNode : e.target
+        }
         const details = document.getElementsByTagName("details")
         for (let index = 0; index < details.length; index++) {
             const element = details[index];
             if (element != elementSelected) {
                 element.open = false
+            }
+        }
+        const newDetails = document.getElementsByTagName("details")
+        for (let index = 0; index < newDetails.length; index++) {
+            const element = newDetails[index];
+            setNavigateOpen(x => x = true)
+            if (element.open) {
+                setNavigateOpen(x => x = false)
+                index = newDetails.length
             }
         }
     }
@@ -46,7 +61,7 @@ const Navigasi = () => {
                     <p className="text-[9px] bg-blue-900 w-max text-white font-bold px-3 py-1 rounded-md">Friend of Your Business Progress</p>
                 </div>
             </div>
-            <ul className="menu menu-horizontal bg-white text-blue-900 px-2 w-full border-t-2 border-blue-900 shadow-2xl">
+            <ul className="menu z-50 menu-horizontal bg-white text-blue-900 px-2 w-full border-t-2 border-blue-900 shadow-2xl">
                 {
                     getRolesInCookie("Dashboard") ? <>
                         <li>
@@ -68,7 +83,7 @@ const Navigasi = () => {
                                     parentName={"Perusahaan"}
                                     sideBars={sideBars[0]}
                                 />
-                                <ul className="menu bg-base-200 rounded-box w-56">
+                                <ul className="menu z-50 bg-base-200 rounded-box w-56">
                                     {
                                         getRolesInCookie("Perusahaan_Master") ? <>
                                             <li>
@@ -162,7 +177,7 @@ const Navigasi = () => {
                                     parentName={"Transaksi"}
                                     sideBars={sideBars[0]}
                                 />
-                                <ul className="menu bg-base-200 rounded-box w-56">
+                                <ul className="menu z-50 bg-base-200 rounded-box w-56">
                                     {
                                         getRolesInCookie("Transaksi_KasDanBank") ? <>
                                             <li>
@@ -261,7 +276,7 @@ const Navigasi = () => {
                                     parentName={"Aset Tetap Dan Perlengkapan"}
                                     sideBars={sideBars[0]}
                                 />
-                                <ul className="menu bg-base-200 rounded-box w-56">
+                                <ul className="menu z-50 bg-base-200 rounded-box w-56">
                                     {
                                         getRolesInCookie("AsetTetapDanPerlengkapan_Aset") ? <>
                                             <li>
@@ -367,7 +382,7 @@ const Navigasi = () => {
                                     parentName={"Persediaan"}
                                     sideBars={sideBars[0]}
                                 />
-                                <ul className="menu bg-base-200 rounded-box w-max max-h-[80vh] no-scrollbar">
+                                <ul className="menu z-50 bg-base-200 rounded-box w-max max-h-[80vh] no-scrollbar">
                                     {
                                         getRolesInCookie("Persediaan_Barang") ? <>
                                             <li>
@@ -537,7 +552,7 @@ const Navigasi = () => {
                                     parentName={"Buku Besar"}
                                     sideBars={sideBars[0]}
                                 />
-                                <ul className="bg-white rounded-md w-full">
+                                <ul className="menu z-50 bg-gray-100 rounded-md w-full">
                                     {
                                         getRolesInCookie("BukuBesar_JurnalUmum") ? <>
                                             <li>
@@ -566,7 +581,7 @@ const Navigasi = () => {
                                     parentName={"Laporan"}
                                     sideBars={sideBars[0]}
                                 />
-                                <ul className="bg-white rounded-md w-max">
+                                <ul className="menu z-50 bg-gray-100 rounded-md w-max">
                                     {
                                         getRolesInCookie("Laporan_NeracaSaldo") ? <>
                                             <li>
@@ -613,7 +628,13 @@ const Navigasi = () => {
                     </> : <></>
                 }
             </ul>
-            <div className="flex justify-between  py-3 px-8 bg-blue-900">
+            <div className="flex justify-between relative py-3 px-8 bg-blue-900 z-100">
+                {
+                    navigateOpen ? <div
+                        className="absolute top-0 left-0 right-0 bottom-0 bg-black opacity-60 z-40 cursor-pointer"
+                        onClick={() => closeAllDetailByParent()}
+                    ></div> : <></>
+                }
                 <div className="text-sm text-white breadcrumbs">
                     <ul>
                         {
@@ -653,7 +674,7 @@ const Navigasi = () => {
                         setData(dataCopy)
                         setTahun(e.value)
                     }}
-                    addClass={`w-max px-1 bg-white font-bold rounded-md`}
+                    addClass={`w-max px-1 bg-white font-bold rounded-md z-30`}
                 />
             </div>
         </div>

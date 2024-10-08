@@ -27,6 +27,7 @@ export const getAllLemburRepo = async (bulan, tahun, req_id) => {
                 lt.total_menit,
                 lt.nilai_lembur_per_menit,
                 pt.name AS pegawai_name,
+                lt.periode AS periode,
                 lt.enabled 
             FROM ${generateDatabaseName(req_id)}.lembur_tab lt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = lt.kode_akun_perkiraan 
@@ -55,6 +56,7 @@ export const getAllLemburRepo = async (bulan, tahun, req_id) => {
                 lt.total_menit,
                 lt.nilai_lembur_per_menit,
                 pt.name AS pegawai_name,
+                lt.periode AS periode,
                 lt.enabled 
             FROM ${generateDatabaseName(req_id)}.lembur_tab lt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "96dc1c2e-1cd3-42b8-b580-3932ebe1e82d"

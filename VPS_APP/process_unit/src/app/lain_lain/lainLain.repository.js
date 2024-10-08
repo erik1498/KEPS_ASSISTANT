@@ -20,6 +20,7 @@ export const getAllLainLainRepo = async (bulan, tahun, req_id) => {
                 llt.keterangan AS uraian,
                 "LAIN - LAIN" AS sumber,
                 pt.name AS pegawai_name,
+                llt.periode AS periode,
                 llt.enabled 
             FROM ${generateDatabaseName(req_id)}.lain_lain_tab llt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = llt.kode_akun_perkiraan 
@@ -41,6 +42,7 @@ export const getAllLainLainRepo = async (bulan, tahun, req_id) => {
                 llt.keterangan AS uraian,
                 "LAIN - LAIN" AS sumber,
                 pt.name AS pegawai_name,
+                llt.periode AS periode,
                 llt.enabled 
             FROM ${generateDatabaseName(req_id)}.lain_lain_tab llt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "b7687ceb-6046-4062-979d-bfed5550bd87"

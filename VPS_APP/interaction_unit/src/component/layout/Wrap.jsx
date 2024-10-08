@@ -17,13 +17,24 @@ const Wrap = ({
     }
   }, [])
 
+  const [navigateOpen, setNavigateOpen] = useState(false)
+
+  const _closeAllDetailByParent = () => {
+    const details = document.getElementsByTagName("details")
+    for (let index = 0; index < details.length; index++) {
+      const element = details[index];
+      element.open = false
+    }
+    setNavigateOpen(x => x = false)
+  }
+
   const [displayNotCompatible, setDisplayNotCompatible] = useState(false)
 
   useEffect(() => {
     window.addEventListener("resize", () => {
       if (window.innerWidth < 1680 || window.innerHeight < 900) {
         setDisplayNotCompatible(true)
-      }else{
+      } else {
         setDisplayNotCompatible(false)
       }
     })
@@ -31,10 +42,22 @@ const Wrap = ({
 
   return displayNotCompatible ? <DisplayNotCompatiblePage /> : <div className="page-container">
     <div className="page-container-wp">
-      <div>
+      <div className="relative">
         {
           isLoading ? <LoadingPage /> : <>
-            <Navigasi />
+            <Navigasi
+              setNavigateOpen={setNavigateOpen}
+              navigateOpen={navigateOpen}
+              closeAllDetailByParent={_closeAllDetailByParent}
+            />
+            {
+              navigateOpen ? <>
+                <div
+                  className="fixed top-0 left-0 right-0 bottom-0 bg-black z-[99] opacity-60 cursor-pointer"
+                  onClick={() => _closeAllDetailByParent()}
+                ></div>
+              </> : <></>
+            }
             <div className="content px-8 relative">{children}</div>
           </>
         }

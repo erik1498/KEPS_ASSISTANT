@@ -20,6 +20,7 @@ export const getAllHadiahRepo = async (bulan, tahun, req_id) => {
                 ht.hadiah AS uraian,
                 "HADIAH PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                ht.periode AS periode,
                 ht.enabled 
             FROM ${generateDatabaseName(req_id)}.hadiah_tab ht 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ht.kode_akun_perkiraan 
@@ -41,6 +42,7 @@ export const getAllHadiahRepo = async (bulan, tahun, req_id) => {
                 ht.hadiah AS uraian,
                 "HADIAH PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                ht.periode AS periode,
                 ht.enabled 
             FROM ${generateDatabaseName(req_id)}.hadiah_tab ht 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a09a5e0c-9544-4a83-b214-c47cf5c07bdd"

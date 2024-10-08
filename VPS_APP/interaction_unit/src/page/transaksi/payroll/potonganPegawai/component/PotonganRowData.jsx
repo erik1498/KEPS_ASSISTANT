@@ -1,5 +1,4 @@
-import { FaUser } from "react-icons/fa"
-import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
+import { convertTo12HoursFormat, getBulanByIndex } from "../../../../../helper/date.helper"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
 
 const PotonganRowData = ({
@@ -19,9 +18,9 @@ const PotonganRowData = ({
             </div>
         </div>
         <div className={`flex w-max items-center gap-x-2 py-1 m-1 font-bold text-green-900`}>
-            <FaUser />
-            <h1>{item1.sumber} - {item1.data[0][0].pegawai_name}</h1>
+            <h1>{item1.sumber} PERIODE {getBulanByIndex(item1.data[0][0].periode - 1).toUpperCase()}</h1>
         </div>
+        <p className="px-1 pb-2 font-bold">{item1.data[0][0].pegawai_name}</p>
         {
             item1.data.map((item2, i) => {
                 return item2.map((item3, j) => {

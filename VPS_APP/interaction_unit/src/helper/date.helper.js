@@ -89,6 +89,7 @@ export const convertTo12HoursFormat = (time) => {
         time = time.slice(1);
         time[5] = +time[0] < 12 ? ' AM' : ' PM';
         time[0] = +time[0] % 12 || 12;
+        time[0] = time[0] < 10 ? `0${time[0]}` : time[0]
     }
 
     return time.join('');

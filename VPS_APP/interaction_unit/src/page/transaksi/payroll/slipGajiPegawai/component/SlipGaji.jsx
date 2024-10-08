@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useDataContext } from "../../../../../context/dataContext.context"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { apiGajiCRUD } from "../../../../../service/endPointList.api"
 import PendapatanPegawai from "./PendapatanPegawai"
 import PotonganPegawai from "./PotonganPegawai"
 import { showError } from "../../../../../helper/form.helper"
+import { useReactToPrint } from "react-to-print"
+import { SlipGajiPrint } from "./SlipGajiPrint"
+import { FaPrint } from "react-icons/fa"
 
 const SlipGaji = ({
     idPegawai,
-    periode
+    periode,
+    pegawaiList = []
 }) => {
     const { data } = useDataContext()
 
@@ -16,6 +20,8 @@ const SlipGaji = ({
         pendapatan: 0,
         potongan: 0
     }
+
+    let sumbercheckArr = []
 
     const [takeHomePay, setTakeHomePay] = useState(0)
 
@@ -28,11 +34,19 @@ const SlipGaji = ({
             }).catch(err => showError(err))
     }
 
+    const slipGajiPrintRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => slipGajiPrintRef.current,
+    });
+
     const _getDataBySumber = (sumber, type) => {
         try {
             const slipGajiGet = slipGaji.filter(x => x.sumber == sumber).at(0)
             if (slipGajiGet.nilai) {
-                total[type] += slipGajiGet.nilai
+                if (!sumbercheckArr.includes(sumber)) {
+                    sumbercheckArr.push(sumber)
+                    total[type] += slipGajiGet.nilai
+                }
 
                 setTakeHomePay(x => x = total.pendapatan - total.potongan)
                 return slipGajiGet.nilai
@@ -64,6 +78,22 @@ const SlipGaji = ({
             <p>Take Home Pay</p>
             <h1 className="text-4xl font-bold">Rp. {parseToRupiahText(takeHomePay)}</h1>
         </div>
+        <div className="hidden">
+            <SlipGajiPrint
+                data={slipGaji}
+                _getDataBySumber={_getDataBySumber}
+                total={total}
+                takeHomePay={takeHomePay}
+                pegawai={pegawaiList.filter(x => x.uuid == idPegawai)?.at(0)}
+                ref={slipGajiPrintRef}
+            />
+        </div>
+        <button
+            onClick={handlePrint}
+            className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600 mt-4"
+        >
+            <FaPrint /> Cetak Slip Gaji
+        </button>
     </>
 }
 export default SlipGaji

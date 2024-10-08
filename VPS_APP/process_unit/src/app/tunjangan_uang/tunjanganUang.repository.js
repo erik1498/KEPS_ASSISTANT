@@ -20,6 +20,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Tunjangan Uang" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "dc632a24-dba2-4c65-9b42-968de322fe1c"
@@ -41,6 +42,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Bonus Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
@@ -62,6 +64,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Insentif Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
@@ -83,6 +86,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "THR Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
@@ -104,6 +108,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Jaminan Pensiun Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
@@ -125,6 +130,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Jaminan Hari Tua Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
@@ -146,6 +152,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Jaminan Kematian Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
@@ -167,6 +174,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Jaminan Keselamatan Kerja Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
@@ -188,6 +196,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Jaminan Pensiun Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
@@ -209,6 +218,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Jaminan Hari Tua Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
@@ -230,6 +240,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Jaminan Kematian Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
@@ -251,6 +262,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Jaminan Keselamatan Kerja Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
@@ -272,6 +284,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "BPJS Kesehatan Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "5555ff3a-9de0-42b5-bdc8-f39c43947496" 
@@ -293,6 +306,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "BPJS Karyawan" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_bpjs_karyawan 
@@ -314,6 +328,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Jaminan Pensiun Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_jp_karyawan
@@ -335,6 +350,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 "Jaminan Hari Tua Pegawai" AS uraian,
                 "TUNJANGAN UANG PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_jht_karyawan 

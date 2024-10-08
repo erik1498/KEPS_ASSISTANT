@@ -96,6 +96,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         NULL AS pegawai_name,
+                        0 AS periode,
                         jut.enabled
                     FROM ${generateDatabaseName(req_id)}.jurnal_umum_tab jut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = jut.kode_akun_uuid
@@ -132,6 +133,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         NULL AS pegawai_name,
+                        0 AS periode,
                         tkt.enabled 
                     FROM ${generateDatabaseName(req_id)}.transaksi_kas_tab tkt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tkt.kode_akun_perkiraan 
@@ -168,6 +170,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         NULL AS pegawai_name,
+                        0 AS periode,
                         rtkt.enabled 
                     FROM ${generateDatabaseName(req_id)}.rincian_transaksi_kas_tab rtkt 
                     JOIN ${generateDatabaseName(req_id)}.transaksi_kas_tab tkt ON tkt.uuid = rtkt.transaksi_kas 
@@ -205,6 +208,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         NULL AS pegawai_name,
+                        0 AS periode,
                         tbt.enabled 
                     FROM ${generateDatabaseName(req_id)}.transaksi_bank_tab tbt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tbt.kode_akun_perkiraan 
@@ -241,6 +245,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         NULL AS pegawai_name,
+                        0 AS periode,
                         rtbt.enabled 
                     FROM ${generateDatabaseName(req_id)}.rincian_transaksi_bank_tab rtbt 
                     JOIN ${generateDatabaseName(req_id)}.transaksi_bank_tab tbt ON tbt.uuid = rtbt.transaksi_bank 
@@ -270,6 +275,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        gt.periode AS periode,
                         gt.enabled 
                     FROM ${generateDatabaseName(req_id)}.gaji_tab gt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = gt.kode_akun_perkiraan 
@@ -300,6 +306,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        gt.periode AS periode,
                         gt.enabled 
                     FROM ${generateDatabaseName(req_id)}.gaji_tab gt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "0c0a1c04-ad98-4818-9a63-9be554b2ae55" 
@@ -330,6 +337,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "dc632a24-dba2-4c65-9b42-968de322fe1c"
@@ -360,6 +368,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
@@ -390,6 +399,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
@@ -420,6 +430,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
@@ -450,6 +461,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
@@ -480,6 +492,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
@@ -510,6 +523,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
@@ -540,6 +554,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
@@ -570,6 +585,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
@@ -600,6 +616,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
@@ -630,6 +647,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
@@ -660,6 +678,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
@@ -690,6 +709,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "5555ff3a-9de0-42b5-bdc8-f39c43947496" 
@@ -720,6 +740,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_bpjs_karyawan 
@@ -750,6 +771,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_jp_karyawan
@@ -780,6 +802,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_jht_karyawan 
@@ -810,6 +833,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         lt.total_menit,
                         lt.nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        lt.periode AS periode,
                         lt.enabled 
                     FROM ${generateDatabaseName(req_id)}.lembur_tab lt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = lt.kode_akun_perkiraan 
@@ -840,6 +864,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         lt.total_menit,
                         lt.nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        lt.periode AS periode,
                         lt.enabled 
                     FROM ${generateDatabaseName(req_id)}.lembur_tab lt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "96dc1c2e-1cd3-42b8-b580-3932ebe1e82d" 
@@ -870,6 +895,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        ht.periode AS periode,
                         ht.enabled 
                     FROM ${generateDatabaseName(req_id)}.hadiah_tab ht 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ht.kode_akun_perkiraan 
@@ -900,6 +926,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        ht.periode AS periode,
                         ht.enabled 
                     FROM ${generateDatabaseName(req_id)}.hadiah_tab ht 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a09a5e0c-9544-4a83-b214-c47cf5c07bdd"
@@ -930,6 +957,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        ppt.periode AS periode,
                         ppt.enabled 
                     FROM ${generateDatabaseName(req_id)}.pph2126_tab ppt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppt.kode_akun_perkiraan 
@@ -960,6 +988,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        ppt.periode AS periode,
                         ppt.enabled 
                     FROM ${generateDatabaseName(req_id)}.pph2126_tab ppt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "eadfec72-7d66-4597-998d-8acf959d34b7" 
@@ -990,6 +1019,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        llt.periode AS periode,
                         llt.enabled 
                     FROM ${generateDatabaseName(req_id)}.lain_lain_tab llt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = llt.kode_akun_perkiraan 
@@ -1020,6 +1050,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        llt.periode AS periode,
                         llt.enabled 
                     FROM ${generateDatabaseName(req_id)}.lain_lain_tab llt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "b7687ceb-6046-4062-979d-bfed5550bd87"
@@ -1050,6 +1081,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        kt.periode AS periode,
                         kt.enabled 
                     FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kt.kode_akun_perkiraan 
@@ -1080,6 +1112,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        kt.periode AS periode,
                         kt.enabled 
                     FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f3eafc29-6a1c-4e57-b789-532b490dac33"
@@ -1118,6 +1151,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        pkt.periode AS periode,
                         pkt.enabled 
                     FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = pkt.kode_akun_perkiraan 
@@ -1156,6 +1190,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS total_menit,
                         NULL AS nilai_lembur_per_menit,
                         pt.name AS pegawai_name,
+                        pkt.periode AS periode,
                         pkt.enabled 
                     FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f15e2810-c736-42f6-9a80-6d70e03315de"

@@ -91,7 +91,7 @@ const PesananPenjualanBarangList = ({
                 <div className={`bg-white my-4 rounded-md no-scrollbar relative ${fakturStatus ? "h-max max-h-[60vh]" : "h-[70vh]"} overflow-y-scroll`}>
                     <div className="sticky top-0">
                         <div className="bg-white py-4 px-6 rounded-md">
-                            <p className="font-bold text-sm">Total Pesanan</p>
+                            <p className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Total Pesanan</p>
                             <p className="font-bold text-4xl">Rp. {parseToRupiahText(rincianPesananPenjualanBarang.reduce((prev, current) => {
                                 return prev + parseFloat(current.total_harga)
                             }, 0))}

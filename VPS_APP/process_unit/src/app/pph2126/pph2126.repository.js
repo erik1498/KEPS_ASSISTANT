@@ -20,6 +20,7 @@ export const getAllPph2126Repo = async (bulan, tahun, req_id) => {
                 "PPH 21/26 Pegawai" AS uraian,
                 "PPH 21/26" AS sumber,
                 pt.name AS pegawai_name,
+                ppt.periode AS periode,
                 ppt.enabled 
             FROM ${generateDatabaseName(req_id)}.pph2126_tab ppt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppt.kode_akun_perkiraan 
@@ -41,6 +42,7 @@ export const getAllPph2126Repo = async (bulan, tahun, req_id) => {
                 "PPH 21/26 Pegawai" AS uraian,
                 "PPH 21/26" AS sumber,
                 pt.name AS pegawai_name,
+                ppt.periode AS periode,
                 ppt.enabled 
             FROM ${generateDatabaseName(req_id)}.pph2126_tab ppt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "eadfec72-7d66-4597-998d-8acf959d34b7" 

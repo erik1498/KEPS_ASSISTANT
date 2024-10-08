@@ -28,6 +28,7 @@ export const getAllPiutangKaryawanRepo = async (bulan, tahun, req_id) => {
                 pkt.keterangan AS uraian,
                 "PIUTANG KARYAWAN" AS sumber,
                 pt.name AS pegawai_name,
+                pkt.periode AS periode,
                 pkt.enabled 
             FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = pkt.kode_akun_perkiraan 
@@ -57,6 +58,7 @@ export const getAllPiutangKaryawanRepo = async (bulan, tahun, req_id) => {
                 pkt.keterangan AS uraian,
                 "PIUTANG KARYAWAN" AS sumber,
                 pt.name AS pegawai_name,
+                pkt.periode AS periode,
                 pkt.enabled 
             FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f15e2810-c736-42f6-9a80-6d70e03315de"

@@ -2,12 +2,12 @@ import { parseToRupiahText } from "../../../../../helper/number.helper"
 
 const PotonganPegawai = ({
     _getDataBySumber = () => { },
-    total
+    total,
+    forPrint
 }) => {
-
-    return <div className="bg-white rounded-md py-6 px-6 col-span-6">
+    return <div className={`bg-white rounded-md py-6 ${forPrint ? "px-3" : "px-6"} col-span-6`}>
         <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Rincian Potongan Pegawai</h1>
-        <div className="mt-7 px-3">
+        <div className={`mt-7 ${forPrint ? "" : "px-3"}`}>
             <div className="flex justify-between border-b-2 py-1">
                 <p>Piutang Karyawan</p>
                 <p>Rp. {parseToRupiahText(_getDataBySumber("piutang_karyawan", "potongan"))}</p>

@@ -17,14 +17,12 @@ const SlipGajiPegawaiPage = () => {
     const [idPegawai, setIdPegawai] = useState()
     const [periode, setPeriode] = useState(getBulanListForFormSelect()[new Date().getMonth()].value)
 
-    const [toggle, setToggle] = useState("Gaji")
-
-    const [kodeAkunList, setKodeAkunList] = useState([])
-
     const _getDataPegawai = () => {
+        setIsLoading(x => x = true)
         apiPegawaiCRUD
             .custom("", "GET")
             .then(resData => {
+                setIsLoading(x => x = false)
                 setPegawaiList(resData.data.entry)
                 if (resData.data.entry.length > 0) {
                     setPegawai({
@@ -93,6 +91,7 @@ const SlipGajiPegawaiPage = () => {
                     <SlipGaji
                         idPegawai={idPegawai}
                         periode={periode}
+                        pegawaiList={pegawaiList}
                     />
                     : <></>
             }

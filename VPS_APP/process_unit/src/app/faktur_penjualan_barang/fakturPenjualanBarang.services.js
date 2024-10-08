@@ -27,12 +27,6 @@ export const getAllFakturPenjualanBarangService = async (query, req_identity) =>
 export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDService = async (faktur_penjualan_barang, req_identity) => {
     LOGGER(logType.INFO, `Start getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDService`, { faktur_penjualan_barang }, req_identity)
     const fakturPenjualanBarang = await getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo(faktur_penjualan_barang, req_identity)
-    if (fakturPenjualanBarang.length == 0) {
-        throw new Error(JSON.stringify({
-            message: "Data Not Found",
-            field: "error"
-        }))
-    }
     return fakturPenjualanBarang
 }
 

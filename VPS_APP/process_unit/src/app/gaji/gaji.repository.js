@@ -20,6 +20,7 @@ export const getAllGajiRepo = async (bulan, tahun, req_id) => {
                 CONCAT("Gaji Pegawai") AS uraian,
                 "GAJI PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                gt.periode AS periode,
                 gt.enabled 
             FROM ${generateDatabaseName(req_id)}.gaji_tab gt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = gt.kode_akun_perkiraan 
@@ -41,6 +42,7 @@ export const getAllGajiRepo = async (bulan, tahun, req_id) => {
                 CONCAT("Gaji Pegawai") AS uraian,
                 "GAJI PEGAWAI" AS sumber,
                 pt.name AS pegawai_name,
+                gt.periode AS periode,
                 gt.enabled 
             FROM ${generateDatabaseName(req_id)}.gaji_tab gt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "0c0a1c04-ad98-4818-9a63-9be554b2ae55" 

@@ -20,6 +20,7 @@ export const getAllKerugianRepo = async (bulan, tahun, req_id) => {
                 kt.keterangan AS uraian,
                 "KERUGIAN" AS sumber,
                 pt.name AS pegawai_name,
+                kt.periode AS periode,
                 kt.enabled 
             FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kt.kode_akun_perkiraan 
@@ -41,6 +42,7 @@ export const getAllKerugianRepo = async (bulan, tahun, req_id) => {
                 kt.keterangan AS uraian,
                 "KERUGIAN" AS sumber,
                 pt.name AS pegawai_name,
+                kt.periode AS periode,
                 kt.enabled 
             FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f3eafc29-6a1c-4e57-b789-532b490dac33"
