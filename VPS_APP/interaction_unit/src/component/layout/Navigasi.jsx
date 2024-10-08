@@ -3,7 +3,7 @@ import NavigationLink from "./NavigationLink";
 import { useEffect } from "react";
 import { useState } from "react";
 import NavigationLinkParent from "./NavigationLinkParent";
-import { getRolesInCookie } from "../../helper/cookies.helper";
+import { getCookie, getRolesInCookie } from "../../helper/cookies.helper";
 import FormSelect from "../form/FormSelect";
 import { useDataContext } from "../../context/dataContext.context";
 import { yearList } from "../../config/objectList.config";
@@ -56,9 +56,11 @@ const Navigasi = ({
         </div>
         <div className="sticky top-0 z-[100]">
             <div className="bg-white px-8 py-5 grid grid-cols-2">
-                <div className="uppercase text-blue-900">
-                    <h1 className="text-xl font-bold">Keps Assistant</h1>
-                    <p className="text-[9px] bg-blue-900 w-max text-white font-bold px-3 py-1 rounded-md">Friend of Your Business Progress</p>
+                <div className="col-span-2 flex uppercase text-blue-900">
+                    <div className="flex flex-col">
+                        <h1 className="text-xl font-bold">{getCookie("perusahaan")}</h1>
+                        <p className="text-[9px] bg-blue-900 w-max text-white font-bold px-3 py-1 rounded-md">Keps Assistant | Friend of Your Business Progress</p>
+                    </div>
                 </div>
             </div>
             <ul className="menu z-50 menu-horizontal bg-white text-blue-900 px-2 w-full border-t-2 border-blue-900 shadow-2xl">

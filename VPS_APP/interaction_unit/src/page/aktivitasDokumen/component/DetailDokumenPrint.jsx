@@ -4,14 +4,19 @@ import RiwayatPembayaranAktivitasDokumen from "./RiwayatPembayaranAktivitasDokum
 import RiwayatAktivitasDokumen from "./RiwayatAktivitasDokumen"
 import { parseToRupiahText } from "../../../helper/number.helper"
 import { formatDate, getHariTanggalFull } from "../../../helper/date.helper"
+import { getCookie } from "../../../helper/cookies.helper"
+import PDFHeader from "../../../component/general/PDFHeader"
 
 export const DetailDokumenPrint = React.forwardRef((props, ref) => {
     return (
         <div
             ref={ref}
         >
-            <h1 className="text-4xl font-bold mb-3">Aktivitas Dokumen</h1>
-            <p>Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
+            <PDFHeader
+                bulan={props.bulan}
+                tahun={props.tahun}
+                title={"Aktivitas Dokumen"}
+            />
             <div className="bg-white py-5 rounded-md">
                 <div className="flex justify-between items-center">
                     <p className="text-md">Tanggal {formatDate(props?.data?.tanggal)} | {props?.data?.penanggung_jawab}</p>

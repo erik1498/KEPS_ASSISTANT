@@ -7,12 +7,14 @@ import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
 import { DetailDokumenPrint } from "./DetailDokumenPrint"
 import { formatDate } from "../../../helper/date.helper"
+import { useDataContext } from "../../../context/dataContext.context"
 
 const DetailDokumen = ({
     item,
     setIsViewDokumen = () => { }
 }) => {
 
+    const { data } = useDataContext()
     const detailDokumenRef = useRef();
     const handlePrint = useReactToPrint({
         content: () => detailDokumenRef.current,
@@ -35,6 +37,7 @@ const DetailDokumen = ({
                 <div className="hidden">
                     <DetailDokumenPrint
                         data={item}
+                        tahun={data.tahun}
                         ref={detailDokumenRef}
                     />
                 </div>

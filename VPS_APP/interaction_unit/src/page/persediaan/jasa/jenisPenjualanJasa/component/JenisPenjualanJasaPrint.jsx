@@ -1,15 +1,16 @@
 import React from "react";
-import { formatDate, getHariTanggalFull } from "../../../../../helper/date.helper";
+import PDFHeader from "../../../../../component/general/PDFHeader";
 
 export const JenisPenjualanJasaPrint = React.forwardRef((props, ref) => {
     return (
         <div
             ref={ref}
         >
-            <div className="px-3 mb-4">
-                <h1 className="text-6xl font-bold">Jenis Penjualan Jasa</h1>
-                <p className="mb-5">Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
-            </div>
+            <PDFHeader
+                bulan={props.bulan}
+                tahun={props.tahun}
+                title={"Jenis Penjualan Jasa"}
+            />
             <table className="table">
                 <thead>
                     <tr className="sticky top-0 bg-white py-4 text-black">

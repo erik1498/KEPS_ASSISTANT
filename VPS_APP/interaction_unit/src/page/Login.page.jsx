@@ -34,6 +34,7 @@ const LoginPage = () => {
                     setCookie("refreshToken", resData.refreshToken, 1)
                     setCookie("tokenExpired", resData.tokenExpired)
                     setCookie("login", "true")
+                    setCookie("perusahaan", resData.perusahaan, 1)
                     setCookie("role", resData.role, 1)
                     navigate("/dashboard")
                 }).catch(err => {

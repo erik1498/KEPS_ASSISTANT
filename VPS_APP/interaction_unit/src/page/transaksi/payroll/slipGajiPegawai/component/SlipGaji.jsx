@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useDataContext } from "../../../../../context/dataContext.context"
-import { parseToRupiahText } from "../../../../../helper/number.helper"
+import { keTerbilang, parseToRupiahText } from "../../../../../helper/number.helper"
 import { apiGajiCRUD } from "../../../../../service/endPointList.api"
 import PendapatanPegawai from "./PendapatanPegawai"
 import PotonganPegawai from "./PotonganPegawai"
@@ -75,14 +75,17 @@ const SlipGaji = ({
             />
         </div>
         <div className="p-6 bg-green-800 text-white rounded-md">
-            <p>Take Home Pay</p>
+            <p className="font-bold">Jumlah Diterima</p>
             <h1 className="text-4xl font-bold">Rp. {parseToRupiahText(takeHomePay)}</h1>
+            <p className="mt-3"><b>TERBILANG</b> : {keTerbilang(takeHomePay).toUpperCase()}</p>
         </div>
         <div className="hidden">
             <SlipGajiPrint
                 data={slipGaji}
                 _getDataBySumber={_getDataBySumber}
                 total={total}
+                periode={periode}
+                tahun={data.tahun}
                 takeHomePay={takeHomePay}
                 pegawai={pegawaiList.filter(x => x.uuid == idPegawai)?.at(0)}
                 ref={slipGajiPrintRef}

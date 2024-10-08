@@ -1,18 +1,18 @@
 import React from "react";
 import HistoryAkunRow from "./HistoryAkunRow";
-import { formatDate, getHariTanggalFull } from "../../../../helper/date.helper";
+import PDFHeader from "../../../../component/general/PDFHeader";
 
 export const HistoryAkunPrint = React.forwardRef((props, ref) => {
     return (
         <div
             ref={ref}
         >
-            <div className="px-3">
-                <h1 className="text-2xl font-bold">{props.bulan} {props.tahun}</h1>
-                <h1 className="text-6xl font-bold">History Akun</h1>
-                <p className="mb-5">Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
-                <h1 className="text-4xl font-bold mt-5">{props.kode_akun_perkiraan}</h1>
-            </div>
+            <PDFHeader
+                bulan={props.bulan}
+                tahun={props.tahun}
+                title={"History Akun"}
+            />
+            <h1 className="text-4xl font-bold mt-5">{props.kode_akun_perkiraan}</h1>
             {
                 props.data.map((item, i) => {
                     return <HistoryAkunRow

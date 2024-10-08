@@ -1,6 +1,7 @@
 import React from "react";
 import { parseToRupiahText } from "../../../../helper/number.helper";
-import { convertTo12HoursFormat, formatDate, getHariTanggalFull } from "../../../../helper/date.helper";
+import { convertTo12HoursFormat, formatDate } from "../../../../helper/date.helper";
+import PDFHeader from "../../../../component/general/PDFHeader";
 
 export const JurnalUmumFormPrint = React.forwardRef((props, ref) => {
     return (
@@ -8,12 +9,15 @@ export const JurnalUmumFormPrint = React.forwardRef((props, ref) => {
             ref={ref}
         >
             <div className="px-3">
-                <h1 className="text-4xl font-bold">Form Jurnal Umum</h1>
-                <p className="mb-5">Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
+                <PDFHeader
+                    bulan={props.bulan}
+                    tahun={props.tahun}
+                    title={"Form Jurnal Umum"}
+                />
                 <div className="flex justify-between">
                     <h1 className="text-2xl font-bold">Tanggal : {formatDate(props.tanggal, false)}</h1>
-                    <h1 className="text-2xl font-bold mb-20">{props.buktiTransaksi}</h1>
                 </div>
+                <h1 className="text-2xl font-bold mb-20">{props.buktiTransaksi}</h1>
                 {
                     props.data.map((item, idx) => {
                         return <>

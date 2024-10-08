@@ -6,7 +6,7 @@ const HistoryAkunRow = ({
     balanceStatus = true,
     forPrint
 }) => {
-    return <div className={`flex flex-col w-full bg-white text-[13px] px-3 ${forPrint ? '' : 'shadow-md'}`}>
+    return <div className={`flex flex-col w-full bg-white text-[13px] ${forPrint ? '' : 'px-3 shadow-md'}`}>
         <div className="grid grid-cols-12 sticky top-0 bg-white py-2 border-b-2">
             <div className="p-2 col-span-12 text-black flex items-end">
                 <div className="text-[28px] font-bold">

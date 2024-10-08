@@ -3,18 +3,18 @@ import RowCard from "../../../../component/card/RowCard";
 import { getNormalizedLabaKotorRugiKotor } from "../../../../helper/labaRugi.helper";
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../helper/number.helper";
 import LabaRugiGain from "./LabaRugiGain";
-import { formatDate, getHariTanggalFull } from "../../../../helper/date.helper";
+import PDFHeader from "../../../../component/general/PDFHeader";
 
 export const LabaRugiPrint = React.forwardRef((props, ref) => {
     return (
         <div
             ref={ref}
         >
-            <div className="px-3 mb-4">
-                <h1 className="text-2xl font-bold">{props.bulan} {props.tahun}</h1>
-                <h1 className="text-6xl font-bold">Laba Rugi</h1>
-                <p className="mb-5">Waktu Cetak - {formatDate(getHariTanggalFull())}</p>
-            </div>
+            <PDFHeader
+                bulan={props.bulan}
+                tahun={props.tahun}
+                title={"Laba Rugi"}
+            />
             <LabaRugiGain
                 labaRugi={props.labaRugi}
                 forPrint={true}
