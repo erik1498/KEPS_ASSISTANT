@@ -1,4 +1,3 @@
-import { AKUN_TIDAK_BOLEH_DIUPDATE } from "../../constant/akuntansiConstant.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { getBulanText } from "../../utils/mathUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
@@ -48,6 +47,7 @@ export const getKodeAkunPerkiraanByUuidService = async (uuid, req_identity) => {
 export const createKodeAkunPerkiraanService = async (kodeAkunPerkiraanData, req_identity) => {
     LOGGER(logType.INFO, `Start createKodeAkunPerkiraanService`, kodeAkunPerkiraanData, req_identity)
     kodeAkunPerkiraanData.enabled = 1
+    kodeAkunPerkiraanData.update_permission = 1
 
     const kodeAkunPerkiraanWithSameCode = await getKodeAkunPerkiraanByCodeRepo(kodeAkunPerkiraanData.code, null, req_identity)
 
@@ -92,7 +92,7 @@ export const deleteKodeAkunPerkiraanByUuidService = async (uuid, req_identity) =
 
     const beforeData = await getKodeAkunPerkiraanByUuidService(uuid, req_identity)
 
-    if (AKUN_TIDAK_BOLEH_DIUPDATE.indexOf(beforeData.code) > -1) {
+    if (beforeData.update_permission) {
         throw Error(JSON.stringify({
             message: "Kode Akun Tidak Diijinkan Dieksekusi",
             field: "kodeAkun"
@@ -118,7 +118,7 @@ export const updateKodeAkunPerkiraanByUuidService = async (uuid, kodeAkunPerkira
 
     const beforeData = await getKodeAkunPerkiraanByUuidService(uuid, req_identity)
 
-    if (AKUN_TIDAK_BOLEH_DIUPDATE.indexOf(beforeData.code) > -1) {
+    if (beforeData.update_permission) {
         throw Error(JSON.stringify({
             message: "Kode Akun Tidak Diijinkan Dieksekusi",
             field: "kodeAkun"

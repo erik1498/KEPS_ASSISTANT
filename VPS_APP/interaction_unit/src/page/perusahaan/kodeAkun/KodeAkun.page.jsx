@@ -173,7 +173,7 @@ const KodeAkunPage = () => {
                                                     <td>{TipeTransaksiKasBankKodeAkunForm.filter(x => x.value == item.type_transaksi_kas_bank).at(0).label}</td>
                                                     <td className="flex gap-x-2">
                                                         {
-                                                            AKUN_TIDAK_BOLEH_DIUPDATE.indexOf(item.code) == -1 && <>
+                                                            item.update_permission ? <>
                                                                 <FaPen size={12} className="text-yellow-500 cursor-pointer"
                                                                     onClick={() => {
                                                                         _editKodeAkun(i)
@@ -183,7 +183,7 @@ const KodeAkunPage = () => {
                                                                         _deleteKodeAkun(i)
                                                                     }}
                                                                 />
-                                                            </>
+                                                            </> : <></>
                                                         }
                                                     </td>
                                                 </tr>

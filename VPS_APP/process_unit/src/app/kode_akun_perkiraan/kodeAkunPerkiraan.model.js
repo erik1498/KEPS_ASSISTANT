@@ -34,6 +34,13 @@ const KodeAkunPerkiraanModel = db.define("kode_akun_perkiraan_tab",
                 notEmpty: true,
             }
         },
+        update_permission: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
         type_transaksi_kas_bank: {
             type: DataTypes.INTEGER,
             allowNull: false,

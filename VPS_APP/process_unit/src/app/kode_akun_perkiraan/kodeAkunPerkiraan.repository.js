@@ -180,6 +180,7 @@ export const createKodeAkunPerkiraanRepo = async (kodeAkunPerkiraanData, req_id)
             type: kodeAkunPerkiraanData.type,
             name: kodeAkunPerkiraanData.name,
             code: kodeAkunPerkiraanData.code,
+            update_permission: kodeAkunPerkiraanData.update_permission,
             type_transaksi_kas_bank: kodeAkunPerkiraanData.type_transaksi_kas_bank,
             enabled: kodeAkunPerkiraanData.enabled
         }
