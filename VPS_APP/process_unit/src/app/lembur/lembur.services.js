@@ -42,7 +42,7 @@ export const createLemburService = async (lemburData, req_identity) => {
     LOGGER(logType.INFO, `Start createLemburService`, lemburData, req_identity)
     lemburData.enabled = 1
 
-    await getNeracaValidasiByTanggalService(lemburData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, lemburData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(lemburData.bukti_transaksi, "EMPTY", req_identity)
 
@@ -55,7 +55,7 @@ export const deleteLemburByUuidService = async (uuid, req_identity) => {
 
     const beforeData = await getLemburByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await deleteLemburByUuidRepo(uuid, req_identity)
     return true
@@ -65,7 +65,7 @@ export const updateLemburByUuidService = async (uuid, lemburData, req_identity, 
     LOGGER(logType.INFO, `Start updateLemburByUuidService [${uuid}]`, lemburData, req_identity)
     const beforeData = await getLemburByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(lemburData.bukti_transaksi, [`"${beforeData.uuid}"`], req_identity)
 

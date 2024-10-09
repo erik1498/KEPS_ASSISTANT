@@ -49,7 +49,7 @@ export const createPph2126Service = async (pph2126Data, req_identity) => {
     LOGGER(logType.INFO, `Start createPph2126Service`, pph2126Data, req_identity)
     pph2126Data.enabled = 1
 
-    await getNeracaValidasiByTanggalService(pph2126Data.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, pph2126Data.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(pph2126Data.bukti_transaksi, "EMPTY", req_identity)
 
@@ -61,7 +61,7 @@ export const deletePph2126ByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deletePph2126ByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getPph2126ByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await deletePph2126ByUuidRepo(uuid, req_identity)
     return true
@@ -71,7 +71,7 @@ export const updatePph2126ByUuidService = async (uuid, pph2126Data, req_identity
     LOGGER(logType.INFO, `Start updatePph2126ByUuidService [${uuid}]`, pph2126Data, req_identity)
     const beforeData = await getPph2126ByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(pph2126Data.bukti_transaksi,  [`"${beforeData.uuid}"`], req_identity)
     

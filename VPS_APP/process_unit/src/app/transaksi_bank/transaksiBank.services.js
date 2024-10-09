@@ -37,7 +37,7 @@ export const createTransaksiBankService = async (transaksiBankData, req_identity
     LOGGER(logType.INFO, `Start createTransaksiBankService`, transaksiBankData, req_identity)
     transaksiBankData.enabled = 1
 
-    await getNeracaValidasiByTanggalService(transaksiBankData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, transaksiBankData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(transaksiBankData.bukti_transaksi, "EMPTY", req_identity)
 
@@ -49,7 +49,7 @@ export const deleteTransaksiBankByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteTransaksiBankByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getTransaksiBankByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await deleteTransaksiBankByUuidRepo(uuid, req_identity)
     return true
@@ -59,7 +59,7 @@ export const updateTransaksiBankByUuidService = async (uuid, transaksiBankData, 
     LOGGER(logType.INFO, `Start updateTransaksiBankByUuidService [${uuid}]`, transaksiBankData, req_identity)
     const beforeData = await getTransaksiBankByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(transaksiBankData.bukti_transaksi, [`"${uuid}"`], req_identity)
 

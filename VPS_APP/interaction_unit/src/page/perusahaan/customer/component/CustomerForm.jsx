@@ -1,7 +1,7 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
 import { useState } from "react"
-import { formShowMessage, formValidation, showAlert } from "../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../helper/form.helper"
 import { apiCustomerCRUD } from "../../../../service/endPointList.api"
 import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
@@ -47,7 +47,7 @@ const CustomerForm = ({
                     setAddCustomerEvent()
                     getData()
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    showError(err)
                 })
         }
     }

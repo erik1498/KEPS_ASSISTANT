@@ -41,7 +41,7 @@ export const createRincianTransaksiKasService = async (rincianTransaksiKasData, 
     LOGGER(logType.INFO, `Start createRincianTransaksiKasService`, rincianTransaksiKasData, req_identity)
     rincianTransaksiKasData.enabled = 1
     
-    await getNeracaValidasiByTanggalService(rincianTransaksiKasData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, rincianTransaksiKasData.tanggal, req_identity)
 
     const rincianTransaksiKas = await createRincianTransaksiKasRepo(rincianTransaksiKasData, req_identity)
     return rincianTransaksiKas
@@ -53,7 +53,7 @@ export const deleteRincianTransaksiKasByUuidService = async (uuid, req_identity)
 
     const transaksiKas = await getTransaksiKasByUuidService(beforeData.transaksi_kas, req_identity)
     
-    await getNeracaValidasiByTanggalService(transaksiKas.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, transaksiKas.tanggal, req_identity)
 
     await deleteRincianTransaksiKasByUuidRepo(uuid, req_identity)
     return true
@@ -64,7 +64,7 @@ export const updateRincianTransaksiKasByUuidService = async (uuid, rincianTransa
 
     const transaksiKas = await getTransaksiKasByUuidService(rincianTransaksiKasData.transaksi_kas, req_identity)
     
-    await getNeracaValidasiByTanggalService(transaksiKas.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, transaksiKas.tanggal, req_identity)
     
     const beforeData = await getRincianTransaksiKasByUuidService(uuid, req_identity)
     const rincianTransaksiKas = await updateRincianTransaksiKasByUuidRepo(uuid, rincianTransaksiKasData, req_identity)

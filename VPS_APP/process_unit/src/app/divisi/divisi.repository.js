@@ -83,3 +83,20 @@ export const updateDivisiByUuidRepo = async (uuid, divisiData, req_id) => {
         }
     )
 }
+
+export const checkDivisiDipakaiPegawaiRepo = async(uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                pt.name,
+                pt.nik
+            FROM ${generateDatabaseName(req_id)}.pegawai_tab pt 
+            WHERE pt.divisi = "${uuid}"
+            AND pt.enabled = 1 
+            LIMIT 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}

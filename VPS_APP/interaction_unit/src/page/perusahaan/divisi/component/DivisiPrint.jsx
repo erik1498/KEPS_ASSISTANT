@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDate, getHariTanggalFull } from "../../../../helper/date.helper";
+import PDFHeader from "../../../../component/general/PDFHeader";
 
 export const DivisiPrint = React.forwardRef((props, ref) => {
     return (

@@ -70,21 +70,21 @@ export const createPegawaiRepo = async (pegawaiData, req_id) => {
         req_id,
         generateDatabaseName(req_id),
         PegawaiModel,
-        {   
-        name: pegawaiData.name,
-        nip: pegawaiData.nip,
-        nik: pegawaiData.nik,
-        npwp: pegawaiData.npwp,
-        tempat_lahir: pegawaiData.tempat_lahir,
-        tanggal_lahir: pegawaiData.tanggal_lahir,
-        jenis_kelamin: pegawaiData.jenis_kelamin,
-        agama: pegawaiData.agama,
-        no_hp: pegawaiData.no_hp,
-        alamat: pegawaiData.alamat,
-        status_tanggungan: pegawaiData.status_tanggungan,
-        divisi: pegawaiData.divisi,
-        status_kerja: pegawaiData.status_kerja,
-        jabatan: pegawaiData.jabatan,
+        {
+            name: pegawaiData.name,
+            nip: pegawaiData.nip,
+            nik: pegawaiData.nik,
+            npwp: pegawaiData.npwp,
+            tempat_lahir: pegawaiData.tempat_lahir,
+            tanggal_lahir: pegawaiData.tanggal_lahir,
+            jenis_kelamin: pegawaiData.jenis_kelamin,
+            agama: pegawaiData.agama,
+            no_hp: pegawaiData.no_hp,
+            alamat: pegawaiData.alamat,
+            status_tanggungan: pegawaiData.status_tanggungan,
+            divisi: pegawaiData.divisi,
+            status_kerja: pegawaiData.status_kerja,
+            jabatan: pegawaiData.jabatan,
             enabled: pegawaiData.enabled
         }
     )
@@ -110,23 +110,52 @@ export const updatePegawaiByUuidRepo = async (uuid, pegawaiData, req_id) => {
         generateDatabaseName(req_id),
         PegawaiModel,
         {
-        name: pegawaiData.name,
-        nip: pegawaiData.nip,
-        nik: pegawaiData.nik,
-        npwp: pegawaiData.npwp,
-        tempat_lahir: pegawaiData.tempat_lahir,
-        tanggal_lahir: pegawaiData.tanggal_lahir,
-        jenis_kelamin: pegawaiData.jenis_kelamin,
-        agama: pegawaiData.agama,
-        no_hp: pegawaiData.no_hp,
-        alamat: pegawaiData.alamat,
-        status_tanggungan: pegawaiData.status_tanggungan,
-        divisi: pegawaiData.divisi,
-        status_kerja: pegawaiData.status_kerja,
-        jabatan: pegawaiData.jabatan,
+            name: pegawaiData.name,
+            nip: pegawaiData.nip,
+            nik: pegawaiData.nik,
+            npwp: pegawaiData.npwp,
+            tempat_lahir: pegawaiData.tempat_lahir,
+            tanggal_lahir: pegawaiData.tanggal_lahir,
+            jenis_kelamin: pegawaiData.jenis_kelamin,
+            agama: pegawaiData.agama,
+            no_hp: pegawaiData.no_hp,
+            alamat: pegawaiData.alamat,
+            status_tanggungan: pegawaiData.status_tanggungan,
+            divisi: pegawaiData.divisi,
+            status_kerja: pegawaiData.status_kerja,
+            jabatan: pegawaiData.jabatan,
         },
         {
             uuid
+        }
+    )
+}
+
+export const checkPegawaiPayrollSudahDiNeracaValidRepo = async (uuid, req_id) => {
+    return await db.query(
+        `   
+            SELECT 
+                MIN(res.tanggal) AS tanggal_awal_payroll
+            FROM (
+                SELECT MIN(gt.tanggal) AS tanggal FROM ${generateDatabaseName(req_id)}.gaji_tab gt WHERE gt.pegawai = "${uuid}"
+                UNION ALL
+                SELECT MIN(tut.tanggal) AS tanggal FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut WHERE tut.pegawai = "${uuid}"
+                UNION ALL
+                SELECT MIN(lt.tanggal) AS tanggal FROM ${generateDatabaseName(req_id)}.lembur_tab lt WHERE lt.pegawai = "${uuid}"
+                UNION ALL
+                SELECT MIN(ht.tanggal) AS tanggal FROM ${generateDatabaseName(req_id)}.hadiah_tab ht WHERE ht.pegawai = "${uuid}"
+                UNION ALL
+                SELECT MIN(pt2.tanggal) AS tanggal FROM ${generateDatabaseName(req_id)}.pph2126_tab pt2 WHERE pt2.pegawai = "${uuid}"
+                UNION ALL
+                SELECT MIN(llt.tanggal) AS tanggal FROM ${generateDatabaseName(req_id)}.lain_lain_tab llt WHERE llt.pegawai = "${uuid}"
+                UNION ALL
+                SELECT MIN(kt.tanggal) AS tanggal FROM ${generateDatabaseName(req_id)}.kerugian_tab kt WHERE kt.pegawai = "${uuid}"
+                UNION ALL
+                SELECT MIN(pkt.tanggal) AS tanggal FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt WHERE pkt.pegawai = "${uuid}"
+            ) AS res
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
         }
     )
 }

@@ -1,7 +1,7 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
 import { useState } from "react"
-import { formShowMessage, formValidation, showAlert } from "../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../helper/form.helper"
 import { apiSyaratPembayaranCRUD } from "../../../../service/endPointList.api"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
 import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
@@ -36,7 +36,7 @@ const SyaratPembayaranForm = ({
                     setAddSyaratPembayaranEvent()
                     getData()
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    showError(err)
                 })
         }
     }

@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createDivisiRepo, deleteDivisiByUuidRepo, getAllDivisiRepo, getDivisiByUuidRepo, updateDivisiByUuidRepo } from "./divisi.repository.js"
+import { checkDivisiDipakaiPegawaiRepo, createDivisiRepo, deleteDivisiByUuidRepo, getAllDivisiRepo, getDivisiByUuidRepo, updateDivisiByUuidRepo } from "./divisi.repository.js"
 
 export const getAllDivisiService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllDivisiService", null, req_identity)
@@ -47,6 +47,7 @@ export const createDivisiService = async (divisiData, req_identity) => {
 export const deleteDivisiByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteDivisiByUuidService [${uuid}]`, null, req_identity)
     await getDivisiByUuidService(uuid, req_identity)
+    await checkDivisiDipakaiPegawaiService(uuid, req_identity)
     await deleteDivisiByUuidRepo(uuid, req_identity)
     return true
 }
@@ -54,12 +55,25 @@ export const deleteDivisiByUuidService = async (uuid, req_identity) => {
 export const updateDivisiByUuidService = async (uuid, divisiData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateDivisiByUuidService [${uuid}]`, divisiData, req_identity)
     const beforeData = await getDivisiByUuidService(uuid, req_identity)
+
+    await checkDivisiDipakaiPegawaiService(uuid, req_identity)
     const divisi = await updateDivisiByUuidRepo(uuid, divisiData, req_identity)
-    
+
     LOGGER_MONITOR(req_original_url, req_method, {
         beforeData,
         divisiData
     }, req_identity)
 
     return divisi
+}
+
+export const checkDivisiDipakaiPegawaiService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkDivisiDipakaiPegawaiService`, { uuid }, req_identity)
+    const pegawai = await checkDivisiDipakaiPegawaiRepo(uuid, req_identity)
+    if (pegawai.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Divisi Sudah Dipakai Oleh Pegawai ${pegawai[0].name} Dengan NIK ${pegawai[0].nik}`,
+            field: "error"
+        }))
+    }
 }

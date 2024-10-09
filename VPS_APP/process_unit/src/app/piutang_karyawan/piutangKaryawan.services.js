@@ -54,7 +54,7 @@ export const createPiutangKaryawanService = async (piutangKaryawanData, req_iden
     LOGGER(logType.INFO, `Start createPiutangKaryawanService`, piutangKaryawanData, req_identity)
     piutangKaryawanData.enabled = 1
 
-    await getNeracaValidasiByTanggalService(piutangKaryawanData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, piutangKaryawanData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(piutangKaryawanData.bukti_transaksi, "EMPTY", req_identity)
 
@@ -66,7 +66,7 @@ export const deletePiutangKaryawanByUuidService = async (uuid, req_identity) => 
     LOGGER(logType.INFO, `Start deletePiutangKaryawanByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getPiutangKaryawanByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
     
     await deletePiutangKaryawanByUuidRepo(uuid, req_identity)
     return true
@@ -76,7 +76,7 @@ export const updatePiutangKaryawanByUuidService = async (uuid, piutangKaryawanDa
     LOGGER(logType.INFO, `Start updatePiutangKaryawanByUuidService [${uuid}]`, piutangKaryawanData, req_identity)
     const beforeData = await getPiutangKaryawanByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(piutangKaryawanData.bukti_transaksi, [`"${beforeData.uuid}"`], req_identity)
 

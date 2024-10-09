@@ -1,11 +1,10 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
-import { formShowMessage, formValidation, showAlert, showError } from "../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../helper/form.helper"
 import { apiJenisBarangCRUD, apiSupplierCRUD } from "../../../../service/endPointList.api"
 import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
-import { kodeHargaList } from "../../../../config/objectList.config"
 
 const SupplierForm = ({
     setAddSupplierEvent = () => { },
@@ -48,7 +47,7 @@ const SupplierForm = ({
                     setAddSupplierEvent()
                     getData()
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    showError(err)
                 })
         }
     }

@@ -1,7 +1,7 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
-import { formShowMessage, formValidation, showAlert } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiDaftarGudangCRUD, apiJenisGudangCRUD, apiKategoriGudangCRUD } from "../../../../../service/endPointList.api"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { initialDataFromEditObject } from "../../../../../helper/select.helper"
@@ -94,7 +94,7 @@ const DaftarGudangForm = ({
                     setAddDaftarGudangEvent()
                     getData()
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    showError(err)
                 })
         }
     }

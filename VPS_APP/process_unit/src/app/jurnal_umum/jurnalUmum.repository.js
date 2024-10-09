@@ -282,6 +282,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = gt.pegawai 
                     WHERE gt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL 
                     SELECT 
                         gt.uuid,
@@ -313,6 +314,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = gt.pegawai 
                     WHERE gt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL -- TUNJANGAN UANG START
                     SELECT 
                         tut.uuid,
@@ -344,6 +346,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -375,6 +378,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -406,6 +410,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -437,6 +442,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -468,6 +474,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -499,6 +506,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -530,6 +538,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -561,6 +570,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -592,6 +602,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -623,6 +634,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -654,6 +666,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -685,6 +698,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -716,6 +730,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -747,6 +762,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -778,6 +794,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         tut.uuid,
@@ -809,6 +826,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL -- LEMBUR START
                     SELECT 
                         lt.uuid,
@@ -840,6 +858,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = lt.pegawai 
                     WHERE lt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         lt.uuid,
@@ -871,6 +890,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = lt.pegawai 
                     WHERE lt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL -- HADIAH START
                     SELECT 
                         ht.uuid,
@@ -902,6 +922,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ht.pegawai 
                     WHERE ht.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL 
                     SELECT 
                         ht.uuid,
@@ -933,6 +954,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ht.pegawai 
                     WHERE ht.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL -- PPH2126 START
                     SELECT 
                         ppt.uuid,
@@ -964,6 +986,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ppt.pegawai 
                     WHERE pt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         ppt.uuid,
@@ -995,6 +1018,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ppt.pegawai 
                     WHERE pt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL -- LAIN LAIN START
                     SELECT 
                         llt.uuid,
@@ -1026,6 +1050,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = llt.pegawai 
                     WHERE llt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         llt.uuid,
@@ -1057,6 +1082,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = llt.pegawai 
                     WHERE llt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL -- KERUGIAN START
                     SELECT 
                         kt.uuid,
@@ -1088,6 +1114,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = kt.pegawai 
                     WHERE kt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         kt.uuid,
@@ -1119,6 +1146,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = kt.pegawai 
                     WHERE kt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL -- PIUTANG PEGAWAI START
                     SELECT 
                         pkt.uuid,
@@ -1158,6 +1186,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = pkt.pegawai 
                     WHERE pkt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                     UNION ALL
                     SELECT 
                         pkt.uuid,
@@ -1197,6 +1226,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = pkt.pegawai 
                     WHERE pkt.enabled = 1
                     AND kapt.enabled = 1
+                    AND pt.enabled = 1
                 ) AS res
                 WHERE res.bulan = :bulan AND res.tahun = :tahun
                 AND (

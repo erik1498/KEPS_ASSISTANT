@@ -47,7 +47,7 @@ export const createKerugianService = async (kerugianData, req_identity) => {
     LOGGER(logType.INFO, `Start createKerugianService`, kerugianData, req_identity)
     kerugianData.enabled = 1
 
-    await getNeracaValidasiByTanggalService(kerugianData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, kerugianData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(kerugianData.bukti_transaksi, "EMPTY", req_identity)
 
@@ -59,7 +59,7 @@ export const deleteKerugianByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteKerugianByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getPiutangKaryawanByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
     
     await deleteKerugianByUuidRepo(uuid, req_identity)
     return true
@@ -69,7 +69,7 @@ export const updateKerugianByUuidService = async (uuid, kerugianData, req_identi
     LOGGER(logType.INFO, `Start updateKerugianByUuidService [${uuid}]`, kerugianData, req_identity)
     const beforeData = await getKerugianByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(kerugianData.bukti_transaksi, [`"${beforeData.uuid}"`], req_identity)
 

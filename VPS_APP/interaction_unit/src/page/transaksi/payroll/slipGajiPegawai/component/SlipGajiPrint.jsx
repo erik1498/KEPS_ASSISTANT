@@ -15,10 +15,14 @@ export const SlipGajiPrint = React.forwardRef((props, ref) => {
                 tahun={props.tahun}
                 title={"Slip Gaji Pegawai"}
             />
-            <div className="mt-16">
+            <div className="mt-16 pb-6 border-b-2 border-gray-200">
                 <div className="grid grid-cols-12">
                     <p className="col-span-3">Nama</p>
                     <p className="col-span-9">:&nbsp;&nbsp;&nbsp;{props.pegawai.name}</p>
+                </div>
+                <div className="grid grid-cols-12">
+                    <p className="col-span-3">NIK</p>
+                    <p className="col-span-9">:&nbsp;&nbsp;&nbsp;{props.pegawai.nik}</p>
                 </div>
                 <div className="grid grid-cols-12">
                     <p className="col-span-3">Divisi</p>
@@ -39,6 +43,14 @@ export const SlipGajiPrint = React.forwardRef((props, ref) => {
                 <div className="grid grid-cols-12">
                     <p className="col-span-3">Periode</p>
                     <p className="col-span-9">:&nbsp;&nbsp;&nbsp;{getBulanByIndex(props.periode - 1)}</p>
+                </div>
+                <div className="grid grid-cols-12">
+                    <p className="col-span-3">Status Tanggungan</p>
+                    <p className="col-span-9">:&nbsp;&nbsp;&nbsp;{props.pegawai.status_tanggungan_name}</p>
+                </div>
+                <div className="grid grid-cols-12">
+                    <p className="col-span-3">Status Kerja</p>
+                    <p className="col-span-9">:&nbsp;&nbsp;&nbsp;{props.pegawai.status_kerja}</p>
                 </div>
             </div>
             <div className="my-6 grid grid-cols-12 gap-x-4">

@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createJabatanRepo, deleteJabatanByUuidRepo, getAllJabatanRepo, getJabatanByUuidRepo, updateJabatanByUuidRepo } from "./jabatan.repository.js"
+import { checkJabatanDipakaiPegawaiRepo, createJabatanRepo, deleteJabatanByUuidRepo, getAllJabatanRepo, getJabatanByUuidRepo, updateJabatanByUuidRepo } from "./jabatan.repository.js"
 
 export const getAllJabatanService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllJabatanService", null, req_identity)
@@ -47,6 +47,7 @@ export const createJabatanService = async (jabatanData, req_identity) => {
 export const deleteJabatanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteJabatanByUuidService [${uuid}]`, null, req_identity)
     await getJabatanByUuidService(uuid, req_identity)
+    await checkJabatanDipakaiPegawaiService(uuid, req_identity)
     await deleteJabatanByUuidRepo(uuid, req_identity)
     return true
 }
@@ -54,6 +55,7 @@ export const deleteJabatanByUuidService = async (uuid, req_identity) => {
 export const updateJabatanByUuidService = async (uuid, jabatanData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateJabatanByUuidService [${uuid}]`, jabatanData, req_identity)
     const beforeData = await getJabatanByUuidService(uuid, req_identity)
+    await checkJabatanDipakaiPegawaiService(uuid, req_identity)
     const jabatan = await updateJabatanByUuidRepo(uuid, jabatanData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
@@ -62,4 +64,15 @@ export const updateJabatanByUuidService = async (uuid, jabatanData, req_identity
     }, req_identity)
 
     return jabatan
+}
+
+export const checkJabatanDipakaiPegawaiService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkJabatanDipakaiPegawaiService`, { uuid }, req_identity)
+    const pegawai = await checkJabatanDipakaiPegawaiRepo(uuid, req_identity)
+    if (pegawai.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Jabatan Sudah Dipakai Oleh Pegawai ${pegawai[0].name} Dengan NIK ${pegawai[0].nik}`,
+            field: "error"
+        }))
+    }
 }

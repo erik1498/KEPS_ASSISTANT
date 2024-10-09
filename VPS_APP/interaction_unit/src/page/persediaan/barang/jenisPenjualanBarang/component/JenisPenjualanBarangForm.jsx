@@ -1,7 +1,7 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useState } from "react"
-import { formShowMessage, formValidation, showAlert } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiJenisPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
 
 const JenisPenjualanBarangForm = ({
@@ -29,7 +29,7 @@ const JenisPenjualanBarangForm = ({
                     setAddJenisPenjualanBarangEvent()
                     getData()
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    showError(err)
                 })
         }
     }

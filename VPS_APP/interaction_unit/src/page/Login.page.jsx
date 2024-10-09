@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router-dom"
 import { apiLogin } from "../service/endPointList.api"
-import { eraseCookie, getCookie, setCookie } from "../helper/cookies.helper"
+import { eraseCookie, setCookie } from "../helper/cookies.helper"
 import { useState } from "react"
 import { formShowMessage, formValidation } from "../helper/form.helper"
 import LoadingPage from "../component/layout/LoadingPage"
-import { useEffect } from "react"
 
 const LoginPage = () => {
 
@@ -38,7 +37,7 @@ const LoginPage = () => {
                     setCookie("role", resData.role, 1)
                     navigate("/dashboard")
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    formShowMessage(err)
                     setIsLoading(false)
                 })
         }

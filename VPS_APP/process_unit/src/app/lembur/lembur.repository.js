@@ -34,6 +34,7 @@ export const getAllLemburRepo = async (bulan, tahun, req_id) => {
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = lt.pegawai 
             WHERE lt.enabled = 1
             AND kapt.enabled = 1
+            AND pt.enabled = 1
             AND YEAR(lt.tanggal) = ${tahun} AND MONTH(lt.tanggal) = ${bulan}
             UNION ALL
             SELECT 
@@ -63,6 +64,7 @@ export const getAllLemburRepo = async (bulan, tahun, req_id) => {
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = lt.pegawai 
             WHERE lt.enabled = 1
             AND kapt.enabled = 1
+            AND pt.enabled = 1
             AND YEAR(lt.tanggal) = ${tahun} AND MONTH(lt.tanggal) = ${bulan}
         `,
         { type: Sequelize.QueryTypes.SELECT }

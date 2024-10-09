@@ -45,7 +45,7 @@ export const createTunjanganUangService = async (tunjanganUangData, req_identity
     LOGGER(logType.INFO, `Start createTunjanganUangService`, tunjanganUangData, req_identity)
     tunjanganUangData.enabled = 1
 
-    await getNeracaValidasiByTanggalService(tunjanganUangData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, tunjanganUangData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(tunjanganUangData.bukti_transaksi, "EMPTY", req_identity)
 
@@ -58,7 +58,7 @@ export const deleteTunjanganUangByUuidService = async (uuid, req_identity) => {
 
     const beforeData = await getTunjanganUangByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await deleteTunjanganUangByUuidRepo(uuid, req_identity)
     return true
@@ -69,7 +69,7 @@ export const updateTunjanganUangByUuidService = async (uuid, tunjanganUangData, 
 
     const beforeData = await getTunjanganUangByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(tunjanganUangData.bukti_transaksi, [`"${uuid}"`], req_identity)
 

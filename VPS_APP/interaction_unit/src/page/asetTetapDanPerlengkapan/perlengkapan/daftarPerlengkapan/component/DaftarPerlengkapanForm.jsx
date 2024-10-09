@@ -1,7 +1,7 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
-import { formShowMessage, formValidation, showAlert } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { initialDataFromEditObject } from "../../../../../helper/select.helper"
@@ -130,7 +130,7 @@ const DaftarPerlengkapanForm = ({
                     setAddDaftarPerlengkapanEvent()
                     getData()
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    showError(err)
                 })
         }
     }

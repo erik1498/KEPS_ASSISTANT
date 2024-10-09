@@ -38,7 +38,7 @@ export const createHadiahService = async (hadiahData, req_identity) => {
     LOGGER(logType.INFO, `Start createHadiahService`, hadiahData, req_identity)
     hadiahData.enabled = 1
 
-    await getNeracaValidasiByTanggalService(hadiahData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, hadiahData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(hadiahData.bukti_transaksi, "EMPTY", req_identity)
 
@@ -50,7 +50,7 @@ export const deleteHadiahByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteHadiahByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getHadiahByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await deleteHadiahByUuidRepo(uuid, req_identity)
     return true
@@ -60,7 +60,7 @@ export const updateHadiahByUuidService = async (uuid, hadiahData, req_identity, 
     LOGGER(logType.INFO, `Start updateHadiahByUuidService [${uuid}]`, hadiahData, req_identity)
     const beforeData = await getHadiahByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(hadiahData.bukti_transaksi, [`"${beforeData.uuid}"`], req_identity)
 

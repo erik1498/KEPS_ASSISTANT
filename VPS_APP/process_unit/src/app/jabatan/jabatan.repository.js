@@ -80,3 +80,20 @@ export const updateJabatanByUuidRepo = async (uuid, jabatanData, req_id) => {
         }
     )
 }
+
+export const checkJabatanDipakaiPegawaiRepo = async(uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                pt.name,
+                pt.nik
+            FROM ${generateDatabaseName(req_id)}.pegawai_tab pt 
+            WHERE pt.jabatan = "${uuid}"
+            AND pt.enabled = 1 
+            LIMIT 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}

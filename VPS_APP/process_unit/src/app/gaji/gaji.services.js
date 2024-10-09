@@ -53,7 +53,7 @@ export const createGajiService = async (gajiData, req_identity) => {
     LOGGER(logType.INFO, `Start createGajiService`, gajiData, req_identity)
     gajiData.enabled = 1
 
-    await getNeracaValidasiByTanggalService(gajiData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, gajiData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(gajiData.bukti_transaksi, "EMPTY", req_identity)
 
@@ -65,7 +65,7 @@ export const deleteGajiByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteGajiByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getGajiByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await deleteGajiByUuidRepo(uuid, req_identity)
     return true
@@ -75,7 +75,7 @@ export const updateGajiByUuidService = async (uuid, gajiData, req_identity, req_
     LOGGER(logType.INFO, `Start updateGajiByUuidService [${uuid}]`, gajiData, req_identity)
     const beforeData = await getGajiByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(gajiData.bukti_transaksi, [`"${uuid}"`], req_identity)
 

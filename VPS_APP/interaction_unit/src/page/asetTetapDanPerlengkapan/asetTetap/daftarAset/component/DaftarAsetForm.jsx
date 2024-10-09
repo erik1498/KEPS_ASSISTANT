@@ -1,7 +1,7 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
-import { formShowMessage, formValidation, showAlert } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiDaftarAsetCRUD, apiKelompokAsetCRUD, apiMetodePenyusutanCRUD, apiSatuanBarangCRUD, apiSupplierCRUD } from "../../../../../service/endPointList.api"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
@@ -161,7 +161,7 @@ const DaftarAsetForm = ({
                     setAddDaftarAsetEvent()
                     getData()
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    showError(err)
                 })
         }
     }

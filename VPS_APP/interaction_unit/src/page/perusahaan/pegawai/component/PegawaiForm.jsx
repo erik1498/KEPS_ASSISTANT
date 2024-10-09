@@ -1,11 +1,11 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
-import { formShowMessage, formValidation, showAlert, showError } from "../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../helper/form.helper"
 import { apiDivisiCRUD, apiJabatanCRUD, apiPegawaiCRUD, apiStatusTanggunganCRUD } from "../../../../service/endPointList.api"
 import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
-import { agamaList, jenisKelaminList, kodeHargaList, statusKerjaList } from "../../../../config/objectList.config"
+import { agamaList, jenisKelaminList, statusKerjaList } from "../../../../config/objectList.config"
 import { getHariTanggal } from "../../../../helper/date.helper"
 import { initialDataFromEditObject } from "../../../../helper/select.helper"
 
@@ -79,7 +79,7 @@ const PegawaiForm = ({
                     setAddPegawaiEvent()
                     getData()
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    showError(err)
                 })
         }
     }

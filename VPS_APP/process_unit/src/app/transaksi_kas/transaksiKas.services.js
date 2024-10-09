@@ -39,7 +39,7 @@ export const createTransaksiKasService = async (transaksiKasData, req_identity) 
 
     await getJurnalUmumByBuktiTransaski(transaksiKasData.bukti_transaksi, "EMPTY", req_identity)
 
-    await getNeracaValidasiByTanggalService(transaksiKasData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, transaksiKasData.tanggal, req_identity)
 
     const transaksiKas = await createTransaksiKasRepo(transaksiKasData, req_identity)
     return transaksiKas
@@ -49,7 +49,7 @@ export const deleteTransaksiKasByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteTransaksiKasByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getTransaksiKasByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await deleteTransaksiKasByUuidRepo(uuid, req_identity)
     return true
@@ -59,7 +59,7 @@ export const updateTransaksiKasByUuidService = async (uuid, transaksiKasData, re
     LOGGER(logType.INFO, `Start updateTransaksiKasByUuidService [${uuid}]`, transaksiKasData, req_identity)
     const beforeData = await getTransaksiKasByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(beforeData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await getJurnalUmumByBuktiTransaski(transaksiKasData.bukti_transaksi, [`"${uuid}"`], req_identity)
 

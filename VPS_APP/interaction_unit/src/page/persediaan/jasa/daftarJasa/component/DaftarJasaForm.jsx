@@ -1,7 +1,7 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
-import { formShowMessage, formValidation, showAlert, showError } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiDaftarJasaCRUD, apiJenisJasaCRUD, apiJenisPenjualanJasaCRUD, apiKategoriJasaCRUD } from "../../../../../service/endPointList.api"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { PPNList } from "../../../../../config/objectList.config"
@@ -55,7 +55,7 @@ const DaftarJasaForm = ({
                     }
                     setKategoriHargaForm(x => x = true)
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    showError(err)
                 })
         }
     }

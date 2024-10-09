@@ -61,12 +61,12 @@ export const getNeracaSaldoByBulanAndTahunServices = async (bulan, tahun, req_id
     return returnData
 }
 
-export const getNeracaValidasiByTanggalService = async (tanggal, req_identity) => {
+export const getNeracaValidasiByTanggalService = async (addMessage, tanggal, req_identity) => {
     const neracaValidasi = await getNeracaValidasiByTanggalRepo(tanggal, req_identity)
 
     if (neracaValidasi.length > 0 && neracaValidasi[0].count > 0) {
         throw Error(JSON.stringify({
-            message: `Neraca sudah divalidasi untuk Bulan ${neracaValidasi[0].bulan} Dan Tahun ${neracaValidasi[0].tahun}`,
+            message: `${addMessage}Neraca sudah divalidasi untuk Bulan ${neracaValidasi[0].bulan} Dan Tahun ${neracaValidasi[0].tahun}`,
             field: "error"
         }))
     }

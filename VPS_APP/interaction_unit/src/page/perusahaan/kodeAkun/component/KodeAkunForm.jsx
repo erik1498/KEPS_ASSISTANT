@@ -1,11 +1,10 @@
-import { FaPlus, FaSave, FaTimes } from "react-icons/fa"
+import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
 import { useState } from "react"
 import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
-import FormSelect from "../../../../component/form/FormSelect"
 import { KodeAkunType, TipeTransaksiKasBankKodeAkunForm } from "../../../../config/objectList.config"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
-import { formShowMessage, formValidation, showAlert } from "../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../helper/form.helper"
 import { apiKodeAkunCRUD } from "../../../../service/endPointList.api"
 import ToggleBox from "../../../../component/general/ToggleBox"
 
@@ -44,7 +43,7 @@ const KodeAkunForm = ({
                     setAddKodeAkunEvent()
                     getData()
                 }).catch(err => {
-                    formShowMessage(JSON.parse(err.response.data.errorData))
+                    showError(err)
                 })
         }
     }

@@ -41,7 +41,7 @@ export const createRincianTransaksiBankService = async (rincianTransaksiBankData
     LOGGER(logType.INFO, `Start createRincianTransaksiBankService`, rincianTransaksiBankData, req_identity)
     rincianTransaksiBankData.enabled = 1
     
-    await getNeracaValidasiByTanggalService(rincianTransaksiBankData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, rincianTransaksiBankData.tanggal, req_identity)
 
     const rincianTransaksiBank = await createRincianTransaksiBankRepo(rincianTransaksiBankData, req_identity)
     return rincianTransaksiBank
@@ -53,7 +53,7 @@ export const deleteRincianTransaksiBankByUuidService = async (uuid, req_identity
 
     const transaksiBank = await getTransaksiBankByUuidService(beforeData.transaksi_bank, req_identity)
     
-    await getNeracaValidasiByTanggalService(transaksiBank.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, transaksiBank.tanggal, req_identity)
 
     await deleteRincianTransaksiBankByUuidRepo(uuid, req_identity)
     return true
@@ -64,7 +64,7 @@ export const updateRincianTransaksiBankByUuidService = async (uuid, rincianTrans
 
     const transaksiBank = await getTransaksiBankByUuidService(rincianTransaksiBankData.transaksi_bank, req_identity)
     
-    await getNeracaValidasiByTanggalService(transaksiBank.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, transaksiBank.tanggal, req_identity)
     
     const beforeData = await getRincianTransaksiBankByUuidService(uuid, req_identity)
     const rincianTransaksiBank = await updateRincianTransaksiBankByUuidRepo(uuid, rincianTransaksiBankData, req_identity)
