@@ -8,7 +8,7 @@ export const getUserByUsername = async (username, req_id) => {
     if (!user) {
         throw Error(JSON.stringify({
             message: "Akun Tidak Terdaftar",
-            field: "password"
+            prop: "password"
         }))
     }
     return user
@@ -19,7 +19,10 @@ export const getUserByUuid = async (data, req_id) => {
     const user = await getUserByUuidRepo(data.uuid, req_id)
 
     if (!user) {
-        throw Error("Authentication Failed")
+        throw Error(JSON.stringify({
+            message: "Akun Tidak Terdaftar",
+            prop: "password"
+        }))
     }
     return user
 }

@@ -18,7 +18,7 @@ export const loginUser = async (req, res) => {
             }, req.identity, req.originalUrl, req.method, false)
             throw Error(JSON.stringify({
                 message: "Akun Tidak Terdaftar",
-                field: "password"
+                prop: "password"
             }))
         }
 
@@ -33,7 +33,7 @@ export const loginUser = async (req, res) => {
                 }, req.identity, req.originalUrl, req.method, false)
                 throw Error(JSON.stringify({
                     message: "Akun Tidak Terdaftar",
-                    field: "password"
+                    prop: "password"
                 }))
             }
         }
@@ -47,7 +47,7 @@ export const loginUser = async (req, res) => {
             }, req.identity, req.originalUrl, req.method, false)
             throw Error(JSON.stringify({
                 message: "Akun Tidak Terdaftar",
-                field: "password"
+                prop: "password"
             }))
         }
 
@@ -58,7 +58,7 @@ export const loginUser = async (req, res) => {
             }, req.identity, req.originalUrl, req.method, false)
             throw Error(JSON.stringify({
                 message: "Akun Tidak Terdaftar",
-                field: "password"
+                prop: "password"
             }))
         }
 
@@ -68,7 +68,7 @@ export const loginUser = async (req, res) => {
             LOGGER(logType.ERROR, "Password Tidak Sesuai", null, req.identity, req.originalUrl, req.method, false)
             throw Error(JSON.stringify({
                 message: "Akun Tidak Terdaftar",
-                field: "password"
+                prop: "password"
             }))
         }
 
@@ -78,7 +78,7 @@ export const loginUser = async (req, res) => {
                 LOGGER(logType.ERROR, "User-Permission Tidak Sesuai Dengan Licence Key", null, req.identity, req.originalUrl, req.method, false)
                 throw Error(JSON.stringify({
                     message: "Akun Tidak Terdaftar",
-                    field: "password"
+                    prop: "password"
                 }))
             }
         }
@@ -118,7 +118,8 @@ export const loginUser = async (req, res) => {
             "userId": "NULL"
         }), req.originalUrl, req.method, false)
         res.status(401).json({
-            errorData: error.message
+            type: "validationError",
+            message: [JSON.parse(error.message)]
         })
     }
 }
@@ -190,8 +191,8 @@ export const refreshToken = async (req, res) => {
     } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(401).json({
-            type: "unauthorizedError",
-            message: new Error('Invalid request!')
-        });
+            type: "validationError",
+            message: [error.message]
+        })
     }
 }
