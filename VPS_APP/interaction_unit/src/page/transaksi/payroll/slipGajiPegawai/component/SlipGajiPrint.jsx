@@ -15,7 +15,7 @@ export const SlipGajiPrint = React.forwardRef((props, ref) => {
                 tahun={props.tahun}
                 title={"Slip Gaji Pegawai"}
             />
-            <div className="mt-16 pb-6 border-b-2 border-gray-200">
+            <div className="mt-16 py-6 border-y-2 border-gray-200">
                 <div className="grid grid-cols-12">
                     <p className="col-span-3">Nama</p>
                     <p className="col-span-9">:&nbsp;&nbsp;&nbsp;{props.pegawai.name}</p>
@@ -53,7 +53,7 @@ export const SlipGajiPrint = React.forwardRef((props, ref) => {
                     <p className="col-span-9">:&nbsp;&nbsp;&nbsp;{props.pegawai.status_kerja}</p>
                 </div>
             </div>
-            <div className="my-6 grid grid-cols-12 gap-x-4">
+            <div className="grid grid-cols-12 gap-x-4">
                 <PendapatanPegawai
                     slipGaji={props.data}
                     _getDataBySumber={props._getDataBySumber}
@@ -67,7 +67,7 @@ export const SlipGajiPrint = React.forwardRef((props, ref) => {
                     forPrint={true}
                 />
             </div>
-            <div className="flex justify-between text-2xl font-bold mt-3 border-t-2 border-gray-200 pt-4 pb-2">
+            <div className="flex justify-between text-2xl font-bold border-y-2 border-gray-200 pt-4 py-2">
                 <p>Jumlah Diterima</p>
                 <p>Rp. {parseToRupiahText(props.takeHomePay)}</p>
             </div>

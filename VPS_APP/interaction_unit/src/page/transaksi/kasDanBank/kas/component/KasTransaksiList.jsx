@@ -13,6 +13,7 @@ const KasTransaksiList = ({
     nilaiTransaksi = 0,
     type = 1
 }) => {
+    const [loadingSave, setIsLoadingSave] = useState(false)
     const [totalDebetKredit, setTotalDebetKredit] = useState({
         totalDebet: type == 1 ? nilaiTransaksi : 0,
         totalKredit: type == 0 ? nilaiTransaksi : 0
@@ -54,9 +55,11 @@ const KasTransaksiList = ({
 
     const deleteTransaksiFromArray = async (index) => {
         if (transaksiDeleted[index]) {
+            setIsLoadingSave(x => x = true)
             apiRincianTransaksiKasCRUD
                 .custom(`/${transaksiDeleted[index].uuid}`, "DELETE")
                 .then(() => {
+                    setIsLoadingSave(x => x = false)
                     deleteTransaksiFromArray(index += 1)
                 }).catch(err => {
                     showError(err)
@@ -66,6 +69,7 @@ const KasTransaksiList = ({
 
     const postTransaksiFromArray = async (index) => {
         if (transaksi[index]) {
+            setIsLoadingSave(x => x = true)
             apiRincianTransaksiKasCRUD
                 .custom(transaksi[index].uuid ? `/${transaksi[index].uuid}` : ``, transaksi[index].uuid ? "PUT" : "POST", null, {
                     data: {
@@ -80,6 +84,7 @@ const KasTransaksiList = ({
                     if (!transaksi[index].uuid) {
                         transaksi[index].uuid = resData.data.uuid
                     }
+                    setIsLoadingSave(x => x = false)
                     postTransaksiFromArray(index += 1)
                 }).catch(err => {
                     showError(err)
@@ -172,40 +177,6 @@ const KasTransaksiList = ({
 
     return <>
         <div className="flex flex-col px-6 mt-6 w-full">
-            {/* <div className="flex gap-x-2 w-max mt-10">
-                <div>
-                    <p className="font-bold">Debet</p>
-                    <FormInput
-                        border={false}
-                        name={`totalDebet`}
-                        type={"text"}
-                        addClass={"font-bold p-0 m-0"}
-                        value={parseToRupiahText(totalDebetKredit.totalDebet)}
-                        other={
-                            {
-                                autoComplete: false,
-                                disabled: true
-                            }
-                        }
-                    />
-                </div>
-                <div>
-                    <p className="font-bold">Kredit</p>
-                    <FormInput
-                        border={false}
-                        name={`totalKredit`}
-                        type={"text"}
-                        addClass={"font-bold"}
-                        value={parseToRupiahText(totalDebetKredit.totalKredit)}
-                        other={
-                            {
-                                autoComplete: false,
-                                disabled: true
-                            }
-                        }
-                    />
-                </div>
-            </div> */}
             <div className="grid grid-cols-7 w-max gap-x-2 items-center">
                 <div className="col-span-1">
                     <label className="form-control w-full bg-white">
@@ -360,7 +331,7 @@ const KasTransaksiList = ({
             </div>
             <div className="flex sticky bottom-0 bg-white py-3 w-full items-end gap-x-2">
                 <button className="btn btn-sm bg-blue-800 mt-4 text-white" onClick={() => addTransaksi()}><FaPlus /> Tambah Transaksi</button>
-                <button className="btn btn-sm bg-green-800 mt-4 text-white" onClick={() => _saveTransaksi()}><FaSave /> Simpan</button>
+                <button disabled={loadingSave} className="btn btn-sm bg-green-800 mt-4 text-white" onClick={() => _saveTransaksi()}><FaSave /> {loadingSave ? "Sedang Menyimpan" : "Simpan"}</button>
             </div>
         </div>
     </>

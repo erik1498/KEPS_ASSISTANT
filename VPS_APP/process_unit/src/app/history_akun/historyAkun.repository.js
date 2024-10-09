@@ -158,6 +158,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                 JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = gt.pegawai 
                 WHERE gt.enabled = 1
                 AND kapt.enabled = 1
+                AND pt.enabled = 1
                 UNION ALL 
                 SELECT 
                     gt.uuid,
@@ -179,6 +180,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                 JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = gt.pegawai 
                 WHERE gt.enabled = 1
                 AND kapt.enabled = 1
+                AND pt.enabled = 1
                 UNION ALL -- TUNJANGAN UANG START
                 SELECT 
                     tut.uuid,

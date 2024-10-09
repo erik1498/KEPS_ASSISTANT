@@ -13,6 +13,7 @@ const BankTransaksiList = ({
     nilaiTransaksi = 0,
     type = 1
 }) => {
+    const [loadingSave, setIsLoadingSave] = useState(false)
     const [totalDebetKredit, setTotalDebetKredit] = useState({
         totalDebet: type == 1 ? nilaiTransaksi : 0,
         totalKredit: type == 0 ? nilaiTransaksi : 0
@@ -54,11 +55,14 @@ const BankTransaksiList = ({
 
     const deleteTransaksiFromArray = async (index) => {
         if (transaksiDeleted[index]) {
+            setIsLoadingSave(x => x = true)
             apiRincianTransaksiBankCRUD
                 .custom(`/${transaksiDeleted[index].uuid}`, "DELETE")
                 .then(() => {
+                    setIsLoadingSave(x => x = false)
                     deleteTransaksiFromArray(index += 1)
                 }).catch(err => {
+                    setIsLoadingSave(x => x = false)
                     showError(err)
                 })
         }
@@ -66,6 +70,7 @@ const BankTransaksiList = ({
 
     const postTransaksiFromArray = async (index) => {
         if (transaksi[index]) {
+            setIsLoadingSave(x => x = true)
             apiRincianTransaksiBankCRUD
                 .custom(transaksi[index].uuid ? `/${transaksi[index].uuid}` : ``, transaksi[index].uuid ? "PUT" : "POST", null, {
                     data: {
@@ -80,9 +85,11 @@ const BankTransaksiList = ({
                     if (!transaksi[index].uuid) {
                         transaksi[index].uuid = resData.data.uuid
                     }
+                    setIsLoadingSave(x => x = false)
                     postTransaksiFromArray(index += 1)
                 }).catch(err => {
                     showError(err)
+                    setIsLoadingSave(x => x = false)
                 })
         }
     }
@@ -326,7 +333,7 @@ const BankTransaksiList = ({
             </div>
             <div className="flex sticky bottom-0 bg-white py-3 w-full items-end gap-x-2">
                 <button className="btn btn-sm bg-blue-800 mt-4 text-white" onClick={() => addTransaksi()}><FaPlus /> Tambah Transaksi</button>
-                <button className="btn btn-sm bg-green-800 mt-4 text-white" onClick={() => _saveTransaksi()}><FaSave /> Simpan</button>
+                <button disabled={loadingSave} className="btn btn-sm bg-green-800 mt-4 text-white" onClick={() => _saveTransaksi()}><FaSave /> {loadingSave ? "Sedang Menyimpan" : "Simpan"}</button>
             </div>
         </div>
     </>

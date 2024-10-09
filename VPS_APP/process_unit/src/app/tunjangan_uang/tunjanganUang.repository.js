@@ -197,7 +197,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 0 AS transaksi,
                 tut.tanggal,
                 0 AS debet,
-                tut.jp AS debet,
+                tut.jp AS kredit,
                 kapt.code AS kode_akun,
                 kapt.name AS nama_akun,
                 kapt.type AS type_akun,

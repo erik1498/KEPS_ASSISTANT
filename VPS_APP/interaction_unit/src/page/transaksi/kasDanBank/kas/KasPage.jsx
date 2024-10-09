@@ -130,8 +130,6 @@ const KasPage = () => {
                             () => setAddTransaksi(!addTransaksi)
                         }
                         transaksiSelected={transaksiSelected}
-                        getData={_getData}
-                        setIsLoadingEvent={setIsLoading}
                     /> :
                     <>
                         <PageTitle title="Transaksi Kas" />

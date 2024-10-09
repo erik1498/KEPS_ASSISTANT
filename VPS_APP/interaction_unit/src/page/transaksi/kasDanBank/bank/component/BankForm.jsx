@@ -14,10 +14,9 @@ import { parseToRupiahText } from "../../../../../helper/number.helper";
 const BankForm = ({
     setAddTransaksiEvent,
     transaksiSelected,
-    setIsLoadingEvent = () => { },
-    getData = () => { }
 }) => {
 
+    const [loadingSave, setIsLoadingSave] = useState(false)
     const [tipeTransaksi, setTipeTransaksi] = useState({
         label: TipeTransaksi[0].label,
         value: TipeTransaksi[0].value
@@ -58,6 +57,7 @@ const BankForm = ({
     const _saveTransaksiBank = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
+            setIsLoadingSave(x => x = true)
             apiTransaksiBankCRUD
                 .custom(`${transaksiSelected ? "/" + transaksiSelected : ""}`, transaksiSelected ? "PUT" : "POST", null, {
                     data: {
@@ -74,8 +74,10 @@ const BankForm = ({
                     } else {
                         setIdTransaksiBank(resData.data.uuid)
                     }
+                    setIsLoadingSave(x => x = false)
                 }).catch(err => {
                     showError(err)
+                    setIsLoadingSave(x => x = false)
                 })
         }
     }
@@ -208,7 +210,7 @@ const BankForm = ({
                         />
                     </div>
                     {
-                        !idTransaksiBank ? <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button> : <></>
+                        !idTransaksiBank ? <button disabled={loadingSave} className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> {loadingSave ? "Sedang Menyimpan" : "Simpan"}</button> : <></>
                     }
                 </form>
             </div>
