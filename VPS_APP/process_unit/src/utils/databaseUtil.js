@@ -3,7 +3,6 @@ import db from "../config/Database.js";
 import { getEnv } from "./envUtils.js";
 
 export const generateDatabaseName = (req_identity, logger) => {
-    logger = false
     return logger ? `${getEnv("DB_NAME")}_logging_${JSON.parse(req_identity).client_id}` : `${getEnv("DB_NAME")}_${JSON.parse(req_identity).client_id}`
 }
 
