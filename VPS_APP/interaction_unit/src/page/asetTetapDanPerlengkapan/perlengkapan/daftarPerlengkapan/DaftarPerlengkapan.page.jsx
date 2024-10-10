@@ -12,7 +12,7 @@ import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
 import { DaftarPerlengkapanPrint } from "./component/DaftarPerlengkapanPrint"
 import { convertTo12HoursFormat, getBulanByIndex } from "../../../../helper/date.helper"
-import { parseToRupiahText } from "../../../../../../process_unit/src/utils/numberParsingUtil"
+import { parseToRupiahText } from "../../../../helper/number.helper"
 
 const DaftarPerlengkapanPage = () => {
 
