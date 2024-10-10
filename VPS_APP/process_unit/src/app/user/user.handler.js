@@ -109,6 +109,7 @@ export const loginUser = async (req, res) => {
             token: tokenEncrypt,
             refreshToken: refreshTokenEncrypt,
             role: user.role,
+            name: user.name,
             perusahaan: user.perusahaan,
             tokenExpired
         });
@@ -185,6 +186,7 @@ export const refreshToken = async (req, res) => {
             token: tokenEncrypt,
             refreshToken: refreshTokenEncrypt,
             role: user.role,
+            name: user.name,
             perusahaan: user.perusahaan,
             tokenExpired
         })

@@ -3,6 +3,7 @@ import { v4 } from 'uuid'
 import bcrypt from "bcrypt"
 import { getEnv } from "../../utils/envUtils.js"
 import { createFile } from "../../utils/fileUtil.js"
+import { BUKU_BESAR, DASHBOARD, LAPORAN, PERUSAHAAN, TRANSAKSI } from "../../const/roles.js"
 
 export const generateInstallerKey = async (data) => {
     const {
@@ -40,21 +41,65 @@ export const generateInstallerKey = async (data) => {
         role, 
         serial_key, 
         mac_address, 
+        os_info,
+        perusahaan,
         createdAt, 
-        updatedAt,
-        os_info
+        updatedAt
     ) VALUES (
         NULL, 
         '${v4()}', 
         '${username}', 
         '${password}', 
         '${name}', 
-        'Admin', 
+        '[${
+            DASHBOARD(
+                true,
+                true,
+                true,
+                true,
+                false
+            ).concat(...PERUSAHAAN(
+                true,
+                true,
+                false,
+                false,
+                true,
+                false,
+                true,
+                true,
+                false,
+                false,
+                true
+            )).concat(...TRANSAKSI(
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                true,
+                true,
+                true
+            )).concat(...BUKU_BESAR(
+                true,
+                true
+            )).concat(...LAPORAN(
+                true,
+                true,
+                true,
+                true
+            ))
+            .map(x => {
+                return `"${x}"`
+            })
+        }]', 
         '${serial_key}', 
         '${mac_address}', 
+        '${JSON.stringify(os_info)}',
+        'PT. KLIEN NAME', 
         '${date.getFullYear()}-${date.getMonth() < 10 ? `0${date.getMonth()}` : `${date.getMonth()}`}-${date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`} ${date.getHours() < 10 ? `0${date.getHours()}` : `${date.getHours()}`}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : `${date.getMinutes()}`}:${date.getSeconds() < 10 ? `0${date.getSeconds()}` : `${date.getSeconds()}`}',
-        '${date.getFullYear()}-${date.getMonth() < 10 ? `0${date.getMonth()}` : `${date.getMonth()}`}-${date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`} ${date.getHours() < 10 ? `0${date.getHours()}` : `${date.getHours()}`}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : `${date.getMinutes()}`}:${date.getSeconds() < 10 ? `0${date.getSeconds()}` : `${date.getSeconds()}`}',
-        '${JSON.stringify(os_info)}' 
+        '${date.getFullYear()}-${date.getMonth() < 10 ? `0${date.getMonth()}` : `${date.getMonth()}`}-${date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`} ${date.getHours() < 10 ? `0${date.getHours()}` : `${date.getHours()}`}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : `${date.getMinutes()}`}:${date.getSeconds() < 10 ? `0${date.getSeconds()}` : `${date.getSeconds()}`}'
     )`)
 
     return {

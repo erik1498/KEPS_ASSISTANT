@@ -1,4 +1,4 @@
-import { FaBook, FaBuilding, FaExchangeAlt, FaFileCsv, FaRegChartBar, FaThLarge, FaToolbox } from "react-icons/fa";
+import { FaBook, FaBuilding, FaDotCircle, FaExchangeAlt, FaFileCsv, FaRegChartBar, FaThLarge, FaToolbox } from "react-icons/fa";
 import NavigationLink from "./NavigationLink";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -55,11 +55,20 @@ const Navigasi = ({
         <div className="top-36 h-[40vh] bg-blue-900 rounded-box left-0 right-0 fixed -z-0 shadow-inner">
         </div>
         <div className="sticky top-0 z-[100]">
-            <div className="bg-white px-8 py-5 grid grid-cols-2">
+            <div className="bg-white px-8 py-5 grid grid-cols-4">
                 <div className="col-span-2 flex uppercase text-blue-900">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-y-2">
                         <h1 className="text-xl font-bold">{getCookie("perusahaan")}</h1>
-                        <p className="text-[9px] bg-blue-900 w-max text-white font-bold px-3 py-1 rounded-md">Keps Assistant | Friend of Your Business Progress</p>
+                        <p className="text-xs bg-blue-900 w-max text-white font-bold px-3 py-1 rounded-md">Keps Assistant | Friend of Your Business Progress</p>
+                    </div>
+                </div>
+                <div className="col-span-2 flex justify-end uppercase text-blue-900">
+                    <div className="flex flex-col gap-y-2 items-end">
+                        <h1 className="text-xl font-bold">{getCookie("name")}</h1>
+                        <div className="flex items-center gap-x-2 text-green-900 w-max font-bold py-1 rounded-md">
+                            <FaDotCircle size={14} />
+                            <p className="text-xs">Online</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -384,7 +393,7 @@ const Navigasi = ({
                                     parentName={"Persediaan"}
                                     sideBars={sideBars[0]}
                                 />
-                                <ul className="menu z-50 bg-base-200 rounded-box w-max max-h-[80vh] no-scrollbar">
+                                <ul className="menu z-50 bg-base-200 rounded-box w-max max-h-[60vh] no-scrollbar">
                                     {
                                         getRolesInCookie("Persediaan_Barang") ? <>
                                             <li>

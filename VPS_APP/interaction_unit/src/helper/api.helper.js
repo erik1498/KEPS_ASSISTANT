@@ -23,6 +23,7 @@ axiosJWT.interceptors.request.use(async (config) => {
           eraseCookie("loadedKodeAkun")
           eraseCookie("perusahaan")
           eraseCookie("role")
+          eraseCookie("name")
           setCookie("login", "false")
           document.location.href = "/"
         }
@@ -34,6 +35,7 @@ axiosJWT.interceptors.request.use(async (config) => {
       setCookie("login", "true")
       setCookie("perusahaan", response.data.perusahaan, 1)
       setCookie("role", response.data.role, 1)
+      setCookie("name", response.data.name, 1)
     } else {
       config.headers.Authorization = `Bearer ${getCookie("token")}`
     }
