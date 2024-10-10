@@ -14,4 +14,4 @@ RUN pnpm install
 EXPOSE 5173
 
 # CMD ["serve", "-s", "dist"] // AKTIVKAN JIKA BUKAN UNTUK SERVER KEPS
-CMD ["pnpm", "run", "serve"]
+CMD ["pnpm", "run", "dev"]
