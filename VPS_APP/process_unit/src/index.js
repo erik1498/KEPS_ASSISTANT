@@ -39,22 +39,27 @@ const PORT = getEnv("PORT")
 await connectDatabase();
 
 app.use((req, res, next) => {
-    if (!req.header("Client_id")) {
-        return res.status(401).json({
-            errorData: JSON.stringify({
+    try {
+        if (!req.header("Client_id")) {
+            throw Error(JSON.stringify({
                 message: "Akun Tidak Terdaftar",
-                field: "password"
-            })
+                prop: "password"
+            }))
+        }
+        let genUUID = v4()
+        req.identity = JSON.stringify({
+            "id": genUUID,
+            "userId": null,
+            "client_id": req.header("Client_id")
+        })
+        res.setHeader("request-id", genUUID);
+        next();
+    } catch (error) {
+        return res.status(401).json({
+            type: "validationError",
+            message: [JSON.parse(error.message)]
         })
     }
-    let genUUID = v4()
-    req.identity = JSON.stringify({
-        "id": genUUID,
-        "userId": null,
-        "client_id": req.header("Client_id")
-    })
-    res.setHeader("request-id", genUUID);
-    next();
 })
 
 app.disable("x-powered-by")

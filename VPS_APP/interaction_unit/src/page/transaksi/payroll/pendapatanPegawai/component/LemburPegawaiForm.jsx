@@ -194,6 +194,8 @@ const LemburPegawaiForm = ({
                         }
                     }
                 />
+            </div>
+            <div className="mt-5 flex gap-x-2">
                 <FormInputWithLabel
                     label={"Keterangan"}
                     type={"text"}
@@ -207,6 +209,8 @@ const LemburPegawaiForm = ({
                         }
                     }
                 />
+            </div>
+            <div className="mt-5 flex gap-x-2">
                 <FormInputWithLabel
                     label={"Nilai Lembur Per Menit"}
                     type={"text"}
