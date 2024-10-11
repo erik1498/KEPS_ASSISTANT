@@ -45,6 +45,7 @@ const LoginPage = () => {
     }
 
     useEffect(() => {
+        eraseCookie("loadedKodeAkun")
         eraseCookie("token")
         eraseCookie("refreshToken")
         eraseCookie("tokenExpired")
