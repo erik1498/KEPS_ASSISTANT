@@ -1,5 +1,3 @@
-import { eraseCookie } from "./cookies.helper";
-
 export const formValidation = (formElement) => {
     return new Promise((res, rej) => {
         let falseField = [];
@@ -74,14 +72,6 @@ export const showError = async (error) => {
         let errorMessage = JSON.parse(error.response.data.errorData)
 
         if (errorMessage.redirect_to_login) {
-            eraseCookie("loadedKodeAkun")
-            eraseCookie("login")
-            eraseCookie("name")
-            eraseCookie("perusahaan")
-            eraseCookie("refreshToken")
-            eraseCookie("role")
-            eraseCookie("token")
-            eraseCookie("tokenExpired")
             setTimeout(() => {
                 document.location.href = "/"
             }, 5000)
