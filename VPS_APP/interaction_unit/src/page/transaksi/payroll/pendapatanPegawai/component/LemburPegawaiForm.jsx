@@ -229,7 +229,7 @@ const LemburPegawaiForm = ({
                     label={"Waktu Mulai"}
                     type={"datetime-local"}
                     onchange={(e) => {
-                        waktuMulai(e.target.value)
+                        setWaktuMulai(e.target.value)
                     }}
                     others={
                         {

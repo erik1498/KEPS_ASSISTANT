@@ -1,5 +1,5 @@
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
-import { createUserRepo, getUserByUsernameRepo, getUserByUuidRepo } from "./user.repository.js"
+import { createUserRepo, getUserByUsernameRepo, getUserByUuidRepo, incrementJumlahUserEntryDataRepo } from "./user.repository.js"
 
 export const getUserByUsername = async (username, req_id) => {
     LOGGER(logType.INFO, `Start getUserByUsername`, { username }, req_id)
@@ -31,5 +31,11 @@ export const getUserByUuid = async (data, req_id) => {
 export const createUserService = async (userData, req_id) => {
     LOGGER(logType.INFO, `Start createUserService`, userData, req_id)
     const user = await createUserRepo(userData, req_id)
+    return user
+}
+
+export const incrementJumlahUserEntryDataService = async (userData, req_id) => {
+    LOGGER(logType.INFO, `Start incrementJumlahUserEntryDataService`, { userData }, req_id)
+    const user = await incrementJumlahUserEntryDataRepo(userData, req_id)
     return user
 }

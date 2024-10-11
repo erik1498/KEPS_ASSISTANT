@@ -2,6 +2,9 @@ import jwt from "jsonwebtoken"
 import { getEnv } from "../utils/envUtils.js";
 import { decryptString } from "../utils/encryptUtil.js";
 import { LOGGER, logType } from "../utils/loggerUtil.js";
+import { allowedMethod } from "../constant/demoConstant.js";
+import { incrementJumlahUserEntryDataService } from "../app/user/user.services.js";
+import { getDateTimeNow } from "../utils/dateUtil.js";
 
 export const authTokenMiddleware = (roles = []) => {
     return (req, res, next) => {
@@ -11,7 +14,11 @@ export const authTokenMiddleware = (roles = []) => {
             }, req.identity, req.originalUrl, req.method, false)
             return res.status(401).json({
                 type: "unauthorizedError",
-                message: "Akun Tidak Terdaftar"
+                errorData: JSON.stringify({
+                    message: "Akun Tidak Terdaftar",
+                    prop: "error",
+                    redirect_to_login: true,
+                })
             });
         }
 
@@ -28,18 +35,26 @@ export const authTokenMiddleware = (roles = []) => {
                     }, req.identity, req.originalUrl, req.method, false)
                     return res.status(401).json({
                         type: "unauthorizedError",
-                        message: "Akun Tidak Terdaftar"
+                        errorData: JSON.stringify({
+                            message: "Akun Tidak Terdaftar",
+                            prop: "error",
+                            redirect_to_login: true,
+                        })
                     });
                 }
             }
         }
 
-        jwt.verify(decryptString(req.header("Authorization").split("Bearer ")[1], getEnv("JWT_ENCRYPT_KEY")), getEnv("JWT_SECRET"), (err, decode) => {
+        jwt.verify(decryptString(req.header("Authorization").split("Bearer ")[1], getEnv("JWT_ENCRYPT_KEY")), getEnv("JWT_SECRET"), async (err, decode) => {
             if (err) {
                 LOGGER(logType.ERROR, "JWT Authorization Error", err.stack, req.identity, req.originalUrl, req.method, false)
                 return res.status(401).json({
                     type: "unauthorizedError",
-                    message: "Akun Tidak Terdaftar"
+                    errorData: JSON.stringify({
+                        message: "Akun Tidak Terdaftar",
+                        prop: "error",
+                        redirect_to_login: true,
+                    })
                 });
             }
 
@@ -48,12 +63,15 @@ export const authTokenMiddleware = (roles = []) => {
                     roles
                         .filter(x => {
                             return JSON.parse(decode.userRole).indexOf(x) > -1
-                    }).length == 0
+                        }).length == 0
                 ) {
                     return res.status(401).json({
                         type: "unauthorizedError",
-                        message: "Akun Tidak Diizinkan",
-                        redirect_to_login: false
+                        errorData: JSON.stringify({
+                            message: "Akun Tidak Diizinkan",
+                            prop: "error",
+                            redirect_to_login: true,
+                        })
                     });
                 }
             }
@@ -65,7 +83,11 @@ export const authTokenMiddleware = (roles = []) => {
                 }, req.identity, req.originalUrl, req.method, false)
                 return res.status(401).json({
                     type: "unauthorizedError",
-                    message: "Akun Tidak Terdaftar"
+                    errorData: JSON.stringify({
+                        message: "Akun Tidak Terdaftar",
+                        prop: "error",
+                        redirect_to_login: true,
+                    })
                 });
             }
 
@@ -75,10 +97,15 @@ export const authTokenMiddleware = (roles = []) => {
                     LOGGER(logType.ERROR, "User-Permission Tidak Sesuai Dengan Licence Key", null, req.identity, req.originalUrl, req.method, false)
                     return res.status(401).json({
                         type: "unauthorizedError",
-                        message: "Akun Tidak Terdaftar"
+                        errorData: JSON.stringify({
+                            message: "Akun Tidak Terdaftar",
+                            prop: "error",
+                            redirect_to_login: true,
+                        })
                     });
                 }
             }
+
 
             let uuid = JSON.parse(req.identity).id
             req.identity = JSON.stringify({
@@ -87,6 +114,42 @@ export const authTokenMiddleware = (roles = []) => {
                 "client_id": JSON.parse(req.identity).client_id,
                 "user_request": userParameter?.osInfo
             })
+
+            if (getEnv("DEMO_TYPE") == "true") {
+                if (allowedMethod.includes(req.method)) {
+                    if (parseFloat(decode.userJumlahEntryData) < parseFloat(decode.userBatasEntryData)) {
+                        if (req.method == "POST") {
+                            await incrementJumlahUserEntryDataService(decode, req.identity)
+                        }
+                        if (getDateTimeNow(false) > decode.userEndDateAkses && decode.userEndDateAkses) {
+                            return res.status(500).json({
+                                type: "internalServerError",
+                                errorData: JSON.stringify({
+                                    message: `Anda Telah Mencapai Batas Waktu Akses`,
+                                    prop: "error",
+                                    redirect_to_login: true
+                                })
+                            })
+                        }
+                    } else {
+                        return res.status(500).json({
+                            type: "internalServerError",
+                            errorData: JSON.stringify({
+                                message: `Anda Telah Mencapai Batas Maksimum Entry Data ( ${decode.userBatasEntryData} Data )`,
+                                prop: "error"
+                            })
+                        })
+                    }
+                } else {
+                    return res.status(500).json({
+                        type: "internalServerError",
+                        errorData: JSON.stringify({
+                            message: "Perinah Anda Ditolak",
+                            prop: "error"
+                        })
+                    })
+                }
+            }
             next();
         })
     }
@@ -99,7 +162,11 @@ export const verifyRefreshToken = (req, res, next) => {
         LOGGER(logType.ERROR, "User-Permission Is Null", null, req.identity, req.originalUrl, req.method, false)
         return res.status(401).json({
             type: "unauthorizedError",
-            message: "Akun Tidak Terdaftar"
+            errorData: JSON.stringify({
+                message: "Akun Tidak Terdaftar",
+                prop: "error",
+                redirect_to_login: true,
+            })
         });
     }
 
@@ -116,7 +183,11 @@ export const verifyRefreshToken = (req, res, next) => {
                 }, req.identity, req.originalUrl, req.method, false)
                 return res.status(401).json({
                     type: "unauthorizedError",
-                    message: "Akun Tidak Terdaftar"
+                    errorData: JSON.stringify({
+                        message: "Akun Tidak Terdaftar",
+                        prop: "error",
+                        redirect_to_login: true,
+                    })
                 });
             }
         }
@@ -128,7 +199,11 @@ export const verifyRefreshToken = (req, res, next) => {
             LOGGER(logType.ERROR, "Refresh Token Tidak Sesuai", null, req.identity, req.originalUrl, req.method, false)
             return res.status(401).json({
                 type: "unauthorizedError",
-                message: "Akun Tidak Terdaftar"
+                errorData: JSON.stringify({
+                    message: "Akun Tidak Terdaftar",
+                    prop: "error",
+                    redirect_to_login: true,
+                })
             });
         }
 
@@ -138,7 +213,11 @@ export const verifyRefreshToken = (req, res, next) => {
                 LOGGER(logType.ERROR, "User-Permission Tidak Sesuai Dengan Licence Key", null, req.identity, req.originalUrl, req.method, false)
                 return res.status(401).json({
                     type: "unauthorizedError",
-                    message: "Akun Tidak Terdaftar"
+                    errorData: JSON.stringify({
+                        message: "Akun Tidak Terdaftar",
+                        prop: "error",
+                        redirect_to_login: true,
+                    })
                 });
             }
         }

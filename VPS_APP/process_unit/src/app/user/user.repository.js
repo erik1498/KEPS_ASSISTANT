@@ -1,4 +1,4 @@
-import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil } from "../../utils/databaseUtil.js";
+import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import UserModel from "./user.model.js";
 
 export const getUserByUsernameRepo = async (username, req_id) => {
@@ -26,7 +26,7 @@ export const getUserByUuidRepo = async (uuid, req_id) => {
 
 export const createUserRepo = async (userData, req_id) => {
     return insertQueryUtil(
-        req_id, 
+        req_id,
         generateDatabaseName(req_id),
         UserModel,
         {
@@ -35,6 +35,20 @@ export const createUserRepo = async (userData, req_id) => {
             name: userData.name,
             role: userData.role,
             client_id: JSON.parse(req_id).client_id
+        }
+    )
+}
+
+export const incrementJumlahUserEntryDataRepo = async (userData, req_id) => {
+    return updateQueryUtil(
+        req_id,
+        generateDatabaseName(req_id),
+        UserModel,
+        {
+            jumlah_entry_data: userData.userJumlahEntryData + 1,
+        },
+        {
+            uuid: userData.userId
         }
     )
 }

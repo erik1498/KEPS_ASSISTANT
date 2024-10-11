@@ -2,7 +2,7 @@ import pino from "pino";
 import moment from "moment"
 import { createLoggerService } from "../app/logger/logger.services.js";
 import { createStream } from 'rotating-file-stream';
-
+import { getDateTimeNow } from "./dateUtil.js";
 
 export const logType = {
     INFO: "info",
@@ -11,13 +11,12 @@ export const logType = {
 }
 
 export const LOGGER_MONITOR = async (service, method, data, req_identity, error) => {
-    const date = new Date()
     await createLoggerService({
         service,
         status: error ? "ERROR" : "SUCCESS",
         method,
         data,
-        req_time: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`,
+        req_time: getDateTimeNow(),
         req_identity: JSON.parse(req_identity)
     }, req_identity)
 }

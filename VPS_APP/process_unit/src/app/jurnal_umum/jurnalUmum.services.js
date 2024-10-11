@@ -73,7 +73,7 @@ export const createJurnalUmumService = async (jurnalUmumData, req_id) => {
     const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(jurnalUmumData.bulan, jurnalUmumData.tahun, req_id);
     jurnalUmumData.bulan = parseFloat(jurnalUmumData.bulan) < 10 ? "0" + jurnalUmumData.bulan : jurnalUmumData.bulan
     
-    await getJurnalUmumByBuktiTransaski(jurnalUmumData.bukti_transaksi, jurnalUmumData.uuidList)
+    await getJurnalUmumByBuktiTransaski(jurnalUmumData.bukti_transaksi, jurnalUmumData.uuidList, req_id)
     
     if (getDataValidasi.length) {
         throw Error(JSON.stringify({

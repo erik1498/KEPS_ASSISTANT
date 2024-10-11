@@ -68,7 +68,28 @@ const UserModel = db.define("user_tab",
             validate: {
                 notEmpty: true,
             }
-        }
+        },
+        jumlah_entry_data: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
+        batas_entry_data: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
+        end_date_akses: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
     }, {
     freezeTableName: true
 }

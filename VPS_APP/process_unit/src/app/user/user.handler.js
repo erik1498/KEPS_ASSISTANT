@@ -86,6 +86,9 @@ export const loginUser = async (req, res) => {
         const token = jwt.sign({
             userId: user.uuid,
             userKey: user.serial_key,
+            userJumlahEntryData: user.jumlah_entry_data,
+            userBatasEntryData: user.batas_entry_data,
+            userEndDateAkses: user.end_date_akses,
             macAddr: user.mac_address
         }, getEnv("JWT_SECRET"), {
             expiresIn: '30s',
@@ -165,6 +168,9 @@ export const refreshToken = async (req, res) => {
         const token = jwt.sign({
             userId: user.uuid,
             userKey: user.serial_key,
+            userJumlahEntryData: user.jumlah_entry_data,
+            userBatasEntryData: user.batas_entry_data,
+            userEndDateAkses: user.end_date_akses,
             macAddr: user.mac_address
         }, getEnv("JWT_SECRET"), {
             expiresIn: '30s',
