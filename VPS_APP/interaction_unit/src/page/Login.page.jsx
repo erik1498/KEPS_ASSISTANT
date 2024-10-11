@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { apiLogin } from "../service/endPointList.api"
 import { eraseCookie, setCookie } from "../helper/cookies.helper"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { formValidation, showError } from "../helper/form.helper"
 import LoadingPage from "../component/layout/LoadingPage"
 
@@ -43,6 +43,16 @@ const LoginPage = () => {
                 })
         }
     }
+
+    useEffect(() => {
+        eraseCookie("token")
+        eraseCookie("refreshToken")
+        eraseCookie("tokenExpired")
+        eraseCookie("login", "true")
+        eraseCookie("perusahaan")
+        eraseCookie("role")
+        eraseCookie("name")
+    }, [])
 
     return isLoading ? <LoadingPage /> : <>
         <div className="h-screen w-screen relative flex flex-col justify-center items-center text-white bg-[url('/wave.svg')] bg-end bg-cover">
