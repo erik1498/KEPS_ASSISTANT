@@ -115,13 +115,13 @@ export const authTokenMiddleware = (roles = []) => {
                 "user_request": userParameter?.osInfo
             })
 
-            if (getEnv("DEMO_TYPE") == "true") {
+            if (getEnv("DEMO_TYPE") == "true" && decode.userEndDateAkses != "UNLIMITED") {
                 if (allowedMethod.includes(req.method)) {
                     if (parseFloat(decode.userJumlahEntryData) < parseFloat(decode.userBatasEntryData)) {
                         if (req.method == "POST") {
                             await incrementJumlahUserEntryDataService(decode, req.identity)
                         }
-                        if (getDateTimeNow(false) > decode.userEndDateAkses && decode.userEndDateAkses) {
+                        if (getDateTimeNow(false) > decode.userEndDateAkses) {
                             return res.status(500).json({
                                 type: "internalServerError",
                                 errorData: JSON.stringify({
