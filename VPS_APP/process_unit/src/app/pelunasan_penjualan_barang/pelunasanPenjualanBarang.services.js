@@ -38,7 +38,7 @@ export const getPelunasanPenjualanBarangByUuidService = async (uuid, req_identit
     if (!pelunasanPenjualanBarang) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return pelunasanPenjualanBarang
@@ -60,7 +60,7 @@ export const createPelunasanPenjualanBarangService = async (pelunasanPenjualanBa
                     if (pelunasanPenjualanDendaAllowAdd[0][`pelunasan_penjualan_barang_denda_count`] > 0) {
                         throw Error(JSON.stringify({
                             message: "Perintah Ditolak",
-                            field: "error"
+                            prop: "error"
                         }))
                     }
                 }

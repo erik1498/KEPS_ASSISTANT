@@ -38,7 +38,7 @@ export const getKodeAkunPerkiraanByUuidService = async (uuid, req_identity) => {
     if (!kodeAkunPerkiraan) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return kodeAkunPerkiraan
@@ -56,7 +56,7 @@ export const createKodeAkunPerkiraanService = async (kodeAkunPerkiraanData, req_
     if (kodeAkunPerkiraanWithSameCode.length > 0 && kodeAkunPerkiraanWithSameCode[0].count > 0) {
         throw Error(JSON.stringify({
             message: "Kode Sudah Terdaftar",
-            field: "kodeAkun"
+            prop: "kodeAkun"
         }))
     }
 
@@ -72,7 +72,7 @@ export const getKodeAkunPerkiraanByUuidSudahDigunakanService = async (uuid, req_
     if (!kodeAkunPerkiraan) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return kodeAkunPerkiraan
@@ -86,7 +86,7 @@ export const deleteKodeAkunPerkiraanByUuidService = async (uuid, req_identity) =
     if (kodeAkunSudahDigunakan.length > 0) {
         throw Error(JSON.stringify({
             message: `Kode Akun Sudah Digunakan pada ${kodeAkunSudahDigunakan[0].tanggal} ${getBulanText(parseInt(kodeAkunSudahDigunakan[0].bulan) - 1)} ${kodeAkunSudahDigunakan[0].tahun} dengan bukti transaksi ${kodeAkunSudahDigunakan[0].bukti_transaksi}`,
-            field: "kodeAkun"
+            prop: "kodeAkun"
         }))
     }
 
@@ -95,7 +95,7 @@ export const deleteKodeAkunPerkiraanByUuidService = async (uuid, req_identity) =
     if (beforeData.update_permission) {
         throw Error(JSON.stringify({
             message: "Kode Akun Tidak Diijinkan Dieksekusi",
-            field: "kodeAkun"
+            prop: "kodeAkun"
         }))
     }
 
@@ -112,7 +112,7 @@ export const updateKodeAkunPerkiraanByUuidService = async (uuid, kodeAkunPerkira
     if (kodeAkunSudahDigunakan.length > 0) {
         throw Error(JSON.stringify({
             message: `Kode Akun Sudah Digunakan pada ${kodeAkunSudahDigunakan[0].tanggal} ${getBulanText(parseInt(kodeAkunSudahDigunakan[0].bulan) - 1)} ${kodeAkunSudahDigunakan[0].tahun} dengan bukti transaksi ${kodeAkunSudahDigunakan[0].bukti_transaksi}`,
-            field: "kodeAkun"
+            prop: "kodeAkun"
         }))
     }
 
@@ -121,7 +121,7 @@ export const updateKodeAkunPerkiraanByUuidService = async (uuid, kodeAkunPerkira
     if (beforeData.update_permission) {
         throw Error(JSON.stringify({
             message: "Kode Akun Tidak Diijinkan Dieksekusi",
-            field: "kodeAkun"
+            prop: "kodeAkun"
         }))
     }
 
@@ -132,7 +132,7 @@ export const updateKodeAkunPerkiraanByUuidService = async (uuid, kodeAkunPerkira
     if (kodeAkunPerkiraanWithSameCode.length > 0 && kodeAkunPerkiraanWithSameCode[0].count > 0) {
         throw Error(JSON.stringify({
             message: "Kode Akun Sudah Terdaftar",
-            field: "kodeAkun"
+            prop: "kodeAkun"
         }))
     }
 

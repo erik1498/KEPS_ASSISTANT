@@ -37,7 +37,7 @@ export const getRiwayatPembayaranAktivitasDokumenByUuidService = async (uuid, re
     if (!riwayatPembayaranAktivitasDokumen) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return riwayatPembayaranAktivitasDokumen

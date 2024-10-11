@@ -23,7 +23,7 @@ export const getPph2126ByUuidService = async (uuid, req_identity) => {
     if (!pph2126) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return pph2126
@@ -39,7 +39,7 @@ export const getPph2126ByPegawaiUUIDService = async (uuid, periode, tahun, req_i
     if (pph2126.length == 0) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return pph2126[0]

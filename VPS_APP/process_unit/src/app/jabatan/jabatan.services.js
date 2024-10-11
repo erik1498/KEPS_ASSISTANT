@@ -30,7 +30,7 @@ export const getJabatanByUuidService = async (uuid, req_identity) => {
     if (!jabatan) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return jabatan
@@ -72,7 +72,7 @@ export const checkJabatanDipakaiPegawaiService = async (uuid, req_identity) => {
     if (pegawai.length > 0) {
         throw Error(JSON.stringify({
             message: `Jabatan Sudah Dipakai Oleh Pegawai ${pegawai[0].name} Dengan NIK ${pegawai[0].nik}`,
-            field: "error"
+            prop: "error"
         }))
     }
 }

@@ -38,7 +38,7 @@ export const getStokAwalBarangByBarangUUIDService = async (uuid, req_identity) =
     if (!stokAwalBarang) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return stokAwalBarang
@@ -53,7 +53,7 @@ export const createStokAwalBarangService = async (stokAwalBarangData, req_identi
     if (stokAwalBarangByDaftarGudangDanKategoriHargaBarang.length > 0 && stokAwalBarangByDaftarGudangDanKategoriHargaBarang[0].count > 0) {
         throw Error(JSON.stringify({
             message: "Data Sudah Ada",
-            field: "error"
+            prop: "error"
         }))
     }
 

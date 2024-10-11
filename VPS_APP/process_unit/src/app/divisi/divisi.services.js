@@ -30,7 +30,7 @@ export const getDivisiByUuidService = async (uuid, req_identity) => {
     if (!divisi) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return divisi
@@ -73,7 +73,7 @@ export const checkDivisiDipakaiPegawaiService = async (uuid, req_identity) => {
     if (pegawai.length > 0) {
         throw Error(JSON.stringify({
             message: `Divisi Sudah Dipakai Oleh Pegawai ${pegawai[0].name} Dengan NIK ${pegawai[0].nik}`,
-            field: "error"
+            prop: "error"
         }))
     }
 }

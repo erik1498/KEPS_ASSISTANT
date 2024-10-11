@@ -23,7 +23,7 @@ export const getLemburByUuidService = async (uuid, req_identity) => {
     if (!lembur) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return lembur

@@ -38,7 +38,7 @@ export const getDaftarAsetByUuidWithKelompokAsetAndPersentasePenyusutanService =
     if (!daftarAset) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return daftarAset[0]
@@ -51,7 +51,7 @@ export const getDaftarAsetByUuidService = async (uuid, req_identity) => {
     if (!daftarAset) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return daftarAset

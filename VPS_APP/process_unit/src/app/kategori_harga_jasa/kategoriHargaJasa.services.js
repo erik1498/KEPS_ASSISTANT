@@ -30,7 +30,7 @@ export const getKategoriHargaJasaByUuidService = async (uuid, req_identity) => {
     if (!kategoriHargaJasa) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return kategoriHargaJasa
@@ -75,7 +75,7 @@ export const checkKategoriHargaJasaByKodeJasaService = async (kode_jasa, req_ide
     if (kategoriHargaJasa) {
         throw Error(JSON.stringify({
             message: "Kode Jasa Sudah Terdaftar",
-            field: "error"
+            prop: "error"
         }))
     }
     return

@@ -32,7 +32,7 @@ export const getPegawaiByUuidService = async (uuid, req_identity) => {
     if (!pegawai) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return pegawai

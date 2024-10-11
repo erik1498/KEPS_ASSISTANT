@@ -28,7 +28,7 @@ export const validasiNeracaServices = async (bulan, tahun, req_identity) => {
     } else {
         throw Error(JSON.stringify({
             message: "Neraca bulan sebelumnya belum divalidasi",
-            field: "error"
+            prop: "error"
         }))
     }
 }
@@ -67,7 +67,7 @@ export const getNeracaValidasiByTanggalService = async (addMessage, tanggal, req
     if (neracaValidasi.length > 0 && neracaValidasi[0].count > 0) {
         throw Error(JSON.stringify({
             message: `${addMessage ? addMessage : ""}Neraca sudah divalidasi untuk Bulan ${neracaValidasi[0].bulan} Dan Tahun ${neracaValidasi[0].tahun}`,
-            field: "error"
+            prop: "error"
         }))
     }
 }

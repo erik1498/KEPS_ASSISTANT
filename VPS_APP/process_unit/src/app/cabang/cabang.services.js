@@ -30,7 +30,7 @@ export const getCabangByUuidService = async (uuid, req_identity) => {
     if (!cabang) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return cabang

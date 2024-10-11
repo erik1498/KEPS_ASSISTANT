@@ -36,7 +36,7 @@ export const getRincianReturPenjualanBarangByUuidService = async (uuid, req_iden
     if (!rincianReturPenjualanBarang) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return rincianReturPenjualanBarang

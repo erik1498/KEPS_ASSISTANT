@@ -30,7 +30,7 @@ export const getMetodePenyusutanByUuidService = async (uuid, req_identity) => {
     if (!metodePenyusutan) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return metodePenyusutan

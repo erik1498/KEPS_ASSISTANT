@@ -30,7 +30,7 @@ export const getRincianPengembalianDendaPenjualanBarangByFakturPenjualanBarangUU
     if (!rincianPengembalianDendaPenjualanBarang) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return rincianPengembalianDendaPenjualanBarang
@@ -43,7 +43,7 @@ export const getRincianPengembalianDendaPenjualanBarangByUuidService = async (uu
     if (!rincianPengembalianDendaPenjualanBarang) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return rincianPengembalianDendaPenjualanBarang

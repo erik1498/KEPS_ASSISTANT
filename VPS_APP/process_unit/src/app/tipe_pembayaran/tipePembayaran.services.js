@@ -30,7 +30,7 @@ export const getTipePembayaranByUuidService = async (uuid, req_identity) => {
     if (!tipePembayaran) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return tipePembayaran

@@ -36,7 +36,7 @@ export const getStatusRiwayatAktivitasDokumenPegawaiPelaksanaByUuidService = asy
     if (!statusRiwayatAktivitasDokumenPegawaiPelaksana) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return statusRiwayatAktivitasDokumenPegawaiPelaksana

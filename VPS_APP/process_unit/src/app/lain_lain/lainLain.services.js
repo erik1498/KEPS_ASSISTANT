@@ -23,7 +23,7 @@ export const getLainLainByUuidService = async (uuid, req_identity) => {
     if (!lainLain) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return lainLain

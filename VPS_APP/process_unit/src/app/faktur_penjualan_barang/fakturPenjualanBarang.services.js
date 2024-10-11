@@ -42,7 +42,7 @@ export const getTanggalTransaksiTerakhirByFakturPenjualanService = async (faktur
                     .split("_")
                     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(" ") : "Faktur Penjualan Barang"}`,
-                field: "error"
+                prop: "error"
             }))
         } else {
             return {
@@ -53,7 +53,7 @@ export const getTanggalTransaksiTerakhirByFakturPenjualanService = async (faktur
     }
     throw Error(JSON.stringify({
         message: "Faktur tidak ditemukan",
-        field: "error"
+        prop: "error"
     }))
 
 }
@@ -69,7 +69,7 @@ export const getJumlahRincianTransaksiOnTableByTanggalService = async (table_nam
             if (jumlahTransaksi[0][`${table_name}_count`] > 0) {
                 throw Error(JSON.stringify({
                     message: "Perintah Ditolak",
-                    field: "error"
+                    prop: "error"
                 }))
             }
         }
@@ -87,7 +87,7 @@ export const getJumlahRincianTransaksiDendaOnTableByTanggalService = async (tabl
             if (jumlahTransaksi[0][`${table_name}_denda_count`] > 0) {
                 throw Error(JSON.stringify({
                     message: "Perintah Ditolak",
-                    field: "error"
+                    prop: "error"
                 }))
             }
         }
@@ -101,7 +101,7 @@ export const getFakturPenjualanBarangByPesananPenjualanBarangUUIDService = async
     if (fakturPenjualanBarang.length == 0) {
         throw new Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return fakturPenjualanBarang[0]
@@ -114,7 +114,7 @@ export const getFakturPenjualanBarangByUuidService = async (uuid, req_identity) 
     if (!fakturPenjualanBarang) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return fakturPenjualanBarang

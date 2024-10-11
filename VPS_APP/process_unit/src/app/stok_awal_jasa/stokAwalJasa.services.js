@@ -30,7 +30,7 @@ export const getStokAwalJasaByJasaUUIDService = async (uuid, req_identity) => {
     if (!stokAwalJasa) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return stokAwalJasa
@@ -45,7 +45,7 @@ export const createStokAwalJasaService = async (stokAwalJasaData, req_identity) 
     if (stokAwalJasaByDaftarGudangDanKategoriHargaJasa.length > 0 && stokAwalJasaByDaftarGudangDanKategoriHargaJasa[0].count > 0) {
         throw Error(JSON.stringify({
             message: "Data Sudah Ada",
-            field: "error"
+            prop: "error"
         }))
     }
 

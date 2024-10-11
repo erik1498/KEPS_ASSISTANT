@@ -42,7 +42,7 @@ export const getRincianPelunasanPenjualanBarangByUuidService = async (uuid, req_
     if (!rincianPelunasanPenjualanBarang) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return rincianPelunasanPenjualanBarang

@@ -7,7 +7,7 @@
   "author": "",
   "license": "ISC",
   "type": "module",
-  "private":true,
+  "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -28,6 +28,7 @@
     "react-feather": "^2.0.10",
     "react-icons": "^5.0.1",
     "react-paginate": "^8.2.0",
+    "react-qr-code": "^2.0.15",
     "react-router-dom": "^6.21.3",
     "react-select": "^5.8.0",
     "react-to-print": "^2.15.1",

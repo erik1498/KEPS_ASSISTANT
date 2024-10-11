@@ -30,7 +30,7 @@ export const getKelompokAsetByUuidService = async (uuid, req_identity) => {
     if (!kelompokAset) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return kelompokAset

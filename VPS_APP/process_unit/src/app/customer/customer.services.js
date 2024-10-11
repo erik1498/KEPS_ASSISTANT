@@ -30,7 +30,7 @@ export const getCustomerByUuidService = async (uuid, req_identity) => {
     if (!customer) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return customer

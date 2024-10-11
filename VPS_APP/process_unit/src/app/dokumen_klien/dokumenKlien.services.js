@@ -32,7 +32,7 @@ export const getDokumenKlienByUuidService = async (uuid, req_id) => {
     if (!dokumenKlien) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return dokumenKlien

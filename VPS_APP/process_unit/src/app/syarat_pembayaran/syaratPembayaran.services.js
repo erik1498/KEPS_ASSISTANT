@@ -36,7 +36,7 @@ export const getSyaratPembayaranByUuidService = async (uuid, req_identity) => {
     if (!syaratPembayaran) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return syaratPembayaran

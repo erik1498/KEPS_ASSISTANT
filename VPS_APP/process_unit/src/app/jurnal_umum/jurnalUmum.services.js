@@ -10,7 +10,7 @@ export const getJurnalUmumByUuidService = async (uuid, req_id) => {
     if (!jurnalUmum) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return jurnalUmum
@@ -39,7 +39,7 @@ export const getJurnalUmumNeracaByBulanService = async (bulan, req_id) => {
     if (!jurnalUmum) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return jurnalUmum
@@ -52,7 +52,7 @@ export const getJurnalUmumLabaRugiByBulanService = async (bulan, req_id) => {
     if (!jurnalUmum) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return jurnalUmum
@@ -78,7 +78,7 @@ export const createJurnalUmumService = async (jurnalUmumData, req_id) => {
     if (getDataValidasi.length) {
         throw Error(JSON.stringify({
             message: "Neraca bulan ini sudah di validasi",
-            field: "errorMessage"
+            prop: "errorMessage"
         }))
     }
 
@@ -99,7 +99,7 @@ export const getJurnalUmumByBuktiTransaski = async (bukti_transaksi, uuidList, r
     if (jurnalUmumWithSameBuktiTransaksi.length > 0 && jurnalUmumWithSameBuktiTransaksi[0].count > 0) {
         throw Error(JSON.stringify({
             message: "Bukti Transaksi Sudah Terdaftar",
-            field: "buktiTransaksi"
+            prop: "buktiTransaksi"
         }))
     }
 }
@@ -113,7 +113,7 @@ export const deleteJurnalUmumByUuidService = async (uuid, req_id) => {
     if (getDataValidasi.length) {
         throw Error(JSON.stringify({
             message: "Neraca bulan ini sudah di validasi",
-            field: "buktiTransaksi"
+            prop: "buktiTransaksi"
         }))
     }
 
@@ -132,7 +132,7 @@ export const deleteJurnalUmumByBuktiTransaksiService = async (bukti_transaksi, r
         if (getDataValidasi.length) {
             throw Error(JSON.stringify({
                 message: "Neraca bulan ini sudah di validasi",
-                field: "buktiTransaksi"
+                prop: "buktiTransaksi"
             }))
         }
     }
@@ -152,7 +152,7 @@ export const updateJurnalUmumByUuidService = async (uuid, jurnalUmumData, req_id
     if (getDataValidasi.length) {
         throw Error(JSON.stringify({
             message: "Neraca bulan ini sudah di validasi",
-            field: "errorMessage"
+            prop: "errorMessage"
         }))
     }
 
@@ -163,7 +163,7 @@ export const updateJurnalUmumByUuidService = async (uuid, jurnalUmumData, req_id
     if (jurnalUmumWithSameBuktiTransaksi.length > 0 && jurnalUmumWithSameBuktiTransaksi[0].count > 0) {
         throw Error(JSON.stringify({
             message: "Bukti Transaksi Sudah Terdaftar",
-            field: "buktiTransaksi"
+            prop: "buktiTransaksi"
         }))
     }
 

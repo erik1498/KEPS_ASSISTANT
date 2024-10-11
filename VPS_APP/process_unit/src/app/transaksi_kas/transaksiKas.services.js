@@ -27,7 +27,7 @@ export const getTransaksiKasByUuidService = async (uuid, req_identity) => {
     if (!transaksiKas) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return transaksiKas

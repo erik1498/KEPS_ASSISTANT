@@ -22,7 +22,7 @@ export const getTunjanganUangByUuidService = async (uuid, req_identity) => {
     if (!tunjanganUang) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return tunjanganUang
@@ -35,7 +35,7 @@ export const getTunjanganUangByPegawaiUUIDService = async (uuid, periode, tahun,
     if (tunjanganUang.length == 0) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return tunjanganUang[0]

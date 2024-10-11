@@ -32,7 +32,7 @@ export const getStatusRiwayatAktivitasDokumenByUuidService = async (uuid, req_id
     if (!statusRiwayatAktivitasDokumen) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return statusRiwayatAktivitasDokumen

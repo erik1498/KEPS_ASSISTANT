@@ -30,7 +30,7 @@ export const getJenisJasaByUuidService = async (uuid, req_identity) => {
     if (!jenisJasa) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return jenisJasa

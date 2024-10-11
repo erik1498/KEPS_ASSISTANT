@@ -28,7 +28,7 @@ export const getPiutangKaryawanByUuidService = async (uuid, req_identity) => {
     if (!piutangKaryawan) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return piutangKaryawan
@@ -44,7 +44,7 @@ export const getPiutangKaryawanByPegawaiUUIDService = async (uuid, periode, tahu
     if (!piutangKaryawan) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return piutangKaryawan

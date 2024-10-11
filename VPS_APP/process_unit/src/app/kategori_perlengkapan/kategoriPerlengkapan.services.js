@@ -30,7 +30,7 @@ export const getKategoriPerlengkapanByUuidService = async (uuid, req_identity) =
     if (!kategoriPerlengkapan) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return kategoriPerlengkapan

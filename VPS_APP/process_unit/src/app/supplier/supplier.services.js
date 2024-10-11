@@ -30,7 +30,7 @@ export const getSupplierByUuidService = async (uuid, req_identity) => {
     if (!supplier) {
         throw Error(JSON.stringify({
             message: "Data Not Found",
-            field: "error"
+            prop: "error"
         }))
     }
     return supplier
