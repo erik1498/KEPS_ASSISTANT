@@ -14,6 +14,7 @@ import { normalizeDataJurnalUmumSubmit } from "../../../../helper/jurnalUmum.hel
 import { axiosJWT } from "../../../../helper/api.helper";
 import { useReactToPrint } from "react-to-print";
 import { JurnalUmumFormPrint } from "./JurnalUmumFormPrint";
+import { getCookie } from "../../../../helper/cookies.helper";
 
 const JurnalUmumForm = ({
   setAddJurnalEvent,
@@ -372,7 +373,13 @@ const JurnalUmumForm = ({
                     })
                   }
                   <div className="mt-5 col-span-4">
-                    <button className="btn btn-sm bg-blue-800 mt-4 text-white" onClick={() => addingTransaksiList(i)}><FaPlus /> Tambah</button>
+                    {
+                      getCookie("demo_permission") && transaksi.length < 2 ? <>
+                        <button className="btn btn-sm bg-blue-800 mt-4 text-white" onClick={() => addingTransaksiList(i)}><FaPlus /> Tambah</button>
+                      </> : <>
+                        <p className="text-red-500 font-bold text-xs">* Hanya Mengijinkan 2 Inputan Dalam Mode Demo</p>
+                      </>
+                    }
                   </div>
                   <div className="mt-5 col-span-4 text-right">
                     <h1 className={`text-md ${totalDebetKredit.totalDebet[i] == totalDebetKredit.totalKredit[i] ? `text-green-600` : `text-red-600`} font-bold mt-1`}>Total ( {totalDebetKredit.totalDebet[i] == totalDebetKredit.totalKredit[i] ? `Seimbang` : `Tidak Seimbang`} )</h1>
@@ -411,7 +418,12 @@ const JurnalUmumForm = ({
           })
         }
         <div className="flex sticky bottom-0 bg-white py-3 w-full items-end gap-x-2">
-          <button className="btn btn-sm bg-blue-800 mt-4 text-white" onClick={() => addTransaksi()}><FaPlus /> Tambah Transaksi</button>
+          {
+            getCookie("demo_permission") && transaksiList.length == 1 ? <>
+              <button className="btn btn-sm bg-blue-800 mt-4 text-white" onClick={() => addTransaksi()}><FaPlus /> Tambah Transaksi</button>
+            </> : <>
+            </>
+          }
           {
             transaksiList.length > 0 ? <>
               <button className="btn btn-sm bg-green-800 mt-4 text-white" onClick={() => {
@@ -440,7 +452,7 @@ const JurnalUmumForm = ({
             </> : <></>
           }
         </div>
-      </div>
+      </div >
     </div>
   </>
 };

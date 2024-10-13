@@ -36,6 +36,7 @@ const LoginPage = () => {
                     setCookie("perusahaan", resData.perusahaan, 1)
                     setCookie("role", resData.role, 1)
                     setCookie("name", resData.name, 1)
+                    setCookie("demo_permission", resData.demo_permission, 1)
                     navigate("/dashboard")
                 }).catch(err => {
                     showError(err)
@@ -53,6 +54,7 @@ const LoginPage = () => {
         eraseCookie("perusahaan")
         eraseCookie("role")
         eraseCookie("name")
+        eraseCookie("demo_permission")
     }, [])
 
     return isLoading ? <LoadingPage /> : <>

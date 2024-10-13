@@ -7,6 +7,7 @@ import { apiKodeAkunCRUD, apiRincianTransaksiKasCRUD } from "../../../../../serv
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { initialKodeAkunValue } from "../../../../../helper/select.helper"
+import { getCookie } from "../../../../../helper/cookies.helper"
 
 const KasTransaksiList = ({
     idTransaksiKas,
@@ -330,7 +331,13 @@ const KasTransaksiList = ({
                 }
             </div>
             <div className="flex sticky bottom-0 bg-white py-3 w-full items-end gap-x-2">
-                <button className="btn btn-sm bg-blue-800 mt-4 text-white" onClick={() => addTransaksi()}><FaPlus /> Tambah Transaksi</button>
+                {
+                    getCookie("demo_permission") && transaksi.length < 2 ? <>
+                        <button className="btn btn-sm bg-blue-800 mt-4 text-white" onClick={() => addTransaksi()}><FaPlus /> Tambah Transaksi</button>
+                    </> : <>
+                        <p className="text-red-500 font-bold text-xs">* Hanya Mengijinkan 2 Inputan Dalam Mode Demo</p>
+                    </>
+                }
                 <button disabled={loadingSave} className="btn btn-sm bg-green-800 mt-4 text-white" onClick={() => _saveTransaksi()}><FaSave /> {loadingSave ? "Sedang Menyimpan" : "Simpan"}</button>
             </div>
         </div>

@@ -114,6 +114,7 @@ export const loginUser = async (req, res) => {
             role: user.role,
             name: user.name,
             perusahaan: user.perusahaan,
+            demo_permission: getEnv("DEMO_TYPE"),
             tokenExpired
         });
     } catch (error) {
@@ -194,6 +195,7 @@ export const refreshToken = async (req, res) => {
             role: user.role,
             name: user.name,
             perusahaan: user.perusahaan,
+            demo_permission: getEnv("DEMO_TYPE"),
             tokenExpired
         })
     } catch (error) {
