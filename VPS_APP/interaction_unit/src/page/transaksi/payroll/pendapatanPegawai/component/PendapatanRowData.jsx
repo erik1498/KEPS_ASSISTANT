@@ -40,7 +40,7 @@ const PendapatanRowData = ({
                                         <div className={`col-span-2 text-gray-900 flex flex-col px-2 ${parseRupiahToFloat(item3.kredit) > 0 && item3.uuid != "NERACA" ? "text-right" : ""}`}>
                                             <p>{item3.kode_akun} - {item3.nama_akun}</p>
                                         </div>
-                                        <div className={`${balanceStatus ? "col-span-5" : "col-span-4"} text-gray-900 flex flex-col px-2`}>
+                                        <div className={`${forPrint ? "col-span-5" : "col-span-4"} text-gray-900 flex flex-col px-2`}>
                                             <p>{item3.uraian}</p>
                                             {
                                                 item3.waktu_mulai && item3.waktu_selesai && item3.transaksi == 0 ? <>

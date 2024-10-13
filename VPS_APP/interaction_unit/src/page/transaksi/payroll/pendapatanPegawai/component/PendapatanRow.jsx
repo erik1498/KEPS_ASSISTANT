@@ -45,7 +45,7 @@ const PendapatanRow = ({
             item.buktiTransaksi.map(item1 => {
                 return <>
                     <PendapatanRowData
-                        forPrint={true}
+                        forPrint={forPrint}
                         item1={item1}
                         balanceStatus={true}
                     />

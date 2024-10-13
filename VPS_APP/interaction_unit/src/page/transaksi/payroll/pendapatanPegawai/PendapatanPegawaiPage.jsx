@@ -136,6 +136,7 @@ const PendapatanPegawaiPage = () => {
                                             return <PendapatanRow
                                                 item={item}
                                                 key={i}
+                                                forPrint={true}
                                             />
                                         })
                                     }

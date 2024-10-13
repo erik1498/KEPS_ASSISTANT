@@ -47,7 +47,7 @@ const PotonganRow = ({
                     <PotonganRowData
                         item1={item1}
                         balanceStatus={true}
-                        forPrint={true}
+                        forPrint={forPrint}
                     />
                 </>
             })
