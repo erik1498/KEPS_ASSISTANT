@@ -4,7 +4,7 @@ import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLab
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaPen, FaSave, FaTimes, FaTrash } from "react-icons/fa"
-import { formValidation, showError } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiKerugianCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { useDataContext } from "../../../../../context/dataContext.context"
@@ -41,6 +41,7 @@ const KerugianPegawaiForm = ({
                     nilai: `${nilai}`
                 }
             }).then(resData => {
+                showAlert("Berhasil", "Data Kerugian Berhasil Disimpan")
                 _getKerugianPegawai()
                 setIdKerugianPegawai(null)
             }).catch(err => showError(err))
@@ -51,6 +52,7 @@ const KerugianPegawaiForm = ({
         apiKerugianCRUD
             .custom(`/${uuid}`, "DELETE")
             .then(() => {
+                showAlert("Berhasil", "Data Kerugian Berhasil Dihapus")
                 _getKerugianPegawai()
             }).catch(err => showError(err))
     }

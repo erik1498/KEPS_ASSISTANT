@@ -24,13 +24,6 @@ export const getTotalPiutangKaryawanService = async (uuid, req_identity) => {
 export const getPiutangKaryawanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getPiutangKaryawanByUuidService [${uuid}]`, null, req_identity)
     const piutangKaryawan = await getPiutangKaryawanByUuidRepo(uuid, req_identity)
-
-    if (!piutangKaryawan) {
-        throw Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
-    }
     return piutangKaryawan
 }
 

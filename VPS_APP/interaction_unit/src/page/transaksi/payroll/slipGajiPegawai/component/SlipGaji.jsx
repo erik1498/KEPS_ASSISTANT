@@ -43,8 +43,8 @@ const SlipGaji = ({
         try {
             const slipGajiGet = slipGaji.filter(x => x.sumber == sumber).at(0)
             if (slipGajiGet.nilai) {
-                if (!sumbercheckArr.includes(sumber)) {
-                    sumbercheckArr.push(sumber)
+                if (!sumbercheckArr.includes(`${sumber}_${type}`)) {
+                    sumbercheckArr.push(`${sumber}_${type}`)
                     total[type] += slipGajiGet.nilai
                 }
 

@@ -4,7 +4,7 @@ import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLab
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaPen, FaSave, FaTimes, FaTrash } from "react-icons/fa"
-import { formValidation, showError } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiLainLainCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { useDataContext } from "../../../../../context/dataContext.context"
@@ -41,6 +41,7 @@ const LainLainPegawaiForm = ({
                     nilai: `${nilai}`
                 }
             }).then(resData => {
+                showAlert("Berhasil", "Data Lain - Lain Berhasil Disimpan")
                 _getLainLainPegawai()
                 setIdLainLainPegawai(null)
             }).catch(err => showError(err))
@@ -51,6 +52,7 @@ const LainLainPegawaiForm = ({
         apiLainLainCRUD
             .custom(`/${uuid}`, "DELETE")
             .then(() => {
+                showAlert("Berhasil", "Data Lain - Lain Berhasil Dihapus")
                 _getLainLainPegawai()
             }).catch(err => showError(err))
     }

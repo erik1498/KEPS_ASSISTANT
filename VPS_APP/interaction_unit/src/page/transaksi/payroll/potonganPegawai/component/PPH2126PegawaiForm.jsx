@@ -3,8 +3,8 @@ import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
-import { FaSave } from "react-icons/fa"
-import { formValidation, showError } from "../../../../../helper/form.helper"
+import { FaSave, FaTrash } from "react-icons/fa"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiPPH2126CRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { useDataContext } from "../../../../../context/dataContext.context"
@@ -38,6 +38,7 @@ const PPH2126PegawaiForm = ({
                     nilai: nilai
                 }
             }).then(resData => {
+                showAlert("Berhasil", "Data PPH21/26 Berhasil Disimpan")
                 if (!pph2126) {
                     setPPH2126(x => x = resData.data)
                 }
@@ -63,6 +64,18 @@ const PPH2126PegawaiForm = ({
                     }
                 }
             })
+    }
+
+    const _deletePPH2126 = () => {
+        apiPPH2126CRUD
+            .custom(`/${pph2126.uuid}`, "DELETE")
+            .then(resData => {
+                setBuktiTransaksi(x => x = "")
+                setNilai(x => x = 0)
+                setTanggal(x => x = getHariTanggalFull())
+                showAlert("Berhasil", "Data PPH21/26 Berhasil Dihapus")
+                setPPH2126(x => x = null)
+            }).catch(err => showError(err))
     }
 
     useEffect(() => {
@@ -128,6 +141,11 @@ const PPH2126PegawaiForm = ({
                 />
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
+            {
+                pph2126 ? <>
+                    <button type="button" onClick={() => _deletePPH2126()} className="btn btn-sm bg-red-800 mt-4 text-white"><FaTrash /> Hapus Data</button>
+                </> : <></>
+            }
         </form>
     </div>
 }

@@ -32,13 +32,6 @@ export const getSlipGajiByPegawaiUUIDService = async (uuid, query, req_identity)
 export const getGajiByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getGajiByUuidService [${uuid}]`, null, req_identity)
     const gaji = await getGajiByUuidRepo(uuid, req_identity)
-
-    if (!gaji) {
-        throw Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
-    }
     return gaji
 }
 

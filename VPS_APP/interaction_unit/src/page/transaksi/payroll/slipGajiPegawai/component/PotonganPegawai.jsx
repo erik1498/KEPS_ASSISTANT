@@ -11,20 +11,24 @@ const PotonganPegawai = ({
                 <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Rincian Potongan Pegawai</h1>
                 <div className={`${forPrint ? "" : "px-3"}`}>
                     <div className="flex justify-between border-b-2 py-1">
-                        <p>Piutang Karyawan</p>
-                        <p>{parseToRupiahText(_getDataBySumber("piutang_karyawan", "potongan"))}</p>
-                    </div>
-                    <div className="flex justify-between border-b-2 py-1">
-                        <p>BPJS Karyawan</p>
+                        <p>BPJS Kesehatan ( Pegawai )</p>
                         <p>{parseToRupiahText(_getDataBySumber("bpjs_karyawan", "potongan"))}</p>
                     </div>
                     <div className="flex justify-between border-b-2 py-1">
-                        <p>JHT Karyawan</p>
+                        <p>JP Pegawai</p>
+                        <p>{parseToRupiahText(_getDataBySumber("jp_karyawan", "potongan"))}</p>
+                    </div>
+                    <div className="flex justify-between border-b-2 py-1">
+                        <p>JHT Pegawai</p>
                         <p>{parseToRupiahText(_getDataBySumber("jht_karyawan", "potongan"))}</p>
                     </div>
                     <div className="flex justify-between border-b-2 py-1">
-                        <p>JP Karyawan</p>
-                        <p>{parseToRupiahText(_getDataBySumber("jp_karyawan", "potongan"))}</p>
+                        <p>Piutang Pegawai</p>
+                        <p>{parseToRupiahText(_getDataBySumber("piutang_karyawan", "potongan"))}</p>
+                    </div>
+                    <div className="flex justify-between border-b-2 py-1">
+                        <p>PPH 21/26</p>
+                        <p>{parseToRupiahText(_getDataBySumber("pph2126", "potongan"))}</p>
                     </div>
                     <div className="flex justify-between border-b-2 py-1">
                         <p>Kerugian</p>
@@ -35,8 +39,24 @@ const PotonganPegawai = ({
                         <p>{parseToRupiahText(_getDataBySumber("lain_lain", "potongan"))}</p>
                     </div>
                     <div className="flex justify-between border-b-2 py-1">
-                        <p>PPH 21/26</p>
-                        <p>{parseToRupiahText(_getDataBySumber("pph2126", "potongan"))}</p>
+                        <p>BPJS Kesehatan ( Perusahaan )</p>
+                        <p>{parseToRupiahText(_getDataBySumber("bpjs_kesehatan", "potongan"))}</p>
+                    </div>
+                    <div className="flex justify-between border-b-2 py-1">
+                        <p>JKK ( Perusahaan )</p>
+                        <p>{parseToRupiahText(_getDataBySumber("jkk", "potongan"))}</p>
+                    </div>
+                    <div className="flex justify-between border-b-2 py-1">
+                        <p>JKM ( Perusahaan )</p>
+                        <p>{parseToRupiahText(_getDataBySumber("jkm", "potongan"))}</p>
+                    </div>
+                    <div className="flex justify-between border-b-2 py-1">
+                        <p>JHT ( Perusahaan )</p>
+                        <p>{parseToRupiahText(_getDataBySumber("jht", "potongan"))}</p>
+                    </div>
+                    <div className="flex justify-between border-b-2 py-1">
+                        <p>JP ( Perusahaan )</p>
+                        <p>{parseToRupiahText(_getDataBySumber("jp", "potongan"))}</p>
                     </div>
                 </div>
             </div>

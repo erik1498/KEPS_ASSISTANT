@@ -17,13 +17,6 @@ export const getAllKerugianService = async (query, req_identity) => {
 export const getKerugianByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getKerugianByUuidService [${uuid}]`, null, req_identity)
     const kerugian = await getKerugianByUuidRepo(uuid, req_identity)
-
-    if (!kerugian) {
-        throw Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
-    }
     return kerugian
 }
 
@@ -57,7 +50,7 @@ export const createKerugianService = async (kerugianData, req_identity) => {
 
 export const deleteKerugianByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteKerugianByUuidService [${uuid}]`, null, req_identity)
-    const beforeData = await getPiutangKaryawanByUuidService(uuid, req_identity)
+    const beforeData = await getKerugianByUuidService(uuid, req_identity)
 
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
     

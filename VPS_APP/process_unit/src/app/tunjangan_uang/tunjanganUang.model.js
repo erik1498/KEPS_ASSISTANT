@@ -56,105 +56,105 @@ const TunjanganUangModel = db.define("tunjangan_uang_tab",
             }
         },
         bonus: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         insentif: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         thr: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         bpjs_kesehatan: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         bpjs_kesehatan_persentase: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         jkk: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         jkk_persentase: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         jkm: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         jkm_persentase: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         jht: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         jht_persentase: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         jp: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         jp_persentase: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         bpjs_karyawan: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         bpjs_karyawan_persentase: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
@@ -168,14 +168,14 @@ const TunjanganUangModel = db.define("tunjangan_uang_tab",
             }
         },
         jp_karyawan: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         jp_karyawan_persentase: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
@@ -189,14 +189,14 @@ const TunjanganUangModel = db.define("tunjangan_uang_tab",
             }
         },
         jht_karyawan: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
         jht_karyawan_persentase: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{
                 notEmpty:true,

@@ -142,7 +142,7 @@ export const showAlert = (title, message) => {
     titleH1.innerHTML = title
 
     const messageError = document.createElement("p")
-    messageError.className = "text-2xl ml-2"
+    messageError.className = "text-xl"
     messageError.innerHTML = message
 
     const buttonClose = document.createElement("button")

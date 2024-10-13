@@ -19,13 +19,6 @@ export const getAllLemburService = async (query, req_identity) => {
 export const getLemburByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getLemburByUuidService [${uuid}]`, null, req_identity)
     const lembur = await getLemburByUuidRepo(uuid, req_identity)
-
-    if (!lembur) {
-        throw Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
-    }
     return lembur
 }
 

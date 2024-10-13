@@ -19,13 +19,6 @@ export const getAllLainLainService = async (query, req_identity) => {
 export const getLainLainByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getLainLainByUuidService [${uuid}]`, null, req_identity)
     const lainLain = await getLainLainByUuidRepo(uuid, req_identity)
-
-    if (!lainLain) {
-        throw Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
-    }
     return lainLain
 }
 
@@ -53,7 +46,7 @@ export const createLainLainService = async (lainLainData, req_identity) => {
 
 export const deleteLainLainByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteLainLainByUuidService [${uuid}]`, null, req_identity)
-    const beforeData = await getPiutangKaryawanByUuidService(uuid, req_identity)
+    const beforeData = await getLainLainByUuidService(uuid, req_identity)
 
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
     

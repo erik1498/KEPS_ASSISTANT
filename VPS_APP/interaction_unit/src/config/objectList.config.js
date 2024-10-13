@@ -449,15 +449,15 @@ export const TipeTransaksiKasBankKodeAkunForm = [
 
 
 export const PPN = 11
-export const BPJSKesehatanPersentase = 4 / 100
-export const JKKPersentase = 0.24 / 100
-export const JKMPersentase = 0.30 / 100
-export const JHTPersentase = 3.7 / 100
-export const JPPersentase = 2 / 100
+export const BPJSKesehatanPersentase = (4 / 100).toFixed(5)
+export const JKKPersentase = (0.24 / 100).toFixed(5)
+export const JKMPersentase = (0.30 / 100).toFixed(5)
+export const JHTPersentase = (3.7 / 100).toFixed(5)
+export const JPPersentase = (2 / 100).toFixed(5)
 
-export const BPJSKaryawanPersentase = 1 / 100
-export const JHTKaryawanPersentase = 2 / 100
-export const JPKaryawanPersentase = 1 / 100
+export const BPJSKaryawanPersentase = (1 / 100).toFixed(5)
+export const JHTKaryawanPersentase = (2 / 100).toFixed(5)
+export const JPKaryawanPersentase = (1 / 100).toFixed(5)
 
 export const TipePiutangKaryawan = [
     {

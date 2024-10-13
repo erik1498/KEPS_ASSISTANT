@@ -4,7 +4,7 @@ import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLab
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaPen, FaSave, FaTimes, FaTrash } from "react-icons/fa"
-import { formValidation, showError } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiHadiahCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { useDataContext } from "../../../../../context/dataContext.context"
@@ -39,6 +39,7 @@ const HadiahPegawaiForm = ({
                     nilai: nilai
                 }
             }).then(resData => {
+                showAlert("Berhasil", "Data Hadiah Berhasil Disimpan")
                 _getDaftarHadiahPegawai()
                 setIdHadiah(null)
             }).catch(err => showError(err))
@@ -57,6 +58,7 @@ const HadiahPegawaiForm = ({
         apiHadiahCRUD
             .custom(`/${uuid}`, "DELETE")
             .then(() => {
+                showAlert("Berhasil", "Data Hadiah Berhasil Dihapus")
                 _getDaftarHadiahPegawai()
             }).catch(err => showError(err))
     }

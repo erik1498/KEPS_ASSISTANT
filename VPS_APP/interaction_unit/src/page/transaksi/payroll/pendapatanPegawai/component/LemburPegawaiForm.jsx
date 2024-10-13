@@ -4,7 +4,7 @@ import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLab
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaPen, FaSave, FaTimes, FaTrash } from "react-icons/fa"
-import { formValidation, showError } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiLemburCRUD } from "../../../../../service/endPointList.api"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
 import { useDataContext } from "../../../../../context/dataContext.context"
@@ -52,6 +52,8 @@ const LemburPegawaiForm = ({
                     total_bayaran: `${totalBayaran}`
                 }
             }).then(resData => {
+                showAlert("Berhasil", "Data Lembur Berhasil Disimpan")
+                setIdLembur(x => x = null)
                 _getDaftarLemburPegawai()
             }).catch(err => showError(err))
         }
@@ -69,6 +71,7 @@ const LemburPegawaiForm = ({
         apiLemburCRUD
             .custom(`/${uuid}`, "DELETE")
             .then(() => {
+                showAlert("Berhasil", "Data Lembur Berhasil Dihapus")
                 _getDaftarLemburPegawai()
             }).catch(err => showError(err))
     }

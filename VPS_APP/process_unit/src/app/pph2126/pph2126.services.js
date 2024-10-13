@@ -19,13 +19,6 @@ export const getAllPph2126Service = async (query, req_identity) => {
 export const getPph2126ByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getPph2126ByUuidService [${uuid}]`, null, req_identity)
     const pph2126 = await getPph2126ByUuidRepo(uuid, req_identity)
-
-    if (!pph2126) {
-        throw Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
-    }
     return pph2126
 }
 
@@ -35,13 +28,6 @@ export const getPph2126ByPegawaiUUIDService = async (uuid, periode, tahun, req_i
         tahun
     }, req_identity)
     const pph2126 = await getPph2126ByPegawaiUuidRepo(uuid, periode, tahun, req_identity)
-
-    if (pph2126.length == 0) {
-        throw Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
-    }
     return pph2126[0]
 }
 

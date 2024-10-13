@@ -26,59 +26,61 @@ const PendapatanRowData = ({
         {
             item1.data.map((item2, i) => {
                 return item2.map((item3, j) => {
-                    return <>
-                        <hr />
-                        {
-                            j <= item2.length ?
-                                <div className="grid grid-cols-12 items-start py-1">
-                                    <div className="col-span-1 px-2 text-black">
-                                        {
-                                            convertTo12HoursFormat(item3.waktu)
-                                        }
-                                    </div>
-                                    <div className={`col-span-2 text-gray-900 flex flex-col px-2 ${parseRupiahToFloat(item3.kredit) > 0 && item3.uuid != "NERACA" ? "text-right" : ""}`}>
-                                        <p>{item3.kode_akun} - {item3.nama_akun}</p>
-                                    </div>
-                                    <div className={`${balanceStatus ? "col-span-5" : "col-span-4"} text-gray-900 flex flex-col px-2`}>
-                                        <p>{item3.uraian}</p>
-                                        {
-                                            item3.waktu_mulai && item3.waktu_selesai && item3.transaksi == 0 ? <>
-                                                <b>{item3.deskripsi_kerja}</b>
-                                                <p className="mb-2">{item3.keterangan_kerja}</p>
-                                                <p>{`${formatDate(item3.waktu_mulai.split("T")[0], false)} ${convertTo12HoursFormat(item3.waktu_mulai.split("T")[1])}`} Hingga {`${formatDate(item3.waktu_selesai.split("T")[0], false)} ${convertTo12HoursFormat(item3.waktu_selesai.split("T")[1])}`}</p>
-                                                <p className="font-semibold">Detail</p>
-                                                <p>{parseToRupiahText(item3.total_jam)} Jam, {parseToRupiahText(item3.total_menit)} Menit. Dengan Nilai Lembur Per Menit {parseToRupiahText(item3.nilai_lembur_per_menit)}</p>
-                                            </> : <></>
-                                        }
-                                    </div>
-                                    <div className="text-right px-2 col-span-2 text-gray-900">
-                                        {
-                                            item3.debet != "0" ? <h1 className=" text-green-900 font-bold">{parseToRupiahText(item3.debet)}</h1> : <></>
-                                        }
-                                    </div>
-                                    <div className="text-right px-2 col-span-2 text-gray-900">
-                                        {
-                                            item3.kredit != "0" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(item3.kredit)}</h1> : <></>
-                                        }
-                                    </div>
-                                </div> : <></>
-                        }
-                        {
-                            j == item2.length - 1 && i == item1.data.length - 1 ?
-                                <>
-                                    <hr />
-                                    <div className="grid grid-cols-12 items-start py-3">
-                                        <div className={`${forPrint ? 'col-span-8' : 'col-span-7'}`}></div>
-                                        <div className="text-right px-2 col-span-2 text-gray-900">
-                                            <h1 className=" text-green-900 font-bold">{parseToRupiahText(item1.debet)}</h1>
+                    return item3.debet != 0 || item3.kredit != 0 ? <>
+                        <>
+                            <hr />
+                            {
+                                j <= item2.length ?
+                                    <div className="grid grid-cols-12 items-start py-1">
+                                        <div className="col-span-1 px-2 text-black">
+                                            {
+                                                convertTo12HoursFormat(item3.waktu)
+                                            }
+                                        </div>
+                                        <div className={`col-span-2 text-gray-900 flex flex-col px-2 ${parseRupiahToFloat(item3.kredit) > 0 && item3.uuid != "NERACA" ? "text-right" : ""}`}>
+                                            <p>{item3.kode_akun} - {item3.nama_akun}</p>
+                                        </div>
+                                        <div className={`${balanceStatus ? "col-span-5" : "col-span-4"} text-gray-900 flex flex-col px-2`}>
+                                            <p>{item3.uraian}</p>
+                                            {
+                                                item3.waktu_mulai && item3.waktu_selesai && item3.transaksi == 0 ? <>
+                                                    <b>{item3.deskripsi_kerja}</b>
+                                                    <p className="mb-2">{item3.keterangan_kerja}</p>
+                                                    <p>{`${formatDate(item3.waktu_mulai.split("T")[0], false)} ${convertTo12HoursFormat(item3.waktu_mulai.split("T")[1])}`} Hingga {`${formatDate(item3.waktu_selesai.split("T")[0], false)} ${convertTo12HoursFormat(item3.waktu_selesai.split("T")[1])}`}</p>
+                                                    <p className="font-semibold">Detail</p>
+                                                    <p>{parseToRupiahText(item3.total_jam)} Jam, {parseToRupiahText(item3.total_menit)} Menit. Dengan Nilai Lembur Per Menit {parseToRupiahText(item3.nilai_lembur_per_menit)}</p>
+                                                </> : <></>
+                                            }
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">
-                                            <h1 className=" text-red-900 font-bold">{parseToRupiahText(item1.kredit)}</h1>
+                                            {
+                                                item3.debet != "0" ? <h1 className=" text-green-900 font-bold">{parseToRupiahText(item3.debet)}</h1> : <></>
+                                            }
                                         </div>
-                                    </div>
-                                </> : <></>
-                        }
-                    </>
+                                        <div className="text-right px-2 col-span-2 text-gray-900">
+                                            {
+                                                item3.kredit != "0" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(item3.kredit)}</h1> : <></>
+                                            }
+                                        </div>
+                                    </div> : <></>
+                            }
+                            {
+                                j == item2.length - 1 && i == item1.data.length - 1 ?
+                                    <>
+                                        <hr />
+                                        <div className="grid grid-cols-12 items-start py-3">
+                                            <div className={`${forPrint ? 'col-span-8' : 'col-span-7'}`}></div>
+                                            <div className="text-right px-2 col-span-2 text-gray-900">
+                                                <h1 className=" text-green-900 font-bold">{parseToRupiahText(item1.debet)}</h1>
+                                            </div>
+                                            <div className="text-right px-2 col-span-2 text-gray-900">
+                                                <h1 className=" text-red-900 font-bold">{parseToRupiahText(item1.kredit)}</h1>
+                                            </div>
+                                        </div>
+                                    </> : <></>
+                            }
+                        </>
+                    </> : <></>
                 })
             })
         }

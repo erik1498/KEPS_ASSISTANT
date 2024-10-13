@@ -18,13 +18,6 @@ export const getAllHadiahService = async (query, req_identity) => {
 export const getHadiahByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getHadiahByUuidService [${uuid}]`, null, req_identity)
     const hadiah = await getHadiahByUuidRepo(uuid, req_identity)
-
-    if (!hadiah) {
-        throw Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
-    }
     return hadiah
 }
 

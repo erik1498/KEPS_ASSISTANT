@@ -4,7 +4,7 @@ import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLab
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaEdit, FaPen, FaSave, FaTimes, FaTrash } from "react-icons/fa"
-import { formValidation, showError } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiPiutangKaryawanCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { useDataContext } from "../../../../../context/dataContext.context"
@@ -45,6 +45,7 @@ const PiutangKaryawanPegawaiForm = ({
                     nilai: nilai
                 }
             }).then(resData => {
+                showAlert("Berhasil", "Data Piutang Pegawai Berhasil Disimpan")
                 _getPiutangKaryawanPegawai()
                 setIdPiutangKaryawan(null)
             }).catch(err => showError(err))
@@ -59,6 +60,7 @@ const PiutangKaryawanPegawaiForm = ({
         apiPiutangKaryawanCRUD
             .custom(`/${uuid}`, "DELETE")
             .then(() => {
+                showAlert("Berhasil", "Data Piutang Pegawai Berhasil Dihapus")
                 _getPiutangKaryawanPegawai()
             }).catch(err => showError(err))
     }

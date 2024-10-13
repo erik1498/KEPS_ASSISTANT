@@ -3,8 +3,8 @@ import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
-import { FaSave } from "react-icons/fa"
-import { formValidation, showError } from "../../../../../helper/form.helper"
+import { FaSave, FaTrash } from "react-icons/fa"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiGajiCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { useDataContext } from "../../../../../context/dataContext.context"
@@ -17,6 +17,9 @@ const GajiPegawaiForm = ({
 }) => {
     const { data } = useDataContext()
 
+    const [gajiDeleted, setGajiDeleted] = useState(false)
+    const [gajiUpdated, setGajiUpdated] = useState(false)
+
     const [nilai, setNilai] = useState("0")
     const [kodeAkun, setKodeAkun] = useState(kodeAkunList.length > 0 ? {
         label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
@@ -28,6 +31,7 @@ const GajiPegawaiForm = ({
 
     const _saveGajiPegawai = async (e) => {
         e.preventDefault()
+        setGajiUpdated(x => x = false)
         if (await formValidation(e.target)) {
             apiGajiCRUD.custom(gaji ? `/${gaji.uuid}` : ``, gaji ? "PUT" : "POST", null, {
                 data: {
@@ -41,9 +45,30 @@ const GajiPegawaiForm = ({
             }).then(resData => {
                 if (!gaji) {
                     setGaji(x => x = resData.data)
+                } else {
+                    const gajiCopy = gaji
+                    gajiCopy.nilai = nilai
+                    setGaji(x => x = gajiCopy)
                 }
+                showAlert("Berhasil", "Data Gaji Berhasil Disimpan")
+                setGajiDeleted(x => x = true)
+                setGajiUpdated(x => x = true)
             }).catch(err => showError(err))
         }
+    }
+
+    const _deleteDataGaji = () => {
+        apiGajiCRUD
+            .custom(`/${gaji.uuid}`, "DELETE")
+            .then(() => {
+                setGaji(x => x = null)
+                setGajiDeleted(x => x = false)
+                setBuktiTransaksi(x => x = "")
+                setNilai(x => x = 0)
+                showAlert("Berhasil", "Data Gaji Berhasil DiHapus")
+            }).catch(err => {
+                showError(err)
+            })
     }
 
     const _getGajiPegawai = () => {
@@ -62,6 +87,7 @@ const GajiPegawaiForm = ({
                             value: kodeAkunGet[0].uuid
                         })
                     }
+                    setGajiDeleted(x => x = true)
                 }
             })
     }
@@ -129,7 +155,18 @@ const GajiPegawaiForm = ({
                         }
                     />
                 </div>
-                <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
+                {
+                    !gajiDeleted ?
+                        <>
+                            <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
+                            <p className="text-red-500 font-bold mt-2 text-sm">* Gaji tidak dapat dihapus jika tunjangan uang tidak dihapus.</p>
+                        </> : <></>
+                }
+                {
+                    gajiDeleted ? <>
+                        <button type="button" onClick={() => _deleteDataGaji()} className="btn btn-sm bg-red-800 mt-4 text-white"><FaTrash /> Hapus Data</button>
+                    </> : <></>
+                }
             </form>
         </div>
         <TunjanganUangPegawaiForm
@@ -137,6 +174,8 @@ const GajiPegawaiForm = ({
             kodeAkunList={kodeAkunList}
             periode={periode}
             gaji={gaji}
+            gajiUpdated={gajiUpdated}
+            setGajiDeleted={setGajiDeleted}
         />
     </>
 }

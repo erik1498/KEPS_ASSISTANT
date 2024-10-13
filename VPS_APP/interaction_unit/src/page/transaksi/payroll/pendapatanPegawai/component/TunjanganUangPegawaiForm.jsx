@@ -4,15 +4,18 @@ import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLab
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import { FaSave, FaTrash } from "react-icons/fa"
-import { formValidation, showError } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import { apiTunjanganUangCRUD } from "../../../../../service/endPointList.api"
-import { parseToRupiahText } from "../../../../../helper/number.helper"
+import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
 import { useDataContext } from "../../../../../context/dataContext.context"
 import { BPJSKaryawanPersentase, BPJSKesehatanPersentase, JHTKaryawanPersentase, JHTPersentase, JKKPersentase, JKMPersentase, JPKaryawanPersentase, JPPersentase } from "../../../../../config/objectList.config"
+import { initialKodeAkunValue } from "../../../../../helper/select.helper"
 
 const TunjanganUangPegawaiForm = ({
     idPegawai,
     gaji,
+    gajiUpdated,
+    setGajiDeleted = () => { },
     periode,
     kodeAkunList = []
 }) => {
@@ -22,7 +25,10 @@ const TunjanganUangPegawaiForm = ({
     const [bonus, setBonus] = useState("0")
     const [insentif, setInsentif] = useState("0")
     const [thr, setTHR] = useState("0")
-    const [kodeAkun, setKodeAkun] = useState()
+    const [kodeAkun, setKodeAkun] = useState(kodeAkunList.length > 0 ? {
+        label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+        value: kodeAkunList[0].uuid
+    } : null)
     const [tanggal, setTanggal] = useState(getHariTanggalFull())
     const [buktiTransaksi, setBuktiTransaksi] = useState()
 
@@ -35,26 +41,39 @@ const TunjanganUangPegawaiForm = ({
     const [bpjsKaryawan, setBPJSKaryawan] = useState("0")
     const [jpKaryawan, setJPKaryawan] = useState("0")
     const [jhtKaryawan, setJHTKaryawan] = useState("0")
-    const [kodeAkunBpjsKaryawan, setKodeAkunBPJSKaryawan] = useState("0")
-    const [kodeAkunJPKaryawan, setKodeAkunJPKaryawan] = useState("0")
-    const [kodeAkunJHTKaryawan, setKodeAkunJHTKaryawan] = useState("0")
+    const [kodeAkunBpjsKaryawan, setKodeAkunBPJSKaryawan] = useState(kodeAkunList.length > 0 ? {
+        label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+        value: kodeAkunList[0].uuid
+    } : null)
+    const [kodeAkunJPKaryawan, setKodeAkunJPKaryawan] = useState(kodeAkunList.length > 0 ? {
+        label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+        value: kodeAkunList[0].uuid
+    } : null)
+    const [kodeAkunJHTKaryawan, setKodeAkunJHTKaryawan] = useState(kodeAkunList.length > 0 ? {
+        label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+        value: kodeAkunList[0].uuid
+    } : null)
 
     const [tunjanganUang, setTunjanganUang] = useState()
 
-    const _saveTunjanganUangPegawai = async (e) => {
-        e.preventDefault()
-        if (await formValidation(e.target)) {
+    const _saveTunjanganUangPegawai = async (e, validationNeed = true) => {
+        let validation = false
+        if (validationNeed) {
+            e.preventDefault()
+        }
+        validation = validationNeed ? await formValidation(e.target) : true
+        if (validation) {
             apiTunjanganUangCRUD.custom(tunjanganUang ? `/${tunjanganUang.uuid}` : ``, tunjanganUang ? "PUT" : "POST", null, {
                 data: {
                     pegawai: idPegawai,
                     periode: periode,
                     gaji: gaji.uuid,
-                    kode_akun_perkiraan: kodeAkun.value,
+                    kode_akun_perkiraan: kodeAkun?.value,
                     tanggal: tanggal,
                     bukti_transaksi: buktiTransaksi,
-                    bonus: bonus,
-                    insentif: insentif,
-                    thr: thr,
+                    bonus: `${bonus}`,
+                    insentif: `${insentif}`,
+                    thr: `${thr}`,
                     bpjs_kesehatan: bpjsKesehatan,
                     bpjs_kesehatan_persentase: BPJSKesehatanPersentase,
                     jkk: jkk,
@@ -67,75 +86,145 @@ const TunjanganUangPegawaiForm = ({
                     jp_persentase: JPPersentase,
                     bpjs_karyawan: bpjsKaryawan,
                     bpjs_karyawan_persentase: BPJSKaryawanPersentase,
-                    kode_akun_perkiraan_bpjs_karyawan: kodeAkunBpjsKaryawan.value,
+                    kode_akun_perkiraan_bpjs_karyawan: kodeAkunBpjsKaryawan?.value,
                     jp_karyawan: jpKaryawan,
                     jp_karyawan_persentase: JPKaryawanPersentase,
-                    kode_akun_perkiraan_jp_karyawan: kodeAkunJPKaryawan.value,
+                    kode_akun_perkiraan_jp_karyawan: kodeAkunJPKaryawan?.value,
                     jht_karyawan: jhtKaryawan,
                     jht_karyawan_persentase: JHTKaryawanPersentase,
-                    kode_akun_perkiraan_jht_karyawan: kodeAkunJHTKaryawan.value
+                    kode_akun_perkiraan_jht_karyawan: kodeAkunJHTKaryawan?.value
                 }
             }).then(resData => {
-                _getTunjanganUangPegawai()
+                setGajiDeleted(x => x = false)
+                if (!tunjanganUang) {
+                    setTunjanganUang(x => x = resData.data)
+                }
+                if (validationNeed) {
+                    showAlert("Berhasil", "Data Tunjangan Uang Berhasil Disimpan")
+                }
             }).catch(err => showError(err))
         }
+    }
+
+
+    const _deleteDataTunjanganUang = () => {
+        apiTunjanganUangCRUD
+            .custom(`/${tunjanganUang.uuid}`, "DELETE")
+            .then(() => {
+                setTanggal(getHariTanggalFull())
+                setBuktiTransaksi(x => x = "")
+                setBonus(x => x = 0)
+                setInsentif(x => x = 0)
+                setTHR(x => x = 0)
+                setKodeAkun(kodeAkunList.length > 0 ? {
+                    label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+                    value: kodeAkunList[0].uuid
+                } : null)
+                setTunjanganUang(null)
+                setBPJSKaryawan(0)
+                setKodeAkunBPJSKaryawan(kodeAkunList.length > 0 ? {
+                    label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+                    value: kodeAkunList[0].uuid
+                } : null)
+                setJPKaryawan(0)
+                setKodeAkunJPKaryawan(kodeAkunList.length > 0 ? {
+                    label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+                    value: kodeAkunList[0].uuid
+                } : null)
+                setJHTKaryawan(0)
+                setKodeAkunJHTKaryawan(kodeAkunList.length > 0 ? {
+                    label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
+                    value: kodeAkunList[0].uuid
+                } : null)
+                showAlert("Berhasil", "Data Tunjangan Uang Berhasil DiHapus")
+                setGajiDeleted(x => x = true)
+            }).catch(err => showError(err))
     }
 
     const _getTunjanganUangPegawai = () => {
         apiTunjanganUangCRUD
             .custom(`/${idPegawai}/${periode}/${data.tahun}`, "GET")
             .then(resData => {
-                if (resData.data?.bonus) {
-                    setBonus(parseToRupiahText(resData.data.bonus))
-                    setInsentif(parseToRupiahText(resData.data.insentif))
-                    setTHR(parseToRupiahText(resData.data.thr))
-                    setBuktiTransaksi(resData.data.bukti_transaksi)
-                    setTanggal(resData.data.tanggal)
+                setBonus(x => x = 0)
+                if (resData?.data?.bonus) {
+                    setBonus(parseToRupiahText(resData?.data?.bonus))
+                }
+                setInsentif(x => x = 0)
+                if (resData?.data?.insentif) {
+                    setInsentif(parseToRupiahText(resData?.data?.insentif))
+                }
+                setTHR(x => x = 0)
+                if (resData?.data?.thr) {
+                    setTHR(parseToRupiahText(resData?.data?.thr))
+                }
+                setBuktiTransaksi(x => x = "")
+                if (resData?.data?.bukti_transaksi) {
+                    setBuktiTransaksi(resData?.data?.bukti_transaksi)
+                }
+                setTanggal(x => x = getHariTanggalFull())
+                if (resData?.data?.tanggal) {
+                    setTanggal(resData?.data?.tanggal)
+                }
 
-                    setBPJSKesehatan(resData.data.bpjs_kesehatan)
-                    setJKK(resData.data.jkk)
-                    setJKM(resData.data.jkm)
-                    setJP(resData.data.jp)
-
-                    setBPJSKaryawan(resData.data.bpjs_karyawan)
+                if (resData?.data?.kode_akun_perkiraan_code_bpjs_karyawan) {
                     setKodeAkunBPJSKaryawan({
-                        label: `${resData.data.kode_akun_perkiraan_code_bpjs_karyawan} - ${resData.data.kode_akun_perkiraan_name_bpjs_karyawan}`,
-                        value: resData.data.kode_akun_perkiraan_bpjs_karyawan,
+                        label: `${resData?.data?.kode_akun_perkiraan_code_bpjs_karyawan} - ${resData?.data?.kode_akun_perkiraan_name_bpjs_karyawan}`,
+                        value: resData?.data?.kode_akun_perkiraan_bpjs_karyawan,
                     })
-                    setJPKaryawan(resData.data.jp_karyawan)
+                }
+                if (resData?.data?.kode_akun_perkiraan_code_jp_karyawan) {
                     setKodeAkunJPKaryawan({
-                        label: `${resData.data.kode_akun_perkiraan_code_jp_karyawan} - ${resData.data.kode_akun_perkiraan_name_jp_karyawan}`,
-                        value: resData.data.kode_akun_perkiraan_jp_karyawan,
+                        label: `${resData?.data?.kode_akun_perkiraan_code_jp_karyawan} - ${resData?.data?.kode_akun_perkiraan_name_jp_karyawan}`,
+                        value: resData?.data?.kode_akun_perkiraan_jp_karyawan,
                     })
-                    setJHTKaryawan(resData.data.jht_karyawan)
+                }
+                if (resData?.data?.kode_akun_perkiraan_code_jht_karyawan) {
                     setKodeAkunJHTKaryawan({
-                        label: `${resData.data.kode_akun_perkiraan_code_jht_karyawan} - ${resData.data.kode_akun_perkiraan_name_jht_karyawan}`,
-                        value: resData.data.kode_akun_perkiraan_jht_karyawan,
+                        label: `${resData?.data?.kode_akun_perkiraan_code_jht_karyawan} - ${resData?.data?.kode_akun_perkiraan_name_jht_karyawan}`,
+                        value: resData?.data?.kode_akun_perkiraan_jht_karyawan,
                     })
+                }
 
-                    setTunjanganUang(resData.data)
-                    const kodeAkunGet = kodeAkunList.filter(x => x.uuid == resData.data.kode_akun_perkiraan)
-                    if (kodeAkunGet) {
-                        setKodeAkun(x => x = {
-                            label: `${kodeAkunGet[0].code} - ${kodeAkunGet[0].name}`,
-                            value: kodeAkunGet[0].uuid
-                        })
-                    }
+                setTunjanganUang(x => x = resData?.data)
+                const kodeAkunGet = kodeAkunList.filter(x => x.uuid == resData?.data?.kode_akun_perkiraan)
+                if (kodeAkunGet.length > 0) {
+                    setKodeAkun(x => x = {
+                        label: `${kodeAkunGet[0].code} - ${kodeAkunGet[0].name}`,
+                        value: kodeAkunGet[0].uuid
+                    })
+                }
+
+                if (resData?.data) {
+                    console.log(resData.data)
+                    setGajiDeleted(x => x = false)
+                }
+
+                if (resData?.data?.bpjs_karyawan != (parseRupiahToFloat(gaji?.nilai) * BPJSKesehatanPersentase).toFixed(0)) {
+                    _saveTunjanganUangPegawai(null, false)
                 }
             })
     }
 
     const _hitungTunjangan = () => {
-        if (gaji) {
-            setBPJSKesehatan(x => x = (gaji.nilai * BPJSKesehatanPersentase).toFixed(0))
-            setJKK(x => x = (gaji.nilai * JKKPersentase).toFixed(0))
-            setJKM(x => x = (gaji.nilai * JKMPersentase).toFixed(0))
-            setJHT(x => x = (gaji.nilai * JHTPersentase).toFixed(0))
-            setJP(x => x = (gaji.nilai * JPPersentase).toFixed(0))
+        setBPJSKesehatan(x => x = 0)
+        setJKK(x => x = 0)
+        setJKM(x => x = 0)
+        setJHT(x => x = 0)
+        setJP(x => x = 0)
 
-            setBPJSKaryawan(x => x = (gaji.nilai * BPJSKaryawanPersentase).toFixed(0))
-            setJPKaryawan(x => x = (gaji.nilai * JPKaryawanPersentase).toFixed(0))
-            setJHTKaryawan(x => x = (gaji.nilai * JHTKaryawanPersentase).toFixed(0))
+        setBPJSKaryawan(x => x = 0)
+        setJPKaryawan(x => x = 0)
+        setJHTKaryawan(x => x = 0)
+        if (gaji) {
+            setBPJSKesehatan(x => x = (parseRupiahToFloat(gaji.nilai) * BPJSKesehatanPersentase).toFixed(0))
+            setJKK(x => x = (parseRupiahToFloat(gaji.nilai) * JKKPersentase).toFixed(0))
+            setJKM(x => x = (parseRupiahToFloat(gaji.nilai) * JKMPersentase).toFixed(0))
+            setJHT(x => x = (parseRupiahToFloat(gaji.nilai) * JHTPersentase).toFixed(0))
+            setJP(x => x = (parseRupiahToFloat(gaji.nilai) * JPPersentase).toFixed(0))
+
+            setBPJSKaryawan(x => x = (parseRupiahToFloat(gaji.nilai) * BPJSKaryawanPersentase).toFixed(0))
+            setJPKaryawan(x => x = (parseRupiahToFloat(gaji.nilai) * JPKaryawanPersentase).toFixed(0))
+            setJHTKaryawan(x => x = (parseRupiahToFloat(gaji.nilai) * JHTKaryawanPersentase).toFixed(0))
 
             _getTunjanganUangPegawai()
         }
@@ -145,9 +234,9 @@ const TunjanganUangPegawaiForm = ({
         if (gaji) {
             _hitungTunjangan()
         }
-    }, [gaji])
+    }, [gajiUpdated, gaji])
 
-    return gaji ? <>
+    return <>
         <div className="my-5 bg-white py-5 px-6 rounded-md">
             <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Tunjangan Uang Pegawai</h1>
             <form onSubmit={e => _saveTunjanganUangPegawai(e)}>
@@ -380,8 +469,13 @@ const TunjanganUangPegawaiForm = ({
                     />
                 </div>
                 <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
+                {
+                    tunjanganUang ? <>
+                        <button type="button" onClick={() => _deleteDataTunjanganUang()} className="btn btn-sm bg-red-800 mt-4 text-white"><FaTrash /> Hapus Data</button>
+                    </> : <></>
+                }
             </form>
         </div>
-    </> : <></>
+    </>
 }
 export default TunjanganUangPegawaiForm
