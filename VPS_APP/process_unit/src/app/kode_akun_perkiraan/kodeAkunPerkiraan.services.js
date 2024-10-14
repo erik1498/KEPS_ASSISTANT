@@ -92,7 +92,7 @@ export const deleteKodeAkunPerkiraanByUuidService = async (uuid, req_identity) =
 
     const beforeData = await getKodeAkunPerkiraanByUuidService(uuid, req_identity)
 
-    if (beforeData.update_permission) {
+    if (!beforeData.update_permission) {
         throw Error(JSON.stringify({
             message: "Kode Akun Tidak Diijinkan Dieksekusi",
             prop: "kodeAkun"
@@ -118,7 +118,7 @@ export const updateKodeAkunPerkiraanByUuidService = async (uuid, kodeAkunPerkira
 
     const beforeData = await getKodeAkunPerkiraanByUuidService(uuid, req_identity)
 
-    if (beforeData.update_permission) {
+    if (!beforeData.update_permission) {
         throw Error(JSON.stringify({
             message: "Kode Akun Tidak Diijinkan Dieksekusi",
             prop: "kodeAkun"
