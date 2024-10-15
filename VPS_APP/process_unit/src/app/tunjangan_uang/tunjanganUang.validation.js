@@ -107,11 +107,6 @@ export const tunjanganUangValidation = (payload) => {
             "number.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        kode_akun_perkiraan_bpjs_karyawan: Joi.string().required().messages({
-            'string.base': "Harus Berupa Text",
-            "string.empty": "Harus Diisi",
-            "any.required": "Harus Diisi",
-        }),
         jp_karyawan: Joi.number().required().messages({
             'number.base': "Harus Berupa Number",
             "number.empty": "Harus Diisi",
@@ -122,11 +117,6 @@ export const tunjanganUangValidation = (payload) => {
             "number.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        kode_akun_perkiraan_jp_karyawan: Joi.string().required().messages({
-            'string.base': "Harus Berupa Text",
-            "string.empty": "Harus Diisi",
-            "any.required": "Harus Diisi",
-        }),
         jht_karyawan: Joi.number().required().messages({
             'number.base': "Harus Berupa Number",
             "number.empty": "Harus Diisi",
@@ -135,11 +125,6 @@ export const tunjanganUangValidation = (payload) => {
         jht_karyawan_persentase: Joi.number().required().messages({
             'number.base': "Harus Berupa Number",
             "number.empty": "Harus Diisi",
-            "any.required": "Harus Diisi",
-        }),
-        kode_akun_perkiraan_jht_karyawan: Joi.string().required().messages({
-            'string.base': "Harus Berupa Text",
-            "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
     })

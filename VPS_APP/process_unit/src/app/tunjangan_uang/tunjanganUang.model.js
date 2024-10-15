@@ -160,13 +160,6 @@ const TunjanganUangModel = db.define("tunjangan_uang_tab",
                 notEmpty:true,
             }
         },
-        kode_akun_perkiraan_bpjs_karyawan: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate:{
-                notEmpty:true,
-            }
-        },
         jp_karyawan: {
             type: DataTypes.DOUBLE,
             allowNull: false,
@@ -181,21 +174,7 @@ const TunjanganUangModel = db.define("tunjangan_uang_tab",
                 notEmpty:true,
             }
         },
-        kode_akun_perkiraan_jp_karyawan: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate:{
-                notEmpty:true,
-            }
-        },
         jht_karyawan: {
-            type: DataTypes.DOUBLE,
-            allowNull: false,
-            validate:{
-                notEmpty:true,
-            }
-        },
-        jht_karyawan_persentase: {
             type: DataTypes.DOUBLE,
             allowNull: false,
             validate:{

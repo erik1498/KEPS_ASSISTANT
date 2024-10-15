@@ -41,18 +41,6 @@ const TunjanganUangPegawaiForm = ({
     const [bpjsKaryawan, setBPJSKaryawan] = useState("0")
     const [jpKaryawan, setJPKaryawan] = useState("0")
     const [jhtKaryawan, setJHTKaryawan] = useState("0")
-    const [kodeAkunBpjsKaryawan, setKodeAkunBPJSKaryawan] = useState(kodeAkunList.length > 0 ? {
-        label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
-        value: kodeAkunList[0].uuid
-    } : null)
-    const [kodeAkunJPKaryawan, setKodeAkunJPKaryawan] = useState(kodeAkunList.length > 0 ? {
-        label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
-        value: kodeAkunList[0].uuid
-    } : null)
-    const [kodeAkunJHTKaryawan, setKodeAkunJHTKaryawan] = useState(kodeAkunList.length > 0 ? {
-        label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
-        value: kodeAkunList[0].uuid
-    } : null)
 
     const [tunjanganUang, setTunjanganUang] = useState()
 
@@ -86,13 +74,10 @@ const TunjanganUangPegawaiForm = ({
                     jp_persentase: JPPersentase,
                     bpjs_karyawan: bpjsKaryawan,
                     bpjs_karyawan_persentase: BPJSKaryawanPersentase,
-                    kode_akun_perkiraan_bpjs_karyawan: kodeAkunBpjsKaryawan?.value,
                     jp_karyawan: jpKaryawan,
                     jp_karyawan_persentase: JPKaryawanPersentase,
-                    kode_akun_perkiraan_jp_karyawan: kodeAkunJPKaryawan?.value,
                     jht_karyawan: jhtKaryawan,
                     jht_karyawan_persentase: JHTKaryawanPersentase,
-                    kode_akun_perkiraan_jht_karyawan: kodeAkunJHTKaryawan?.value
                 }
             }).then(resData => {
                 setGajiDeleted(x => x = false)
@@ -122,20 +107,8 @@ const TunjanganUangPegawaiForm = ({
                 } : null)
                 setTunjanganUang(null)
                 setBPJSKaryawan(0)
-                setKodeAkunBPJSKaryawan(kodeAkunList.length > 0 ? {
-                    label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
-                    value: kodeAkunList[0].uuid
-                } : null)
                 setJPKaryawan(0)
-                setKodeAkunJPKaryawan(kodeAkunList.length > 0 ? {
-                    label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
-                    value: kodeAkunList[0].uuid
-                } : null)
                 setJHTKaryawan(0)
-                setKodeAkunJHTKaryawan(kodeAkunList.length > 0 ? {
-                    label: `${kodeAkunList[0].code} - ${kodeAkunList[0].name}`,
-                    value: kodeAkunList[0].uuid
-                } : null)
                 showAlert("Berhasil", "Data Tunjangan Uang Berhasil DiHapus")
                 setGajiDeleted(x => x = true)
             }).catch(err => showError(err))
@@ -164,25 +137,6 @@ const TunjanganUangPegawaiForm = ({
                 setTanggal(x => x = getHariTanggalFull())
                 if (resData?.data?.tanggal) {
                     setTanggal(resData?.data?.tanggal)
-                }
-
-                if (resData?.data?.kode_akun_perkiraan_code_bpjs_karyawan) {
-                    setKodeAkunBPJSKaryawan({
-                        label: `${resData?.data?.kode_akun_perkiraan_code_bpjs_karyawan} - ${resData?.data?.kode_akun_perkiraan_name_bpjs_karyawan}`,
-                        value: resData?.data?.kode_akun_perkiraan_bpjs_karyawan,
-                    })
-                }
-                if (resData?.data?.kode_akun_perkiraan_code_jp_karyawan) {
-                    setKodeAkunJPKaryawan({
-                        label: `${resData?.data?.kode_akun_perkiraan_code_jp_karyawan} - ${resData?.data?.kode_akun_perkiraan_name_jp_karyawan}`,
-                        value: resData?.data?.kode_akun_perkiraan_jp_karyawan,
-                    })
-                }
-                if (resData?.data?.kode_akun_perkiraan_code_jht_karyawan) {
-                    setKodeAkunJHTKaryawan({
-                        label: `${resData?.data?.kode_akun_perkiraan_code_jht_karyawan} - ${resData?.data?.kode_akun_perkiraan_name_jht_karyawan}`,
-                        value: resData?.data?.kode_akun_perkiraan_jht_karyawan,
-                    })
                 }
 
                 setTunjanganUang(x => x = resData?.data)
@@ -325,11 +279,12 @@ const TunjanganUangPegawaiForm = ({
                         }
                     />
                 </div>
-                <div className="mt-5 flex gap-x-2">
+                <div className="mt-5 grid grid-cols-10 gap-x-2">
                     <FormInputWithLabel
                         label={"BPJS Kesehatan"}
                         type={"text"}
                         disabled={true}
+                        addClassParent="col-span-2"
                         addClassInput="border-none"
                         others={
                             {
@@ -342,6 +297,7 @@ const TunjanganUangPegawaiForm = ({
                         label={"JKK"}
                         type={"text"}
                         disabled={true}
+                        addClassParent="col-span-2"
                         addClassInput="border-none"
                         others={
                             {
@@ -354,6 +310,7 @@ const TunjanganUangPegawaiForm = ({
                         label={"JKM"}
                         type={"text"}
                         disabled={true}
+                        addClassParent="col-span-2"
                         addClassInput="border-none"
                         others={
                             {
@@ -366,6 +323,7 @@ const TunjanganUangPegawaiForm = ({
                         label={"JHT"}
                         type={"text"}
                         disabled={true}
+                        addClassParent="col-span-2"
                         addClassInput="border-none"
                         others={
                             {
@@ -378,6 +336,7 @@ const TunjanganUangPegawaiForm = ({
                         label={"JP"}
                         type={"text"}
                         disabled={true}
+                        addClassParent="col-span-2"
                         addClassInput="border-none"
                         others={
                             {
@@ -387,85 +346,45 @@ const TunjanganUangPegawaiForm = ({
                         }
                     />
                 </div>
-                <div className="mt-5 flex gap-x-2">
+                <div className="mt-5 grid grid-cols-10 gap-x-2">
                     <FormInputWithLabel
                         label={"BPJS Karyawan"}
                         type={"text"}
                         disabled={true}
+                        addClassParent="col-span-2"
                         addClassInput="border-none"
                         others={
                             {
                                 value: parseToRupiahText(bpjsKaryawan),
-                                name: "bpjsKaryawan"
+                                name: "bpjsKaryawan",
                             }
                         }
                     />
-                    <FormSelectWithLabel
-                        label={"Sumber Dana"}
-                        optionsDataList={kodeAkunList}
-                        optionsLabel={["code", "name"]}
-                        optionsValue={"uuid"}
-                        optionsLabelIsArray={true}
-                        optionsDelimiter={"-"}
-                        selectValue={kodeAkunBpjsKaryawan}
-                        onchange={(e) => {
-                            setKodeAkunBPJSKaryawan(e)
-                        }}
-                        selectName={`periode`}
-                    />
-                </div>
-                <div className="mt-5 flex gap-x-2">
                     <FormInputWithLabel
                         label={"JP Karyawan"}
                         type={"text"}
                         disabled={true}
+                        addClassParent="col-span-2"
                         addClassInput="border-none"
                         others={
                             {
                                 value: parseToRupiahText(jpKaryawan),
-                                name: "jpKaryawan"
+                                name: "jpKaryawan",
                             }
                         }
                     />
-                    <FormSelectWithLabel
-                        label={"Sumber Dana"}
-                        optionsDataList={kodeAkunList}
-                        optionsLabel={["code", "name"]}
-                        optionsValue={"uuid"}
-                        optionsLabelIsArray={true}
-                        optionsDelimiter={"-"}
-                        selectValue={kodeAkunJPKaryawan}
-                        onchange={(e) => {
-                            setKodeAkunJPKaryawan(e)
-                        }}
-                        selectName={`periode`}
-                    />
-                </div>
-                <div className="mt-5 flex gap-x-2">
                     <FormInputWithLabel
                         label={"JHT Karyawan"}
                         type={"text"}
                         disabled={true}
+                        addClassParent="col-span-2"
                         addClassInput="border-none"
                         others={
                             {
                                 value: parseToRupiahText(jhtKaryawan),
-                                name: "jhtKaryawan"
+                                name: "jhtKaryawan",
                             }
                         }
-                    />
-                    <FormSelectWithLabel
-                        label={"Sumber Dana"}
-                        optionsDataList={kodeAkunList}
-                        optionsLabel={["code", "name"]}
-                        optionsValue={"uuid"}
-                        optionsLabelIsArray={true}
-                        optionsDelimiter={"-"}
-                        selectValue={kodeAkunJHTKaryawan}
-                        onchange={(e) => {
-                            setKodeAkunJHTKaryawan(e)
-                        }}
-                        selectName={`periode`}
                     />
                 </div>
                 <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>

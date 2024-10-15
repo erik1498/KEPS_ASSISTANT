@@ -253,7 +253,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "261984b1-4a45-4332-aaae-9687fe550262"
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
             WHERE tut.enabled = 1
             AND kapt.enabled = 1
@@ -276,7 +276,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "261984b1-4a45-4332-aaae-9687fe550262"
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
             WHERE tut.enabled = 1
             AND kapt.enabled = 1
@@ -299,7 +299,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "261984b1-4a45-4332-aaae-9687fe550262"
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
             WHERE tut.enabled = 1
             AND kapt.enabled = 1
@@ -322,7 +322,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "261984b1-4a45-4332-aaae-9687fe550262"
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
             WHERE tut.enabled = 1
             AND kapt.enabled = 1
@@ -368,7 +368,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_bpjs_karyawan 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "261984b1-4a45-4332-aaae-9687fe550262" 
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
             WHERE tut.enabled = 1
             AND kapt.enabled = 1
@@ -391,7 +391,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_jp_karyawan
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "261984b1-4a45-4332-aaae-9687fe550262"
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
             WHERE tut.enabled = 1
             AND kapt.enabled = 1
@@ -414,7 +414,7 @@ export const getAllTunjanganUangRepo = async (bulan, tahun, req_id) => {
                 tut.periode AS periode,
                 tut.enabled 
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_jht_karyawan 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "261984b1-4a45-4332-aaae-9687fe550262" 
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
             WHERE tut.enabled = 1
             AND kapt.enabled = 1
@@ -454,9 +454,9 @@ export const getTunjanganUangByPegawaiUuidRepo = async (uuid, periode, tahun, re
                 tut.*
             FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt2 ON kapt2.uuid = tut.kode_akun_perkiraan_bpjs_karyawan 
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt3 ON kapt3.uuid = tut.kode_akun_perkiraan_jp_karyawan 
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt4 ON kapt4.uuid = tut.kode_akun_perkiraan_jht_karyawan 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt2 ON kapt2.uuid = "261984b1-4a45-4332-aaae-9687fe550262" 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt3 ON kapt3.uuid = "261984b1-4a45-4332-aaae-9687fe550262" 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt4 ON kapt4.uuid = "261984b1-4a45-4332-aaae-9687fe550262" 
             JOIN ${generateDatabaseName(req_id)}.gaji_tab gt ON gt.uuid = tut.gaji 
             WHERE tut.pegawai = "${uuid}"
             AND tut.enabled = 1

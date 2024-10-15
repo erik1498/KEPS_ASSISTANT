@@ -758,7 +758,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_bpjs_karyawan 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "261984b1-4a45-4332-aaae-9687fe550262" 
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
@@ -790,7 +790,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_jp_karyawan
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "261984b1-4a45-4332-aaae-9687fe550262"
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
@@ -822,7 +822,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         tut.periode AS periode,
                         tut.enabled 
                     FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan_jht_karyawan 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "261984b1-4a45-4332-aaae-9687fe550262" 
                     JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                     WHERE tut.enabled = 1
                     AND kapt.enabled = 1
