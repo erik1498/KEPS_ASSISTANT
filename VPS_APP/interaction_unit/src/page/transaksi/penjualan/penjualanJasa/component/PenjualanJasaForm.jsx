@@ -2,27 +2,27 @@ import { FaCheck, FaSave, FaSearch, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
-import { apiCustomerCRUD, apiPesananPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
+import { apiCustomerCRUD, apiPesananPenjualanJasaCRUD } from "../../../../../service/endPointList.api"
 import { formValidation, showError } from "../../../../../helper/form.helper"
-import PesananPenjualanBarangList from "./PenjualanBarangList"
+import PesananPenjualanJasaList from "./PenjualanJasaList"
 import Pagination from "../../../../../component/general/Pagination"
 import FormInput from "../../../../../component/form/FormInput"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
-import FakturPenjualanBarangForm from "./FakturPenjualanBarangForm"
+import FakturPenjualanJasaForm from "./FakturPenjualanJasaForm"
 
-const PenjualanBarangForm = ({
-    setAddPenjualanBarang = () => { }
+const PenjualanJasaForm = ({
+    setAddPenjualanJasa = () => { }
 }) => {
     const [tanggalTransaksiAkhir, setTanggalTransaksiAkhir] = useState(getHariTanggalFull())
     const [fakturStatus, setFakturStatus] = useState(false)
     const [ppnStatus, setPPNStatus] = useState(false)
-    const [pilihPesananPenjualanBarang, setPilihPesananPenjualanBarang] = useState(false)
-    const [pesananPenjualanBarangListData, setPesananPenjualanBarangListData] = useState([])
-    const [pesananPenjualanBarangSelected, setPesananPenjualanBarangSelected] = useState(true)
+    const [pilihPesananPenjualanJasa, setPilihPesananPenjualanJasa] = useState(false)
+    const [pesananPenjualanJasaListData, setPesananPenjualanJasaListData] = useState([])
+    const [pesananPenjualanJasaSelected, setPesananPenjualanJasaSelected] = useState(true)
 
     const [customerList, setCustomerList] = useState([])
-    const [nomorPesananPenjualanBarang, setNomorPesananPenjualanBarang] = useState("")
-    const [tanggalPesananPenjualanBarang, setTanggalPesananPenjualanBarang] = useState(getHariTanggalFull())
+    const [nomorPesananPenjualanJasa, setNomorPesananPenjualanJasa] = useState("")
+    const [tanggalPesananPenjualanJasa, setTanggalPesananPenjualanJasa] = useState(getHariTanggalFull())
     const [customer, setCustomer] = useState()
 
     const [searchStatus, setSearchStatus] = useState(false)
@@ -50,7 +50,7 @@ const PenjualanBarangForm = ({
         _getDataCustomer()
     }
 
-    const [pesananPenjualanBarang, setPesananPenjualanBarang] = useState()
+    const [pesananPenjualanJasa, setPesananPenjualanJasa] = useState()
 
     const _getDataCustomer = (searchParam = "") => {
         if (searchParam == "") {
@@ -70,58 +70,58 @@ const PenjualanBarangForm = ({
     const _savePesananPenjualan = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
-            apiPesananPenjualanBarangCRUD
-                .custom(pesananPenjualanBarangSelected ? `/${pesananPenjualanBarangSelected.value}` : "", pesananPenjualanBarangSelected ? "PUT" : `POST`, null, {
+            apiPesananPenjualanJasaCRUD
+                .custom(pesananPenjualanJasaSelected ? `/${pesananPenjualanJasaSelected.value}` : "", pesananPenjualanJasaSelected ? "PUT" : `POST`, null, {
                     data: {
-                        nomor_pesanan_penjualan_barang: nomorPesananPenjualanBarang,
-                        tanggal_pesanan_penjualan_barang: tanggalPesananPenjualanBarang,
+                        nomor_pesanan_penjualan_jasa: nomorPesananPenjualanJasa,
+                        tanggal_pesanan_penjualan_jasa: tanggalPesananPenjualanJasa,
                         customer: customer.uuid
                     }
                 }).then(resData => {
-                    if (pesananPenjualanBarangSelected) {
-                        const pesananPenjualanBarangSelectedGet = pesananPenjualanBarangListData.filter(x => x.uuid == pesananPenjualanBarangSelected.value)
-                        setPesananPenjualanBarang(pesananPenjualanBarangSelectedGet[0])
+                    if (pesananPenjualanJasaSelected) {
+                        const pesananPenjualanJasaSelectedGet = pesananPenjualanJasaListData.filter(x => x.uuid == pesananPenjualanJasaSelected.value)
+                        setPesananPenjualanJasa(pesananPenjualanJasaSelectedGet[0])
                     } else {
-                        setPesananPenjualanBarang(resData.data)
+                        setPesananPenjualanJasa(resData.data)
                     }
                 })
         }
     }
 
     useEffect(() => {
-        if (pesananPenjualanBarangSelected) {
-            const pesananPenjualanBarangSelectedGet = pesananPenjualanBarangListData.filter(x => x.uuid == pesananPenjualanBarangSelected.value)
-            if (pesananPenjualanBarangSelectedGet.length > 0) {
-                const customerGet = customerList.filter(x => x.uuid == pesananPenjualanBarangSelectedGet[0].customer)
+        if (pesananPenjualanJasaSelected) {
+            const pesananPenjualanJasaSelectedGet = pesananPenjualanJasaListData.filter(x => x.uuid == pesananPenjualanJasaSelected.value)
+            if (pesananPenjualanJasaSelectedGet.length > 0) {
+                const customerGet = customerList.filter(x => x.uuid == pesananPenjualanJasaSelectedGet[0].customer)
                 if (customerGet.length > 0) {
                     setCustomer(x => x = customerGet[0])
-                    setTanggalPesananPenjualanBarang(pesananPenjualanBarangSelectedGet[0].tanggal_pesanan_penjualan_barang)
-                    setNomorPesananPenjualanBarang(pesananPenjualanBarangSelectedGet[0].nomor_pesanan_penjualan_barang)
+                    setTanggalPesananPenjualanJasa(pesananPenjualanJasaSelectedGet[0].tanggal_pesanan_penjualan_jasa)
+                    setNomorPesananPenjualanJasa(pesananPenjualanJasaSelectedGet[0].nomor_pesanan_penjualan_jasa)
                 }
             }
         }
-    }, [pesananPenjualanBarangSelected])
+    }, [pesananPenjualanJasaSelected])
 
     useEffect(() => {
-        if (pilihPesananPenjualanBarang) {
-            apiPesananPenjualanBarangCRUD
+        if (pilihPesananPenjualanJasa) {
+            apiPesananPenjualanJasaCRUD
                 .custom("", "GET")
                 .then(resData => {
-                    setPesananPenjualanBarangListData(x => x = resData.data.entry)
+                    setPesananPenjualanJasaListData(x => x = resData.data.entry)
                     if (resData.data.entry.length > 0) {
-                        setPesananPenjualanBarangSelected(x => x = {
-                            label: resData.data.entry[0].nomor_pesanan_penjualan_barang,
+                        setPesananPenjualanJasaSelected(x => x = {
+                            label: resData.data.entry[0].nomor_pesanan_penjualan_jasa,
                             value: resData.data.entry[0].uuid
                         })
                     }
                 }).catch(err => showError(err))
         } else {
-            setNomorPesananPenjualanBarang(x => x = "")
-            setPesananPenjualanBarangSelected(x => x = false)
-            setTanggalPesananPenjualanBarang(x => x = getHariTanggalFull())
+            setNomorPesananPenjualanJasa(x => x = "")
+            setPesananPenjualanJasaSelected(x => x = false)
+            setTanggalPesananPenjualanJasa(x => x = getHariTanggalFull())
             setCustomer(x => x = null)
         }
-    }, [pilihPesananPenjualanBarang])
+    }, [pilihPesananPenjualanJasa])
 
     useEffect(() => {
         _getDataCustomer()
@@ -131,74 +131,74 @@ const PenjualanBarangForm = ({
         <div className="bg-white rounded-md shadow-sm h-max">
             <div className="py-5 px-6 h-max w-full z-10">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-2">Pesanan Penjualan Barang</h1>
+                    <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-2">Pesanan Penjualan Jasa</h1>
                 </div>
                 <form onSubmit={e => _savePesananPenjualan(e)}>
                     <div className="flex items-end gap-x-2">
                         <div className="flex items-end gap-x-2 w-full">
                             {
-                                pilihPesananPenjualanBarang && !pesananPenjualanBarang ? <>
+                                pilihPesananPenjualanJasa && !pesananPenjualanJasa ? <>
                                     <FormSelectWithLabel
-                                        label={"Nomor Pesanan Penjualan Barang"}
-                                        optionsDataList={pesananPenjualanBarangListData}
-                                        optionsLabel={"nomor_pesanan_penjualan_barang"}
+                                        label={"Nomor Pesanan Penjualan Jasa"}
+                                        optionsDataList={pesananPenjualanJasaListData}
+                                        optionsLabel={"nomor_pesanan_penjualan_jasa"}
                                         optionsValue={"uuid"}
-                                        selectValue={pesananPenjualanBarangSelected}
+                                        selectValue={pesananPenjualanJasaSelected}
                                         onchange={(e) => {
-                                            setPesananPenjualanBarangSelected(e)
+                                            setPesananPenjualanJasaSelected(e)
                                         }}
-                                        selectName={`pesananPenjualanBarangSelected`}
+                                        selectName={`pesananPenjualanJasaSelected`}
                                     />
                                 </> : <>
                                     <FormInputWithLabel
-                                        label={"Nomor Pesanan Penjualan Barang"}
+                                        label={"Nomor Pesanan Penjualan Jasa"}
                                         type={"text"}
-                                        disabled={pesananPenjualanBarang}
-                                        addClassInput={pesananPenjualanBarang ? "border-none px-1" : ""}
+                                        disabled={pesananPenjualanJasa}
+                                        addClassInput={pesananPenjualanJasa ? "border-none px-1" : ""}
                                         onchange={(e) => {
-                                            setNomorPesananPenjualanBarang(e.target.value)
+                                            setNomorPesananPenjualanJasa(e.target.value)
                                         }}
                                         others={
                                             {
-                                                value: nomorPesananPenjualanBarang,
-                                                name: "nomorPesananPenjualanBarang",
-                                                disabled: pesananPenjualanBarang
+                                                value: nomorPesananPenjualanJasa,
+                                                name: "nomorPesananPenjualanJasa",
+                                                disabled: pesananPenjualanJasa
                                             }
                                         }
                                     />
                                 </>
                             }
                             {
-                                pesananPenjualanBarang ? <></> : <>
+                                pesananPenjualanJasa ? <></> : <>
                                     <button
                                         type="button"
-                                        className={`btn btn-sm ${pilihPesananPenjualanBarang ? "bg-red-900" : "bg-blue-900"} text-white border-none`} onClick={() => {
-                                            setPilihPesananPenjualanBarang(x => x = !x)
+                                        className={`btn btn-sm ${pilihPesananPenjualanJasa ? "bg-red-900" : "bg-blue-900"} text-white border-none`} onClick={() => {
+                                            setPilihPesananPenjualanJasa(x => x = !x)
                                         }}
                                     >
                                         {
-                                            pilihPesananPenjualanBarang ? <FaTimes /> : <FaSearch />
+                                            pilihPesananPenjualanJasa ? <FaTimes /> : <FaSearch />
                                         }
                                         {
-                                            pilihPesananPenjualanBarang ? "Batal Pesanan Penjualan" : "Pilih Pesanan Penjualan"
+                                            pilihPesananPenjualanJasa ? "Batal Pesanan Penjualan" : "Pilih Pesanan Penjualan"
                                         }
                                     </button>
                                 </>
                             }
                         </div>
                         <FormInputWithLabel
-                            label={"Tanggal Pesanan Penjualan Barang"}
+                            label={"Tanggal Pesanan Penjualan Jasa"}
                             type={"datetime-local"}
                             onchange={(e) => {
-                                setTanggalPesananPenjualanBarang(e.target.value)
+                                setTanggalPesananPenjualanJasa(e.target.value)
                             }}
-                            disabled={pesananPenjualanBarang}
-                            addClassInput={pesananPenjualanBarang ? "border-none px-1" : ""}
+                            disabled={pesananPenjualanJasa}
+                            addClassInput={pesananPenjualanJasa ? "border-none px-1" : ""}
                             others={
                                 {
-                                    value: tanggalPesananPenjualanBarang,
-                                    name: "tanggalPesananPenjualanBarang",
-                                    disabled: pesananPenjualanBarang
+                                    value: tanggalPesananPenjualanJasa,
+                                    name: "tanggalPesananPenjualanJasa",
+                                    disabled: pesananPenjualanJasa
                                 }
                             }
                         />
@@ -235,7 +235,7 @@ const PenjualanBarangForm = ({
                                     </div>
                                 </div>
                                 {
-                                    pesananPenjualanBarang ? <></> : <>
+                                    pesananPenjualanJasa ? <></> : <>
                                         <button
                                             className="absolute top-0 right-3 flex mt-3 py-1 px-2 gap-x-2 items-center font-bold text-xs rounded-md bg-red-800 text-white"
                                             onClick={() => {
@@ -253,13 +253,13 @@ const PenjualanBarangForm = ({
                     {
                         customer ? <>
                             {
-                                pesananPenjualanBarang ? <>
+                                pesananPenjualanJasa ? <>
                                     <button
                                         type="button"
                                         onClick={() => {
-                                            setPesananPenjualanBarang(x => x = null)
+                                            setPesananPenjualanJasa(x => x = null)
                                             setCustomer(x => x = null)
-                                            setPilihPesananPenjualanBarang(x => x = false)
+                                            setPilihPesananPenjualanJasa(x => x = false)
                                             setFakturStatus(x => x = false)
                                         }}
                                         className="btn btn-sm bg-red-800 mt-4 text-white"
@@ -342,16 +342,16 @@ const PenjualanBarangForm = ({
             </div>
         </div>
         {
-            pesananPenjualanBarang ? <>
-                <PesananPenjualanBarangList
-                    pesananPenjualanBarang={pesananPenjualanBarang}
+            pesananPenjualanJasa ? <>
+                <PesananPenjualanJasaList
+                    pesananPenjualanJasa={pesananPenjualanJasa}
                     customer={customer}
                     fakturStatus={fakturStatus}
                     setPPNStatus={setPPNStatus}
                     tanggalTransaksiAkhir={tanggalTransaksiAkhir}
                 />
-                <FakturPenjualanBarangForm
-                    pesananPenjualanBarang={pesananPenjualanBarang}
+                <FakturPenjualanJasaForm
+                    pesananPenjualanJasa={pesananPenjualanJasa}
                     setFakturStatus={setFakturStatus}
                     fakturStatus={fakturStatus}
                     ppnStatus={ppnStatus}
@@ -361,4 +361,4 @@ const PenjualanBarangForm = ({
         }
     </>
 }
-export default PenjualanBarangForm
+export default PenjualanJasaForm

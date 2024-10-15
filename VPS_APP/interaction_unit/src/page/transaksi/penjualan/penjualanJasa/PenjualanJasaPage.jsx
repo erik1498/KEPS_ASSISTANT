@@ -2,6 +2,7 @@ import { useState } from "react"
 import PageTitle from "../../../../component/general/PageTitle"
 import Wrap from "../../../../component/layout/Wrap"
 import { FaPlus, FaSearch, FaTimes } from "react-icons/fa"
+import PenjualanJasaForm from "./component/PenjualanJasaForm"
 
 const PenjualanJasaPage = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -14,9 +15,14 @@ const PenjualanJasaPage = () => {
     >
         <div>
             <PageTitle title="Penjualan Jasa" />
-            {
-                addPenjualanJasa ?
-                    <></> :
+            <PenjualanJasaForm
+                setAddPenjualanJasa={setAddPenjualanJasa}
+            />
+            {/* {
+                !addPenjualanJasa ?
+                    <>
+                        
+                    </> :
                     <>
                         <div className="bg-white py-3 px-6 mb-3 rounded-md flex justify-between shadow-2xl">
                             <label className="input input-sm input-bordered flex items-center gap-2 bg-white">
@@ -39,7 +45,7 @@ const PenjualanJasaPage = () => {
                             </div>
                         </div>
                     </>
-            }
+            } */}
         </div>
     </Wrap>
 }

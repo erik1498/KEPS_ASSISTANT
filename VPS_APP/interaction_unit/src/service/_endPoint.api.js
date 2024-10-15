@@ -294,3 +294,45 @@ export const SrvRincianReturPenjualanBarang = objectPathEndPointAPI(
 export const SrvRincianPengembalianDendaPenjualanBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/rincian_pengembalian_denda_penjualan_barang'
 )
+
+
+
+export const SrvPesananPenjualanJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/pesanan_penjualan_jasa'
+)
+
+export const SrvRincianPesananPenjualanJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_pesanan_penjualan_jasa'
+)
+
+export const SrvFakturPenjualanJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/faktur_penjualan_jasa'
+)
+
+export const SrvPelunasanPenjualanJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/pelunasan_penjualan_jasa'
+)
+
+export const SrvReturPenjualanJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/retur_penjualan_jasa'
+)
+
+export const SrvPengembalianDendaPenjualanJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/pengembalian_denda_penjualan_jasa'
+)
+
+export const SrvRincianPelunasanPenjualanJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_pelunasan_penjualan_jasa'
+)
+
+export const SrvRincianPelunasanPenjualanDendaJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_pelunasan_penjualan_denda_jasa'
+)
+
+export const SrvRincianReturPenjualanJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_retur_penjualan_jasa'
+)
+
+export const SrvRincianPengembalianDendaPenjualanJasa = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_pengembalian_denda_penjualan_jasa'
+)

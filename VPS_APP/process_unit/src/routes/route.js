@@ -69,6 +69,16 @@ import { getRincianReturPenjualanBarangRoute } from "../app/rincian_retur_penjua
 import { getRincianPelunasanPenjualanDendaBarangRoute } from "../app/rincian_pelunasan_penjualan_denda_barang/rincianPelunasanPenjualanDendaBarang.route.js";
 import { getPengembalianDendaPenjualanBarangRoute } from "../app/pengembalian_denda_penjualan_barang/pengembalianDendaPenjualanBarang.route.js";
 import { getRincianPengembalianDendaPenjualanBarangRoute } from "../app/rincian_pengembalian_denda_penjualan_barang/rincianPengembalianDendaPenjualanBarang.route.js";
+import { getPesananPenjualanJasaRoute } from "../app/pesanan_penjualan_jasa/pesananPenjualanJasa.route.js";
+import { getRincianPesananPenjualanJasaRoute } from "../app/rincian_pesanan_penjualan_jasa/rincianPesananPenjualanJasa.route.js";
+import { getFakturPenjualanJasaRoute } from "../app/faktur_penjualan_jasa/fakturPenjualanJasa.route.js";
+import { getPelunasanPenjualanJasaRoute } from "../app/pelunasan_penjualan_jasa/pelunasanPenjualanJasa.route.js";
+import { getReturPenjualanJasaRoute } from "../app/retur_penjualan_jasa/returPenjualanJasa.route.js";
+import { getRincianPelunasanPenjualanJasaRoute } from "../app/rincian_pelunasan_penjualan_jasa/rincianPelunasanPenjualanJasa.route.js";
+import { getRincianReturPenjualanJasaRoute } from "../app/rincian_retur_penjualan_jasa/rincianReturPenjualanJasa.route.js";
+import { getRincianPelunasanPenjualanDendaJasaRoute } from "../app/rincian_pelunasan_penjualan_denda_jasa/rincianPelunasanPenjualanDendaJasa.route.js";
+import { getPengembalianDendaPenjualanJasaRoute } from "../app/pengembalian_denda_penjualan_jasa/pengembalianDendaPenjualanJasa.route.js";
+import { getRincianPengembalianDendaPenjualanJasaRoute } from "../app/rincian_pengembalian_denda_penjualan_jasa/rincianPengembalianDendaPenjualanJasa.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -142,5 +152,15 @@ export const routerList = new Array()
         getReturPenjualanBarangRoute(),
         getRincianReturPenjualanBarangRoute(),
         getPengembalianDendaPenjualanBarangRoute(),
-        getRincianPengembalianDendaPenjualanBarangRoute()
+        getRincianPengembalianDendaPenjualanBarangRoute(),
+        getPesananPenjualanJasaRoute(),
+        getRincianPesananPenjualanJasaRoute(),
+        getFakturPenjualanJasaRoute(),
+        getPelunasanPenjualanJasaRoute(),
+        getRincianPelunasanPenjualanJasaRoute(),
+        getRincianPelunasanPenjualanDendaJasaRoute(),
+        getReturPenjualanJasaRoute(),
+        getRincianReturPenjualanJasaRoute(),
+        getPengembalianDendaPenjualanJasaRoute(),
+        getRincianPengembalianDendaPenjualanJasaRoute()
     )

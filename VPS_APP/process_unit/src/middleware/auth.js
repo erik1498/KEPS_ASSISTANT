@@ -53,7 +53,6 @@ export const authTokenMiddleware = (roles = []) => {
                     errorData: JSON.stringify({
                         message: "Akun Tidak Terdaftar",
                         prop: "error",
-                        redirect_to_login: true,
                     })
                 });
             }
@@ -117,7 +116,7 @@ export const authTokenMiddleware = (roles = []) => {
 
             if (getEnv("DEMO_TYPE") == "true" && decode.userEndDateAkses != "UNLIMITED") {
                 if (allowedMethod.includes(req.method)) {
-                    if (parseFloat(decode.userJumlahEntryData) < parseFloat(decode.userBatasEntryData)) {
+                    if (parseFloat(decode.userJumlahEntryData) <= parseFloat(decode.userBatasEntryData)) {
                         if (req.method == "POST") {
                             await incrementJumlahUserEntryDataService(decode, req.identity)
                         }
