@@ -22,6 +22,11 @@ export const kodeAkunPerkiraanValidation = (payload) => {
             "number.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
+        type_transaksi_payroll: Joi.number().required().messages({
+            'number.base': "Harus Berupa Number",
+            "number.empty": "Harus Diisi",
+            "any.required": "Harus Diisi",
+        }),
     })
 
     return schema.validate(payload)

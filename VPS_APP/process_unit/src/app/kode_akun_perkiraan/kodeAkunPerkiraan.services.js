@@ -1,7 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { getBulanText } from "../../utils/mathUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createKodeAkunPerkiraanRepo, deleteKodeAkunPerkiraanByUuidRepo, getAllKodeAkunPerkiraanRepo, getAllKodeAkunPerkiraanWhereInRepo, getKodeAkunPerkiraanByCodeRepo, getKodeAkunPerkiraanByUuidRepo, getKodeAkunPerkiraanByUuidSudahDigunakanRepo, updateKodeAkunPerkiraanByUuidRepo } from "./kodeAkunPerkiraan.repository.js"
+import { createKodeAkunPerkiraanRepo, deleteKodeAkunPerkiraanByUuidRepo, getAllKodeAkunPerkiraanRepo, getAllKodeAkunPerkiraansPayrollRepo, getAllKodeAkunPerkiraanWhereInRepo, getKodeAkunPerkiraanByCodeRepo, getKodeAkunPerkiraanByUuidRepo, getKodeAkunPerkiraanByUuidSudahDigunakanRepo, updateKodeAkunPerkiraanByUuidRepo } from "./kodeAkunPerkiraan.repository.js"
 
 export const getAllKodeAkunPerkiraanService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllKodeAkunPerkiraanService", null, req_identity)
@@ -23,6 +23,11 @@ export const getAllKodeAkunPerkiraanService = async (query, req_identity) => {
 
     const kodeAkunPerkiraans = await getAllKodeAkunPerkiraanRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(kodeAkunPerkiraans.entry, kodeAkunPerkiraans.count, kodeAkunPerkiraans.pageNumber, kodeAkunPerkiraans.size)
+}
+
+export const getAllKodeAkunPerkiraansPayrollService = async (req_identity) => {
+    LOGGER(logType.INFO, "Start getAllKodeAkunPerkiraansPayrollService", req_identity)
+    return await getAllKodeAkunPerkiraansPayrollRepo(req_identity)
 }
 
 export const getAllKodeAkunPerkiraanWhereInService = async (whereIN, req_identity) => {

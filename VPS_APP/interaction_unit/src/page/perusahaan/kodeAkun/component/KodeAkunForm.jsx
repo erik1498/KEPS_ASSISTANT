@@ -2,7 +2,7 @@ import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
 import { useState } from "react"
 import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
-import { KodeAkunType, TipeTransaksiKasBankKodeAkunForm } from "../../../../config/objectList.config"
+import { KodeAkunType, TipeTransaksiKasBankKodeAkunForm, TipeTransaksiPayrollKodeAkunForm } from "../../../../config/objectList.config"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
 import { formValidation, showAlert, showError } from "../../../../helper/form.helper"
 import { apiKodeAkunCRUD } from "../../../../service/endPointList.api"
@@ -17,6 +17,7 @@ const KodeAkunForm = ({
     const [kodeAkun, setKodeAkun] = useState(kodeAkunEdit?.code ? kodeAkunEdit.code : ``)
     const [kodeAkunTypeList, setKodeAkunTypeList] = useState(KodeAkunType())
     const [tipeTransaksiKasBank, setTipeTransaksiKasBank] = useState(kodeAkunEdit?.type_transaksi_kas_bank ? kodeAkunEdit?.type_transaksi_kas_bank : 0)
+    const [tipeTransaksiPayroll, setTipeTransaksiPayroll] = useState(kodeAkunEdit?.type_transaksi_payroll ? kodeAkunEdit?.type_transaksi_payroll : 0)
     const [typeKodeAkun, setTypeKodeAkun] = useState({
         label: kodeAkunEdit?.type ? kodeAkunEdit.type : `Harta`,
         value: kodeAkunEdit?.type ? kodeAkunEdit.type : `Harta`
@@ -33,6 +34,7 @@ const KodeAkunForm = ({
                         name: namaAkun,
                         code: kodeAkun,
                         type_transaksi_kas_bank: tipeTransaksiKasBank,
+                        type_transaksi_payroll: tipeTransaksiPayroll,
                     }
                 }).then(() => {
                     if (kodeAkunEdit) {
@@ -105,6 +107,14 @@ const KodeAkunForm = ({
                     setToggleBox={setTipeTransaksiKasBank}
                     toggleBox={tipeTransaksiKasBank}
                     toggleBoxList={TipeTransaksiKasBankKodeAkunForm}
+                />
+            </div>
+            <div className="flex gap-x-2">
+                <ToggleBox
+                    label="Tipe Untuk Transaksi Payroll"
+                    setToggleBox={setTipeTransaksiPayroll}
+                    toggleBox={tipeTransaksiPayroll}
+                    toggleBoxList={TipeTransaksiPayrollKodeAkunForm}
                 />
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"

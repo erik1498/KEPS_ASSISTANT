@@ -32,6 +32,16 @@ export const getAllKodeAkunPerkiraanRepo = async (pageNumber, size, search, req_
     }
 }
 
+export const getAllKodeAkunPerkiraansPayrollRepo = async (req_id) => {
+    const kodeAkunPerkiraan = await db.query(
+        `
+            SELECT kapt.* FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.type_transaksi_payroll = 1 AND enabled = 1
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return kodeAkunPerkiraan
+}
+
 export const getKodeAkunPerkiraanByCodeRepo = async (code, uuid, req_id) => {
     const kodeAkunPerkiraan = await db.query(
         `
@@ -182,6 +192,7 @@ export const createKodeAkunPerkiraanRepo = async (kodeAkunPerkiraanData, req_id)
             code: kodeAkunPerkiraanData.code,
             update_permission: kodeAkunPerkiraanData.update_permission,
             type_transaksi_kas_bank: kodeAkunPerkiraanData.type_transaksi_kas_bank,
+            type_transaksi_payroll: kodeAkunPerkiraanData.type_transaksi_payroll,
             enabled: kodeAkunPerkiraanData.enabled
         }
     )
@@ -211,6 +222,7 @@ export const updateKodeAkunPerkiraanByUuidRepo = async (uuid, kodeAkunPerkiraanD
             name: kodeAkunPerkiraanData.name,
             code: kodeAkunPerkiraanData.code,
             type_transaksi_kas_bank: kodeAkunPerkiraanData.type_transaksi_kas_bank,
+            type_transaksi_payroll: kodeAkunPerkiraanData.type_transaksi_payroll,
         },
         {
             uuid

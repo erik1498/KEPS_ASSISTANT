@@ -11,7 +11,6 @@ import PiutangKaryawanPegawaiForm from "./PiutangKaryawanPegawaiForm"
 import ToggleBox from "../../../../../component/general/ToggleBox"
 
 const PotonganPegawaiForm = ({
-    potonganPegawaiSelected,
     setPotonganPegawaiForm = () => { }
 }) => {
     const [pegawai, setPegawai] = useState()
@@ -37,9 +36,9 @@ const PotonganPegawaiForm = ({
             }).catch(err => showError(err))
     }
 
-    const _getDataKodeAkunBankDanKas = () => {
+    const _getDataKodeAkunPayroll = () => {
         apiKodeAkunCRUD
-            .custom("/kas_bank")
+        .custom("/payroll")
             .then(resData => {
                 setKodeAkunList(resData.data)
             }).catch(err => {
@@ -49,7 +48,7 @@ const PotonganPegawaiForm = ({
 
     useEffect(() => {
         _getDataPegawai()
-        _getDataKodeAkunBankDanKas()
+        _getDataKodeAkunPayroll()
     }, [])
 
     return <>

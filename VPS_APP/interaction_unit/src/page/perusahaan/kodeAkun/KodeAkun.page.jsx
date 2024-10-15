@@ -12,7 +12,7 @@ import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
 import { KodeAkunPrint } from "./component/KodeAkunPrint"
 import { getBulanByIndex } from "../../../helper/date.helper"
-import { AKUN_TIDAK_BOLEH_DIUPDATE, TipeTransaksiKasBankKodeAkunForm } from "../../../config/objectList.config"
+import { AKUN_TIDAK_BOLEH_DIUPDATE, TipeTransaksiKasBankKodeAkunForm, TipeTransaksiPayrollKodeAkunForm } from "../../../config/objectList.config"
 
 const KodeAkunPage = () => {
 
@@ -158,6 +158,7 @@ const KodeAkunPage = () => {
                                         <th>Tipe Akun</th>
                                         <th>Nama Akun</th>
                                         <th>Tipe Untuk Transaksi Kas Dan Bank</th>
+                                        <th>Tipe Untuk Transaksi Payroll</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -171,6 +172,7 @@ const KodeAkunPage = () => {
                                                     <td>{item.type}</td>
                                                     <td>{item.name}</td>
                                                     <td>{TipeTransaksiKasBankKodeAkunForm.filter(x => x.value == item.type_transaksi_kas_bank).at(0).label}</td>
+                                                    <td>{TipeTransaksiPayrollKodeAkunForm.filter(x => x.value == item.type_transaksi_payroll).at(0).label}</td>
                                                     <td className="flex gap-x-2">
                                                         {
                                                             item.update_permission ? <>

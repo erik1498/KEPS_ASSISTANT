@@ -1,4 +1,4 @@
-import { FaCheck, FaSave, FaTimes } from "react-icons/fa"
+import { FaCheck, FaTimes } from "react-icons/fa"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { useEffect, useState } from "react"
 import { apiKodeAkunCRUD, apiPegawaiCRUD } from "../../../../../service/endPointList.api"
@@ -33,9 +33,9 @@ const PendapatanPegawaiForm = ({
             }).catch(err => showError(err))
     }
 
-    const _getDataKodeAkunBankDanKas = () => {
+    const _getDataKodeAkunPayroll = () => {
         apiKodeAkunCRUD
-            .custom("/kas_bank")
+            .custom("/payroll")
             .then(resData => {
                 setKodeAkunList(resData.data)
             }).catch(err => {
@@ -45,7 +45,7 @@ const PendapatanPegawaiForm = ({
 
     useEffect(() => {
         _getDataPegawai()
-        _getDataKodeAkunBankDanKas()
+        _getDataKodeAkunPayroll()
     }, [])
 
     return <>
