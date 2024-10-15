@@ -69,6 +69,9 @@ export const showError = async (error) => {
             }
             return
         }
+        if (error.response.data.type == "unauthorizedError") {
+            return
+        }
         let errorMessage = JSON.parse(error.response.data.errorData)
 
         if (errorMessage.redirect_to_login) {

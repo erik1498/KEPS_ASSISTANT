@@ -165,8 +165,7 @@ const PesananPenjualanBarangForm = ({
             </div>
             {
                 kategoriHargaBarangSelected ? <>
-                    <div className="gap-x-2 border-b-[2.5px] border-black px-2 py-3">
-                        <p className="text-sm">Nama Barang</p>
+                    <div className="gap-x-2 bg-gray-300 my-4 rounded-md px-2 py-3">
                         <p className="text-xl font-extrabold">{kategoriHargaBarangSelected.daftar_barang_name}</p>
                         <p className="text-sm mt-5">Harga Barang</p>
                         <p className="font-bold mt-1 text-xl">

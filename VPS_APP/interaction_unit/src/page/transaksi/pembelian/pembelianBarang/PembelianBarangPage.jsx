@@ -1,7 +1,7 @@
 import { useState } from "react"
 import PageTitle from "../../../../component/general/PageTitle"
 import Wrap from "../../../../component/layout/Wrap"
-import { FaPlus, FaSearch, FaTimes } from "react-icons/fa"
+import PembelianBarangForm from "./component/PembelianBarangForm"
 
 const PembelianBarangPage = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -14,9 +14,14 @@ const PembelianBarangPage = () => {
     >
         <div>
             <PageTitle title="Pembelian Barang" />
-            {
-                addPembelianBarang ?
-                    <></> :
+            <PembelianBarangForm
+                setAddPembelianBarang={setAddPembelianBarang}
+            />
+            {/* {
+                !addPembelianBarang ?
+                    <>
+                        
+                    </> :
                     <>
                         <div className="bg-white py-3 px-6 mb-3 rounded-md flex justify-between shadow-2xl">
                             <label className="input input-sm input-bordered flex items-center gap-2 bg-white">
@@ -39,7 +44,7 @@ const PembelianBarangPage = () => {
                             </div>
                         </div>
                     </>
-            }
+            } */}
         </div>
     </Wrap>
 }

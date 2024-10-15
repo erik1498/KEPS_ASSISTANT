@@ -79,6 +79,8 @@ import { getRincianReturPenjualanJasaRoute } from "../app/rincian_retur_penjuala
 import { getRincianPelunasanPenjualanDendaJasaRoute } from "../app/rincian_pelunasan_penjualan_denda_jasa/rincianPelunasanPenjualanDendaJasa.route.js";
 import { getPengembalianDendaPenjualanJasaRoute } from "../app/pengembalian_denda_penjualan_jasa/pengembalianDendaPenjualanJasa.route.js";
 import { getRincianPengembalianDendaPenjualanJasaRoute } from "../app/rincian_pengembalian_denda_penjualan_jasa/rincianPengembalianDendaPenjualanJasa.route.js";
+import { getPesananPembelianBarangRoute } from "../app/pesanan_pembelian_barang/pesananPembelianBarang.route.js";
+import { getRincianPesananPembelianBarangRoute } from "../app/rincian_pesanan_pembelian_barang/rincianPesananPembelianBarang.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -162,5 +164,7 @@ export const routerList = new Array()
         getReturPenjualanJasaRoute(),
         getRincianReturPenjualanJasaRoute(),
         getPengembalianDendaPenjualanJasaRoute(),
-        getRincianPengembalianDendaPenjualanJasaRoute()
+        getRincianPengembalianDendaPenjualanJasaRoute(),
+        getPesananPembelianBarangRoute(),
+        getRincianPesananPembelianBarangRoute()
     )

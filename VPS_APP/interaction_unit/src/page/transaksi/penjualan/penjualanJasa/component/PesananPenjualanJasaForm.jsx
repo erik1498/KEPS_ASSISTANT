@@ -165,8 +165,7 @@ const PesananPenjualanJasaForm = ({
             </div>
             {
                 kategoriHargaJasaSelected ? <>
-                    <div className="gap-x-2 border-b-[2.5px] border-black px-2 py-3">
-                        <p className="text-sm">Nama Jasa</p>
+                    <div className="gap-x-2 bg-gray-300 my-4 rounded-md px-2 py-3">
                         <p className="text-xl font-extrabold">{kategoriHargaJasaSelected.daftar_jasa_name}</p>
                         <p className="text-sm mt-5">Harga Jasa</p>
                         <p className="font-bold mt-1 text-xl">
