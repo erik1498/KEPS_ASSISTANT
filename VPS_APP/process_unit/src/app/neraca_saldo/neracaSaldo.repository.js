@@ -259,7 +259,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 AND pt.enabled = 1
                 UNION ALL
                 SELECT 
-                    261984b1-4a45-4332-aaae-9687fe550262 AS kode_akun_perkiraan,
+                    "261984b1-4a45-4332-aaae-9687fe550262" AS kode_akun_perkiraan,
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     0 AS debet,
@@ -270,7 +270,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 AND pt.enabled = 1
                 UNION ALL
                 SELECT 
-                    261984b1-4a45-4332-aaae-9687fe550262 AS kode_akun_perkiraan,
+                    "261984b1-4a45-4332-aaae-9687fe550262" AS kode_akun_perkiraan,
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     0 AS debet,
@@ -281,7 +281,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 AND pt.enabled = 1
                 UNION ALL
                 SELECT 
-                    261984b1-4a45-4332-aaae-9687fe550262 AS kode_akun_perkiraan,
+                    "261984b1-4a45-4332-aaae-9687fe550262" AS kode_akun_perkiraan,
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     0 AS debet,
