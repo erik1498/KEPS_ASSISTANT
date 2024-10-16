@@ -81,6 +81,14 @@ import { getPengembalianDendaPenjualanJasaRoute } from "../app/pengembalian_dend
 import { getRincianPengembalianDendaPenjualanJasaRoute } from "../app/rincian_pengembalian_denda_penjualan_jasa/rincianPengembalianDendaPenjualanJasa.route.js";
 import { getPesananPembelianBarangRoute } from "../app/pesanan_pembelian_barang/pesananPembelianBarang.route.js";
 import { getRincianPesananPembelianBarangRoute } from "../app/rincian_pesanan_pembelian_barang/rincianPesananPembelianBarang.route.js";
+import { getFakturPembelianBarangRoute } from "../app/faktur_pembelian_barang/fakturPembelianBarang.route.js";
+import { getPelunasanPembelianBarangRoute } from "../app/pelunasan_pembelian_barang/pelunasanPembelianBarang.route.js";
+import { getRincianPelunasanPembelianBarangRoute } from "../app/rincian_pelunasan_pembelian_barang/rincianPelunasanPembelianBarang.route.js";
+import { getRincianPelunasanPembelianDendaBarangRoute } from "../app/rincian_pelunasan_pembelian_denda_barang/rincianPelunasanPembelianDendaBarang.route.js";
+import { getReturPembelianBarangRoute } from "../app/retur_pembelian_barang/returPembelianBarang.route.js";
+import { getRincianReturPembelianBarangRoute } from "../app/rincian_retur_pembelian_barang/rincianReturPembelianBarang.route.js";
+import { getPengembalianDendaPembelianBarangRoute } from "../app/pengembalian_denda_pembelian_barang/pengembalianDendaPembelianBarang.route.js";
+import { getRincianPengembalianDendaPembelianBarangRoute } from "../app/rincian_pengembalian_denda_pembelian_barang/rincianPengembalianDendaPembelianBarang.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -166,5 +174,13 @@ export const routerList = new Array()
         getPengembalianDendaPenjualanJasaRoute(),
         getRincianPengembalianDendaPenjualanJasaRoute(),
         getPesananPembelianBarangRoute(),
-        getRincianPesananPembelianBarangRoute()
+        getRincianPesananPembelianBarangRoute(),
+        getFakturPembelianBarangRoute(),
+        getPelunasanPembelianBarangRoute(),
+        getRincianPelunasanPembelianBarangRoute(),
+        getRincianPelunasanPembelianDendaBarangRoute(),
+        getReturPembelianBarangRoute(),
+        getRincianReturPembelianBarangRoute(),
+        getPengembalianDendaPembelianBarangRoute(),
+        getRincianPengembalianDendaPembelianBarangRoute(),
     )

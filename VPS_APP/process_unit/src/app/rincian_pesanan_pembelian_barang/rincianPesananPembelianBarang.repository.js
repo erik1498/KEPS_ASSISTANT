@@ -84,7 +84,11 @@ export const createRincianPesananPembelianBarangRepo = async (rincianPesananPemb
             stok_awal_barang: rincianPesananPembelianBarangData.stok_awal_barang,
             jumlah: rincianPesananPembelianBarangData.jumlah,
             harga: rincianPesananPembelianBarangData.harga,
+            harga_setelah_diskon: rincianPesananPembelianBarangData.harga_setelah_diskon,
             ppn: rincianPesananPembelianBarangData.ppn,
+            ppn_setelah_diskon: rincianPesananPembelianBarangData.ppn_setelah_diskon,
+            diskon_angka: rincianPesananPembelianBarangData.diskon_angka,
+            diskon_persentase: rincianPesananPembelianBarangData.diskon_persentase,
             total_harga: rincianPesananPembelianBarangData.total_harga,
             enabled: rincianPesananPembelianBarangData.enabled
         }
@@ -119,8 +123,12 @@ export const updateRincianPesananPembelianBarangByUuidRepo = async (uuid, rincia
             stok_awal_barang: rincianPesananPembelianBarangData.stok_awal_barang,
             jumlah: rincianPesananPembelianBarangData.jumlah,
             harga: rincianPesananPembelianBarangData.harga,
+            harga_setelah_diskon: rincianPesananPembelianBarangData.harga_setelah_diskon,
             ppn: rincianPesananPembelianBarangData.ppn,
-            total_harga: rincianPesananPembelianBarangData.total_harga,
+            ppn_setelah_diskon: rincianPesananPembelianBarangData.ppn_setelah_diskon,
+            diskon_angka: rincianPesananPembelianBarangData.diskon_angka,
+            diskon_persentase: rincianPesananPembelianBarangData.diskon_persentase,
+            total_harga: rincianPesananPembelianBarangData.total_harga
         },
         {
             uuid

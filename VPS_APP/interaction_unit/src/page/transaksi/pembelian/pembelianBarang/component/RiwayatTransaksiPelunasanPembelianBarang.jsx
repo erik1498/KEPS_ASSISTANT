@@ -27,7 +27,7 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
 
     const _cekDendaFakturPembelian = () => {
         apiPelunasanPembelianBarangCRUD
-            .custom(`/cek_denda_pelunasan_Pembelian/${riwayatPelunasanPembelianBarang.uuid}`, "GET")
+            .custom(`/cek_denda_pelunasan_pembelian/${riwayatPelunasanPembelianBarang.uuid}`, "GET")
             .then(resData => {
                 setDendaOpen(x => x = resData.data)
             }).catch(err => showError(err))
@@ -82,10 +82,10 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
     const _saveRincianPelunasanPembelianDendaBarang = async () => {
         for (let index = 0; index < listPelunasanPembelianDendaBarang.length; index++) {
             await apiRincianPelunasanPembelianDendaBarangCRUD
-                .custom(`${listPelunasanPembelianDendaBarang[index].rincian_pelunasan_Pembelian_denda_barang ? `/${listPelunasanPembelianDendaBarang[index].rincian_pelunasan_Pembelian_denda_barang}` : ""}`, listPelunasanPembelianDendaBarang[index].rincian_pelunasan_Pembelian_denda_barang ? "PUT" : "POST", null, {
+                .custom(`${listPelunasanPembelianDendaBarang[index].rincian_pelunasan_pembelian_denda_barang ? `/${listPelunasanPembelianDendaBarang[index].rincian_pelunasan_pembelian_denda_barang}` : ""}`, listPelunasanPembelianDendaBarang[index].rincian_pelunasan_pembelian_denda_barang ? "PUT" : "POST", null, {
                     data: {
-                        pelunasan_Pembelian_barang: riwayatPelunasanPembelianBarang.uuid,
-                        rincian_pesanan_Pembelian_barang: listPelunasanPembelianDendaBarang[index].uuid,
+                        pelunasan_pembelian_barang: riwayatPelunasanPembelianBarang.uuid,
+                        rincian_pesanan_pembelian_barang: listPelunasanPembelianDendaBarang[index].uuid,
                         hari_terlewat: listPelunasanPembelianDendaBarang[index].hari_terlewat,
                         total_denda: listPelunasanPembelianDendaBarang[index].total_denda,
                         denda_sudah_dibayar: listPelunasanPembelianDendaBarang[index].denda_sudah_dibayar,
@@ -100,10 +100,10 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
     const _saveRincianPelunasanPembelianBarang = async () => {
         for (let index = 0; index < listPelunasanPembelianBarang.length; index++) {
             await apiRincianPelunasanPembelianBarangCRUD
-                .custom(`${listPelunasanPembelianBarang[index].rincian_pelunasan_Pembelian_barang ? `/${listPelunasanPembelianBarang[index].rincian_pelunasan_Pembelian_barang}` : ""}`, listPelunasanPembelianBarang[index].rincian_pelunasan_Pembelian_barang ? "PUT" : "POST", null, {
+                .custom(`${listPelunasanPembelianBarang[index].rincian_pelunasan_pembelian_barang ? `/${listPelunasanPembelianBarang[index].rincian_pelunasan_pembelian_barang}` : ""}`, listPelunasanPembelianBarang[index].rincian_pelunasan_pembelian_barang ? "PUT" : "POST", null, {
                     data: {
-                        pelunasan_Pembelian_barang: riwayatPelunasanPembelianBarang.uuid,
-                        rincian_pesanan_Pembelian_barang: listPelunasanPembelianBarang[index].uuid,
+                        pelunasan_pembelian_barang: riwayatPelunasanPembelianBarang.uuid,
+                        rincian_pesanan_pembelian_barang: listPelunasanPembelianBarang[index].uuid,
                         sudah_dibayar: listPelunasanPembelianBarang[index].sudah_dibayar,
                         piutang: listPelunasanPembelianBarang[index].piutang,
                         nilai_pelunasan: `${listPelunasanPembelianBarang[index].nilai_pelunasan}`
@@ -128,10 +128,10 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
             apiPelunasanPembelianBarangCRUD
                 .custom("/" + riwayatPelunasanPembelianBarang.uuid, "PUT", null, {
                     data: {
-                        nomor_pelunasan_Pembelian_barang: nomorPelunasanPembelianBarang,
+                        nomor_pelunasan_pembelian_barang: nomorPelunasanPembelianBarang,
                         bukti_transaksi: buktiTransaksiPelunasanPembelianBarang,
                         keterangan: keteranganPelunasanPembelianBarang,
-                        faktur_Pembelian_barang: riwayatPelunasanPembelianBarang.faktur_Pembelian_barang,
+                        faktur_pembelian_barang: riwayatPelunasanPembelianBarang.faktur_pembelian_barang,
                         tanggal: riwayatPelunasanPembelianBarang.tanggal,
                         kode_akun_perkiraan: riwayatPelunasanPembelianBarang.kode_akun_perkiraan,
                     }
@@ -183,7 +183,7 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
                                         {
                                             edited ? <FormInput
                                                 addClass={"px-0"}
-                                                name={"nomor_pelunasan_Pembelian_barang"}
+                                                name={"nomor_pelunasan_pembelian_barang"}
                                                 value={nomorPelunasanPembelianBarang}
                                                 onchange={(e) => setNomorPelunasanPembelianBarang(e.target.value)}
                                             /> : riwayatPelunasanPembelianBarang.nomor_transaksi

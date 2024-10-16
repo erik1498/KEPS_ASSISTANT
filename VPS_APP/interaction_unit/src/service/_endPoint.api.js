@@ -342,3 +342,35 @@ export const SrvPesananPembelianBarang = objectPathEndPointAPI(
 export const SrvRincianPesananPembelianBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/rincian_pesanan_pembelian_barang'
 )
+
+export const SrvFakturPembelianBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/faktur_pembelian_barang'
+)
+
+export const SrvPelunasanPembelianBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/pelunasan_pembelian_barang'
+)
+
+export const SrvReturPembelianBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/retur_pembelian_barang'
+)
+
+export const SrvPengembalianDendaPembelianBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/pengembalian_denda_pembelian_barang'
+)
+
+export const SrvRincianPelunasanPembelianBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_pelunasan_pembelian_barang'
+)
+
+export const SrvRincianPelunasanPembelianDendaBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_pelunasan_pembelian_denda_barang'
+)
+
+export const SrvRincianReturPembelianBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_retur_pembelian_barang'
+)
+
+export const SrvRincianPengembalianDendaPembelianBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_pengembalian_denda_pembelian_barang'
+)

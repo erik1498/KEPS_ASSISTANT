@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react"
-import { apiDaftarBarangCRUD, apiRincianPesananPembelianBarangCRUD } from "../../../../../service/endPointList.api"
+import { apiDaftarBarangCRUD, apiRincianPelunasanPembelianBarangCRUD, apiRincianPesananPembelianBarangCRUD } from "../../../../../service/endPointList.api"
 import { showError } from "../../../../../helper/form.helper"
 import PesananPembelianBarangForm from "./PesananPembelianBarangForm"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { FaCheck, FaTimes, FaTrash } from "react-icons/fa"
-import { getHariTanggalFull } from "../../../../../helper/date.helper"
 
 const PesananPembelianBarangList = ({
     pesananPembelianBarang,
     customer,
     fakturStatus,
-    setPPNStatus = () => { },
     tanggalTransaksiAkhir
 }) => {
     const [rincianPesananPembelianBarang, setRincianPesananPembelianBarang] = useState([])
@@ -22,11 +20,7 @@ const PesananPembelianBarangList = ({
         apiRincianPesananPembelianBarangCRUD
             .custom(`/${pesananPembelianBarang.uuid}`, "GET")
             .then(resData => {
-                setPPNStatus(x => x = false)
                 setRincianPesananPembelianBarang(resData.data)
-                if (resData.data.filter(x => x.ppn > 0).length > 0) {
-                    setPPNStatus(x => x = true)
-                }
             }).catch(err => showError(err))
     }
 
@@ -44,29 +38,29 @@ const PesananPembelianBarangList = ({
         }).catch(err => showError(err))
     }
 
-    // const _getDataRincianDaftarPasananPembelianStatusLunas = () => {
-    //     apiRincianPelunasanPembelianBarangCRUD
-    //         .custom("/pesanan_by_tanggal", "POST", null, {
-    //             data: {
-    //                 faktur_Pembelian_barang: fakturStatus,
-    //                 tanggal: tanggalTransaksiAkhir
-    //             }
-    //         }).then(resData => {
-    //             setRincianPesananPembelianBarang(x => x = resData.data)
-    //             const totalPiutangGet = resData.data.reduce((prev, current) => {
-    //                 return prev + parseFloat(current.piutang)
-    //             }, 0)
-    //             setTotalPiutang(x => x = totalPiutangGet)
-    //         })
-    // }
+    const _getDataRincianDaftarPasananPembelianStatusLunas = () => {
+        apiRincianPelunasanPembelianBarangCRUD
+            .custom("/pesanan_by_tanggal", "POST", null, {
+                data: {
+                    faktur_pembelian_barang: fakturStatus,
+                    tanggal: tanggalTransaksiAkhir
+                }
+            }).then(resData => {
+                setRincianPesananPembelianBarang(x => x = resData.data)
+                const totalPiutangGet = resData.data.reduce((prev, current) => {
+                    return prev + parseFloat(current.piutang)
+                }, 0)
+                setTotalPiutang(x => x = totalPiutangGet)
+            })
+    }
 
     useEffect(() => {
         _getDataBarangTransaksi()
-        // if (fakturStatus) {
-        // _getDataRincianDaftarPasananPembelianStatusLunas()
-        // } else {
-        _getDataRincianDaftarPasananPembelian()
-        // }
+        if (fakturStatus) {
+            _getDataRincianDaftarPasananPembelianStatusLunas()
+        } else {
+            _getDataRincianDaftarPasananPembelian()
+        }
     }, [fakturStatus, tanggalTransaksiAkhir, listPesanan])
 
     return <>
@@ -191,8 +185,22 @@ const PesananPembelianBarangList = ({
                                                 }
                                             </div>
                                             <div className="col-span-3">
+                                                {
+                                                    x.diskon_angka > 0 ? <>
+                                                        <p>Diskon</p>
+                                                        <p>Harga Diskon</p>
+                                                        <p>PPN Diskon</p>
+                                                    </> : <></>
+                                                }
                                             </div>
                                             <div className="col-span-3">
+                                                {
+                                                    x.diskon_angka > 0 ? <>
+                                                        <p>Rp. {parseToRupiahText(x.diskon_angka)} ({x.diskon_persentase} % )</p>
+                                                        <p>Rp. {parseToRupiahText(x.harga_setelah_diskon)}</p>
+                                                        <p>Rp. {parseToRupiahText(x.ppn_setelah_diskon)}</p>
+                                                    </> : <></>
+                                                }
                                             </div>
                                             <div className="col-span-3">
                                                 Total Harga <p>Rp. {parseToRupiahText(x.total_harga)}</p>

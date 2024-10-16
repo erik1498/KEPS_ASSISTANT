@@ -55,10 +55,10 @@ const RiwayatTransaksiReturPembelianBarang = ({
     const _saveRincianReturPembelianBarang = async () => {
         for (let index = 0; index < listReturPembelianBarang.length; index++) {
             await apiRincianReturPembelianBarangCRUD
-                .custom(`${listReturPembelianBarang[index].rincian_retur_Pembelian_barang ? `/${listReturPembelianBarang[index].rincian_retur_Pembelian_barang}` : ""}`, listReturPembelianBarang[index].rincian_retur_Pembelian_barang ? "PUT" : "POST", null, {
+                .custom(`${listReturPembelianBarang[index].rincian_retur_pembelian_barang ? `/${listReturPembelianBarang[index].rincian_retur_pembelian_barang}` : ""}`, listReturPembelianBarang[index].rincian_retur_pembelian_barang ? "PUT" : "POST", null, {
                     data: {
-                        retur_Pembelian_barang: riwayatReturPembelianBarang.uuid,
-                        rincian_pesanan_Pembelian_barang: listReturPembelianBarang[index].uuid,
+                        retur_pembelian_barang: riwayatReturPembelianBarang.uuid,
+                        rincian_pesanan_pembelian_barang: listReturPembelianBarang[index].uuid,
                         jumlah: `${listReturPembelianBarang[index].jumlah_fix}`,
                         denda_sudah_dibayar: `${listReturPembelianBarang[index].denda_sudah_dibayar}`,
                         sudah_dibayar: `${listReturPembelianBarang[index].sudah_dibayar_fix}`,
@@ -87,10 +87,10 @@ const RiwayatTransaksiReturPembelianBarang = ({
             apiReturPembelianBarangCRUD
                 .custom("/" + riwayatReturPembelianBarang.uuid, "PUT", null, {
                     data: {
-                        nomor_retur_Pembelian_barang: nomorReturPembelianBarang,
+                        nomor_retur_pembelian_barang: nomorReturPembelianBarang,
                         bukti_transaksi: buktiTransaksiReturPembelianBarang,
                         keterangan: keteranganReturPembelianBarang,
-                        faktur_Pembelian_barang: riwayatReturPembelianBarang.faktur_Pembelian_barang,
+                        faktur_pembelian_barang: riwayatReturPembelianBarang.faktur_pembelian_barang,
                         tanggal: riwayatReturPembelianBarang.tanggal,
                         kode_akun_perkiraan: riwayatReturPembelianBarang.kode_akun_perkiraan,
                     }
@@ -135,7 +135,7 @@ const RiwayatTransaksiReturPembelianBarang = ({
                                         {
                                             edited ? <FormInput
                                                 addClass={"px-0"}
-                                                name={"nomor_retur_Pembelian_barang"}
+                                                name={"nomor_retur_pembelian_barang"}
                                                 value={nomorReturPembelianBarang}
                                                 onchange={(e) => setNomorReturPembelianBarang(e.target.value)}
                                             /> : riwayatReturPembelianBarang.nomor_transaksi

@@ -58,14 +58,14 @@ const RiwayatTransaksiPembelianBarang = ({
             }
 
             const data = {
-                faktur_Pembelian_barang: fakturPembelianBarang.uuid,
+                faktur_pembelian_barang: fakturPembelianBarang.uuid,
                 tanggal: tanggal,
                 bukti_transaksi: "EMPTY",
                 kode_akun_perkiraan: kodeAkun.value,
                 keterangan: "EMPTY"
             }
 
-            data[`nomor_${tipeTransaksi.value.toLowerCase()}_Pembelian_barang`] = "EMPTY"
+            data[`nomor_${tipeTransaksi.value.toLowerCase()}_pembelian_barang`] = "EMPTY"
 
             apiCall.custom("", "POST", null, {
                 data
@@ -188,7 +188,7 @@ const RiwayatTransaksiPembelianBarang = ({
                                             x.data.map((y, j) => {
                                                 return <>
                                                     {
-                                                        y.type == "pelunasan_Pembelian_barang" ? <>
+                                                        y.type == "pelunasan_pembelian_barang" ? <>
                                                             <RiwayatTransaksiPelunasanPembelianBarang
                                                                 riwayatPelunasanPembelianBarang={y}
                                                                 edited={i == 0 && j == 0}
@@ -197,7 +197,7 @@ const RiwayatTransaksiPembelianBarang = ({
                                                         </> : <></>
                                                     }
                                                     {
-                                                        y.type == "retur_Pembelian_barang" ? <>
+                                                        y.type == "retur_pembelian_barang" ? <>
                                                             <RiwayatTransaksiReturPembelianBarang
                                                                 riwayatReturPembelianBarang={y}
                                                                 edited={i == 0 && j == 0}
@@ -206,7 +206,7 @@ const RiwayatTransaksiPembelianBarang = ({
                                                         </> : <></>
                                                     }
                                                     {
-                                                        y.type == "pengembalian_denda_Pembelian_barang" ? <>
+                                                        y.type == "pengembalian_denda_pembelian_barang" ? <>
                                                             <RiwayatTransaksiPengembalianDendaPembelianBarang
                                                                 riwayatPengembalianDendaPembelianBarang={y}
                                                                 edited={i == 0 && j == 0}

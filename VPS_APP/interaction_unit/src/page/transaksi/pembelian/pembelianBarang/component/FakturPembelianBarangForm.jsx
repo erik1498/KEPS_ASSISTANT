@@ -14,7 +14,7 @@ const FakturPembelianBarangForm = ({
     ppnStatus,
     setTanggalTransaksiAkhir = () => { }
 }) => {
-    const [fakturPembelianBarang, setFakturPnenjualanBarang] = useState()
+    const [fakturPembelianBarang, setFakturPembelianBarang] = useState()
     const [fakturCancel, setFakturCancel] = useState(true)
 
     const [tipePembayaranList, setTipePembayaranList] = useState([])
@@ -42,34 +42,20 @@ const FakturPembelianBarangForm = ({
             })
     }
 
-    const _getDataSyaratPembayaran = () => {
-        apiSyaratPembayaranCRUD
-            .custom("/type/" + tipePembayaran.value, "GET")
-            .then(resData => {
-                setSyaratPembayaranList(x => x = resData.data)
-                if (resData.data.length > 0) {
-                    setSyaratPembayaran(x => x = {
-                        label: resData.data[0].name,
-                        value: resData.data[0].uuid,
-                    })
-                }
-            })
-    }
-
     const _saveFakturPembelianBarang = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
             apiFakturPembelianBarangCRUD
                 .custom("", "POST", null, {
                     data: {
-                        pesanan_Pembelian_barang: pesananPembelianBarang.uuid,
+                        pesanan_pembelian_barang: pesananPembelianBarang.uuid,
                         tanggal: tanggalFakturPembelianBarang,
-                        nomor_faktur_Pembelian_barang: nomorFakturPembelianBarang,
+                        nomor_faktur_pembelian_barang: nomorFakturPembelianBarang,
                         bukti_transaksi: buktiTransaksi,
                         tipe_pembayaran: tipePembayaran.value,
-                        syarat_pembayaran: syaratPembayaran.value,
+                        syarat_pembayaran: syaratPembayaran,
                         keterangan: keteranganFakturPembelianBarang,
-                        nomor_faktur_pajak_Pembelian_barang: nomorFakturPajakFakturPembelianBarang ? nomorFakturPajakFakturPembelianBarang : "EMPTY"
+                        nomor_faktur_pajak_pembelian_barang: nomorFakturPajakFakturPembelianBarang ? nomorFakturPajakFakturPembelianBarang : "EMPTY"
                     }
                 }).then(resData => {
                     setFakturStatus(x => x = resData.data.uuid)
@@ -85,27 +71,19 @@ const FakturPembelianBarangForm = ({
             }).catch(err => showError(err))
     }
 
-    useEffect(() => {
-        if (tipePembayaran?.value) {
-            _getDataSyaratPembayaran()
-        }
-    }, [tipePembayaran])
-
     const _getFakturPembelian = () => {
         apiFakturPembelianBarangCRUD
-            .custom(`/pesanan_Pembelian_barang/${pesananPembelianBarang.uuid}`, "GET")
+            .custom(`/pesanan_pembelian_barang/${pesananPembelianBarang.uuid}`, "GET")
             .then(resData => {
-                if (resData.data) {
-                    setFakturPnenjualanBarang(x => x = resData.data)
-                    setNomorFakturPembelianBarang(x => x = resData.data.nomor_faktur_Pembelian_barang)
-                    setBuktiTransaksi(x => x = resData.data.bukti_transaksi)
-                    setTanggalFakturPembelianBarang(x => x = resData.data.tanggal)
-                    setTipePembayaran(x => x = resData.data.tipe_pembayaran_name)
-                    setSyaratPembayaran(x => x = resData.data.syarat_pembayaran_name)
-                    setKeteranganFakturPembelianBarang(x => x = resData.data.keterangan)
-                    setFakturStatus(x => x = resData.data.uuid)
-                    setNomorFakturPajakFakturPembelianBarang(x => x = resData.data.nomor_faktur_pajak_Pembelian_barang != "EMPTY" ? resData.data.nomor_faktur_pajak_Pembelian_barang : "")
-                }
+                setFakturPembelianBarang(x => x = resData.data)
+                setNomorFakturPembelianBarang(x => x = resData.data.nomor_faktur_pembelian_barang)
+                setBuktiTransaksi(x => x = resData.data.bukti_transaksi)
+                setTanggalFakturPembelianBarang(x => x = resData.data.tanggal)
+                setTipePembayaran(x => x = resData.data.tipe_pembayaran_name)
+                setSyaratPembayaran(x => x = resData.data.syarat_pembayaran)
+                setKeteranganFakturPembelianBarang(x => x = resData.data.keterangan)
+                setFakturStatus(x => x = resData.data.uuid)
+                setNomorFakturPajakFakturPembelianBarang(x => x = resData.data.nomor_faktur_pajak_pembelian_barang != "EMPTY" ? resData.data.nomor_faktur_pajak_pembelian_barang : "")
             }).catch(err => {
                 setFakturStatus(x => x = null)
             })
@@ -120,7 +98,7 @@ const FakturPembelianBarangForm = ({
     }, [fakturStatus])
 
     return <>
-        <div className="bg-white rounded-md py-6 px-6 shadow-2xl">
+        <div className="bg-white mt-4 rounded-md py-6 px-6 shadow-2xl">
             <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Faktur Pembelian Barang</h1>
             <form onSubmit={e => _saveFakturPembelianBarang(e)}>
                 <div className="flex gap-x-2">
@@ -187,19 +165,6 @@ const FakturPembelianBarangForm = ({
                                     }
                                 }
                             />
-                            <FormInputWithLabel
-                                label={"Syarat Pembayaran"}
-                                type={"text"}
-                                disabled={fakturStatus}
-                                addClassInput={fakturStatus ? "border-none px-1" : ""}
-                                others={
-                                    {
-                                        value: syaratPembayaran,
-                                        name: "syaratPembayaran",
-                                        disabled: fakturStatus
-                                    }
-                                }
-                            />
                         </> : <>
                             <FormSelectWithLabel
                                 label={"Tipe Pembayaran"}
@@ -212,19 +177,24 @@ const FakturPembelianBarangForm = ({
                                 }}
                                 selectName={`tipePembayaran`}
                             />
-                            <FormSelectWithLabel
-                                label={"Syarat Pembayaran"}
-                                optionsDataList={syaratPembayaranList}
-                                optionsLabel={"name"}
-                                optionsValue={"uuid"}
-                                selectValue={syaratPembayaran}
-                                onchange={(e) => {
-                                    setSyaratPembayaran(e)
-                                }}
-                                selectName={`syaratPembayaran`}
-                            />
                         </>
                     }
+                    <FormInputWithLabel
+                        label={"Syarat Pembayaran"}
+                        type={"text"}
+                        disabled={fakturStatus}
+                        addClassInput={fakturStatus ? "border-none px-1" : ""}
+                        onchange={(e) => {
+                            setSyaratPembayaran(e.target.value)
+                        }}
+                        others={
+                            {
+                                value: syaratPembayaran,
+                                name: "syaratPembayaran",
+                                disabled: fakturStatus
+                            }
+                        }
+                    />
                 </div>
                 <div className="flex gap-x-2">
                     <FormInputWithLabel

@@ -33,10 +33,10 @@ const RiwayatTransaksiPengembalianDendaPembelianBarang = ({
     const _saveRincianPengembalianDendaPembelianBarang = async () => {
         for (let index = 0; index < listPengembalianDendaPembelianBarang.length; index++) {
             await apiRincianPengembalianDendaPembelianBarangCRUD
-                .custom(`${listPengembalianDendaPembelianBarang[index].rincian_pengembalian_denda_Pembelian_barang ? `/${listPengembalianDendaPembelianBarang[index].rincian_pengembalian_denda_Pembelian_barang}` : ""}`, listPengembalianDendaPembelianBarang[index].rincian_pengembalian_denda_Pembelian_barang ? "PUT" : "POST", null, {
+                .custom(`${listPengembalianDendaPembelianBarang[index].rincian_pengembalian_denda_pembelian_barang ? `/${listPengembalianDendaPembelianBarang[index].rincian_pengembalian_denda_pembelian_barang}` : ""}`, listPengembalianDendaPembelianBarang[index].rincian_pengembalian_denda_pembelian_barang ? "PUT" : "POST", null, {
                     data: {
-                        pengembalian_denda_Pembelian_barang: riwayatPengembalianDendaPembelianBarang.uuid,
-                        rincian_pesanan_Pembelian_barang: listPengembalianDendaPembelianBarang[index].uuid,
+                        pengembalian_denda_pembelian_barang: riwayatPengembalianDendaPembelianBarang.uuid,
+                        rincian_pesanan_pembelian_barang: listPengembalianDendaPembelianBarang[index].uuid,
                         denda_yang_dikembalikan: `${listPengembalianDendaPembelianBarang[index].denda_yang_dikembalikan}`,
                     }
                 })
@@ -59,10 +59,10 @@ const RiwayatTransaksiPengembalianDendaPembelianBarang = ({
             apiPengembalianDendaPembelianBarangCRUD
                 .custom("/" + riwayatPengembalianDendaPembelianBarang.uuid, "PUT", null, {
                     data: {
-                        nomor_pengembalian_denda_Pembelian_barang: nomorPengembalianDendaPembelianBarang,
+                        nomor_pengembalian_denda_pembelian_barang: nomorPengembalianDendaPembelianBarang,
                         bukti_transaksi: buktiTransaksiPengembalianDendaPembelianBarang,
                         keterangan: keteranganPengembalianDendaPembelianBarang,
-                        faktur_Pembelian_barang: riwayatPengembalianDendaPembelianBarang.faktur_Pembelian_barang,
+                        faktur_pembelian_barang: riwayatPengembalianDendaPembelianBarang.faktur_pembelian_barang,
                         tanggal: riwayatPengembalianDendaPembelianBarang.tanggal,
                         kode_akun_perkiraan: riwayatPengembalianDendaPembelianBarang.kode_akun_perkiraan,
                     }
@@ -110,7 +110,7 @@ const RiwayatTransaksiPengembalianDendaPembelianBarang = ({
                                         {
                                             edited ? <FormInput
                                                 addClass={"px-0"}
-                                                name={"nomor_pengembalian_denda_Pembelian_barang"}
+                                                name={"nomor_pengembalian_denda_pembelian_barang"}
                                                 value={nomorPengembalianDendaPembelianBarang}
                                                 onchange={(e) => setNomorPengembalianDendaPembelianBarang(e.target.value)}
                                             /> : riwayatPengembalianDendaPembelianBarang.nomor_transaksi

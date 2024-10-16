@@ -24,10 +24,10 @@ const PelunasanPembelianBarangForm = ({
             apiPelunasanPembelianBarangCRUD
                 .custom("", "POST", null, {
                     data: {
-                        faktur_Pembelian_barang: fakturPembelianBarang.uuid,
+                        faktur_pembelian_barang: fakturPembelianBarang.uuid,
                         tanggal: tanggalPelunasanPembelianBarang,
                         bukti_transaksi: buktiTransaksi,
-                        nomor_pelunasan_Pembelian_barang: nomorPalunasanPembelianBarang,
+                        nomor_pelunasan_pembelian_barang: nomorPalunasanPembelianBarang,
                         kode_akun_perkiraan: kodeAkunPelunasanPembelianBarang.value,
                         keterangan: keteranganPelunasanPembelianBarang
                     }

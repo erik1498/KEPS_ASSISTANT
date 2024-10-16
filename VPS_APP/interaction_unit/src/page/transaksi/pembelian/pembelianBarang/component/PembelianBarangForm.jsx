@@ -8,22 +8,22 @@ import PesananPembelianBarangList from "./PembelianBarangList"
 import Pagination from "../../../../../component/general/Pagination"
 import FormInput from "../../../../../component/form/FormInput"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
-// import FakturPembelianBarangForm from "./FakturPembelianBarangForm"
+import FakturPembelianBarangForm from "./FakturPembelianBarangForm"
 
 const PembelianBarangForm = ({
     setAddPembelianBarang = () => { }
 }) => {
     const [tanggalTransaksiAkhir, setTanggalTransaksiAkhir] = useState(getHariTanggalFull())
     const [fakturStatus, setFakturStatus] = useState(false)
-    const [ppnStatus, setPPNStatus] = useState(false)
+    const [ppnStatus, setPPNStatus] = useState(true)
     const [pilihPesananPembelianBarang, setPilihPesananPembelianBarang] = useState(false)
     const [pesananPembelianBarangListData, setPesananPembelianBarangListData] = useState([])
     const [pesananPembelianBarangSelected, setPesananPembelianBarangSelected] = useState(true)
 
-    const [SupplierList, setSupplierList] = useState([])
+    const [supplierList, setSupplierList] = useState([])
     const [nomorPesananPembelianBarang, setNomorPesananPembelianBarang] = useState("")
     const [tanggalPesananPembelianBarang, setTanggalPesananPembelianBarang] = useState(getHariTanggalFull())
-    const [Supplier, setSupplier] = useState()
+    const [supplier, setSupplier] = useState()
 
     const [searchStatus, setSearchStatus] = useState(false)
     const [search, setSearch] = useState("")
@@ -75,7 +75,7 @@ const PembelianBarangForm = ({
                     data: {
                         nomor_pesanan_pembelian_barang: nomorPesananPembelianBarang,
                         tanggal_pesanan_pembelian_barang: tanggalPesananPembelianBarang,
-                        supplier: Supplier.uuid
+                        supplier: supplier.uuid
                     }
                 }).then(resData => {
                     if (pesananPembelianBarangSelected) {
@@ -92,7 +92,7 @@ const PembelianBarangForm = ({
         if (pesananPembelianBarangSelected) {
             const pesananPembelianBarangSelectedGet = pesananPembelianBarangListData.filter(x => x.uuid == pesananPembelianBarangSelected.value)
             if (pesananPembelianBarangSelectedGet.length > 0) {
-                const SupplierGet = SupplierList.filter(x => x.uuid == pesananPembelianBarangSelectedGet[0].supplier)
+                const SupplierGet = supplierList.filter(x => x.uuid == pesananPembelianBarangSelectedGet[0].supplier)
                 if (SupplierGet.length > 0) {
                     setSupplier(x => x = SupplierGet[0])
                     setTanggalPesananPembelianBarang(pesananPembelianBarangSelectedGet[0].tanggal_pesanan_pembelian_barang)
@@ -204,30 +204,30 @@ const PembelianBarangForm = ({
                         />
                     </div>
                     {
-                        Supplier ? <>
+                        supplier ? <>
                             <div className="mt-5 relative px-1">
-                                <p className="font-bold text-sm mb-3">Supplier Terpilih</p>
-                                <p className="text-xl font-bold">{Supplier.code} - {Supplier.name}</p>
+                                <p className="font-bold text-sm mb-3">supplier Terpilih</p>
+                                <p className="text-xl font-bold">{supplier.code} - {supplier.name}</p>
                                 <div className="mt-3 flex gap-x-10">
                                     <div>
                                         <p className="text-xs font-bold mb-1">Alamat Rumah</p>
-                                        <p className="text-sm">{Supplier.alamat_rumah}</p>
+                                        <p className="text-sm">{supplier.alamat_rumah}</p>
                                     </div>
                                     <div>
                                         <p className="text-xs font-bold mb-1">Alamat Kantor</p>
-                                        <p className="text-sm">{Supplier.alamat_kantor}</p>
+                                        <p className="text-sm">{supplier.alamat_kantor}</p>
                                     </div>
                                     <div>
                                         <p className="text-xs font-bold mb-1">NPWP</p>
-                                        <p className="text-sm">{Supplier.npwp}</p>
+                                        <p className="text-sm">{supplier.npwp}</p>
                                     </div>
                                     <div>
                                         <p className="text-xs font-bold mb-1">Nomor Telepon</p>
-                                        <p className="text-sm">{Supplier.no_telp}</p>
+                                        <p className="text-sm">{supplier.no_telp}</p>
                                     </div>
                                     <div>
                                         <p className="text-xs font-bold mb-1">Nomor Handphone</p>
-                                        <p className="text-sm">{Supplier.no_hp}</p>
+                                        <p className="text-sm">{supplier.no_hp}</p>
                                     </div>
                                 </div>
                                 {
@@ -247,7 +247,7 @@ const PembelianBarangForm = ({
                         </> : <></>
                     }
                     {
-                        Supplier ? <>
+                        supplier ? <>
                             {
                                 pesananPembelianBarang ? <>
                                     <button
@@ -270,14 +270,14 @@ const PembelianBarangForm = ({
                     }
                 </form>
                 {
-                    !Supplier ? <>
+                    !supplier ? <>
                         <div className="mt-5">
                             <div className="flex w-full items-center gap-x-2 mb-5">
                                 <FormInput
                                     value={search}
                                     onchange={e => setSearch(e.target.value)}
                                     other={{
-                                        placeholder: "Cari Supplier"
+                                        placeholder: "Cari supplier"
                                     }}
                                 />
                                 {
@@ -292,21 +292,19 @@ const PembelianBarangForm = ({
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
-                                        <th>Kode Supplier</th>
-                                        <th>Nama Supplier</th>
-                                        <th>Kode Harga</th>
+                                        <th>Kode supplier</th>
+                                        <th>Nama supplier</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        SupplierList?.map((item, i) => {
+                                        supplierList?.map((item, i) => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
                                                     <td width={400}>{item.code}</td>
                                                     <td width={400}>{item.name}</td>
-                                                    <td width={400}>Harga {item.kode_harga}</td>
                                                     <td>
                                                         <button
                                                             className="flex py-1 px-5 gap-x-2 items-center rounded-xl bg-green-800 text-white"
@@ -341,18 +339,17 @@ const PembelianBarangForm = ({
             pesananPembelianBarang ? <>
                 <PesananPembelianBarangList
                     pesananPembelianBarang={pesananPembelianBarang}
-                    Supplier={Supplier}
+                    supplier={supplier}
                     fakturStatus={fakturStatus}
-                    setPPNStatus={setPPNStatus}
                     tanggalTransaksiAkhir={tanggalTransaksiAkhir}
                 />
-                {/* <FakturPembelianBarangForm
+                <FakturPembelianBarangForm
                     pesananPembelianBarang={pesananPembelianBarang}
                     setFakturStatus={setFakturStatus}
                     fakturStatus={fakturStatus}
                     ppnStatus={ppnStatus}
                     setTanggalTransaksiAkhir={setTanggalTransaksiAkhir}
-                /> */}
+                />
             </> : <></>
         }
     </>

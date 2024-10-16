@@ -14,7 +14,7 @@ const FakturPenjualanBarangForm = ({
     ppnStatus,
     setTanggalTransaksiAkhir = () => { }
 }) => {
-    const [fakturPenjualanBarang, setFakturPnenjualanBarang] = useState()
+    const [fakturPenjualanBarang, setFakturPenjualanBarang] = useState()
     const [fakturCancel, setFakturCancel] = useState(true)
 
     const [tipePembayaranList, setTipePembayaranList] = useState([])
@@ -96,7 +96,7 @@ const FakturPenjualanBarangForm = ({
             .custom(`/pesanan_penjualan_barang/${pesananPenjualanBarang.uuid}`, "GET")
             .then(resData => {
                 if (resData.data) {
-                    setFakturPnenjualanBarang(x => x = resData.data)
+                    setFakturPenjualanBarang(x => x = resData.data)
                     setNomorFakturPenjualanBarang(x => x = resData.data.nomor_faktur_penjualan_barang)
                     setBuktiTransaksi(x => x = resData.data.bukti_transaksi)
                     setTanggalFakturPenjualanBarang(x => x = resData.data.tanggal)

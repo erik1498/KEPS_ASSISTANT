@@ -1,0 +1,71 @@
+import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { createRincianReturPembelianBarangRepo, deleteRincianReturPembelianBarangByUuidRepo, getAllRincianPesananPembelianBarangByReturPembelianRepo, getAllRincianReturPembelianBarangRepo, getRincianReturPembelianBarangByUuidRepo, updateRincianReturPembelianBarangByUuidRepo } from "./rincianReturPembelianBarang.repository.js"
+
+export const getAllRincianReturPembelianBarangService = async (query, req_identity) => {
+    LOGGER(logType.INFO, "Start getAllRincianReturPembelianBarangService", null, req_identity)
+
+    let { page, size, search } = query
+    page = page ? page : null
+    size = size ? size : null
+    if (size == "all") {
+        page = null
+        size = null
+    }
+    search = search ? search : ""
+    const pageNumber = (page - 1) * size
+
+    LOGGER(logType.INFO, "Pagination", {
+        pageNumber, size, search
+    }, req_identity)
+    
+    const rincianReturPembelianBarangs = await getAllRincianReturPembelianBarangRepo(pageNumber, size, search, req_identity)
+    return generatePaginationResponse(rincianReturPembelianBarangs.entry, rincianReturPembelianBarangs.count, rincianReturPembelianBarangs.pageNumber, rincianReturPembelianBarangs.size)
+}
+
+export const getAllRincianPesananPembelianBarangByReturPembelianService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getAllRincianPesananPembelianBarangByReturPembelianService [${uuid}]`, null, req_identity)
+    const rincianPesananPembelianBarang = await getAllRincianPesananPembelianBarangByReturPembelianRepo(uuid, req_identity)
+    return rincianPesananPembelianBarang
+}
+
+export const getRincianReturPembelianBarangByUuidService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getRincianReturPembelianBarangByUuidService [${uuid}]`, null, req_identity)
+    const rincianReturPembelianBarang = await getRincianReturPembelianBarangByUuidRepo(uuid, req_identity)
+
+    if (!rincianReturPembelianBarang) {
+        throw Error(JSON.stringify({
+            message: "Data Not Found",
+            prop: "error"
+        }))
+    }
+    return rincianReturPembelianBarang
+}
+
+export const createRincianReturPembelianBarangService = async (rincianReturPembelianBarangData, req_identity) => {
+    LOGGER(logType.INFO, `Start createRincianReturPembelianBarangService`, rincianReturPembelianBarangData, req_identity)
+    rincianReturPembelianBarangData.enabled = 1
+
+    const rincianReturPembelianBarang = await createRincianReturPembelianBarangRepo(rincianReturPembelianBarangData, req_identity)
+    return rincianReturPembelianBarang
+}
+
+export const deleteRincianReturPembelianBarangByUuidService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start deleteRincianReturPembelianBarangByUuidService [${uuid}]`, null, req_identity)
+    await getRincianReturPembelianBarangByUuidService(uuid, req_identity)
+    await deleteRincianReturPembelianBarangByUuidRepo(uuid, req_identity)
+    return true
+}
+
+export const updateRincianReturPembelianBarangByUuidService = async (uuid, rincianReturPembelianBarangData, req_identity, req_original_url, req_method) => {
+    LOGGER(logType.INFO, `Start updateRincianReturPembelianBarangByUuidService [${uuid}]`, rincianReturPembelianBarangData, req_identity)
+    const beforeData = await getRincianReturPembelianBarangByUuidService(uuid, req_identity)
+    const rincianReturPembelianBarang = await updateRincianReturPembelianBarangByUuidRepo(uuid, rincianReturPembelianBarangData, req_identity)
+
+    LOGGER_MONITOR(req_original_url, req_method, {
+        beforeData,
+        rincianReturPembelianBarangData
+    }, req_identity)
+
+    return rincianReturPembelianBarang
+}

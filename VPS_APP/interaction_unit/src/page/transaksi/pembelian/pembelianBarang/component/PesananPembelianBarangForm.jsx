@@ -13,17 +13,23 @@ const PesananPembelianBarangForm = ({
     pesananPembelianBarang,
     _getDataRincianDaftarPasananPembelian,
     kategoriHargaBarangList,
-    customer
+    supplier
 }) => {
+    const [useDiskon, setUseDiskon] = useState(false)
     const [gudangBarangList, setGudangBarangList] = useState([])
     const [kategoriHargaBarangSelected, setKategoriHargaBarangSelected] = useState()
 
     const [kategoriHargaBarang, setKategoriHargaBarang] = useState()
     const [gudangBarang, setGudangBarang] = useState()
     const [jumlah, setJumlah] = useState(0)
+    const [harga, setHarga] = useState(0)
+    const [ppn, setPPN] = useState(0)
+    const [diskonAngka, setDiskonAngka] = useState(0)
+    const [diskonPersentase, setDiskonPersentase] = useState(0)
+
+    const [totalAkhir, setTotalAkhir] = useState(0)
     const [ppnBarang, setPPNBarang] = useState(0)
     const [hargaBarang, setHargaBarang] = useState(0)
-    const [totalAkhir, setTotalAkhir] = useState(0)
 
     const _getDataDaftarGudangByKategoriHarga = () => {
         setGudangBarang(x => x = null)
@@ -50,8 +56,12 @@ const PesananPembelianBarangForm = ({
                         kategori_harga_barang: kategoriHargaBarang.value,
                         stok_awal_barang: gudangBarang.value,
                         jumlah: `${jumlah}`,
-                        harga: `${hargaBarang}`,
-                        ppn: `${ppnBarang}`,
+                        harga: `${harga}`,
+                        harga_setelah_diskon: `${hargaBarang}`,
+                        ppn: `${ppn}`,
+                        ppn_setelah_diskon: `${ppnBarang}`,
+                        diskon_angka: `${diskonAngka}`,
+                        diskon_persentase: `${diskonPersentase}`,
                         total_harga: `${totalAkhir}`
                     }
                 }).then(resData => {
@@ -60,12 +70,44 @@ const PesananPembelianBarangForm = ({
         }
     }
 
+
+    const _updateDiskonAngka = (e) => {
+        try {
+            const diskonAngka = (parseRupiahToFloat(e.target.value) * parseRupiahToFloat(harga)) / 100
+            setDiskonPersentase(e.target.value)
+            setDiskonAngka(x => x = parseToRupiahText(diskonAngka))
+        } catch (error) {
+            setDiskonAngka(x => x = 0)
+        }
+    }
+
+    const _updateDiskonPersentase = () => {
+        try {
+            const diskonPersentase = parseRupiahToFloat(diskonAngka) * 100 / parseRupiahToFloat(harga)
+            setDiskonPersentase(x => x = diskonPersentase)
+            _updateTotalAkhir()
+        } catch (error) {
+            setDiskonPersentase(x => x = 0)
+        }
+    }
+
+    useEffect(() => {
+        if (kategoriHargaBarangSelected) {
+            _updateDiskonPersentase()
+        }
+    }, [diskonAngka])
+
     const _updateTotalAkhir = () => {
         const jumlahFloat = parseRupiahToFloat(jumlah)
-        const hargaFloat = parseRupiahToFloat(hargaBarang)
-        const ppnFloat = parseRupiahToFloat(ppnBarang)
 
-        const total = (jumlahFloat * hargaFloat) + (ppnFloat * jumlahFloat)
+        const hargaBarangGet = parseRupiahToFloat(harga) - parseRupiahToFloat(diskonAngka)
+
+        setHargaBarang(x => x = hargaBarangGet)
+
+        const ppnBarangGet = kategoriHargaBarangSelected.ppn == 1 ? ((hargaBarangGet * PPN) / 100) : 0
+        setPPNBarang(x => x = ppnBarangGet)
+
+        const total = (jumlahFloat * hargaBarangGet) + (ppnBarangGet * jumlahFloat)
         setTotalAkhir(x => x = total)
     }
 
@@ -73,7 +115,7 @@ const PesananPembelianBarangForm = ({
         if (kategoriHargaBarangSelected) {
             _updateTotalAkhir()
         }
-    }, [jumlah, hargaBarang, ppnBarang])
+    }, [jumlah, harga, ppn])
 
     useEffect(() => {
         if (kategoriHargaBarang) {
@@ -81,8 +123,9 @@ const PesananPembelianBarangForm = ({
             const kategoriHargaBarangGet = kategoriHargaBarangList.filter(x => x.uuid == kategoriHargaBarang.value)
             if (kategoriHargaBarangGet.length > 0) {
                 setJumlah(x => x = 0)
-                setHargaBarang(x => x = 0)
-                setPPNBarang(x => x = 0)
+                setUseDiskon(x => x = 0)
+                setDiskonAngka(x => x = 0)
+                setDiskonPersentase(x => x = 0)
                 setKategoriHargaBarangSelected(kategoriHargaBarangGet[0])
             }
         }
@@ -131,7 +174,6 @@ const PesananPembelianBarangForm = ({
                         gudangBarang ? <>
                             <div className="flex gap-x-2">
                                 <FormInputWithLabel
-                                    addClassInput="w-full"
                                     label={"Jumlah"}
                                     type={"text"}
                                     onchange={(e) => {
@@ -146,36 +188,96 @@ const PesananPembelianBarangForm = ({
                                     }
                                 />
                                 <FormInputWithLabel
-                                    addClassInput="w-full"
-                                    label={"Harga Barang"}
+                                    label={"Harga"}
                                     type={"text"}
                                     onchange={(e) => {
                                         inputOnlyRupiah(e)
-                                        setHargaBarang(e.target.value)
+                                        setHarga(e.target.value)
                                     }}
                                     others={
                                         {
-                                            value: hargaBarang,
-                                            name: "hargaBarang",
+                                            value: harga,
+                                            name: "harga",
                                         }
                                     }
                                 />
                                 <FormInputWithLabel
-                                    addClassInput="w-full"
-                                    label={"PPN Barang"}
+                                    label={"PPN"}
                                     type={"text"}
                                     onchange={(e) => {
                                         inputOnlyRupiah(e)
-                                        setPPNBarang(e.target.value)
+                                        setPPN(e.target.value)
                                     }}
                                     others={
                                         {
-                                            value: ppnBarang,
-                                            name: "ppnBarang",
+                                            value: ppn,
+                                            name: "ppn",
                                         }
                                     }
                                 />
                             </div>
+                            <div className="mt-5">
+                                <ToggleBox
+                                    label="Gunakan Diskon ?"
+                                    setToggleBox={setUseDiskon}
+                                    toggleBox={useDiskon}
+                                    toggleBoxList={[
+                                        {
+                                            label: "Tidak",
+                                            value: 0
+                                        },
+                                        {
+                                            label: "Ya",
+                                            value: 1
+                                        },
+                                    ]}
+                                />
+                            </div>
+                            {
+                                useDiskon ? <>
+                                    <div className="mt-5 flex gap-x-2">
+                                        <FormInputWithLabel
+                                            label={"Diskon Angka"}
+                                            type={"text"}
+                                            onchange={(e) => {
+                                                inputOnlyRupiah(e)
+                                                setDiskonAngka(e.target.value)
+                                            }}
+                                            others={
+                                                {
+                                                    value: diskonAngka,
+                                                    name: "diskonAngka",
+                                                }
+                                            }
+                                        />
+                                        <FormInputWithLabel
+                                            label={"Diskon Persentase"}
+                                            type={"text"}
+                                            onchange={(e) => {
+                                                inputOnlyRupiah(e)
+                                                _updateDiskonAngka(e)
+                                            }}
+                                            others={
+                                                {
+                                                    value: diskonPersentase,
+                                                    name: "diskonPersentase",
+                                                }
+                                            }
+                                        />
+                                    </div>
+                                    <div className="mt-5 gap-x-2 px-1">
+                                        <p className="font-bold mt-2">Harga Setelah Diskon</p>
+                                        <p className="font-bold mt-2 text-xl">
+                                            Rp. {parseToRupiahText(hargaBarang)}
+                                        </p>
+                                        {
+                                            kategoriHargaBarangSelected.ppn == 1 ? <>
+                                                <p className="font-bold mb-5 mt-2">PPN Rp. {parseToRupiahText(ppnBarang)}</p>
+                                            </> : <></>
+                                        }
+                                    </div>
+                                </> : <></>
+                            }
                             <div className="mt-5 gap-x-2 px-1">
                                 <p className="font-bold text-sm">Total Harga</p>
                                 <p className="font-bold text-4xl">Rp. {parseToRupiahText(totalAkhir)}</p>
