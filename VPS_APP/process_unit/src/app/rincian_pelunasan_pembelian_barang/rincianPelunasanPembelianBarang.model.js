@@ -48,6 +48,13 @@ const RincianPelunasanPembelianBarangModel = db.define("rincian_pelunasan_pembel
                 notEmpty:true,
             }
         },
+        nilai_pelunasan_denda: {
+            type: DataTypes.DOUBLE,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
     }), {
     freezeTableName: true
 }

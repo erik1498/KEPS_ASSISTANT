@@ -18,34 +18,17 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
     const [keteranganPelunasanPembelianBarang, setKeteranganPelunasanPembelianBarang] = useState(riwayatPelunasanPembelianBarang.keterangan != "EMPTY" ? riwayatPelunasanPembelianBarang.keterangan : "Tidak Ada")
 
     const [totalPelunasan, setTotalPelunasan] = useState(riwayatPelunasanPembelianBarang.total)
-    const [dendaOpen, setDendaOpen] = useState(false)
+    const [totalPelunasanDenda, setTotalPelunasanDenda] = useState(riwayatPelunasanPembelianBarang.total_denda)
     const [listPelunasanPembelianBarang, setListPelunasanPembelianBarang] = useState([])
-    const [listPelunasanPembelianDendaBarang, setListPelunasanPembelianDendaBarang] = useState([])
 
     const [listRincian, setListRincian] = useState(false)
     const [detailOpen, setDetailOpen] = useState(edited)
-
-    const _cekDendaFakturPembelian = () => {
-        apiPelunasanPembelianBarangCRUD
-            .custom(`/cek_denda_pelunasan_pembelian/${riwayatPelunasanPembelianBarang.uuid}`, "GET")
-            .then(resData => {
-                setDendaOpen(x => x = resData.data)
-            }).catch(err => showError(err))
-    }
 
     const _getRincianPesananPembelianBarang = () => {
         apiRincianPelunasanPembelianBarangCRUD
             .custom(`/pesanan/${riwayatPelunasanPembelianBarang.uuid}`)
             .then(resData => {
                 setListPelunasanPembelianBarang(resData.data)
-            }).catch(err => showError(err))
-    }
-
-    const _getRincianPesananPembelianDendaBarang = () => {
-        apiRincianPelunasanPembelianDendaBarangCRUD
-            .custom(`/pesanan/${riwayatPelunasanPembelianBarang.uuid}`)
-            .then(resData => {
-                setListPelunasanPembelianDendaBarang(resData.data)
             }).catch(err => showError(err))
     }
 
@@ -65,36 +48,18 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
     }
 
     const _updateNilaiPelunasanDenda = (value, uuid) => {
-        let listPelunasanPembelianDendaBarangCopy = listPelunasanPembelianDendaBarang
+        let listPelunasanPembelianBarangCopy = listPelunasanPembelianBarang
 
-        let totalPelunasanCopy = 0
-        listPelunasanPembelianDendaBarangCopy = listPelunasanPembelianDendaBarangCopy.map(x => {
+        let totalPelunasanDendaCopy = 0
+        listPelunasanPembelianBarangCopy = listPelunasanPembelianBarangCopy.map(x => {
             if (x.uuid == uuid) {
-                x.nilai_pelunasan = value
+                x.nilai_pelunasan_denda = value
             }
-            totalPelunasanCopy += parseRupiahToFloat(x.nilai_pelunasan)
+            totalPelunasanDendaCopy += parseRupiahToFloat(x.nilai_pelunasan_denda)
             return x
         })
-        setTotalPelunasan(x => x = totalPelunasanCopy)
-        setListPelunasanPembelianDendaBarang(x => x = listPelunasanPembelianDendaBarangCopy)
-    }
-
-    const _saveRincianPelunasanPembelianDendaBarang = async () => {
-        for (let index = 0; index < listPelunasanPembelianDendaBarang.length; index++) {
-            await apiRincianPelunasanPembelianDendaBarangCRUD
-                .custom(`${listPelunasanPembelianDendaBarang[index].rincian_pelunasan_pembelian_denda_barang ? `/${listPelunasanPembelianDendaBarang[index].rincian_pelunasan_pembelian_denda_barang}` : ""}`, listPelunasanPembelianDendaBarang[index].rincian_pelunasan_pembelian_denda_barang ? "PUT" : "POST", null, {
-                    data: {
-                        pelunasan_pembelian_barang: riwayatPelunasanPembelianBarang.uuid,
-                        rincian_pesanan_pembelian_barang: listPelunasanPembelianDendaBarang[index].uuid,
-                        hari_terlewat: listPelunasanPembelianDendaBarang[index].hari_terlewat,
-                        total_denda: listPelunasanPembelianDendaBarang[index].total_denda,
-                        denda_sudah_dibayar: listPelunasanPembelianDendaBarang[index].denda_sudah_dibayar,
-                        piutang_denda: listPelunasanPembelianDendaBarang[index].total_denda - listPelunasanPembelianDendaBarang[index].denda_sudah_dibayar,
-                        nilai_pelunasan: `${listPelunasanPembelianDendaBarang[index].nilai_pelunasan}`,
-                    }
-                })
-        }
-        _getRincianPesananPembelianDendaBarang()
+        setTotalPelunasanDenda(x => x = totalPelunasanDendaCopy)
+        setListPelunasanPembelianBarang(x => x = listPelunasanPembelianBarangCopy)
     }
 
     const _saveRincianPelunasanPembelianBarang = async () => {
@@ -106,7 +71,8 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
                         rincian_pesanan_pembelian_barang: listPelunasanPembelianBarang[index].uuid,
                         sudah_dibayar: listPelunasanPembelianBarang[index].sudah_dibayar,
                         piutang: listPelunasanPembelianBarang[index].piutang,
-                        nilai_pelunasan: `${listPelunasanPembelianBarang[index].nilai_pelunasan}`
+                        nilai_pelunasan: `${listPelunasanPembelianBarang[index].nilai_pelunasan}`,
+                        nilai_pelunasan_denda: `${listPelunasanPembelianBarang[index].nilai_pelunasan_denda}`
                     }
                 })
         }
@@ -140,16 +106,8 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
     }
 
     useEffect(() => {
-        if (dendaOpen == 0) {
-            _getRincianPesananPembelianBarang()
-        } else {
-            _getRincianPesananPembelianDendaBarang()
-        }
-    }, [dendaOpen])
-
-    useEffect(() => {
         if (listRincian) {
-            _cekDendaFakturPembelian()
+            _getRincianPesananPembelianBarang()
         }
     }, [listRincian])
 
@@ -214,6 +172,11 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
                                     <td className={`px-5 ${edited ? "pb-3" : ""}`}>:</td>
                                     <td className={`${edited ? "pb-3" : ""}`}>Rp. {parseToRupiahText(totalPelunasan)}</td>
                                 </tr>
+                                <tr>
+                                    <td className={`${edited ? "pb-3" : ""}`}>Total Pelunasan Denda</td>
+                                    <td className={`px-5 ${edited ? "pb-3" : ""}`}>:</td>
+                                    <td className={`${edited ? "pb-3" : ""}`}>Rp. {parseToRupiahText(totalPelunasanDenda)}</td>
+                                </tr>
                             </table>
                             <p className={`text-sm mt-3 ${edited ? "mt-5" : ""}`}>Keterangan</p>
                             <p className="text-sm mb-3">
@@ -267,147 +230,90 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
                             </div>
                             {
                                 listRincian ? <>
+                                    <div className="overflow-x-auto mt-5 max-h-[20vh] no-scrollbar pb-4">
+                                        <table className="table table-sm table-zebra rounded-xl">
+                                            <thead className="bg-blue-950 z-10 text-white sticky top-0">
+                                                <th>No.</th>
+                                                <th>Kode Barang</th>
+                                                <th>Nama Barang</th>
+                                                <th>Satuan Barang</th>
+                                                <th>Gudang Asal</th>
+                                                <th>Pelunasan Sudah Dibayar</th>
+                                                <th>Piutang</th>
+                                                <th width={200}>Nilai Pelunasan</th>
+                                                <th width={200}>Nilai Pelunasan Denda</th>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    listPelunasanPembelianBarang.map((x, i) => {
+                                                        return <>
+                                                            <tr>
+                                                                <td>{i + 1}.</td>
+                                                                <td>{x.kategori_harga_barang_kode_barang}</td>
+                                                                <td>{x.daftar_barang_name}</td>
+                                                                <td>{x.satuan_barang_name}</td>
+                                                                <td>{x.daftar_gudang_name}</td>
+                                                                <td>Rp. {parseToRupiahText(x.sudah_dibayar)}</td>
+                                                                <td>Rp. {parseToRupiahText(x.piutang)}</td>
+                                                                <td>
+                                                                    {
+                                                                        edited ? <>
+                                                                            <FormInput
+                                                                                name={"nilai_pelunasan"}
+                                                                                type={"text"}
+                                                                                other={{
+                                                                                    defaultValue: 0
+                                                                                }}
+                                                                                onchange={(e) => {
+                                                                                    inputOnlyRupiah(e, x.piutang)
+                                                                                    _updateNilaiPelunasan(e.target.value, x.uuid)
+                                                                                }}
+                                                                                value={parseToRupiahText(x.nilai_pelunasan)}
+                                                                            />
+                                                                        </> : <>
+                                                                            Rp. {parseToRupiahText(x.nilai_pelunasan)}
+                                                                        </>
+                                                                    }
+                                                                </td>
+                                                                <td>
+                                                                    {
+                                                                        edited ? <>
+                                                                            <FormInput
+                                                                                name={"nilai_pelunasan_denda"}
+                                                                                type={"text"}
+                                                                                other={{
+                                                                                    defaultValue: 0
+                                                                                }}
+                                                                                onchange={(e) => {
+                                                                                    _updateNilaiPelunasanDenda(e.target.value, x.uuid)
+                                                                                }}
+                                                                                value={parseToRupiahText(x.nilai_pelunasan_denda)}
+                                                                            />
+                                                                        </> : <>
+                                                                            Rp. {parseToRupiahText(x.nilai_pelunasan_denda)}
+                                                                        </>
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        </>
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     {
-                                        dendaOpen == 1 ?
-                                            <>
-                                                <div className="overflow-x-auto mt-5 max-h-[20vh] no-scrollbar pb-4">
-                                                    <table className="table table-sm table-zebra rounded-xl">
-                                                        <thead className="bg-blue-950 z-10 text-white sticky top-0">
-                                                            <th>No.</th>
-                                                            <th>Kode Barang</th>
-                                                            <th>Nama Barang</th>
-                                                            <th>Satuan Barang</th>
-                                                            <th>Gudang Asal</th>
-                                                            <th>Hari Terlewat</th>
-                                                            <th>Total Denda</th>
-                                                            <th>Denda Sudah Dibayar</th>
-                                                            <th>Piutang Denda</th>
-                                                            <th width={200}>Nilai Pelunasan</th>
-                                                        </thead>
-                                                        <tbody>
-                                                            {
-                                                                listPelunasanPembelianDendaBarang.map((x, i) => {
-                                                                    return <>
-                                                                        <tr>
-                                                                            <td>{i + 1}.</td>
-                                                                            <td>{x.kategori_harga_barang_kode_barang}</td>
-                                                                            <td>{x.daftar_barang_name}</td>
-                                                                            <td>{x.satuan_barang_name}</td>
-                                                                            <td>{x.daftar_gudang_name}</td>
-                                                                            <td>{x.hari_terlewat} Hari</td>
-                                                                            <td>Rp. {parseToRupiahText(x.total_denda)}</td>
-                                                                            <td>Rp. {parseToRupiahText(x.denda_sudah_dibayar)}</td>
-                                                                            <td>Rp. {parseToRupiahText((x.piutang_denda))}</td>
-                                                                            <td>
-                                                                                {
-                                                                                    edited ? <>
-                                                                                        <FormInput
-                                                                                            name={"nilai_pelunasan"}
-                                                                                            type={"text"}
-                                                                                            other={{
-                                                                                                defaultValue: 0
-                                                                                            }}
-                                                                                            onchange={(e) => {
-                                                                                                inputOnlyRupiah(e, x.piutang_denda)
-                                                                                                _updateNilaiPelunasanDenda(e.target.value, x.uuid)
-                                                                                            }}
-                                                                                            value={parseToRupiahText(x.nilai_pelunasan)}
-                                                                                        />
-                                                                                    </> : <>
-                                                                                        Rp. {parseToRupiahText(x.nilai_pelunasan)}
-                                                                                    </>
-                                                                                }
-                                                                            </td>
-                                                                        </tr>
-                                                                    </>
-                                                                })
-                                                            }
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                {
-                                                    edited ? <>
-                                                        <div className="flex justify-end">
-                                                            <button
-                                                                className="btn btn-sm bg-green-900 text-white"
-                                                                onClick={() => {
-                                                                    _saveRincianPelunasanPembelianDendaBarang()
-                                                                }}
-                                                            >
-                                                                Simpan
-                                                            </button>
-                                                        </div>
-                                                    </> : <></>
-                                                }
-                                            </>
-                                            :
-                                            <>
-                                                <div className="overflow-x-auto mt-5 max-h-[20vh] no-scrollbar pb-4">
-                                                    <table className="table table-sm table-zebra rounded-xl">
-                                                        <thead className="bg-blue-950 z-10 text-white sticky top-0">
-                                                            <th>No.</th>
-                                                            <th>Kode Barang</th>
-                                                            <th>Nama Barang</th>
-                                                            <th>Satuan Barang</th>
-                                                            <th>Gudang Asal</th>
-                                                            <th>Pelunasan Sudah Dibayar</th>
-                                                            <th>Piutang</th>
-                                                            <th width={200}>Nilai Pelunasan</th>
-                                                        </thead>
-                                                        <tbody>
-                                                            {
-                                                                listPelunasanPembelianBarang.map((x, i) => {
-                                                                    return <>
-                                                                        <tr>
-                                                                            <td>{i + 1}.</td>
-                                                                            <td>{x.kategori_harga_barang_kode_barang}</td>
-                                                                            <td>{x.daftar_barang_name}</td>
-                                                                            <td>{x.satuan_barang_name}</td>
-                                                                            <td>{x.daftar_gudang_name}</td>
-                                                                            <td>Rp. {parseToRupiahText(x.sudah_dibayar)}</td>
-                                                                            <td>Rp. {parseToRupiahText(x.piutang)}</td>
-                                                                            <td>
-                                                                                {
-                                                                                    edited ? <>
-                                                                                        <FormInput
-                                                                                            name={"nilai_pelunasan"}
-                                                                                            type={"text"}
-                                                                                            other={{
-                                                                                                defaultValue: 0
-                                                                                            }}
-                                                                                            onchange={(e) => {
-                                                                                                inputOnlyRupiah(e, x.piutang)
-                                                                                                _updateNilaiPelunasan(e.target.value, x.uuid)
-                                                                                            }}
-                                                                                            value={parseToRupiahText(x.nilai_pelunasan)}
-                                                                                        />
-                                                                                    </> : <>
-                                                                                        Rp. {parseToRupiahText(x.nilai_pelunasan)}
-                                                                                    </>
-                                                                                }
-                                                                            </td>
-                                                                        </tr>
-                                                                    </>
-                                                                })
-                                                            }
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                {
-                                                    edited ? <>
-                                                        <div className="flex justify-end">
-                                                            <button
-                                                                className="btn btn-sm bg-green-900 text-white"
-                                                                onClick={() => {
-                                                                    _saveRincianPelunasanPembelianBarang()
-                                                                }}
-                                                            >
-                                                                Simpan
-                                                            </button>
-                                                        </div>
-                                                    </> : <></>
-                                                }
-                                            </>
+                                        edited ? <>
+                                            <div className="flex justify-end">
+                                                <button
+                                                    className="btn btn-sm bg-green-900 text-white"
+                                                    onClick={() => {
+                                                        _saveRincianPelunasanPembelianBarang()
+                                                    }}
+                                                >
+                                                    Simpan
+                                                </button>
+                                            </div>
+                                        </> : <></>
                                     }
                                 </> : <></>
                             }

@@ -84,7 +84,6 @@ import { getRincianPesananPembelianBarangRoute } from "../app/rincian_pesanan_pe
 import { getFakturPembelianBarangRoute } from "../app/faktur_pembelian_barang/fakturPembelianBarang.route.js";
 import { getPelunasanPembelianBarangRoute } from "../app/pelunasan_pembelian_barang/pelunasanPembelianBarang.route.js";
 import { getRincianPelunasanPembelianBarangRoute } from "../app/rincian_pelunasan_pembelian_barang/rincianPelunasanPembelianBarang.route.js";
-import { getRincianPelunasanPembelianDendaBarangRoute } from "../app/rincian_pelunasan_pembelian_denda_barang/rincianPelunasanPembelianDendaBarang.route.js";
 import { getReturPembelianBarangRoute } from "../app/retur_pembelian_barang/returPembelianBarang.route.js";
 import { getRincianReturPembelianBarangRoute } from "../app/rincian_retur_pembelian_barang/rincianReturPembelianBarang.route.js";
 import { getPengembalianDendaPembelianBarangRoute } from "../app/pengembalian_denda_pembelian_barang/pengembalianDendaPembelianBarang.route.js";
@@ -178,7 +177,6 @@ export const routerList = new Array()
         getFakturPembelianBarangRoute(),
         getPelunasanPembelianBarangRoute(),
         getRincianPelunasanPembelianBarangRoute(),
-        getRincianPelunasanPembelianDendaBarangRoute(),
         getReturPembelianBarangRoute(),
         getRincianReturPembelianBarangRoute(),
         getPengembalianDendaPembelianBarangRoute(),

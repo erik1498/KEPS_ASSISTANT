@@ -101,6 +101,17 @@ export const getAllRincianPesananPembelianBarangByPelunasanPembelianRepo = async
                             AND rppbt2.rincian_pesanan_pembelian_barang = rppbt.uuid
                         ), 0) AS nilai_pelunasan,` : 
                     ``}
+                    ${!tanggal ? `
+                        IFNULL((
+                            SELECT 
+                                rppbt2.nilai_pelunasan_denda 
+                            FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_barang_tab rppbt2 
+                            JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pelunasan_pembelian_barang 
+                            WHERE ppbt2.uuid = "${uuid}"
+                            AND ppbt2.enabled = 1
+                            AND rppbt2.rincian_pesanan_pembelian_barang = rppbt.uuid
+                        ), 0) AS nilai_pelunasan_denda,` : 
+                    ``}
                     rppbt.uuid, 
                     khbt.kode_barang AS kategori_harga_barang_kode_barang,
                     dbt.name AS daftar_barang_name,
@@ -148,7 +159,7 @@ export const getRincianPelunasanPembelianBarangByUuidRepo = async (uuid, req_id)
 
 export const createRincianPelunasanPembelianBarangRepo = async (rincianPelunasanPembelianBarangData, req_id) => {
     rincianPelunasanPembelianBarangData = removeDotInRupiahInput(rincianPelunasanPembelianBarangData, [
-        "nilai_pelunasan"
+        "nilai_pelunasan", "nilai_pelunasan_denda"
     ])
     return insertQueryUtil(
         req_id,
@@ -160,6 +171,7 @@ export const createRincianPelunasanPembelianBarangRepo = async (rincianPelunasan
             sudah_dibayar: rincianPelunasanPembelianBarangData.sudah_dibayar,
             piutang: rincianPelunasanPembelianBarangData.piutang,
             nilai_pelunasan: rincianPelunasanPembelianBarangData.nilai_pelunasan,
+            nilai_pelunasan_denda: rincianPelunasanPembelianBarangData.nilai_pelunasan_denda,
             enabled: rincianPelunasanPembelianBarangData.enabled
         }
     )
@@ -181,7 +193,7 @@ export const deleteRincianPelunasanPembelianBarangByUuidRepo = async (uuid, req_
 
 export const updateRincianPelunasanPembelianBarangByUuidRepo = async (uuid, rincianPelunasanPembelianBarangData, req_id) => {
     rincianPelunasanPembelianBarangData = removeDotInRupiahInput(rincianPelunasanPembelianBarangData, [
-        "nilai_pelunasan"
+        "nilai_pelunasan", "nilai_pelunasan_denda"
     ])
     return updateQueryUtil(
         req_id,
@@ -193,6 +205,7 @@ export const updateRincianPelunasanPembelianBarangByUuidRepo = async (uuid, rinc
             sudah_dibayar: rincianPelunasanPembelianBarangData.sudah_dibayar,
             piutang: rincianPelunasanPembelianBarangData.piutang,
             nilai_pelunasan: rincianPelunasanPembelianBarangData.nilai_pelunasan,
+            nilai_pelunasan_denda: rincianPelunasanPembelianBarangData.nilai_pelunasan_denda,
         },
         {
             uuid

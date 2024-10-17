@@ -206,7 +206,7 @@ const PembelianBarangForm = ({
                     {
                         supplier ? <>
                             <div className="mt-5 relative px-1">
-                                <p className="font-bold text-sm mb-3">supplier Terpilih</p>
+                                <p className="font-bold text-sm mb-3">Supplier Terpilih</p>
                                 <p className="text-xl font-bold">{supplier.code} - {supplier.name}</p>
                                 <div className="mt-3 flex gap-x-10">
                                     <div>
@@ -292,8 +292,8 @@ const PembelianBarangForm = ({
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
-                                        <th>Kode supplier</th>
-                                        <th>Nama supplier</th>
+                                        <th>Kode Supplier</th>
+                                        <th>Nama Supplier</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>

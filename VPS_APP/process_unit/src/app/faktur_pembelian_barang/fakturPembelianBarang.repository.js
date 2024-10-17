@@ -50,15 +50,14 @@ export const getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo =
                         FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_barang_tab rppbt
                         WHERE rppbt.pelunasan_pembelian_barang = ppbt.uuid
                         AND rppbt.enabled = 1
-                    ), 0) 
-                    + 
+                    ), 0) AS total,
                     IFNULL((
                         SELECT 
-                            SUM(rppdbt.nilai_pelunasan)
-                        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_denda_barang_tab rppdbt
-                        WHERE rppdbt.pelunasan_pembelian_barang = ppbt.uuid
-                        AND rppdbt.enabled = 1
-                    ), 0) AS total,
+                            SUM(rppbt.nilai_pelunasan_denda)
+                        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_barang_tab rppbt
+                        WHERE rppbt.pelunasan_pembelian_barang = ppbt.uuid
+                        AND rppbt.enabled = 1
+                    ), 0) AS total_denda,
                     "pelunasan_pembelian_barang" AS type
                 FROM ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt 
                 JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppbt.kode_akun_perkiraan 
@@ -81,6 +80,7 @@ export const getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo =
                         WHERE rrpbt.retur_pembelian_barang = rpbt.uuid
                         AND rrpbt.enabled = 1
                     ), 0)AS total,
+                    0 AS total_denda,
                     "retur_pembelian_barang" AS type
                 FROM ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt 
                 JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = rpbt.kode_akun_perkiraan 
@@ -97,6 +97,7 @@ export const getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo =
                     pdpbt.kode_akun_perkiraan AS kode_akun_perkiraan,
                     kapt.name AS kode_akun_perkiraan_name,
                     0 AS total,
+                    0 AS total_denda,
                     "pengembalian_denda_pembelian_barang" AS type
                 FROM ${generateDatabaseName(req_id)}.pengembalian_denda_pembelian_barang_tab pdpbt 
                 JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = pdpbt.kode_akun_perkiraan 

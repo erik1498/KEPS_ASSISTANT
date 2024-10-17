@@ -32,23 +32,31 @@ const RiwayatTransaksiReturPembelianBarang = ({
             }).catch(err => showError(err))
     }
 
+
     const _updateNilaiRetur = (value, uuid) => {
         let listReturPembelianBarangCopy = listReturPembelianBarang
 
         let totalReturCopy = 0
         listReturPembelianBarangCopy = listReturPembelianBarangCopy.map(x => {
             if (x.uuid == uuid) {
-                x.retur = value
-                x.nilai_retur = (x.harga_setelah_diskon + x.ppn_setelah_diskon) * parseRupiahToFloat(value)
-
-                if (x.nilai_retur > x.sudah_dibayar_fix) {
-                    x.nilai_retur = x.sudah_dibayar_fix
-                }
+                x.nilai_retur = value
             }
             totalReturCopy += parseRupiahToFloat(x.nilai_retur)
             return x
         })
         setTotalRetur(x => x = totalReturCopy)
+        setListReturPembelianBarang(x => x = listReturPembelianBarangCopy)
+    }
+
+    const _updateRetur = (value, uuid) => {
+        let listReturPembelianBarangCopy = listReturPembelianBarang
+
+        listReturPembelianBarangCopy = listReturPembelianBarangCopy.map(x => {
+            if (x.uuid == uuid) {
+                x.retur = value
+            }
+            return x
+        })
         setListReturPembelianBarang(x => x = listReturPembelianBarangCopy)
     }
 
@@ -230,7 +238,7 @@ const RiwayatTransaksiReturPembelianBarang = ({
                                                 <th>Pelunasan Sudah Dibayar</th>
                                                 <th width={150}>Retur Sebelumnya</th>
                                                 <th width={150}>Retur</th>
-                                                <th>Nilai Retur</th>
+                                                <th width={150}>Nilai Retur</th>
                                             </thead>
                                             <tbody>
                                                 {
@@ -255,7 +263,7 @@ const RiwayatTransaksiReturPembelianBarang = ({
                                                                                 }}
                                                                                 onchange={(e) => {
                                                                                     inputOnlyRupiah(e, x.jumlah_fix)
-                                                                                    _updateNilaiRetur(e.target.value, x.uuid)
+                                                                                    _updateRetur(e.target.value, x.uuid)
                                                                                 }}
                                                                                 value={parseToRupiahText(x.retur)}
                                                                             />
@@ -264,7 +272,25 @@ const RiwayatTransaksiReturPembelianBarang = ({
                                                                         </>
                                                                     }
                                                                 </td>
-                                                                <td>Rp. {parseToRupiahText(x.nilai_retur)}</td>
+                                                                <td>
+                                                                    {
+                                                                        edited ? <>
+                                                                            <FormInput
+                                                                                name={"retur"}
+                                                                                type={"text"}
+                                                                                other={{
+                                                                                    defaultValue: 0
+                                                                                }}
+                                                                                onchange={(e) => {
+                                                                                    _updateNilaiRetur(e.target.value, x.uuid)
+                                                                                }}
+                                                                                value={parseToRupiahText(x.nilai_retur)}
+                                                                            />
+                                                                        </> : <>
+                                                                            Rp. {parseToRupiahText(x.nilai_retur)}
+                                                                        </>
+                                                                    }
+                                                                </td>
                                                             </tr>
                                                         </>
                                                     })

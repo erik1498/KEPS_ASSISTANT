@@ -5,6 +5,7 @@ import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 import { apiPengembalianDendaPembelianBarangCRUD, apiRincianPengembalianDendaPembelianBarangCRUD } from "../../../../../service/endPointList.api"
 import { deleteAllFormMessage, formValidation, showError } from "../../../../../helper/form.helper"
 import FormInput from "../../../../../component/form/FormInput"
+import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 
 const RiwayatTransaksiPengembalianDendaPembelianBarang = ({
     riwayatPengembalianDendaPembelianBarang,
@@ -19,7 +20,7 @@ const RiwayatTransaksiPengembalianDendaPembelianBarang = ({
     const [totalPengembalianDenda, setTotalPengembalianDenda] = useState(riwayatPengembalianDendaPembelianBarang.total)
     const [listPengembalianDendaPembelianBarang, setListPengembalianDendaPembelianBarang] = useState([])
 
-    const [listRincian, setListRincian] = useState(edited)
+    const [listRincian, setListRincian] = useState(false)
     const [detailOpen, setDetailOpen] = useState(edited)
 
     const _getRincianPengembalianDendaPembelianBarang = () => {
@@ -52,6 +53,21 @@ const RiwayatTransaksiPengembalianDendaPembelianBarang = ({
             }).catch(err => showError(err))
     }
 
+    const _updateDendaYangDikembalikan = (value, uuid) => {
+        let listPengembalianDendaPembelianBarangCopy = listPengembalianDendaPembelianBarang
+
+        let totalsetTotalPengembalianDendaCopy = 0
+        listPengembalianDendaPembelianBarangCopy = listPengembalianDendaPembelianBarangCopy.map(x => {
+            if (x.uuid == uuid) {
+                x.denda_yang_dikembalikan = value
+            }
+            totalsetTotalPengembalianDendaCopy += parseRupiahToFloat(x.denda_yang_dikembalikan)
+            return x
+        })
+        setTotalPengembalianDenda(x => x = totalsetTotalPengembalianDendaCopy)
+        setListPengembalianDendaPembelianBarang(x => x = listPengembalianDendaPembelianBarangCopy)
+    }
+
     const _updateRiwayatPengembalianDendaPembelian = async () => {
         await deleteAllFormMessage()
 
@@ -66,11 +82,7 @@ const RiwayatTransaksiPengembalianDendaPembelianBarang = ({
                         tanggal: riwayatPengembalianDendaPembelianBarang.tanggal,
                         kode_akun_perkiraan: riwayatPengembalianDendaPembelianBarang.kode_akun_perkiraan,
                     }
-                })
-                .then(() => {
-                    _saveRincianPengembalianDendaPembelianBarang()
-                })
-                .catch(err => showError(err))
+                }).catch(err => showError(err))
         }
     }
 
@@ -202,7 +214,7 @@ const RiwayatTransaksiPengembalianDendaPembelianBarang = ({
                                                 <th>Nama Barang</th>
                                                 <th>Satuan Barang</th>
                                                 <th>Gudang Asal</th>
-                                                <th>Denda Yang Dikembalikan</th>
+                                                <th width={200}>Denda Yang Dikembalikan</th>
                                             </thead>
                                             <tbody>
                                                 {
@@ -214,7 +226,26 @@ const RiwayatTransaksiPengembalianDendaPembelianBarang = ({
                                                                 <td>{x.daftar_barang_name}</td>
                                                                 <td>{x.satuan_barang_name}</td>
                                                                 <td>{x.daftar_gudang_name}</td>
-                                                                <td>Rp. {parseToRupiahText(x.denda_yang_dikembalikan)}</td>
+                                                                <td>
+                                                                    {
+                                                                        edited ? <>
+                                                                            <FormInput
+                                                                                name={"denda_yang_dikembalikan"}
+                                                                                type={"text"}
+                                                                                other={{
+                                                                                    defaultValue: 0
+                                                                                }}
+                                                                                onchange={(e) => {
+                                                                                    inputOnlyRupiah(e)
+                                                                                    _updateDendaYangDikembalikan(e.target.value, x.uuid)
+                                                                                }}
+                                                                                value={parseToRupiahText(x.denda_yang_dikembalikan)}
+                                                                            />
+                                                                        </> : <>
+                                                                            Rp. {parseToRupiahText(x.denda_yang_dikembalikan)}
+                                                                        </>
+                                                                    }
+                                                                </td>
                                                             </tr>
                                                         </>
                                                     })
@@ -222,6 +253,20 @@ const RiwayatTransaksiPengembalianDendaPembelianBarang = ({
                                             </tbody>
                                         </table>
                                     </div>
+                                    {
+                                        edited ? <>
+                                            <div className="flex justify-end">
+                                                <button
+                                                    className="btn btn-sm bg-green-900 text-white"
+                                                    onClick={() => {
+                                                        _saveRincianPengembalianDendaPembelianBarang()
+                                                    }}
+                                                >
+                                                    Simpan
+                                                </button>
+                                            </div>
+                                        </> : <></>
+                                    }
                                 </> : <></>
                             }
                         </> : <></>

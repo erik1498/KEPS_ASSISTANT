@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import RincianReturPembelianBarangModel from "./rincianReturPembelianBarang.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
 export const getAllRincianReturPembelianBarangRepo = async (pageNumber, size, search, req_id) => {
     const rincianReturPembelianBarangsCount = await db.query(
@@ -150,6 +151,9 @@ export const getRincianReturPembelianBarangByUuidRepo = async (uuid, req_id) => 
 }
 
 export const createRincianReturPembelianBarangRepo = async (rincianReturPembelianBarangData, req_id) => {
+    rincianReturPembelianBarangData = removeDotInRupiahInput(rincianReturPembelianBarangData, [
+        "retur", "nilai_retur"
+    ])
     return insertQueryUtil(
         req_id,
         generateDatabaseName(req_id),
@@ -184,6 +188,9 @@ export const deleteRincianReturPembelianBarangByUuidRepo = async (uuid, req_id) 
 }
 
 export const updateRincianReturPembelianBarangByUuidRepo = async (uuid, rincianReturPembelianBarangData, req_id) => {
+    rincianReturPembelianBarangData = removeDotInRupiahInput(rincianReturPembelianBarangData, [
+        "retur", "nilai_retur"
+    ])
     return updateQueryUtil(
         req_id,
         generateDatabaseName(req_id),

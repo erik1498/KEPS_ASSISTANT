@@ -98,7 +98,6 @@ export const getJumlahRincianTransaksiDendaOnTableByTanggalService = async (tabl
 export const getFakturPembelianBarangByPesananPembelianBarangUUIDService = async (pesanan_pembelian_barang_uuid, req_identity) => {
     LOGGER(logType.INFO, `Start getFakturPembelianBarangByPesananPembelianBarangUUIDService`, { pesanan_pembelian_barang_uuid }, req_identity)
     const fakturPembelianBarang = await getFakturPembelianBarangByPesananPembelianBarangUUIDRepo(pesanan_pembelian_barang_uuid, req_identity)
-    console.log("FAKTUR PEMBELIAN BARANG", fakturPembelianBarang)
     if (fakturPembelianBarang.length == 0) {
         throw new Error(JSON.stringify({
             message: "Data Not Found",

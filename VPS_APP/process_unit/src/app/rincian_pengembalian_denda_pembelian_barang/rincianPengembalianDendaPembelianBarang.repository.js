@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import RincianPengembalianDendaPembelianBarangModel from "./rincianPengembalianDendaPembelianBarang.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
 export const getAllRincianPengembalianDendaPembelianBarangRepo = async (pageNumber, size, search, req_id) => {
     const rincianPengembalianDendaPembelianBarangsCount = await db.query(
@@ -41,20 +42,12 @@ export const getRincianPengembalianDendaPembelianBarangByFakturPembelianBarangUU
                 dgt.name AS daftar_gudang_name,
                 IFNULL((
                     SELECT 
-                        ROUND(SUM((rrpbt.denda_sudah_dibayar / rrpbt.jumlah) * rrpbt.retur), 0) 
-                        - IFNULL((
-                            SELECT 
-                                SUM(rpdpbt.denda_yang_dikembalikan) 
-                            FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_pembelian_barang_tab rpdpbt 
-                            JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_pembelian_barang_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_pembelian_barang
-                            WHERE rpdpbt.rincian_pesanan_pembelian_barang = rrpbt.rincian_pesanan_pembelian_barang
-                            AND pdpbt.enabled = 1
-                            AND rpdpbt.enabled = 1
-                        ), 0) 
-                    FROM ${generateDatabaseName(req_id)}.rincian_retur_pembelian_barang_tab rrpbt 
-                    JOIN ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_pembelian_barang
-                    WHERE rpbt.enabled = 1
-                    AND rrpbt.rincian_pesanan_pembelian_barang = rppbt.uuid
+                        rpdpbt.denda_yang_dikembalikan 
+                    FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_pembelian_barang_tab rpdpbt 
+                    JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_pembelian_barang_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_pembelian_barang
+                    WHERE rpdpbt.enabled = 1
+                    AND pdpbt.enabled = 1
+                    AND rpdpbt.rincian_pesanan_pembelian_barang = rppbt.uuid 
                 ), 0) AS denda_yang_dikembalikan,
                 (
                     SELECT 
@@ -97,6 +90,9 @@ export const getRincianPengembalianDendaPembelianBarangByUuidRepo = async (uuid,
 }
 
 export const createRincianPengembalianDendaPembelianBarangRepo = async (rincianPengembalianDendaPembelianBarangData, req_id) => {
+    rincianPengembalianDendaPembelianBarangData = removeDotInRupiahInput(rincianPengembalianDendaPembelianBarangData, [
+        "denda_yang_dikembalikan"
+    ])
     return insertQueryUtil(
         req_id,
         generateDatabaseName(req_id),
@@ -125,6 +121,9 @@ export const deleteRincianPengembalianDendaPembelianBarangByUuidRepo = async (uu
 }
 
 export const updateRincianPengembalianDendaPembelianBarangByUuidRepo = async (uuid, rincianPengembalianDendaPembelianBarangData, req_id) => {
+    rincianPengembalianDendaPembelianBarangData = removeDotInRupiahInput(rincianPengembalianDendaPembelianBarangData, [
+        "denda_yang_dikembalikan"
+    ])
     return updateQueryUtil(
         req_id,
         generateDatabaseName(req_id),
