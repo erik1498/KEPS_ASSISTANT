@@ -6,7 +6,7 @@ import { formatDate, getHariTanggalFormated, getHariTanggalFull } from "../../..
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { FaSave } from "react-icons/fa"
-import { formValidation, showError } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import RiwayatTransaksiReturPembelianBarang from "./RiwayatTransaksiReturPembelianBarang"
 import RiwayatTransaksiPengembalianDendaPembelianBarang from "./RiwayatTransaksiPengembalianDendaPembelianBarang"
 
@@ -46,33 +46,38 @@ const RiwayatTransaksiPembelianBarang = ({
 
     const _saveRiwayatTransaksi = async (e) => {
         e.preventDefault()
-        if (await formValidation(e.target)) {
-            let apiCall = apiPelunasanPembelianBarangCRUD
+        if (riwayatTransaksi?.at(0)?.data?.at(0)?.bukti_transaksi != "EMPTY" && riwayatTransaksi?.at(0)?.data?.at(0)?.nomor_transaksi != "EMPTY") {
+            if (await formValidation(e.target)) {
+                let apiCall = apiPelunasanPembelianBarangCRUD
 
-            if (tipeTransaksi.value == "Retur") {
-                apiCall = apiReturPembelianBarangCRUD
+                if (tipeTransaksi.value == "Retur") {
+                    apiCall = apiReturPembelianBarangCRUD
+                }
+
+                if (tipeTransaksi.value == "Pengembalian_Denda") {
+                    apiCall = apiPengembalianDendaPembelianBarangCRUD
+                }
+
+                const data = {
+                    faktur_pembelian_barang: fakturPembelianBarang.uuid,
+                    tanggal: tanggal,
+                    bukti_transaksi: "EMPTY",
+                    kode_akun_perkiraan: kodeAkun.value,
+                    keterangan: "EMPTY"
+                }
+
+                data[`nomor_${tipeTransaksi.value.toLowerCase()}_pembelian_barang`] = "EMPTY"
+
+                apiCall.custom("", "POST", null, {
+                    data
+                }).then(() => {
+                    _getDaftarRiwayatTransaksi()
+                    setTanggal(getHariTanggalFull())
+                }).catch(err => showError(err))
             }
-
-            if (tipeTransaksi.value == "Pengembalian_Denda") {
-                apiCall = apiPengembalianDendaPembelianBarangCRUD
-            }
-
-            const data = {
-                faktur_pembelian_barang: fakturPembelianBarang.uuid,
-                tanggal: tanggal,
-                bukti_transaksi: "EMPTY",
-                kode_akun_perkiraan: kodeAkun.value,
-                keterangan: "EMPTY"
-            }
-
-            data[`nomor_${tipeTransaksi.value.toLowerCase()}_pembelian_barang`] = "EMPTY"
-
-            apiCall.custom("", "POST", null, {
-                data
-            }).then(() => {
-                _getDaftarRiwayatTransaksi()
-                setTanggal(getHariTanggalFull())
-            }).catch(err => showError(err))
+        }
+        else{
+            showAlert("Peringatan", "Riwayat Transaksi Terakhir Beberapa Data Masih Kosong")
         }
     }
 

@@ -46,33 +46,35 @@ const RiwayatTransaksiPenjualanJasa = ({
 
     const _saveRiwayatTransaksi = async (e) => {
         e.preventDefault()
-        if (await formValidation(e.target)) {
-            let apiCall = apiPelunasanPenjualanJasaCRUD
+        if (riwayatTransaksi?.at(0)?.data?.at(0)?.bukti_transaksi != "EMPTY" && riwayatTransaksi?.at(0)?.data?.at(0)?.nomor_transaksi != "EMPTY") {
+            if (await formValidation(e.target)) {
+                let apiCall = apiPelunasanPenjualanJasaCRUD
 
-            if (tipeTransaksi.value == "Retur") {
-                apiCall = apiReturPenjualanJasaCRUD
+                if (tipeTransaksi.value == "Retur") {
+                    apiCall = apiReturPenjualanJasaCRUD
+                }
+
+                if (tipeTransaksi.value == "Pengembalian_Denda") {
+                    apiCall = apiPengembalianDendaPenjualanJasaCRUD
+                }
+
+                const data = {
+                    faktur_penjualan_jasa: fakturPenjualanJasa.uuid,
+                    tanggal: tanggal,
+                    bukti_transaksi: "EMPTY",
+                    kode_akun_perkiraan: kodeAkun.value,
+                    keterangan: "EMPTY"
+                }
+
+                data[`nomor_${tipeTransaksi.value.toLowerCase()}_penjualan_jasa`] = "EMPTY"
+
+                apiCall.custom("", "POST", null, {
+                    data
+                }).then(() => {
+                    _getDaftarRiwayatTransaksi()
+                    setTanggal(getHariTanggalFull())
+                }).catch(err => showError(err))
             }
-
-            if (tipeTransaksi.value == "Pengembalian_Denda") {
-                apiCall = apiPengembalianDendaPenjualanJasaCRUD
-            }
-
-            const data = {
-                faktur_penjualan_jasa: fakturPenjualanJasa.uuid,
-                tanggal: tanggal,
-                bukti_transaksi: "EMPTY",
-                kode_akun_perkiraan: kodeAkun.value,
-                keterangan: "EMPTY"
-            }
-
-            data[`nomor_${tipeTransaksi.value.toLowerCase()}_penjualan_jasa`] = "EMPTY"
-
-            apiCall.custom("", "POST", null, {
-                data
-            }).then(() => {
-                _getDaftarRiwayatTransaksi()
-                setTanggal(getHariTanggalFull())
-            }).catch(err => showError(err))
         }
     }
 
