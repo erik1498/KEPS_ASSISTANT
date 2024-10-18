@@ -9,9 +9,10 @@ const PesananPembelianBarangList = ({
     pesananPembelianBarang,
     customer,
     fakturStatus,
-    tanggalTransaksiAkhir
+    tanggalTransaksiAkhir,
+    rincianPesananPembelianBarang,
+    setRincianPesananPembelianBarang = () => { }
 }) => {
-    const [rincianPesananPembelianBarang, setRincianPesananPembelianBarang] = useState([])
     const [kategoriHargaBarangList, setKategoriHargaBarangList] = useState([])
     const [listPesanan, setListPesanan] = useState(false)
     const [totalPiutang, setTotalPiutang] = useState(0)

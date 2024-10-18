@@ -4,16 +4,16 @@ import { showError } from "../../../../../helper/form.helper"
 import PesananPenjualanBarangForm from "./PesananPenjualanBarangForm"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { FaCheck, FaTimes, FaTrash } from "react-icons/fa"
-import { getHariTanggalFull } from "../../../../../helper/date.helper"
 
 const PesananPenjualanBarangList = ({
     pesananPenjualanBarang,
     customer,
     fakturStatus,
     setPPNStatus = () => { },
-    tanggalTransaksiAkhir
+    tanggalTransaksiAkhir,
+    rincianPesananPenjualanBarang,
+    setRincianPesananPenjualanBarang = () => { }
 }) => {
-    const [rincianPesananPenjualanBarang, setRincianPesananPenjualanBarang] = useState([])
     const [kategoriHargaBarangList, setKategoriHargaBarangList] = useState([])
     const [listPesanan, setListPesanan] = useState(false)
     const [totalPiutang, setTotalPiutang] = useState(0)

@@ -17,8 +17,10 @@ const PenjualanBarangForm = ({
     const [fakturStatus, setFakturStatus] = useState(false)
     const [ppnStatus, setPPNStatus] = useState(false)
     const [pilihPesananPenjualanBarang, setPilihPesananPenjualanBarang] = useState(false)
+    const [editNomorPesananPenjualan, setEditNomorPesananPenjualan] = useState(false)
     const [pesananPenjualanBarangListData, setPesananPenjualanBarangListData] = useState([])
     const [pesananPenjualanBarangSelected, setPesananPenjualanBarangSelected] = useState(true)
+    const [rincianPesananPenjualanBarang, setRincianPesananPenjualanBarang] = useState([])
 
     const [customerList, setCustomerList] = useState([])
     const [nomorPesananPenjualanBarang, setNomorPesananPenjualanBarang] = useState("")
@@ -67,6 +69,15 @@ const PenjualanBarangForm = ({
             })
     }
 
+    const _deletePesananPenjualan = () => {
+        apiPesananPenjualanBarangCRUD
+            .custom(`/${pesananPenjualanBarang.uuid}`, "DELETE")
+            .then(resData => {
+                setPesananPenjualanBarang(null)
+                _getAllPesananPenjualanBarang()
+            }).catch(err => showError(err))
+    }
+
     const _savePesananPenjualan = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
@@ -84,12 +95,16 @@ const PenjualanBarangForm = ({
                     } else {
                         setPesananPenjualanBarang(resData.data)
                     }
+                    setEditNomorPesananPenjualan(x => x = true)
                 })
         }
     }
 
     useEffect(() => {
         if (pesananPenjualanBarangSelected) {
+            setCustomer(x => x = null)
+            setTanggalPesananPenjualanBarang(x => x = getHariTanggalFull())
+            setNomorPesananPenjualanBarang(x => x = null)
             const pesananPenjualanBarangSelectedGet = pesananPenjualanBarangListData.filter(x => x.uuid == pesananPenjualanBarangSelected.value)
             if (pesananPenjualanBarangSelectedGet.length > 0) {
                 const customerGet = customerList.filter(x => x.uuid == pesananPenjualanBarangSelectedGet[0].customer)
@@ -102,19 +117,23 @@ const PenjualanBarangForm = ({
         }
     }, [pesananPenjualanBarangSelected])
 
+    const _getAllPesananPenjualanBarang = () => {
+        apiPesananPenjualanBarangCRUD
+            .custom("", "GET")
+            .then(resData => {
+                setPesananPenjualanBarangListData(x => x = resData.data.entry)
+                if (resData.data.entry.length > 0) {
+                    setPesananPenjualanBarangSelected(x => x = {
+                        label: resData.data.entry[0].nomor_pesanan_penjualan_barang,
+                        value: resData.data.entry[0].uuid
+                    })
+                }
+            }).catch(err => showError(err))
+    }
+
     useEffect(() => {
         if (pilihPesananPenjualanBarang) {
-            apiPesananPenjualanBarangCRUD
-                .custom("", "GET")
-                .then(resData => {
-                    setPesananPenjualanBarangListData(x => x = resData.data.entry)
-                    if (resData.data.entry.length > 0) {
-                        setPesananPenjualanBarangSelected(x => x = {
-                            label: resData.data.entry[0].nomor_pesanan_penjualan_barang,
-                            value: resData.data.entry[0].uuid
-                        })
-                    }
-                }).catch(err => showError(err))
+            _getAllPesananPenjualanBarang()
         } else {
             setNomorPesananPenjualanBarang(x => x = "")
             setPesananPenjualanBarangSelected(x => x = false)
@@ -153,8 +172,8 @@ const PenjualanBarangForm = ({
                                     <FormInputWithLabel
                                         label={"Nomor Pesanan Penjualan Barang"}
                                         type={"text"}
-                                        disabled={pesananPenjualanBarang}
-                                        addClassInput={pesananPenjualanBarang ? "border-none px-1" : ""}
+                                        disabled={pesananPenjualanBarang && editNomorPesananPenjualan}
+                                        addClassInput={pesananPenjualanBarang && editNomorPesananPenjualan ? "border-none px-1" : ""}
                                         onchange={(e) => {
                                             setNomorPesananPenjualanBarang(e.target.value)
                                         }}
@@ -162,14 +181,34 @@ const PenjualanBarangForm = ({
                                             {
                                                 value: nomorPesananPenjualanBarang,
                                                 name: "nomorPesananPenjualanBarang",
-                                                disabled: pesananPenjualanBarang
+                                                disabled: pesananPenjualanBarang && editNomorPesananPenjualan
                                             }
                                         }
                                     />
                                 </>
                             }
                             {
-                                pesananPenjualanBarang ? <></> : <>
+                                pesananPenjualanBarang ? <>
+                                    {
+                                        rincianPesananPenjualanBarang.length != 0 || fakturStatus ? <></> : <>
+                                            <button
+                                                type="button"
+                                                className={`btn btn-sm ${editNomorPesananPenjualan ? "bg-yellow-400 hover:bg-yellow-400" : ""}`}
+                                                onClick={() => {
+                                                    setEditNomorPesananPenjualan(x => x = !x)
+                                                }}
+                                            >
+                                                {editNomorPesananPenjualan ? <FaPen /> : <FaTimes />} {editNomorPesananPenjualan ? "Edit" : "Batal Edit"} Nomor Pesanan
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => _deletePesananPenjualan()}
+                                                className="btn btn-sm bg-red-700 text-white">
+                                                <FaTrash /> Hapus Nomor Pesanan
+                                            </button>
+                                        </>
+                                    }
+                                </> : <>
                                     <button
                                         type="button"
                                         className={`btn btn-sm ${pilihPesananPenjualanBarang ? "bg-red-900" : "bg-blue-900"} text-white border-none`} onClick={() => {
@@ -253,7 +292,7 @@ const PenjualanBarangForm = ({
                     {
                         customer ? <>
                             {
-                                pesananPenjualanBarang ? <>
+                                pesananPenjualanBarang && editNomorPesananPenjualan ? <>
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -342,13 +381,15 @@ const PenjualanBarangForm = ({
             </div>
         </div>
         {
-            pesananPenjualanBarang ? <>
+            pesananPenjualanBarang && editNomorPesananPenjualan ? <>
                 <PesananPenjualanBarangList
                     pesananPenjualanBarang={pesananPenjualanBarang}
                     customer={customer}
                     fakturStatus={fakturStatus}
                     setPPNStatus={setPPNStatus}
                     tanggalTransaksiAkhir={tanggalTransaksiAkhir}
+                    rincianPesananPenjualanBarang={rincianPesananPenjualanBarang}
+                    setRincianPesananPenjualanBarang={setRincianPesananPenjualanBarang}
                 />
                 <FakturPenjualanBarangForm
                     pesananPenjualanBarang={pesananPenjualanBarang}

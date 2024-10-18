@@ -17,8 +17,10 @@ const PenjualanJasaForm = ({
     const [fakturStatus, setFakturStatus] = useState(false)
     const [ppnStatus, setPPNStatus] = useState(false)
     const [pilihPesananPenjualanJasa, setPilihPesananPenjualanJasa] = useState(false)
+    const [editNomorPesananPenjualan, setEditNomorPesananPenjualan] = useState(false)
     const [pesananPenjualanJasaListData, setPesananPenjualanJasaListData] = useState([])
     const [pesananPenjualanJasaSelected, setPesananPenjualanJasaSelected] = useState(true)
+    const [rincianPesananPenjualanJasa, setRincianPesananPenjualanJasa] = useState([])
 
     const [customerList, setCustomerList] = useState([])
     const [nomorPesananPenjualanJasa, setNomorPesananPenjualanJasa] = useState("")
@@ -67,6 +69,15 @@ const PenjualanJasaForm = ({
             })
     }
 
+    const _deletePesananPenjualan = () => {
+        apiPesananPenjualanJasaCRUD
+            .custom(`/${pesananPenjualanJasa.uuid}`, "DELETE")
+            .then(resData => {
+                setPesananPenjualanJasa(null)
+                _getAllPesananPenjualanJasa()
+            }).catch(err => showError(err))
+    }
+
     const _savePesananPenjualan = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
@@ -84,12 +95,16 @@ const PenjualanJasaForm = ({
                     } else {
                         setPesananPenjualanJasa(resData.data)
                     }
+                    setEditNomorPesananPenjualan(x => x = true)
                 })
         }
     }
 
     useEffect(() => {
         if (pesananPenjualanJasaSelected) {
+            setCustomer(x => x = null)
+            setTanggalPesananPenjualanJasa(x => x = getHariTanggalFull())
+            setNomorPesananPenjualanJasa(x => x = null)
             const pesananPenjualanJasaSelectedGet = pesananPenjualanJasaListData.filter(x => x.uuid == pesananPenjualanJasaSelected.value)
             if (pesananPenjualanJasaSelectedGet.length > 0) {
                 const customerGet = customerList.filter(x => x.uuid == pesananPenjualanJasaSelectedGet[0].customer)
@@ -102,19 +117,23 @@ const PenjualanJasaForm = ({
         }
     }, [pesananPenjualanJasaSelected])
 
+    const _getAllPesananPenjualanJasa = () => {
+        apiPesananPenjualanJasaCRUD
+            .custom("", "GET")
+            .then(resData => {
+                setPesananPenjualanJasaListData(x => x = resData.data.entry)
+                if (resData.data.entry.length > 0) {
+                    setPesananPenjualanJasaSelected(x => x = {
+                        label: resData.data.entry[0].nomor_pesanan_penjualan_jasa,
+                        value: resData.data.entry[0].uuid
+                    })
+                }
+            }).catch(err => showError(err))
+    }
+
     useEffect(() => {
         if (pilihPesananPenjualanJasa) {
-            apiPesananPenjualanJasaCRUD
-                .custom("", "GET")
-                .then(resData => {
-                    setPesananPenjualanJasaListData(x => x = resData.data.entry)
-                    if (resData.data.entry.length > 0) {
-                        setPesananPenjualanJasaSelected(x => x = {
-                            label: resData.data.entry[0].nomor_pesanan_penjualan_jasa,
-                            value: resData.data.entry[0].uuid
-                        })
-                    }
-                }).catch(err => showError(err))
+            _getAllPesananPenjualanJasa()
         } else {
             setNomorPesananPenjualanJasa(x => x = "")
             setPesananPenjualanJasaSelected(x => x = false)
@@ -153,8 +172,8 @@ const PenjualanJasaForm = ({
                                     <FormInputWithLabel
                                         label={"Nomor Pesanan Penjualan Jasa"}
                                         type={"text"}
-                                        disabled={pesananPenjualanJasa}
-                                        addClassInput={pesananPenjualanJasa ? "border-none px-1" : ""}
+                                        disabled={pesananPenjualanJasa && editNomorPesananPenjualan}
+                                        addClassInput={pesananPenjualanJasa && editNomorPesananPenjualan ? "border-none px-1" : ""}
                                         onchange={(e) => {
                                             setNomorPesananPenjualanJasa(e.target.value)
                                         }}
@@ -162,14 +181,34 @@ const PenjualanJasaForm = ({
                                             {
                                                 value: nomorPesananPenjualanJasa,
                                                 name: "nomorPesananPenjualanJasa",
-                                                disabled: pesananPenjualanJasa
+                                                disabled: pesananPenjualanJasa && editNomorPesananPenjualan
                                             }
                                         }
                                     />
                                 </>
                             }
                             {
-                                pesananPenjualanJasa ? <></> : <>
+                                pesananPenjualanJasa ? <>
+                                    {
+                                        rincianPesananPenjualanJasa.length != 0 || fakturStatus ? <></> : <>
+                                            <button
+                                                type="button"
+                                                className={`btn btn-sm ${editNomorPesananPenjualan ? "bg-yellow-400 hover:bg-yellow-400" : ""}`}
+                                                onClick={() => {
+                                                    setEditNomorPesananPenjualan(x => x = !x)
+                                                }}
+                                            >
+                                                {editNomorPesananPenjualan ? <FaPen /> : <FaTimes />} {editNomorPesananPenjualan ? "Edit" : "Batal Edit"} Nomor Pesanan
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => _deletePesananPenjualan()}
+                                                className="btn btn-sm bg-red-700 text-white">
+                                                <FaTrash /> Hapus Nomor Pesanan
+                                            </button>
+                                        </>
+                                    }
+                                </> : <>
                                     <button
                                         type="button"
                                         className={`btn btn-sm ${pilihPesananPenjualanJasa ? "bg-red-900" : "bg-blue-900"} text-white border-none`} onClick={() => {
@@ -253,7 +292,7 @@ const PenjualanJasaForm = ({
                     {
                         customer ? <>
                             {
-                                pesananPenjualanJasa ? <>
+                                pesananPenjualanJasa && editNomorPesananPenjualan ? <>
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -342,13 +381,15 @@ const PenjualanJasaForm = ({
             </div>
         </div>
         {
-            pesananPenjualanJasa ? <>
+            pesananPenjualanJasa && editNomorPesananPenjualan ? <>
                 <PesananPenjualanJasaList
                     pesananPenjualanJasa={pesananPenjualanJasa}
                     customer={customer}
                     fakturStatus={fakturStatus}
                     setPPNStatus={setPPNStatus}
                     tanggalTransaksiAkhir={tanggalTransaksiAkhir}
+                    rincianPesananPenjualanJasa={rincianPesananPenjualanJasa}
+                    setRincianPesananPenjualanJasa={setRincianPesananPenjualanJasa}
                 />
                 <FakturPenjualanJasaForm
                     pesananPenjualanJasa={pesananPenjualanJasa}

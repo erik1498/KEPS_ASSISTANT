@@ -1,4 +1,4 @@
-import { FaCheck, FaSave, FaSearch, FaTimes } from "react-icons/fa"
+import { FaCheck, FaPen, FaSave, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
@@ -17,8 +17,10 @@ const PembelianBarangForm = ({
     const [fakturStatus, setFakturStatus] = useState(false)
     const [ppnStatus, setPPNStatus] = useState(true)
     const [pilihPesananPembelianBarang, setPilihPesananPembelianBarang] = useState(false)
+    const [editNomorPesananPembelian, setEditNomorPesananPembelian] = useState(false)
     const [pesananPembelianBarangListData, setPesananPembelianBarangListData] = useState([])
     const [pesananPembelianBarangSelected, setPesananPembelianBarangSelected] = useState(true)
+    const [rincianPesananPembelianBarang, setRincianPesananPembelianBarang] = useState([])
 
     const [supplierList, setSupplierList] = useState([])
     const [nomorPesananPembelianBarang, setNomorPesananPembelianBarang] = useState("")
@@ -67,6 +69,15 @@ const PembelianBarangForm = ({
             })
     }
 
+    const _deletePesananPembelian = () => {
+        apiPesananPembelianBarangCRUD
+            .custom(`/${pesananPembelianBarang.uuid}`, "DELETE")
+            .then(resData => {
+                setPesananPembelianBarang(null)
+                _getAllPesananPembelianBarang()
+            }).catch(err => showError(err))
+    }
+
     const _savePesananPembelian = async (e) => {
         e.preventDefault()
         if (await formValidation(e.target)) {
@@ -84,12 +95,16 @@ const PembelianBarangForm = ({
                     } else {
                         setPesananPembelianBarang(resData.data)
                     }
+                    setEditNomorPesananPembelian(x => x = true)
                 })
         }
     }
 
     useEffect(() => {
         if (pesananPembelianBarangSelected) {
+            setSupplier(x => x = null)
+            setTanggalPesananPembelianBarang(x => x = getHariTanggalFull())
+            setNomorPesananPembelianBarang(x => x = null)
             const pesananPembelianBarangSelectedGet = pesananPembelianBarangListData.filter(x => x.uuid == pesananPembelianBarangSelected.value)
             if (pesananPembelianBarangSelectedGet.length > 0) {
                 const SupplierGet = supplierList.filter(x => x.uuid == pesananPembelianBarangSelectedGet[0].supplier)
@@ -102,19 +117,24 @@ const PembelianBarangForm = ({
         }
     }, [pesananPembelianBarangSelected])
 
+    const _getAllPesananPembelianBarang = () => {
+        apiPesananPembelianBarangCRUD
+            .custom("", "GET")
+            .then(resData => {
+                setPesananPembelianBarangSelected(x => x = null)
+                setPesananPembelianBarangListData(x => x = resData.data.entry)
+                if (resData.data.entry.length > 0) {
+                    setPesananPembelianBarangSelected(x => x = {
+                        label: resData.data.entry[0].nomor_pesanan_pembelian_barang,
+                        value: resData.data.entry[0].uuid
+                    })
+                }
+            }).catch(err => showError(err))
+    }
+
     useEffect(() => {
         if (pilihPesananPembelianBarang) {
-            apiPesananPembelianBarangCRUD
-                .custom("", "GET")
-                .then(resData => {
-                    setPesananPembelianBarangListData(x => x = resData.data.entry)
-                    if (resData.data.entry.length > 0) {
-                        setPesananPembelianBarangSelected(x => x = {
-                            label: resData.data.entry[0].nomor_pesanan_pembelian_barang,
-                            value: resData.data.entry[0].uuid
-                        })
-                    }
-                }).catch(err => showError(err))
+            _getAllPesananPembelianBarang()
         } else {
             setNomorPesananPembelianBarang(x => x = "")
             setPesananPembelianBarangSelected(x => x = false)
@@ -153,8 +173,8 @@ const PembelianBarangForm = ({
                                     <FormInputWithLabel
                                         label={"Nomor Pesanan Pembelian Barang"}
                                         type={"text"}
-                                        disabled={pesananPembelianBarang}
-                                        addClassInput={pesananPembelianBarang ? "border-none px-1" : ""}
+                                        disabled={pesananPembelianBarang && editNomorPesananPembelian}
+                                        addClassInput={pesananPembelianBarang && editNomorPesananPembelian ? "border-none px-1" : ""}
                                         onchange={(e) => {
                                             setNomorPesananPembelianBarang(e.target.value)
                                         }}
@@ -162,14 +182,34 @@ const PembelianBarangForm = ({
                                             {
                                                 value: nomorPesananPembelianBarang,
                                                 name: "nomorPesananPembelianBarang",
-                                                disabled: pesananPembelianBarang
+                                                disabled: pesananPembelianBarang && editNomorPesananPembelian
                                             }
                                         }
                                     />
                                 </>
                             }
                             {
-                                pesananPembelianBarang ? <></> : <>
+                                pesananPembelianBarang ? <>
+                                    {
+                                        rincianPesananPembelianBarang.length != 0 || fakturStatus ? <></> : <>
+                                            <button
+                                                type="button"
+                                                className={`btn btn-sm ${editNomorPesananPembelian ? "bg-yellow-400 hover:bg-yellow-400" : ""}`}
+                                                onClick={() => {
+                                                    setEditNomorPesananPembelian(x => x = !x)
+                                                }}
+                                            >
+                                                {editNomorPesananPembelian ? <FaPen /> : <FaTimes />} {editNomorPesananPembelian ? "Edit" : "Batal Edit"} Nomor Pesanan
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => _deletePesananPembelian()}
+                                                className="btn btn-sm bg-red-700 text-white">
+                                                <FaTrash /> Hapus Nomor Pesanan
+                                            </button>
+                                        </>
+                                    }
+                                </> : <>
                                     <button
                                         type="button"
                                         className={`btn btn-sm ${pilihPesananPembelianBarang ? "bg-red-900" : "bg-blue-900"} text-white border-none`} onClick={() => {
@@ -249,7 +289,7 @@ const PembelianBarangForm = ({
                     {
                         supplier ? <>
                             {
-                                pesananPembelianBarang ? <>
+                                pesananPembelianBarang && editNomorPesananPembelian ? <>
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -336,12 +376,14 @@ const PembelianBarangForm = ({
             </div>
         </div>
         {
-            pesananPembelianBarang ? <>
+            pesananPembelianBarang && editNomorPesananPembelian ? <>
                 <PesananPembelianBarangList
                     pesananPembelianBarang={pesananPembelianBarang}
                     supplier={supplier}
                     fakturStatus={fakturStatus}
                     tanggalTransaksiAkhir={tanggalTransaksiAkhir}
+                    rincianPesananPembelianBarang={rincianPesananPembelianBarang}
+                    setRincianPesananPembelianBarang={setRincianPesananPembelianBarang}
                 />
                 <FakturPembelianBarangForm
                     pesananPembelianBarang={pesananPembelianBarang}
