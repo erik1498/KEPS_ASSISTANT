@@ -44,7 +44,10 @@ export const generateInstallerKey = async (data) => {
         os_info,
         perusahaan,
         createdAt, 
-        updatedAt
+        updatedAt,
+        jumlah_entry_data,
+        batas_entry_data,
+        end_date_akses 
     ) VALUES (
         NULL, 
         '${v4()}', 
@@ -99,7 +102,10 @@ export const generateInstallerKey = async (data) => {
         '${JSON.stringify(os_info)}',
         'PT. KLIEN NAME', 
         '${date.getFullYear()}-${date.getMonth() < 10 ? `0${date.getMonth()}` : `${date.getMonth()}`}-${date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`} ${date.getHours() < 10 ? `0${date.getHours()}` : `${date.getHours()}`}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : `${date.getMinutes()}`}:${date.getSeconds() < 10 ? `0${date.getSeconds()}` : `${date.getSeconds()}`}',
-        '${date.getFullYear()}-${date.getMonth() < 10 ? `0${date.getMonth()}` : `${date.getMonth()}`}-${date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`} ${date.getHours() < 10 ? `0${date.getHours()}` : `${date.getHours()}`}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : `${date.getMinutes()}`}:${date.getSeconds() < 10 ? `0${date.getSeconds()}` : `${date.getSeconds()}`}'
+        '${date.getFullYear()}-${date.getMonth() < 10 ? `0${date.getMonth()}` : `${date.getMonth()}`}-${date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`} ${date.getHours() < 10 ? `0${date.getHours()}` : `${date.getHours()}`}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : `${date.getMinutes()}`}:${date.getSeconds() < 10 ? `0${date.getSeconds()}` : `${date.getSeconds()}`}',
+        '0',
+        '0',
+        'UNLIMITED'
     )`)
 
     return {
