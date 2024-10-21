@@ -1,4 +1,4 @@
-import { FaCheck, FaSave, FaSearch, FaTimes } from "react-icons/fa"
+import { FaCheck, FaPen, FaSave, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
 import { getHariTanggalFull } from "../../../../../helper/date.helper"

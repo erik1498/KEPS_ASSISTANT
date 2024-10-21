@@ -50,6 +50,7 @@ import hitunganPenyusutanPath from './path/asetTetapDanPerlengkapan/penyusutan/h
 import penjualanBarangPath from './path/transaksi/penjualan/penjualanBarang.path';
 import penjualanJasaPath from './path/transaksi/penjualan/penjualanJasa.path';
 import pembelianBarangPath from './path/transaksi/pembelian/pembelianBarang.path';
+import transferBarangPath from './path/persediaan/barang/transferBarang.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -70,6 +71,7 @@ const CustomerPage = React.lazy(() => import('./page/perusahaan/customer/Custome
 const SupplierPage = React.lazy(() => import('./page/perusahaan/supplier/Supplier.page'))
 const PegawaiPage = React.lazy(() => import('./page/perusahaan/pegawai/Pegawai.page'))
 const SatuanBarangPage = React.lazy(() => import('./page/persediaan/barang/satuanBarang/SatuanBarang.page'))
+const TransferBarangPage = React.lazy(() => import('./page/persediaan/barang/transferBarang/TransferBarang.page'))
 const KategoriBarangPage = React.lazy(() => import('./page/persediaan/barang/kategoriBarang/KategoriBarang.page'))
 const JenisBarangPage = React.lazy(() => import('./page/persediaan/barang/jenisBarang/JenisBarang.page'))
 const JenisPenjualanBarangPage = React.lazy(() => import('./page/persediaan/barang/jenisPenjualanBarang/JenisPenjualanBarang.page'))
@@ -147,6 +149,9 @@ function App() {
         </Routes>
         <Routes basename={satuanBarangPath.main}>
           <Route path={satuanBarangPath.main} element={<SatuanBarangPage />} />
+        </Routes>
+        <Routes basename={transferBarangPath.main}>
+          <Route path={transferBarangPath.main} element={<TransferBarangPage />} />
         </Routes>
         <Routes basename={kategoriBarangPath.main}>
           <Route path={kategoriBarangPath.main} element={<KategoriBarangPage />} />

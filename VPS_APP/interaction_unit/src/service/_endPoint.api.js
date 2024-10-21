@@ -127,6 +127,10 @@ export const SrvSatuanBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/satuan_barang'
 )
 
+export const SrvTransferBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/transfer_barang'
+)
+
 export const SrvKategoriBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kategori_barang'
 )
