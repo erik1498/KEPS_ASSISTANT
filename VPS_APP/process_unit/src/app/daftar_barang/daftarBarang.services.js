@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createDaftarBarangRepo, deleteDaftarBarangByUuidRepo, getAllDaftarBarangRepo, getAllDaftarBarangUntukTransaksiRepo, getDaftarBarangByUuidRepo, updateDaftarBarangByUuidRepo } from "./daftarBarang.repository.js"
+import { createDaftarBarangRepo, deleteDaftarBarangByUuidRepo, getAllDaftarBarangRepo, getAllDaftarBarangsAktifByDaftarGudangRepo, getAllDaftarBarangUntukTransaksiRepo, getDaftarBarangByUuidRepo, updateDaftarBarangByUuidRepo } from "./daftarBarang.repository.js"
 
 export const getAllDaftarBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllDaftarBarangService", null, req_identity)
@@ -18,9 +18,17 @@ export const getAllDaftarBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const daftarBarangs = await getAllDaftarBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(daftarBarangs.entry, daftarBarangs.count, daftarBarangs.pageNumber, daftarBarangs.size)
+}
+
+export const getAllDaftarBarangsAktifByDaftarGudangService = async (daftar_gudang, req_identity) => {
+    LOGGER(logType.INFO, "Start getAllDaftarBarangsAktifByDaftarGudangService", {
+        daftar_gudang
+    }, req_identity)
+    const daftarBarangs = await getAllDaftarBarangsAktifByDaftarGudangRepo(daftar_gudang, req_identity)
+    return daftarBarangs
 }
 
 export const getAllDaftarBarangUntukTransaksiService = async (req_identity) => {

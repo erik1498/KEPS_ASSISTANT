@@ -3,34 +3,34 @@ import PageTitle from "../../../../component/general/PageTitle"
 import Wrap from "../../../../component/layout/Wrap"
 import { useDataContext } from "../../../../context/dataContext.context"
 import { useState } from "react"
-import { apiSatuanBarangCRUD } from "../../../../service/endPointList.api"
+import { apiKonversiBarangCRUD } from "../../../../service/endPointList.api"
 import { useEffect } from "react"
 import Pagination from "../../../../component/general/Pagination"
-import SatuanBarangForm from "./component/SatuanBarangForm"
+import KonversiBarangForm from "./component/KonversiBarangForm"
 import { showAlert, showDialog, showError } from "../../../../helper/form.helper"
 import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
-import { SatuanBarangPrint } from "./component/SatuanBarangPrint"
+import { KonversiBarangPrint } from "./component/KonversiBarangPrint"
 import { getBulanByIndex } from "../../../../helper/date.helper"
 
-const SatuanBarangPage = () => {
+const KonversiBarangPage = () => {
 
     const dataContext = useDataContext()
     const { data } = dataContext
 
-    const [satuanBarang, setSatuanBarang] = useState([])
+    const [KonversiBarang, setKonversiBarang] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const [addSatuanBarang, setAddSatuanBarang] = useState(false)
-    const [satuanBarangEdit, setSatuanBarangEdit] = useState({
+    const [addKonversiBarang, setAddKonversiBarang] = useState(false)
+    const [konversiBarangEdit, setKonversiBarangEdit] = useState({
         name: ""
     })
 
     const [searchStatus, setSearchStatus] = useState(false)
     const [search, setSearch] = useState("")
 
-    const SatuanBarangPrintRef = useRef();
+    const KonversiBarangPrintRef = useRef();
     const handlePrint = useReactToPrint({
-        content: () => SatuanBarangPrintRef.current,
+        content: () => KonversiBarangPrintRef.current,
     });
 
     const [pagination, setPagination] = useState({
@@ -45,12 +45,12 @@ const SatuanBarangPage = () => {
             setSearch(searchParam)
         }
         setIsLoading(true)
-        apiSatuanBarangCRUD
+        apiKonversiBarangCRUD
             .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
             .then(resData => {
 
                 setSearchStatus(searchParam.length < 1)
-                setSatuanBarang(resData?.data?.entry)
+                setKonversiBarang(resData?.data?.entry)
                 setPagination(resData?.data?.pagination)
                 setIsLoading(false)
             }).catch(err => {
@@ -58,17 +58,17 @@ const SatuanBarangPage = () => {
             })
     }
 
-    const _editSatuanBarang = (i) => {
-        let satuanBarangSelected = satuanBarang[i]
-        setSatuanBarangEdit(satuanBarangSelected)
-        setAddSatuanBarang(!addSatuanBarang)
+    const _editKonversiBarang = (i) => {
+        let konversiBarangSelected = KonversiBarang[i]
+        setKonversiBarangEdit(konversiBarangSelected)
+        setAddKonversiBarang(!addKonversiBarang)
     }
 
-    const _deleteSatuanBarang = async (i) => {
+    const _deleteKonversiBarang = async (i) => {
         if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
-            let satuanBarangSelected = satuanBarang[i]
-            apiSatuanBarangCRUD
-                .custom(`/${satuanBarangSelected.uuid}`, "DELETE")
+            let konversiBarangSelected = KonversiBarang[i]
+            apiKonversiBarangCRUD
+                .custom(`/${konversiBarangSelected.uuid}`, "DELETE")
                 .then(() => {
                     showAlert("Berhasil", "Data berhasil dihapus")
                     _getData()
@@ -100,13 +100,13 @@ const SatuanBarangPage = () => {
     return <Wrap
         isLoading={isLoading}>
         <div>
-            <PageTitle title="Satuan Barang" />
+            <PageTitle title="Konversi Barang" />
             {
-                addSatuanBarang ?
-                    <SatuanBarangForm
-                        setAddSatuanBarangEvent={() => setAddSatuanBarang(false)}
+                addKonversiBarang ?
+                    <KonversiBarangForm
+                        setAddKonversiBarangEvent={() => setAddKonversiBarang(false)}
                         getData={_getData}
-                        satuanBarangEdit={satuanBarangEdit}
+                        konversiBarangEdit={konversiBarangEdit}
                     />
                     :
                     <>
@@ -123,14 +123,14 @@ const SatuanBarangPage = () => {
                             <div className="flex gap-x-2 items-center">
                                 <button className="btn btn-sm bg-blue-900 text-white border-none"
                                     onClick={() => {
-                                        setSatuanBarangEdit(null)
-                                        setAddSatuanBarang(!addSatuanBarang)
+                                        setKonversiBarangEdit(null)
+                                        setAddKonversiBarang(!addKonversiBarang)
                                     }}
-                                ><FaPlus /> Tambah Satuan Barang</button>
+                                ><FaPlus /> Tambah Konversi Barang</button>
                                 <div className="hidden">
-                                    <SatuanBarangPrint
-                                        data={satuanBarang}
-                                        ref={SatuanBarangPrintRef}
+                                    <KonversiBarangPrint
+                                        data={KonversiBarang}
+                                        ref={KonversiBarangPrintRef}
                                         bulan={getBulanByIndex(new Date().getMonth())}
                                         tahun={data.tahun}
                                     />
@@ -139,7 +139,7 @@ const SatuanBarangPage = () => {
                                     onClick={handlePrint}
                                     className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
                                 >
-                                    <FaPrint /> Cetak Satuan Barang
+                                    <FaPrint /> Cetak Konversi Barang
                                 </button>
                             </div>
                         </div>
@@ -149,25 +149,27 @@ const SatuanBarangPage = () => {
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
-                                        <th>Nama Satuan Barang</th>
+                                        <th>Tanggal</th>
+                                        <th>Kode</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        satuanBarang?.map((item, i) => {
+                                        KonversiBarang?.map((item, i) => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
-                                                    <td>{item.name}</td>
+                                                    <td>{item.tanggal}</td>
+                                                    <td>{item.kode_konversi_barang}</td>
                                                     <td className="flex gap-x-2">
                                                         <FaPen size={12} className="text-yellow-500 cursor-pointer"
                                                             onClick={() => {
-                                                                _editSatuanBarang(i)
+                                                                _editKonversiBarang(i)
                                                             }} />
                                                         <FaTrash size={12} className="text-red-500 cursor-pointer"
                                                             onClick={() => {
-                                                                _deleteSatuanBarang(i)
+                                                                _deleteKonversiBarang(i)
                                                             }}
                                                         />
                                                     </td>
@@ -184,4 +186,4 @@ const SatuanBarangPage = () => {
         </div>
     </Wrap>
 }
-export default SatuanBarangPage
+export default KonversiBarangPage

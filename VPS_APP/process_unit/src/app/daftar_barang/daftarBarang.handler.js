@@ -1,5 +1,5 @@
 import { daftarBarangValidation } from "./daftarBarang.validation.js"
-import { createDaftarBarangService, deleteDaftarBarangByUuidService, getAllDaftarBarangService, getAllDaftarBarangUntukTransaksiService, getDaftarBarangByUuidService, updateDaftarBarangByUuidService } from "./daftarBarang.services.js"
+import { createDaftarBarangService, deleteDaftarBarangByUuidService, getAllDaftarBarangsAktifByDaftarGudangService, getAllDaftarBarangService, getAllDaftarBarangUntukTransaksiService, getDaftarBarangByUuidService, updateDaftarBarangByUuidService } from "./daftarBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -13,6 +13,24 @@ export const getAllDaftarBarangs = async (req, res) => {
         })
     } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getAllDaftarBarangsAktifByDaftarGudang = async (req, res) => {
+    LOGGER(logType.INFO, "Start getAllDaftarBarangsAktifByDaftarGudang", null, req.identity)
+    try {
+        const { daftar_gudang } = req.params
+        const daftarBarangs = await getAllDaftarBarangsAktifByDaftarGudangService(req.identity)
+        res.json({
+            data: daftarBarangs,
+            message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack)
         res.status(500).json({
             type: "internalServerError",
             errorData: error.message

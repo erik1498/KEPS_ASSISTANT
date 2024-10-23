@@ -18,7 +18,7 @@ const TransferBarangPage = () => {
     const dataContext = useDataContext()
     const { data } = dataContext
 
-    const [TransferBarang, setTransferBarang] = useState([])
+    const [transferBarang, setTransferBarang] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [addTransferBarang, setAddTransferBarang] = useState(false)
     const [transferBarangEdit, setTransferBarangEdit] = useState({
@@ -59,14 +59,14 @@ const TransferBarangPage = () => {
     }
 
     const _editTransferBarang = (i) => {
-        let TransferBarangSelected = TransferBarang[i]
+        let TransferBarangSelected = transferBarang[i]
         setTransferBarangEdit(TransferBarangSelected)
         setAddTransferBarang(!addTransferBarang)
     }
 
     const _deleteTransferBarang = async (i) => {
         if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
-            let TransferBarangSelected = TransferBarang[i]
+            let TransferBarangSelected = transferBarang[i]
             apiTransferBarangCRUD
                 .custom(`/${TransferBarangSelected.uuid}`, "DELETE")
                 .then(() => {
@@ -100,7 +100,7 @@ const TransferBarangPage = () => {
     return <Wrap
         isLoading={isLoading}>
         <div>
-            <PageTitle title="TransferBarang" />
+            <PageTitle title="Transfer Barang" />
             {
                 addTransferBarang ?
                     <TransferBarangForm
@@ -129,7 +129,7 @@ const TransferBarangPage = () => {
                                 ><FaPlus /> Tambah Transfer Barang</button>
                                 <div className="hidden">
                                     <TransferBarangPrint
-                                        data={TransferBarang}
+                                        data={transferBarang}
                                         ref={TransferBarangPrintRef}
                                         bulan={getBulanByIndex(new Date().getMonth())}
                                         tahun={data.tahun}
@@ -158,7 +158,7 @@ const TransferBarangPage = () => {
                                 </thead>
                                 <tbody>
                                     {
-                                        TransferBarang?.map((item, i) => {
+                                        transferBarang?.map((item, i) => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>

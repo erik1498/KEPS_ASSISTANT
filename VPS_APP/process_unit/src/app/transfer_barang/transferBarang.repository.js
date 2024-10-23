@@ -9,9 +9,10 @@ export const getAllTransferBarangRepo = async (pageNumber, size, search, req_id)
             SELECT
                 COUNT(0) AS count
             FROM ${generateDatabaseName(req_id)}.transfer_barang_tab tbt
-            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt_asal ON dgt_asal.uuid = tbt.gudang_asal 
-            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt_akhir ON dgt_akhir.uuid = tbt.gudang_akhir 
+            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt_asal ON dgt_asal.uuid = tbt.daftar_gudang_asal 
+            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt_akhir ON dgt_akhir.uuid = tbt.daftar_gudang_akhir 
             WHERE tbt.tanggal LIKE '%${search}%'
+            AND tbt.enabled = 1
             GROUP BY tbt.kode_transfer_barang
         `,
         { type: Sequelize.QueryTypes.SELECT }
@@ -31,9 +32,10 @@ export const getAllTransferBarangRepo = async (pageNumber, size, search, req_id)
                 dgt_asal.name AS daftar_gudang_asal_name,
                 dgt_akhir.name AS daftar_gudang_akhir_name
             FROM ${generateDatabaseName(req_id)}.transfer_barang_tab tbt
-            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt_asal ON dgt_asal.uuid = tbt.gudang_asal 
-            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt_akhir ON dgt_akhir.uuid = tbt.gudang_akhir 
+            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt_asal ON dgt_asal.uuid = tbt.daftar_gudang_asal 
+            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt_akhir ON dgt_akhir.uuid = tbt.daftar_gudang_akhir 
             WHERE tbt.tanggal LIKE '%${search}%'
+            AND tbt.enabled = 1
             GROUP BY tbt.kode_transfer_barang
             LIMIT ${pageNumber}, ${size}
         `,
@@ -68,8 +70,8 @@ export const createTransferBarangRepo = async (transferBarangData, req_id) => {
         {
             tanggal: transferBarangData.tanggal,
             kode_transfer_barang: transferBarangData.kode_transfer_barang,
-            gudang_asal: transferBarangData.gudang_asal,
-            gudang_akhir: transferBarangData.gudang_akhir,
+            daftar_gudang_asal: transferBarangData.daftar_gudang_asal,
+            daftar_gudang_akhir: transferBarangData.daftar_gudang_akhir,
             enabled: transferBarangData.enabled
         }
     )
@@ -97,8 +99,8 @@ export const updateTransferBarangByUuidRepo = async (uuid, transferBarangData, r
         {
             tanggal: transferBarangData.tanggal,
             kode_transfer_barang: transferBarangData.kode_transfer_barang,
-            gudang_asal: transferBarangData.gudang_asal,
-            gudang_akhir: transferBarangData.gudang_akhir
+            daftar_gudang_asal: transferBarangData.daftar_gudang_asal,
+            daftar_gudang_akhir: transferBarangData.daftar_gudang_akhir
         },
         {
             uuid

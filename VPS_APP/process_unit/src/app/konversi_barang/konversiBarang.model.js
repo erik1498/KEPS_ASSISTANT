@@ -3,7 +3,7 @@ import db, { defaultModelBuilder } from "../../config/Database.js";
 
 const { DataTypes } = Sequelize;
 
-const TransferBarangModel = db.define("transfer_barang_tab", 
+const KonversiBarangModel = db.define("konversi_barang_tab", 
     defaultModelBuilder({
         uuid: {
             type: DataTypes.STRING,
@@ -20,30 +20,30 @@ const TransferBarangModel = db.define("transfer_barang_tab",
                 notEmpty:true,
             }
         },
-        kode_transfer_barang: {
+        kode_konversi_barang: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
-        daftar_gudang_asal: {
+        daftar_gudang: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
-        daftar_gudang_akhir: {
+        satuan_barang: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
-        },
+        }
     }), {
     freezeTableName: true
 }
 )
 
-export default TransferBarangModel
+export default KonversiBarangModel

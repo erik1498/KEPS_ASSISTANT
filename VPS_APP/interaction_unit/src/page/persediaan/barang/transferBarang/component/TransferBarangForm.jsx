@@ -6,6 +6,7 @@ import { apiDaftarGudangCRUD, apiTransferBarangCRUD } from "../../../../../servi
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { initialDataFromEditObject } from "../../../../../helper/select.helper"
+import TransferBarangList from "./TransferBarangList"
 
 const TransferBarangForm = ({
     setAddTransferBarangEvent = () => { },
@@ -29,8 +30,8 @@ const TransferBarangForm = ({
                     data: {
                         tanggal: tanggalTransferBarang,
                         kode_transfer_barang: kodeTransferBarang,
-                        gudang_asal: gudangAsalTransferBarang.value,
-                        gudang_akhir: gudangAkhirTransferBarang.value
+                        daftar_gudang_asal: gudangAsalTransferBarang.value,
+                        daftar_gudang_akhir: gudangAkhirTransferBarang.value
 
                     }
                 }).then((resData) => {
@@ -101,7 +102,10 @@ const TransferBarangForm = ({
                 <h1 className="uppercase text-gray-600 font-bold">{transferBarangEdit ? `Edit` : `Tambahkan`} Transfer Barang</h1>
                 <button
                     className="btn btn-sm bg-red-900 text-white border-none"
-                    onClick={() => setAddTransferBarangEvent()}
+                    onClick={() => {
+                        getData()
+                        setAddTransferBarangEvent()
+                    }}
                 ><FaTimes /> Batalkan Transfer Barang
                 </button>
             </div>
@@ -115,7 +119,7 @@ const TransferBarangForm = ({
                     others={
                         {
                             value: tanggalTransferBarang,
-                            disabled: { transferBarang },
+                            disabled: transferBarang,
                             tanggal: "tanggalTransferBarang"
                         }
                     }
@@ -129,7 +133,7 @@ const TransferBarangForm = ({
                     others={
                         {
                             value: kodeTransferBarang,
-                            disabled: { transferBarang },
+                            disabled: transferBarang,
                             tanggal: "kodeTransferBarang"
                         }
                     }
@@ -160,7 +164,11 @@ const TransferBarangForm = ({
                 />
             </div>
             {
-                transferBarang ? <></> : <>
+                transferBarang ? <>
+                    <TransferBarangList
+                        transferBarang={transferBarang}
+                    />
+                </> : <>
                     <button className="btn btn-sm bg-green-800 mt-4 text-white"
                         onClick={() => {
                             _saveTransferBarang()

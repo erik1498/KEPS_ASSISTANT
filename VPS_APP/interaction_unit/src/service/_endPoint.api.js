@@ -131,6 +131,18 @@ export const SrvTransferBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/transfer_barang'
 )
 
+export const SrvRincianTransferBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_transfer_barang'
+)
+
+export const SrvKonversiBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/konversi_barang'
+)
+
+export const SrvRincianKonversiBarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_konversi_barang'
+)
+
 export const SrvKategoriBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kategori_barang'
 )

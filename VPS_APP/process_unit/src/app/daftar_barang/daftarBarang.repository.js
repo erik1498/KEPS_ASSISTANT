@@ -53,6 +53,19 @@ export const getAllDaftarBarangRepo = async (pageNumber, size, search, req_id) =
     }
 }
 
+export const getAllDaftarBarangsAktifByDaftarGudangRepo = async (daftar_gudang, req_id) => {
+    const daftarBarangs = await db.query(
+        `
+            SELECT 
+                daftar_barang_tab.*
+            FROM daftar_barang_tab 
+            WHERE daftar_barang_tab.status = true
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return daftarBarangs
+}
+
 export const getAllDaftarBarangUntukTransaksiRepo = async (req_id) => {
     const daftarBarangs = await db.query(
         `

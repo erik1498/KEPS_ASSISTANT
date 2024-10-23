@@ -89,6 +89,9 @@ import { getRincianReturPembelianBarangRoute } from "../app/rincian_retur_pembel
 import { getPengembalianDendaPembelianBarangRoute } from "../app/pengembalian_denda_pembelian_barang/pengembalianDendaPembelianBarang.route.js";
 import { getRincianPengembalianDendaPembelianBarangRoute } from "../app/rincian_pengembalian_denda_pembelian_barang/rincianPengembalianDendaPembelianBarang.route.js";
 import { getTransferBarangRoute } from "../app/transfer_barang/transferBarang.route.js";
+import { getRincianTransferBarangRoute } from "../app/rincian_transfer_barang/rincianTransferBarang.route.js";
+import { getKonversiBarangRoute } from "../app/konversi_barang/konversiBarang.route.js";
+import { getRincianKonversiBarangRoute } from "../app/rincian_konversi_barang/rincianKonversiBarang.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -119,6 +122,9 @@ export const routerList = new Array()
         getDokumenKlienRoute(),
         getSatuanBarangRoute(),
         getTransferBarangRoute(),
+        getRincianTransferBarangRoute(),
+        getKonversiBarangRoute(),
+        getRincianKonversiBarangRoute(),
         getSatuanJasaRoute(),
         getKategoriBarangRoute(),
         getKategoriJasaRoute(),
