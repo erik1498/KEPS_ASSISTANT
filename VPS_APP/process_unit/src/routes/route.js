@@ -92,6 +92,7 @@ import { getTransferBarangRoute } from "../app/transfer_barang/transferBarang.ro
 import { getRincianTransferBarangRoute } from "../app/rincian_transfer_barang/rincianTransferBarang.route.js";
 import { getKonversiBarangRoute } from "../app/konversi_barang/konversiBarang.route.js";
 import { getRincianKonversiBarangRoute } from "../app/rincian_konversi_barang/rincianKonversiBarang.route.js";
+import { getPerintahStokOpnameRoute } from "../app/perintah_stok_opname/perintahStokOpname.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -132,6 +133,7 @@ export const routerList = new Array()
         getJenisJasaRoute(),
         getJenisPenjualanBarangRoute(),
         getJenisPenjualanJasaRoute(),
+        getPerintahStokOpnameRoute(),
         getJenisGudangRoute(),
         getKategoriGudangRoute(),
         getDaftarGudangRoute(),

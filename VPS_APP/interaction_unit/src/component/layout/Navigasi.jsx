@@ -504,7 +504,7 @@ const Navigasi = ({
                                                     {
                                                         getRolesInCookie("Persediaan_Opname_PerinahStokOpname") ? <>
                                                             <li>
-                                                                <NavigationLink to="/perusahaan/penjualanBarang" addClass={"my-1"} label={"Perintah Stok Opname"} />
+                                                                <NavigationLink to="/persediaan/opname/perintahStokOpname" addClass={"my-1"} label={"Perintah Stok Opname"} />
                                                             </li>
                                                         </> : <></>
                                                     }
