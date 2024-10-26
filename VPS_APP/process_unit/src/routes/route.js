@@ -93,6 +93,8 @@ import { getRincianTransferBarangRoute } from "../app/rincian_transfer_barang/ri
 import { getKonversiBarangRoute } from "../app/konversi_barang/konversiBarang.route.js";
 import { getRincianKonversiBarangRoute } from "../app/rincian_konversi_barang/rincianKonversiBarang.route.js";
 import { getPerintahStokOpnameRoute } from "../app/perintah_stok_opname/perintahStokOpname.route.js";
+import { getHasilStokOpnameRoute } from "../app/hasil_stok_opname/hasilStokOpname.route.js";
+import { getPenyesuaianPersediaanRoute } from "../app/penyesuaian_persediaan/penyesuaianPersediaan.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -134,6 +136,8 @@ export const routerList = new Array()
         getJenisPenjualanBarangRoute(),
         getJenisPenjualanJasaRoute(),
         getPerintahStokOpnameRoute(),
+        getHasilStokOpnameRoute(),
+        getPenyesuaianPersediaanRoute(),
         getJenisGudangRoute(),
         getKategoriGudangRoute(),
         getDaftarGudangRoute(),

@@ -1,17 +1,17 @@
 import { FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
-import PageTitle from "../../../component/general/PageTitle"
-import Wrap from "../../../component/layout/Wrap"
-import { useDataContext } from "../../../context/dataContext.context"
+import Wrap from "../../../../component/layout/Wrap"
+import { useDataContext } from "../../../../context/dataContext.context"
 import { useState } from "react"
-import { apiPerintahStokOpnameCRUD } from "../../../service/endPointList.api"
+import { apiPerintahStokOpnameCRUD } from "../../../../service/endPointList.api"
 import { useEffect } from "react"
-import Pagination from "../../../component/general/Pagination"
+import Pagination from "../../../../component/general/Pagination"
 import PerintahStokOpnameForm from "./component/PerintahStokOpnameForm"
-import { showAlert, showDialog, showError } from "../../../helper/form.helper"
+import { showAlert, showDialog, showError } from "../../../../helper/form.helper"
 import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
 import { PerintahStokOpnamePrint } from "./component/PerintahStokOpnamePrint"
-import { getBulanByIndex } from "../../../helper/date.helper"
+import { getBulanByIndex } from "../../../../helper/date.helper"
+import PageTitle from "../../../../component/general/PageTitle"
 
 const PerintahStokOpnamePage = () => {
 
@@ -149,7 +149,11 @@ const PerintahStokOpnamePage = () => {
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
-                                        <th>Nama Perintah Stok Opname</th>
+                                        <th>Nomor Perintah Stok Opname</th>
+                                        <th>Pegawai Penanggung Jawab</th>
+                                        <th>Pegawai Pelaksana</th>
+                                        <th>Kategori Barang</th>
+                                        <th>Gudang Asal</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -159,7 +163,11 @@ const PerintahStokOpnamePage = () => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
-                                                    <td>{item.name}</td>
+                                                    <td>{item.nomor_surat_perintah}</td>
+                                                    <td>{item.pegawai_penanggung_jawab_name}</td>
+                                                    <td>{item.pegawai_pelaksana_name}</td>
+                                                    <td>{item.kategori_barang_name}</td>
+                                                    <td>{item.daftar_gudang_name}</td>
                                                     <td className="flex gap-x-2">
                                                         <FaPen size={12} className="text-yellow-500 cursor-pointer"
                                                             onClick={() => {

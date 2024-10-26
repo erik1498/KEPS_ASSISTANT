@@ -179,6 +179,14 @@ export const SrvPerintahStokOpname = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/perintah_stok_opname'
 )
 
+export const SrvHasilStokOpname = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/hasil_stok_opname'
+)
+
+export const SrvPenyesuaianPersediaan = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/penyesuaian_persediaan'
+)
+
 export const SrvDaftarGudang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/daftar_gudang'
 )

@@ -1,11 +1,11 @@
 import { FaSave, FaTimes } from "react-icons/fa"
-import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
+import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
-import { formValidation, showAlert, showError } from "../../../../helper/form.helper"
-import { apiDaftarGudangCRUD, apiKategoriBarangCRUD, apiPegawaiCRUD, apiPerintahStokOpnameCRUD } from "../../../../service/endPointList.api"
-import { getHariTanggalFull } from "../../../../helper/date.helper"
-import { initialDataFromEditObject } from "../../../../helper/select.helper"
-import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
+import { apiDaftarGudangCRUD, apiKategoriBarangCRUD, apiPegawaiCRUD, apiPerintahStokOpnameCRUD } from "../../../../../service/endPointList.api"
+import { getHariTanggalFull } from "../../../../../helper/date.helper"
+import { initialDataFromEditObject } from "../../../../../helper/select.helper"
+import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 
 const PerintahStokOpnameForm = ({
     setAddPerintahStokOpnameEvent = () => { },

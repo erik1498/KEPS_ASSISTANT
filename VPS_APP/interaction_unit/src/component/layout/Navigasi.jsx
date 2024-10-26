@@ -502,9 +502,23 @@ const Navigasi = ({
                                                 <p className="font-bold pointer-events-none">Opname</p>
                                                 <ul>
                                                     {
-                                                        getRolesInCookie("Persediaan_Opname_PerinahStokOpname") ? <>
+                                                        getRolesInCookie("Persediaan_Opname_PerintahStokOpname") ? <>
                                                             <li>
                                                                 <NavigationLink to="/persediaan/opname/perintahStokOpname" addClass={"my-1"} label={"Perintah Stok Opname"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Opname_HasilStokOpname") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/opname/hasilStokOpname" addClass={"my-1"} label={"Hasil Stok Opname"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_Opname_PenyesuaianPersediaan") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/opname/penyesuaianPersediaan" addClass={"my-1"} label={"Penyesuaian Persediaan"} />
                                                             </li>
                                                         </> : <></>
                                                     }

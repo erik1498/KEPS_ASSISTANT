@@ -1,7 +1,7 @@
 import React from "react";
-import PDFHeader from "../../../../component/general/PDFHeader";
+import PDFHeader from "../../../../../component/general/PDFHeader";
 
-export const PerintahStokOpnamePrint = React.forwardRef((props, ref) => {
+export const PenyesuaianPersediaanPrint = React.forwardRef((props, ref) => {
     return (
         <div
             ref={ref}
@@ -9,13 +9,13 @@ export const PerintahStokOpnamePrint = React.forwardRef((props, ref) => {
             <PDFHeader
                 bulan={props.bulan}
                 tahun={props.tahun}
-                title={"Perintah Stok Opname"}
+                title={"Hasil Stok Opname"}
             />
             <table className="table">
                 <thead>
                     <tr className="sticky top-0 bg-white py-4 text-black">
                         <th width={12}>No</th>
-                        <th>Nama Perintah Stok Opname</th>
+                        <th>Nama Hasil Stok Opname</th>
                     </tr>
                 </thead>
                 <tbody>

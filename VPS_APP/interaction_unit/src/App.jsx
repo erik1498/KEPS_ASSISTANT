@@ -52,7 +52,9 @@ import penjualanJasaPath from './path/transaksi/penjualan/penjualanJasa.path';
 import pembelianBarangPath from './path/transaksi/pembelian/pembelianBarang.path';
 import transferBarangPath from './path/persediaan/barang/transferBarang.path';
 import konversiBarangPath from './path/persediaan/barang/konversiBarang.path';
-import perintahStokOpnamePath from './path/persediaan/perintahStokOpname/perintahStokOpname.path';
+import perintahStokOpnamePath from './path/persediaan/opname/perintahStokOpname.path';
+import hasilStokOpnamePath from './path/persediaan/opname/hasilStokOpname.path';
+import penyesuaianPersediaanPath from './path/persediaan/opname/penyesuaianPersediaan.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -103,7 +105,9 @@ const SlipGajiPegawaiPage = React.lazy(() => import('./page/transaksi/payroll/sl
 const PenjualanJasaPage = React.lazy(() => import('./page/transaksi/penjualan/penjualanJasa/PenjualanJasaPage'))
 const PenjualanBarangPage = React.lazy(() => import('./page/transaksi/penjualan/penjualanBarang/PenjualanBarangPage'))
 const PembelianBarangPage = React.lazy(() => import('./page/transaksi/pembelian/pembelianBarang/PembelianBarangPage'))
-const PerintahStokOpnamePage = React.lazy(() => import('./page/persediaan/perintahStokOpname/PerintahStokOpname.page'))
+const PerintahStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/perintahStokOpname/PerintahStokOpname.page'))
+const HasilStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/hasilStokOpname/HasilStokOpname.page'));
+const PenyesuaianPersediaanPage  = React.lazy(() => import('./page/persediaan/opname/penyesuaianPersediaan/PenyesuaianPersediaan.page'));
 
 function App() {
   return (
@@ -186,6 +190,12 @@ function App() {
         </Routes>
         <Routes basename={perintahStokOpnamePath.main}>
           <Route path={perintahStokOpnamePath.main} element={<PerintahStokOpnamePage />} />
+        </Routes>
+        <Routes basename={hasilStokOpnamePath.main}>
+          <Route path={hasilStokOpnamePath.main} element={<HasilStokOpnamePage />} />
+        </Routes>
+        <Routes basename={penyesuaianPersediaanPath.main}>
+          <Route path={penyesuaianPersediaanPath.main} element={<PenyesuaianPersediaanPage />} />
         </Routes>
         <Routes basename={kategoriGudangPath.main}>
           <Route path={kategoriGudangPath.main} element={<KategoriGudangPage />} />
