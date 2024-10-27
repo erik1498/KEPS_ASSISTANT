@@ -39,14 +39,14 @@ const PenyesuaianPersediaanForm = ({
                         gudang_asal: gudangAsal.value,
                         validasi: false
                     }
-                }).then(() => {
+                }).then((resData) => {
                     if (penyesuaianPersediaanEdit) {
+                        setPenyesuaianPersediaan(penyesuaianPersediaanEdit)
                         showAlert("Berhasil", "Data berhasil diupdate")
                     } else {
+                        setPenyesuaianPersediaan(resData.data)
                         showAlert("Berhasil", "Data berhasil disimpan")
                     }
-                    setAddPenyesuaianPersediaanEvent()
-                    getData()
                 }).catch(err => {
                     showError(err)
                 })
@@ -145,11 +145,11 @@ const PenyesuaianPersediaanForm = ({
     return <>
         <div className="bg-white px-6 py-3 rounded-md shadow-2xl">
             <div className="mb-3 flex justify-between items-center">
-                <h1 className="uppercase text-gray-600 font-bold">{penyesuaianPersediaanEdit ? `Edit` : `Tambahkan`} Hasil Stok Opname</h1>
+                <h1 className="uppercase text-gray-600 font-bold">{penyesuaianPersediaanEdit ? `Edit` : `Tambahkan`} Penyesuaian Persediaan</h1>
                 <button
                     className="btn btn-sm bg-red-900 text-white border-none"
                     onClick={() => setAddPenyesuaianPersediaanEvent()}
-                ><FaTimes /> Batalkan Hasil Stok Opname
+                ><FaTimes /> Batalkan Penyesuaian Persediaan
                 </button>
             </div>
             <div className="flex gap-x-2">
@@ -167,7 +167,7 @@ const PenyesuaianPersediaanForm = ({
                     }
                 />
                 <FormInputWithLabel
-                    label={"Nomor Hasil Stok Opname"}
+                    label={"Nomor Penyesuaian Persediaan"}
                     type={"text"}
                     onchange={(e) => {
                         setNomorPenyesuaianPersediaan(e.target.value)

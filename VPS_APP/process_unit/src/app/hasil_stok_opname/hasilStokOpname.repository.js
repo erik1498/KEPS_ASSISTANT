@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import HasilStokOpnameModel from "./hasilStokOpname.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
 export const getAllHasilStokOpnameRepo = async (pageNumber, size, search, req_id) => {
     const hasilStokOpnamesCount = await db.query(
@@ -29,6 +30,32 @@ export const getAllHasilStokOpnameRepo = async (pageNumber, size, search, req_id
     }
 }
 
+export const getAllBarangAktifByPerintahStokOpnameRepo = async (perintah_stok_opname, req_id) => {
+    const daftarBarangs = await db.query(
+        `
+            SELECT 
+                sabt.uuid AS stok_awal_barang,
+                "" AS uuid,
+                kht.kode_barang AS kategori_harga_barang_kode_barang,
+                dbt.name AS daftar_barang_name,
+                sbt.name AS satuan_barang_name
+            FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt 
+            JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang
+            JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab kht ON kht.uuid = sabt.kategori_harga_barang
+            JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = kht.satuan_barang 
+            WHERE sabt.daftar_gudang = (
+                SELECT psot.gudang_asal FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot WHERE psot.uuid = "${perintah_stok_opname}"
+            )
+            AND dbt.kategori_barang = (
+                SELECT psot.kategori_barang FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot WHERE psot.uuid = "${perintah_stok_opname}"
+            )
+            AND dbt.status = 1
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return daftarBarangs
+}
+
 export const getHasilStokOpnameByUuidRepo = async (uuid, req_id) => {
     return selectOneQueryUtil(
         generateDatabaseName(req_id),
@@ -42,6 +69,9 @@ export const getHasilStokOpnameByUuidRepo = async (uuid, req_id) => {
 }
 
 export const createHasilStokOpnameRepo = async (hasilStokOpnameData, req_id) => {
+    hasilStokOpnameData = removeDotInRupiahInput(hasilStokOpnameData, [
+        "kuantitas"
+    ])
     return insertQueryUtil(
         req_id,
         generateDatabaseName(req_id),
@@ -71,6 +101,9 @@ export const deleteHasilStokOpnameByUuidRepo = async (uuid, req_id) => {
 }
 
 export const updateHasilStokOpnameByUuidRepo = async (uuid, hasilStokOpnameData, req_id) => {
+    hasilStokOpnameData = removeDotInRupiahInput(hasilStokOpnameData, [
+        "kuantitas"
+    ])
     return updateQueryUtil(
         req_id,
         generateDatabaseName(req_id),

@@ -100,7 +100,7 @@ const PenyesuaianPersediaanPage = () => {
     return <Wrap
         isLoading={isLoading}>
         <div>
-            <PageTitle title="Hasil Stok Opname" />
+            <PageTitle title="Penyesuaian Persediaan" />
             {
                 addPenyesuaianPersediaan ?
                     <PenyesuaianPersediaanForm
@@ -126,7 +126,7 @@ const PenyesuaianPersediaanPage = () => {
                                         setPenyesuaianPersediaanEdit(null)
                                         setAddPenyesuaianPersediaan(!addPenyesuaianPersediaan)
                                     }}
-                                ><FaPlus /> Tambah Hasil Stok Opname</button>
+                                ><FaPlus /> Tambah Penyesuaian Persediaan</button>
                                 <div className="hidden">
                                     <PenyesuaianPersediaanPrint
                                         data={penyesuaianPersediaan}
@@ -139,7 +139,7 @@ const PenyesuaianPersediaanPage = () => {
                                     onClick={handlePrint}
                                     className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
                                 >
-                                    <FaPrint /> Cetak Hasil Stok Opname
+                                    <FaPrint /> Cetak Penyesuaian Persediaan
                                 </button>
                             </div>
                         </div>
@@ -149,7 +149,7 @@ const PenyesuaianPersediaanPage = () => {
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
-                                        <th>Nomor Hasil Stok Opname</th>
+                                        <th>Nomor Penyesuaian Persediaan</th>
                                         <th>Pegawai Penanggung Jawab</th>
                                         <th>Pegawai Pelaksana</th>
                                         <th>Kategori Barang</th>

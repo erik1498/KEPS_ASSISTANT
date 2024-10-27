@@ -2,7 +2,7 @@ import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
 import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
-import { apiDaftarGudangCRUD, apiKategoriBarangCRUD, apiPegawaiCRUD, apiHasilStokOpnameCRUD } from "../../../../../service/endPointList.api"
+import { apiHasilStokOpnameCRUD, apiPerintahStokOpnameCRUD } from "../../../../../service/endPointList.api"
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import { initialDataFromEditObject } from "../../../../../helper/select.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
@@ -13,133 +13,69 @@ const HasilStokOpnameForm = ({
     getData = () => { }
 }) => {
     const [tanggal, setTanggal] = useState(hasilStokOpnameEdit?.tanggal ? hasilStokOpnameEdit.tanggal : getHariTanggalFull())
-    const [nomorHasilStokOpname, setNomorHasilStokOpname] = useState(hasilStokOpnameEdit?.nomor_surat_Hasil ? hasilStokOpnameEdit.nomor_surat_Hasil : ``)
-    const [pegawaiPenanggungJawab, setPegawaiPenanggungJawab] = useState(hasilStokOpnameEdit?.pegawai_penanggung_jawab ? hasilStokOpnameEdit.pegawai_penanggung_jawab : ``)
-    const [pegawaiPelaksana, setPegawaiPelaksana] = useState(hasilStokOpnameEdit?.pegawai_pelaksana ? hasilStokOpnameEdit.pegawai_pelaksana : ``)
-    const [kategoriBarang, setKategoriBarang] = useState(hasilStokOpnameEdit?.kategori_barang ? hasilStokOpnameEdit.kategori_barang : ``)
-    const [gudangAsal, setGudangAsal] = useState(hasilStokOpnameEdit?.gudang_asal ? hasilStokOpnameEdit.gudang_asal : ``)
-    const [validasi, setValidasi] = useState(hasilStokOpnameEdit?.validasi ? hasilStokOpnameEdit.validasi : ``)
+    const [perintahStokOpname, setPerintahStokOpname] = useState(hasilStokOpnameEdit?.perintah_stok_opname ? hasilStokOpnameEdit.perintah_stok_opname : ``)
 
-    const [hasilStokOpname, setHasilStokOpname] = useState()
+    const [perintahStokOpnameList, setPerintahStokOpnameList] = useState([])
+    const [hasilStokOpnameList, setHasilStokOpnameList] = useState([])
 
-    const [pegawaiList, setPegawaiList] = useState([])
-    const [kategoriBarangList, setKategoriBarangList] = useState([])
-    const [gudangAsalList, setGudangAsalList] = useState([])
-
-    const _saveHasilStokOpname = async () => {
-        if (await formValidation()) {
-            apiHasilStokOpnameCRUD
-                .custom(`${hasilStokOpnameEdit?.uuid ? `/${hasilStokOpnameEdit.uuid}` : ``}`, hasilStokOpnameEdit ? "PUT" : "POST", null, {
-                    data: {
-                        tanggal: tanggal,
-                        nomor_surat_Hasil: nomorHasilStokOpname,
-                        pegawai_penanggung_jawab: pegawaiPenanggungJawab.value,
-                        pegawai_pelaksana: pegawaiPelaksana.value,
-                        kategori_barang: kategoriBarang.value,
-                        gudang_asal: gudangAsal.value,
-                        validasi: false
-                    }
-                }).then(() => {
-                    if (hasilStokOpnameEdit) {
-                        showAlert("Berhasil", "Data berhasil diupdate")
-                    } else {
-                        showAlert("Berhasil", "Data berhasil disimpan")
-                    }
-                    setAddHasilStokOpnameEvent()
+    const _saveHasilStokOpname = async (index) => {
+        apiHasilStokOpnameCRUD
+            .custom(`${hasilStokOpnameList[index].uuid != "" ? `/${hasilStokOpnameList[index].uuid}` : ``}`, hasilStokOpnameList[index].uuid != "" ? "PUT" : "POST", null, {
+                data: {
+                    tanggal: tanggal,
+                    perintah_stok_opname: perintahStokOpname.value,
+                    stok_awal_barang: hasilStokOpnameList[index].stok_awal_barang,
+                    kuantitas: `${0}`
+                }
+            }).then(() => {
+                if (index + 1 < hasilStokOpnameList.length) {
+                    _saveHasilStokOpname(index + 1)
+                } else {
                     getData()
-                }).catch(err => {
-                    showError(err)
-                })
-        }
+                    setAddHasilStokOpnameEvent()
+                }
+            }).catch(err => {
+                showError(err)
+            })
     }
 
-    const _getDataKategoriBarang = () => {
-        apiKategoriBarangCRUD
+    const _getDataPerintahStokOpname = () => {
+        apiPerintahStokOpnameCRUD
             .custom("", "GET")
             .then(resData => {
-                setKategoriBarangList(resData.data.entry)
+                setPerintahStokOpnameList(resData.data.entry)
                 if (resData.data.entry.length > 0) {
                     if (hasilStokOpnameEdit) {
                         initialDataFromEditObject({
                             editObject: hasilStokOpnameEdit.kategori_barang,
                             dataList: resData.data.entry,
-                            setState: setKategoriBarang,
-                            labelKey: "name",
+                            setState: setPerintahStokOpname,
+                            labelKey: "nomor_surat_perintah",
                             valueKey: "uuid",
                         })
                         return
                     }
-                    setKategoriBarang({
-                        label: resData.data.entry[0].name,
+                    setPerintahStokOpname({
+                        label: resData.data.entry[0].nomor_surat_perintah,
                         value: resData.data.entry[0].uuid,
                     })
                 }
             }).catch(err => showError(err))
     }
 
-    const _getDataGudang = () => {
-        apiDaftarGudangCRUD
-            .custom("", "GET")
+    const _getDaftarBarangPerintahStokOpname = () => {
+        apiHasilStokOpnameCRUD.custom(`/daftar_barang/${perintahStokOpname.value}`, "GET")
             .then(resData => {
-                setGudangAsalList(resData.data.entry)
-                if (resData.data.entry.length > 0) {
-                    if (hasilStokOpnameEdit) {
-                        initialDataFromEditObject({
-                            editObject: hasilStokOpnameEdit.gudang_asal,
-                            dataList: resData.data.entry,
-                            setState: setGudangAsal,
-                            labelKey: "name",
-                            valueKey: "uuid",
-                        })
-                        return
-                    }
-                    setGudangAsal({
-                        label: resData.data.entry[0].name,
-                        value: resData.data.entry[0].uuid,
-                    })
-                }
-            }).catch(err => showError(err))
-    }
-
-    const _getDataPegawai = () => {
-        apiPegawaiCRUD
-            .custom("", "GET")
-            .then(resData => {
-                setPegawaiList(resData.data.entry)
-                if (resData.data.entry.length > 0) {
-                    if (hasilStokOpnameEdit) {
-                        initialDataFromEditObject({
-                            editObject: hasilStokOpnameEdit.pegawai_penanggung_jawab,
-                            dataList: resData.data.entry,
-                            setState: setPegawaiPenanggungJawab,
-                            labelKey: "name",
-                            valueKey: "uuid",
-                        })
-                        initialDataFromEditObject({
-                            editObject: hasilStokOpnameEdit.pegawai_pelaksana,
-                            dataList: resData.data.entry,
-                            setState: setPegawaiPelaksana,
-                            labelKey: "name",
-                            valueKey: "uuid",
-                        })
-                        return
-                    }
-                    setPegawaiPenanggungJawab({
-                        label: resData.data.entry[0].name,
-                        value: resData.data.entry[0].uuid,
-                    })
-                    setPegawaiPelaksana({
-                        label: resData.data.entry[0].name,
-                        value: resData.data.entry[0].uuid,
-                    })
-                }
+                setHasilStokOpnameList(resData.data)
             }).catch(err => showError(err))
     }
 
     useEffect(() => {
-        _getDataPegawai()
-        _getDataKategoriBarang()
-        _getDataGudang()
+        _getDaftarBarangPerintahStokOpname()
+    }, [perintahStokOpname])
+
+    useEffect(() => {
+        _getDataPerintahStokOpname()
     }, [])
 
     return <>
@@ -166,73 +102,50 @@ const HasilStokOpnameForm = ({
                         }
                     }
                 />
-                <FormInputWithLabel
-                    label={"Nomor Hasil Stok Opname"}
-                    type={"text"}
-                    onchange={(e) => {
-                        setNomorHasilStokOpname(e.target.value)
-                    }}
-                    others={
-                        {
-                            value: nomorHasilStokOpname,
-                            name: "nomorHasilStokOpname"
-                        }
-                    }
-                />
                 <FormSelectWithLabel
-                    label={"Pegawai Penanggung Jawab"}
-                    optionsDataList={pegawaiList}
-                    optionsLabel={"name"}
+                    label={"Perintah Stok Opname"}
+                    optionsDataList={perintahStokOpnameList}
+                    optionsLabel={"nomor_surat_perintah"}
                     optionsValue={"uuid"}
-                    disabled={hasilStokOpname}
-                    selectValue={pegawaiPenanggungJawab}
+                    selectValue={perintahStokOpname}
                     onchange={(e) => {
-                        setPegawaiPenanggungJawab(e)
+                        setPerintahStokOpname(e)
                     }}
-                    selectName={`pegawaiPenanggungJawab`}
+                    selectName={`perintahStokOpname`}
                 />
             </div>
-            <div className="mt-5 flex gap-x-2">
-                <FormSelectWithLabel
-                    label={"Pegawai Pelaksana"}
-                    optionsDataList={pegawaiList}
-                    optionsLabel={"name"}
-                    optionsValue={"uuid"}
-                    disabled={hasilStokOpname}
-                    selectValue={pegawaiPelaksana}
-                    onchange={(e) => {
-                        setPegawaiPelaksana(e)
-                    }}
-                    selectName={`pegawaiPelaksana`}
-                />
-                <FormSelectWithLabel
-                    label={"Kategori Barang"}
-                    optionsDataList={kategoriBarangList}
-                    optionsLabel={"name"}
-                    optionsValue={"uuid"}
-                    disabled={hasilStokOpname}
-                    selectValue={kategoriBarang}
-                    onchange={(e) => {
-                        setKategoriBarang(e)
-                    }}
-                    selectName={`kategoriBarang`}
-                />
-                <FormSelectWithLabel
-                    label={"Gudang Asal"}
-                    optionsDataList={gudangAsalList}
-                    optionsLabel={"name"}
-                    optionsValue={"uuid"}
-                    disabled={hasilStokOpname}
-                    selectValue={gudangAsal}
-                    onchange={(e) => {
-                        setGudangAsal(e)
-                    }}
-                    selectName={`gudangAsal`}
-                />
+            <div className="overflow-x-auto rounded-md h-max max-h-[90vh] no-scrollbar mt-5 pb-4">
+                <table className="table">
+                    {/* head */}
+                    <thead>
+                        <tr className="sticky top-0 bg-white py-4 text-black">
+                            <th width={12}>No</th>
+                            <th>Kode Barang</th>
+                            <th>Nama Barang</th>
+                            <th>Satuan Barang</th>
+                            <th>Kuantitas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            hasilStokOpnameList?.map((item, i) => {
+                                return <>
+                                    <tr key={i}>
+                                        <td>{i + 1}.</td>
+                                        <td>{item.kategori_harga_barang_kode_barang}</td>
+                                        <td>{item.daftar_barang_name}</td>
+                                        <td>{item.satuan_barang_name}</td>
+                                        <td>{item.kuantitas}</td>
+                                    </tr>
+                                </>
+                            })
+                        }
+                    </tbody>
+                </table>
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"
                 onClick={() => {
-                    _saveHasilStokOpname()
+                    _saveHasilStokOpname(0)
                 }}
             ><FaSave /> Simpan</button>
         </div>

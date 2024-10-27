@@ -1,5 +1,5 @@
 import { hasilStokOpnameValidation } from "./hasilStokOpname.validation.js"
-import { createHasilStokOpnameService, deleteHasilStokOpnameByUuidService, getAllHasilStokOpnameService, getHasilStokOpnameByUuidService, updateHasilStokOpnameByUuidService } from "./hasilStokOpname.services.js"
+import { createHasilStokOpnameService, deleteHasilStokOpnameByUuidService, getAllBarangAktifByPerintahStokOpnameService, getAllHasilStokOpnameService, getHasilStokOpnameByUuidService, updateHasilStokOpnameByUuidService } from "./hasilStokOpname.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -11,7 +11,24 @@ export const getAllHasilStokOpnames = async (req, res) => {
             data: hasilStokOpnames,
             message: "Get Data Success"
         })
-    } catch (error) {    
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getAllBarangAktifByPerintahStokOpname = async (req, res) => {
+    LOGGER(logType.INFO, "Start getAllBarangAktifByPerintahStokOpname", null, req.identity)
+    try {
+        const { perintah_stok_opname } = req.params
+        res.json({
+            data: await getAllBarangAktifByPerintahStokOpnameService(perintah_stok_opname, req.identity),
+            message: "Get Data By UUID Success"
+        })
+    } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
@@ -84,7 +101,7 @@ export const deleteHasilStokOpnameByUUID = async (req, res) => {
 
 export const updateHasilStokOpnameByUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start updateHasilStokOpnameByUuidController", null, req.identity)
-    try {    
+    try {
         const hasilStokOpnameData = req.body
         const { error, value } = hasilStokOpnameValidation(hasilStokOpnameData)
         if (error) {
