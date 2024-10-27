@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import HasilStokOpnameModel from "./hasilStokOpname.model.js";
-import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { generateDatabaseName, insertQueryUtil, selectAllQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
 export const getAllHasilStokOpnameRepo = async (pageNumber, size, search, req_id) => {
@@ -68,6 +68,28 @@ export const getHasilStokOpnameByUuidRepo = async (uuid, req_id) => {
     )
 }
 
+export const getHasilStokOpnameByPerintahStokOpnameRepo = async (perintah_stok_opname, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                hsot.*,
+                sabt.uuid AS stok_awal_barang,
+                kht.kode_barang AS kategori_harga_barang_kode_barang,
+                dbt.name AS daftar_barang_name,
+                sbt.name AS satuan_barang_name
+            FROM ${generateDatabaseName(req_id)}.hasil_stok_opname_tab hsot 
+            JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = hsot.stok_awal_barang 
+            JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang
+            JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab kht ON kht.uuid = sabt.kategori_harga_barang
+            JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = kht.satuan_barang 
+            WHERE hsot.perintah_stok_opname = "${perintah_stok_opname}"
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
 export const createHasilStokOpnameRepo = async (hasilStokOpnameData, req_id) => {
     hasilStokOpnameData = removeDotInRupiahInput(hasilStokOpnameData, [
         "kuantitas"
@@ -76,11 +98,11 @@ export const createHasilStokOpnameRepo = async (hasilStokOpnameData, req_id) => 
         req_id,
         generateDatabaseName(req_id),
         HasilStokOpnameModel,
-        {   
-        tanggal: hasilStokOpnameData.tanggal,
-        perintah_stok_opname: hasilStokOpnameData.perintah_stok_opname,
-        stok_awal_barang: hasilStokOpnameData.stok_awal_barang,
-        kuantitas: hasilStokOpnameData.kuantitas,
+        {
+            tanggal: hasilStokOpnameData.tanggal,
+            perintah_stok_opname: hasilStokOpnameData.perintah_stok_opname,
+            stok_awal_barang: hasilStokOpnameData.stok_awal_barang,
+            kuantitas: hasilStokOpnameData.kuantitas,
             enabled: hasilStokOpnameData.enabled
         }
     )
@@ -109,10 +131,10 @@ export const updateHasilStokOpnameByUuidRepo = async (uuid, hasilStokOpnameData,
         generateDatabaseName(req_id),
         HasilStokOpnameModel,
         {
-        tanggal: hasilStokOpnameData.tanggal,
-        perintah_stok_opname: hasilStokOpnameData.perintah_stok_opname,
-        stok_awal_barang: hasilStokOpnameData.stok_awal_barang,
-        kuantitas: hasilStokOpnameData.kuantitas,
+            tanggal: hasilStokOpnameData.tanggal,
+            perintah_stok_opname: hasilStokOpnameData.perintah_stok_opname,
+            stok_awal_barang: hasilStokOpnameData.stok_awal_barang,
+            kuantitas: hasilStokOpnameData.kuantitas,
         },
         {
             uuid

@@ -6,6 +6,9 @@ import { apiHasilStokOpnameCRUD, apiPerintahStokOpnameCRUD } from "../../../../.
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import { initialDataFromEditObject } from "../../../../../helper/select.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
+import FormInput from "../../../../../component/form/FormInput"
+import { parseToRupiahText } from "../../../../../helper/number.helper"
+import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 
 const HasilStokOpnameForm = ({
     setAddHasilStokOpnameEvent = () => { },
@@ -13,7 +16,7 @@ const HasilStokOpnameForm = ({
     getData = () => { }
 }) => {
     const [tanggal, setTanggal] = useState(hasilStokOpnameEdit?.tanggal ? hasilStokOpnameEdit.tanggal : getHariTanggalFull())
-    const [perintahStokOpname, setPerintahStokOpname] = useState(hasilStokOpnameEdit?.perintah_stok_opname ? hasilStokOpnameEdit.perintah_stok_opname : ``)
+    const [perintahStokOpname, setPerintahStokOpname] = useState(hasilStokOpnameEdit?.uuid ? hasilStokOpnameEdit.uuid : ``)
 
     const [perintahStokOpnameList, setPerintahStokOpnameList] = useState([])
     const [hasilStokOpnameList, setHasilStokOpnameList] = useState([])
@@ -25,7 +28,7 @@ const HasilStokOpnameForm = ({
                     tanggal: tanggal,
                     perintah_stok_opname: perintahStokOpname.value,
                     stok_awal_barang: hasilStokOpnameList[index].stok_awal_barang,
-                    kuantitas: `${0}`
+                    kuantitas: `${hasilStokOpnameList[index].kuantitas}`
                 }
             }).then(() => {
                 if (index + 1 < hasilStokOpnameList.length) {
@@ -47,7 +50,7 @@ const HasilStokOpnameForm = ({
                 if (resData.data.entry.length > 0) {
                     if (hasilStokOpnameEdit) {
                         initialDataFromEditObject({
-                            editObject: hasilStokOpnameEdit.kategori_barang,
+                            editObject: hasilStokOpnameEdit.uuid,
                             dataList: resData.data.entry,
                             setState: setPerintahStokOpname,
                             labelKey: "nomor_surat_perintah",
@@ -70,8 +73,22 @@ const HasilStokOpnameForm = ({
             }).catch(err => showError(err))
     }
 
+    const _updateKuantitas = (value, stok_awal_barang) => {
+        let hasilStokOpnameListCopy = hasilStokOpnameList
+
+        hasilStokOpnameListCopy = hasilStokOpnameListCopy.map(x => {
+            if (x.stok_awal_barang == stok_awal_barang) {
+                x.kuantitas = value
+            }
+            return x
+        })
+        setHasilStokOpnameList(x => x = hasilStokOpnameListCopy)
+    }
+
     useEffect(() => {
-        _getDaftarBarangPerintahStokOpname()
+        if (perintahStokOpname) {
+            _getDaftarBarangPerintahStokOpname()
+        }
     }, [perintahStokOpname])
 
     useEffect(() => {
@@ -135,7 +152,20 @@ const HasilStokOpnameForm = ({
                                         <td>{item.kategori_harga_barang_kode_barang}</td>
                                         <td>{item.daftar_barang_name}</td>
                                         <td>{item.satuan_barang_name}</td>
-                                        <td>{item.kuantitas}</td>
+                                        <td>
+                                            <FormInput
+                                                name={"kuantitas_" + i}
+                                                type={"text"}
+                                                other={{
+                                                    defaultValue: item.kuantitas
+                                                }}
+                                                onchange={(e) => {
+                                                    inputOnlyRupiah(e)
+                                                    _updateKuantitas(e.target.value, item.stok_awal_barang)
+                                                }}
+                                                value={parseToRupiahText(item.kuantitas)}
+                                            />
+                                        </td>
                                     </tr>
                                 </>
                             })

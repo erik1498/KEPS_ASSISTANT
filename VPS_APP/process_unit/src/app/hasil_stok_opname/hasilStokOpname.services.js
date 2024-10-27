@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createHasilStokOpnameRepo, deleteHasilStokOpnameByUuidRepo, getAllBarangAktifByPerintahStokOpnameRepo, getAllHasilStokOpnameRepo, getHasilStokOpnameByUuidRepo, updateHasilStokOpnameByUuidRepo } from "./hasilStokOpname.repository.js"
+import { createHasilStokOpnameRepo, deleteHasilStokOpnameByUuidRepo, getAllBarangAktifByPerintahStokOpnameRepo, getAllHasilStokOpnameRepo, getHasilStokOpnameByPerintahStokOpnameRepo, getHasilStokOpnameByUuidRepo, updateHasilStokOpnameByUuidRepo } from "./hasilStokOpname.repository.js"
 
 export const getAllHasilStokOpnameService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllHasilStokOpnameService", null, req_identity)
@@ -25,15 +25,16 @@ export const getAllHasilStokOpnameService = async (query, req_identity) => {
 
 export const getAllBarangAktifByPerintahStokOpnameService = async (perintah_stok_opname, req_identity) => {
     LOGGER(logType.INFO, `Start getAllBarangAktifByPerintahStokOpnameService [${perintah_stok_opname}]`, null, req_identity)
-    const hasilStokOpname = await getAllBarangAktifByPerintahStokOpnameRepo(perintah_stok_opname, req_identity)
 
-    if (!hasilStokOpname) {
-        throw Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
+    const hasilStokOpnameOld = await getHasilStokOpnameByPerintahStokOpnameRepo(perintah_stok_opname, req_identity)
+
+    if (hasilStokOpnameOld.length == 0) {
+        const hasilStokOpname = await getAllBarangAktifByPerintahStokOpnameRepo(perintah_stok_opname, req_identity)
+        return hasilStokOpname
     }
-    return hasilStokOpname
+
+    return hasilStokOpnameOld
+
 }
 
 export const getHasilStokOpnameByUuidService = async (uuid, req_identity) => {
