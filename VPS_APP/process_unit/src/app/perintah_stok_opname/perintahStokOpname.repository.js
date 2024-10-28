@@ -117,3 +117,73 @@ export const updatePerintahStokOpnameByUuidRepo = async (uuid, perintahStokOpnam
         }
     )
 }
+
+export const getStatusPerintahStokOpnameAktifByTanggalRepo = async (tanggal, uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                res.*,
+                CASE 
+                    WHEN res.tanggal_selesai != "BELUM SELESAI"
+                    THEN 
+                        CASE
+                            WHEN res.tanggal_selesai >= "${tanggal}"
+                            THEN 0
+                            ELSE 1
+                        END
+                    ELSE 0
+                END AS allowToExecute
+            FROM (
+                SELECT  
+                    psot.uuid,
+                    psot.tanggal,
+                    IFNULL((
+                        SELECT 
+                            ppt.tanggal 
+                        FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt 
+                        WHERE ppt.perintah_stok_opname = psot.uuid 
+                        LIMIT 1
+                    ), "BELUM SELESAI") AS tanggal_selesai,
+                    psot.nomor_surat_perintah
+                FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
+                WHERE psot.tanggal <= "${tanggal}"
+                ${uuid ? `AND psot.uuid != "${uuid}"` : ``}
+            ) AS res
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
+export const perintahStokOpnameStatusRepo = async (perintah_stok_opname, req_id) => {
+    const perintahStokOpname = await db.query(
+        `
+            SELECT 
+                (
+                    SELECT 
+                        COUNT(0) 
+                    FROM ${generateDatabaseName(req_id)}.hasil_stok_opname_tab hsot
+                    WHERE hsot.perintah_stok_opname = psot.uuid 
+                ) AS hasil_stok_opname,
+                (
+                    SELECT
+                        COUNT(0)
+                    FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt
+                    WHERE ppt.perintah_stok_opname = psot.uuid 
+                ) AS penyesuaian_persediaan,
+                (
+                    SELECT 
+                        COUNT(0)
+                    FROM ${generateDatabaseName(req_id)}.neraca_tab nt 
+                    WHERE nt.bulan = MONTH(psot.tanggal) AND nt.tahun = YEAR(psot.tanggal)
+                ) AS status_validasi,
+                YEAR(psot.tanggal) AS tahun,
+                MONTH(psot.tanggal) AS bulan
+            FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
+            WHERE psot.uuid = "${perintah_stok_opname}"
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return perintahStokOpname
+}

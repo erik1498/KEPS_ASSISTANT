@@ -10,7 +10,7 @@ import { showAlert, showDialog, showError } from "../../../../helper/form.helper
 import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
 import { HasilStokOpnamePrint } from "./component/HasilStokOpnamePrint"
-import { getBulanByIndex } from "../../../../helper/date.helper"
+import { formatDate, getBulanByIndex } from "../../../../helper/date.helper"
 import PageTitle from "../../../../component/general/PageTitle"
 
 const HasilStokOpnamePage = () => {
@@ -120,28 +120,6 @@ const HasilStokOpnamePage = () => {
                                         <FaTimes onClick={() => _getData("")} className="cursor-pointer" />
                                 }
                             </label>
-                            <div className="flex gap-x-2 items-center">
-                                <button className="btn btn-sm bg-blue-900 text-white border-none"
-                                    onClick={() => {
-                                        setHasilStokOpnameEdit(null)
-                                        setAddHasilStokOpname(!addHasilStokOpname)
-                                    }}
-                                ><FaPlus /> Tambah Hasil Stok Opname</button>
-                                <div className="hidden">
-                                    <HasilStokOpnamePrint
-                                        data={hasilStokOpname}
-                                        ref={HasilStokOpnamePrintRef}
-                                        bulan={getBulanByIndex(new Date().getMonth())}
-                                        tahun={data.tahun}
-                                    />
-                                </div>
-                                <button
-                                    onClick={handlePrint}
-                                    className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
-                                >
-                                    <FaPrint /> Cetak Hasil Stok Opname
-                                </button>
-                            </div>
                         </div>
                         <div className="overflow-x-auto bg-white shadow-xl rounded-md h-[50vh] no-scrollbar px-6 pb-4">
                             <table className="table">
@@ -149,6 +127,7 @@ const HasilStokOpnamePage = () => {
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
+                                        <th>Tanggal</th>
                                         <th>Nomor Perintah Stok Opname</th>
                                         <th>Pegawai Penanggung Jawab</th>
                                         <th>Pegawai Pelaksana</th>
@@ -163,6 +142,7 @@ const HasilStokOpnamePage = () => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
+                                                    <td>{formatDate(item.tanggal, true)}</td>
                                                     <td>{item.nomor_surat_perintah}</td>
                                                     <td>{item.pegawai_penanggung_jawab_name}</td>
                                                     <td>{item.pegawai_pelaksana_name}</td>
@@ -173,11 +153,6 @@ const HasilStokOpnamePage = () => {
                                                             onClick={() => {
                                                                 _editHasilStokOpname(i)
                                                             }} />
-                                                        <FaTrash size={12} className="text-red-500 cursor-pointer"
-                                                            onClick={() => {
-                                                                _deleteHasilStokOpname(i)
-                                                            }}
-                                                        />
                                                     </td>
                                                 </tr>
                                             </>

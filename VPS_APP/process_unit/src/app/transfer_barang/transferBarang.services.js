@@ -1,5 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getStatusPerintahStokOpnameAktifByTanggalService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createTransferBarangRepo, deleteTransferBarangByUuidRepo, getAllTransferBarangRepo, getTransferBarangByUuidRepo, updateTransferBarangByUuidRepo } from "./transferBarang.repository.js"
 
 export const getAllTransferBarangService = async (query, req_identity) => {
@@ -40,13 +41,19 @@ export const createTransferBarangService = async (transferBarangData, req_identi
     LOGGER(logType.INFO, `Start createTransferBarangService`, transferBarangData, req_identity)
     transferBarangData.enabled = 1
 
+    await getStatusPerintahStokOpnameAktifByTanggalService(transferBarangData.tanggal, null, req_identity)
+
     const transferBarang = await createTransferBarangRepo(transferBarangData, req_identity)
     return transferBarang
 }
 
 export const deleteTransferBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteTransferBarangByUuidService [${uuid}]`, null, req_identity)
-    await getTransferBarangByUuidService(uuid, req_identity)
+
+    const beforeData = await getTransferBarangByUuidService(uuid, req_identity)
+
+    await getStatusPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, null, req_identity)
+
     await deleteTransferBarangByUuidRepo(uuid, req_identity)
     return true
 }
@@ -54,7 +61,10 @@ export const deleteTransferBarangByUuidService = async (uuid, req_identity) => {
 export const updateTransferBarangByUuidService = async (uuid, transferBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateTransferBarangByUuidService [${uuid}]`, transferBarangData, req_identity)
     const beforeData = await getTransferBarangByUuidService(uuid, req_identity)
-    const transferBarang = await updateTransferBarangByUuidRepo(uuid, transferBarangData, req_identity)
+
+    await getStatusPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, req_identity)
+
+    const transferBarang = await updateTransferBarangByUuidRepo(uuid, transferBarangData, null, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
         beforeData,

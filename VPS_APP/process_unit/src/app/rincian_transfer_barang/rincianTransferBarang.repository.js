@@ -60,7 +60,7 @@ export const getRincianTransferBarangByTransferBarangUuidRepo = async (transfer_
             JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang
             WHERE dgt.uuid = (
                 SELECT 
-                    tbt.gudang_asal
+                    tbt.daftar_gudang_asal
                 FROM ${generateDatabaseName(req_id)}.transfer_barang_tab tbt 
                 WHERE tbt.uuid = "${transfer_barang}"
             ) AND dbt.status = 1

@@ -1,4 +1,5 @@
 import { getLabaRugiReport } from "../../utils/labaRugiUtil.js"
+import { LOGGER, logType } from "../../utils/loggerUtil.js"
 import { getNeracaSaldoReport } from "../../utils/neracaSaldoUtil.js"
 import { getNeracaReport } from "../../utils/neracaUtils.js"
 import { getAllNeracaSaldoByBulanService } from "../neraca_saldo/neracaSaldo.services.js"
@@ -62,6 +63,7 @@ export const getNeracaSaldoByBulanAndTahunServices = async (bulan, tahun, req_id
 }
 
 export const getNeracaValidasiByTanggalService = async (addMessage, tanggal, req_identity) => {
+    LOGGER(logType.INFO, `Start getNeracaValidasiByTanggalService`, { addMessage, tanggal, req_identity }, req_identity)
     const neracaValidasi = await getNeracaValidasiByTanggalRepo(tanggal, req_identity)
 
     if (neracaValidasi.length > 0 && neracaValidasi[0].count > 0) {

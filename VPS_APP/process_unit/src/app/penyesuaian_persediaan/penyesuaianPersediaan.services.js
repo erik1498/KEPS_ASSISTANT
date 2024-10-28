@@ -52,7 +52,6 @@ export const createPenyesuaianPersediaanService = async (penyesuaianPersediaanDa
 
 export const deletePenyesuaianPersediaanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deletePenyesuaianPersediaanByUuidService [${uuid}]`, null, req_identity)
-    await getPenyesuaianPersediaanByUuidService(uuid, req_identity)
     await deletePenyesuaianPersediaanByUuidRepo(uuid, req_identity)
     return true
 }

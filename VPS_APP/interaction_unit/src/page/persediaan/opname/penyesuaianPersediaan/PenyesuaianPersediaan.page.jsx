@@ -10,7 +10,7 @@ import { showAlert, showDialog, showError } from "../../../../helper/form.helper
 import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
 import { PenyesuaianPersediaanPrint } from "./component/PenyesuaianPersediaanPrint"
-import { getBulanByIndex } from "../../../../helper/date.helper"
+import { formatDate, getBulanByIndex } from "../../../../helper/date.helper"
 import PageTitle from "../../../../component/general/PageTitle"
 
 const PenyesuaianPersediaanPage = () => {
@@ -120,28 +120,6 @@ const PenyesuaianPersediaanPage = () => {
                                         <FaTimes onClick={() => _getData("")} className="cursor-pointer" />
                                 }
                             </label>
-                            <div className="flex gap-x-2 items-center">
-                                <button className="btn btn-sm bg-blue-900 text-white border-none"
-                                    onClick={() => {
-                                        setPenyesuaianPersediaanEdit(null)
-                                        setAddPenyesuaianPersediaan(!addPenyesuaianPersediaan)
-                                    }}
-                                ><FaPlus /> Tambah Penyesuaian Persediaan</button>
-                                <div className="hidden">
-                                    <PenyesuaianPersediaanPrint
-                                        data={penyesuaianPersediaan}
-                                        ref={PenyesuaianPersediaanPrintRef}
-                                        bulan={getBulanByIndex(new Date().getMonth())}
-                                        tahun={data.tahun}
-                                    />
-                                </div>
-                                <button
-                                    onClick={handlePrint}
-                                    className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
-                                >
-                                    <FaPrint /> Cetak Penyesuaian Persediaan
-                                </button>
-                            </div>
                         </div>
                         <div className="overflow-x-auto bg-white shadow-xl rounded-md h-[50vh] no-scrollbar px-6 pb-4">
                             <table className="table">
@@ -149,6 +127,7 @@ const PenyesuaianPersediaanPage = () => {
                                 <thead>
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
+                                        <th>Tanggal</th>
                                         <th>Nomor Penyesuaian Persediaan</th>
                                         <th>Pegawai Penanggung Jawab</th>
                                         <th>Pegawai Pelaksana</th>
@@ -163,6 +142,7 @@ const PenyesuaianPersediaanPage = () => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
+                                                    <td>{formatDate(item.tanggal, true)}</td>
                                                     <td>{item.nomor_surat_perintah}</td>
                                                     <td>{item.pegawai_penanggung_jawab_name}</td>
                                                     <td>{item.pegawai_pelaksana_name}</td>
@@ -173,11 +153,6 @@ const PenyesuaianPersediaanPage = () => {
                                                             onClick={() => {
                                                                 _editPenyesuaianPersediaan(i)
                                                             }} />
-                                                        <FaTrash size={12} className="text-red-500 cursor-pointer"
-                                                            onClick={() => {
-                                                                _deletePenyesuaianPersediaan(i)
-                                                            }}
-                                                        />
                                                     </td>
                                                 </tr>
                                             </>
