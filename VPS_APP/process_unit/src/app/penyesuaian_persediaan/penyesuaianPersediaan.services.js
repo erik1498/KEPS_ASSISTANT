@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createPenyesuaianPersediaanRepo, deletePenyesuaianPersediaanByUuidRepo, getAllPenyesuaianPersediaanRepo, getPenyesuaianPersediaanByUuidRepo, updatePenyesuaianPersediaanByUuidRepo } from "./penyesuaianPersediaan.repository.js"
+import { createPenyesuaianPersediaanRepo, deletePenyesuaianPersediaanByUuidRepo, getAllPenyesuaianPersediaanRepo, getPenyesuaianPersediaanByPerintahStokOpnameRepo, getPenyesuaianPersediaanByUuidRepo, updatePenyesuaianPersediaanByUuidRepo } from "./penyesuaianPersediaan.repository.js"
 
 export const getAllPenyesuaianPersediaanService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPenyesuaianPersediaanService", null, req_identity)
@@ -33,6 +33,12 @@ export const getPenyesuaianPersediaanByUuidService = async (uuid, req_identity) 
             prop: "error"
         }))
     }
+    return penyesuaianPersediaan
+}
+
+export const getPenyesuaianPersediaanByPerintahStokOpnameService = async (perintah_stok_opname, req_identity) => {
+    LOGGER(logType.INFO, `Start getPenyesuaianPersediaanByPerintahStokOpnameService [${perintah_stok_opname}]`, null, req_identity)
+    const penyesuaianPersediaan = await getPenyesuaianPersediaanByPerintahStokOpnameRepo(perintah_stok_opname, req_identity)
     return penyesuaianPersediaan
 }
 

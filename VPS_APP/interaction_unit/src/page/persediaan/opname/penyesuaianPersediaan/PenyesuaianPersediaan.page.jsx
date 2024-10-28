@@ -2,7 +2,7 @@ import { FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/
 import Wrap from "../../../../component/layout/Wrap"
 import { useDataContext } from "../../../../context/dataContext.context"
 import { useState } from "react"
-import { apiPenyesuaianPersediaanCRUD } from "../../../../service/endPointList.api"
+import { apiPerintahStokOpnameCRUD } from "../../../../service/endPointList.api"
 import { useEffect } from "react"
 import Pagination from "../../../../component/general/Pagination"
 import PenyesuaianPersediaanForm from "./component/PenyesuaianPersediaanForm"
@@ -45,7 +45,7 @@ const PenyesuaianPersediaanPage = () => {
             setSearch(searchParam)
         }
         setIsLoading(true)
-        apiPenyesuaianPersediaanCRUD
+        apiPerintahStokOpnameCRUD
             .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
             .then(resData => {
 
@@ -67,7 +67,7 @@ const PenyesuaianPersediaanPage = () => {
     const _deletePenyesuaianPersediaan = async (i) => {
         if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
             let PenyesuaianPersediaanSelected = penyesuaianPersediaan[i]
-            apiPenyesuaianPersediaanCRUD
+            apiPerintahStokOpnameCRUD
                 .custom(`/${PenyesuaianPersediaanSelected.uuid}`, "DELETE")
                 .then(() => {
                     showAlert("Berhasil", "Data berhasil dihapus")
@@ -163,7 +163,7 @@ const PenyesuaianPersediaanPage = () => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
-                                                    <td>{item.nomor_surat_Hasil}</td>
+                                                    <td>{item.nomor_surat_perintah}</td>
                                                     <td>{item.pegawai_penanggung_jawab_name}</td>
                                                     <td>{item.pegawai_pelaksana_name}</td>
                                                     <td>{item.kategori_barang_name}</td>

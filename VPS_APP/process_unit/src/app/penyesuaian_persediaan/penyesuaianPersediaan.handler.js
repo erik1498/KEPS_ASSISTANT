@@ -1,5 +1,5 @@
 import { penyesuaianPersediaanValidation } from "./penyesuaianPersediaan.validation.js"
-import { createPenyesuaianPersediaanService, deletePenyesuaianPersediaanByUuidService, getAllPenyesuaianPersediaanService, getPenyesuaianPersediaanByUuidService, updatePenyesuaianPersediaanByUuidService } from "./penyesuaianPersediaan.services.js"
+import { createPenyesuaianPersediaanService, deletePenyesuaianPersediaanByUuidService, getAllPenyesuaianPersediaanService, getPenyesuaianPersediaanByPerintahStokOpnameService, getPenyesuaianPersediaanByUuidService, updatePenyesuaianPersediaanByUuidService } from "./penyesuaianPersediaan.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -27,6 +27,24 @@ export const getPenyesuaianPersediaanByUUID = async (req, res) => {
 
         res.json({
             data: await getPenyesuaianPersediaanByUuidService(uuid, req.identity),
+            message: "Get Data By UUID Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getPenyesuaianPersediaanByPerintahStokOpname = async (req, res) => {
+    LOGGER(logType.INFO, "Start getPenyesuaianPersediaanByPerintahStokOpname", null, req.identity)
+    try {
+        const { perintah_stok_opname } = req.params
+
+        res.json({
+            data: await getPenyesuaianPersediaanByPerintahStokOpnameService(perintah_stok_opname, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {

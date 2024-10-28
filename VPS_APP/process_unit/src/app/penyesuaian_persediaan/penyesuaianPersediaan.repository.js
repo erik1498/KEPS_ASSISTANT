@@ -41,20 +41,101 @@ export const getPenyesuaianPersediaanByUuidRepo = async (uuid, req_id) => {
     )
 }
 
+export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_stok_opname, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                res.jumlah_awal_stok - res.penjualan + res.retur_penjualan + res.pembelian - res.retur_pembelian AS stok_sistem,
+                CASE 
+                    WHEN (res.jumlah_awal_stok - res.penjualan + res.retur_penjualan + res.pembelian - res.retur_pembelian) > res.kuantitas
+                    THEN "PENGURANGAN"
+                    ELSE 
+                        CASE
+                            WHEN (res.jumlah_awal_stok - res.penjualan + res.retur_penjualan + res.pembelian - res.retur_pembelian) = res.kuantitas
+                            THEN "SESUAI"
+                            ELSE "PENAMBAHAN"
+                        END
+                END AS tipe_penyesuaian,
+                res.*
+            FROM (
+                SELECT 
+                    IFNULL((
+                        SELECT ppt.uuid FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt WHERE ppt.hasil_stok_opname = hsot.uuid
+                    ), "") AS uuid,
+                    IFNULL((
+                        SELECT ppt.keterangan FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt WHERE ppt.hasil_stok_opname = hsot.uuid
+                    ), "") AS keterangan,
+                    IFNULL((
+                        SELECT
+                            SUM(rppbt.jumlah) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt 
+                        JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_pembelian_barang 
+                        WHERE rppbt.stok_awal_barang = sabt.uuid 
+                        AND ppbt.enabled = 1 
+                        AND rppbt.enabled = 1
+                    ), 0) AS pembelian,
+                    IFNULL((
+                        SELECT 
+                            SUM(rrpbt.jumlah) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_pembelian_barang_tab rrpbt 
+                        JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt ON rppbt.uuid = rrpbt.rincian_pesanan_pembelian_barang
+                        WHERE rppbt.stok_awal_barang = sabt.uuid 
+                        AND rrpbt.enabled = 1
+                        AND rppbt.enabled = 1
+                    ), 0) AS retur_pembelian,
+                    IFNULL((
+                        SELECT
+                            SUM(rppbt.jumlah) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
+                        JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang 
+                        WHERE rppbt.stok_awal_barang = sabt.uuid 
+                        AND ppbt.enabled = 1 
+                        AND rppbt.enabled = 1
+                    ), 0) AS penjualan,
+                    IFNULL((
+                        SELECT 
+                            SUM(rrpbt.jumlah) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+                        JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt ON rppbt.uuid = rrpbt.rincian_pesanan_penjualan_barang
+                        WHERE rppbt.stok_awal_barang = sabt.uuid 
+                        AND rrpbt.enabled = 1
+                        AND rppbt.enabled = 1
+                    ), 0) AS retur_penjualan,
+                    hsot.uuid AS hasil_stok_opname,
+                    hsot.kuantitas AS kuantitas,
+                    sabt.jumlah AS jumlah_awal_stok,
+                    sabt.uuid AS stok_awal_barang,
+                    kht.kode_barang AS kategori_harga_barang_kode_barang,
+                    dbt.name AS daftar_barang_name,
+                    sbt.name AS satuan_barang_name
+                FROM ${generateDatabaseName(req_id)}.hasil_stok_opname_tab hsot 
+                JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = hsot.stok_awal_barang 
+                JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang
+                JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab kht ON kht.uuid = sabt.kategori_harga_barang
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = kht.satuan_barang 
+                WHERE hsot.perintah_stok_opname = "${perintah_stok_opname}"
+            ) AS res
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
 export const createPenyesuaianPersediaanRepo = async (penyesuaianPersediaanData, req_id) => {
     return insertQueryUtil(
         req_id,
         generateDatabaseName(req_id),
         PenyesuaianPersediaanModel,
-        {   
-        tanggal: penyesuaianPersediaanData.tanggal,
-        perintah_stok_opname: penyesuaianPersediaanData.perintah_stok_opname,
-        hasil_stok_opname: penyesuaianPersediaanData.hasil_stok_opname,
-        kuantitas: penyesuaianPersediaanData.kuantitas,
-        stok_tersedia_sistem: penyesuaianPersediaanData.stok_tersedia_sistem,
-        tipe_penyesuaian: penyesuaianPersediaanData.tipe_penyesuaian,
-        jumlah: penyesuaianPersediaanData.jumlah,
-        keterangan: penyesuaianPersediaanData.keterangan,
+        {
+            tanggal: penyesuaianPersediaanData.tanggal,
+            perintah_stok_opname: penyesuaianPersediaanData.perintah_stok_opname,
+            hasil_stok_opname: penyesuaianPersediaanData.hasil_stok_opname,
+            kuantitas: penyesuaianPersediaanData.kuantitas,
+            stok_tersedia_sistem: penyesuaianPersediaanData.stok_tersedia_sistem,
+            tipe_penyesuaian: penyesuaianPersediaanData.tipe_penyesuaian,
+            jumlah: penyesuaianPersediaanData.jumlah,
+            keterangan: penyesuaianPersediaanData.keterangan,
             enabled: penyesuaianPersediaanData.enabled
         }
     )
@@ -80,14 +161,14 @@ export const updatePenyesuaianPersediaanByUuidRepo = async (uuid, penyesuaianPer
         generateDatabaseName(req_id),
         PenyesuaianPersediaanModel,
         {
-        tanggal: penyesuaianPersediaanData.tanggal,
-        perintah_stok_opname: penyesuaianPersediaanData.perintah_stok_opname,
-        hasil_stok_opname: penyesuaianPersediaanData.hasil_stok_opname,
-        kuantitas: penyesuaianPersediaanData.kuantitas,
-        stok_tersedia_sistem: penyesuaianPersediaanData.stok_tersedia_sistem,
-        tipe_penyesuaian: penyesuaianPersediaanData.tipe_penyesuaian,
-        jumlah: penyesuaianPersediaanData.jumlah,
-        keterangan: penyesuaianPersediaanData.keterangan,
+            tanggal: penyesuaianPersediaanData.tanggal,
+            perintah_stok_opname: penyesuaianPersediaanData.perintah_stok_opname,
+            hasil_stok_opname: penyesuaianPersediaanData.hasil_stok_opname,
+            kuantitas: penyesuaianPersediaanData.kuantitas,
+            stok_tersedia_sistem: penyesuaianPersediaanData.stok_tersedia_sistem,
+            tipe_penyesuaian: penyesuaianPersediaanData.tipe_penyesuaian,
+            jumlah: penyesuaianPersediaanData.jumlah,
+            keterangan: penyesuaianPersediaanData.keterangan,
         },
         {
             uuid

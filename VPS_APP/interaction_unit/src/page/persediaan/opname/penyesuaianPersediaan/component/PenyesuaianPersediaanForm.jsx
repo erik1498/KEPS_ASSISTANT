@@ -2,10 +2,12 @@ import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
 import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
-import { apiDaftarGudangCRUD, apiKategoriBarangCRUD, apiPegawaiCRUD, apiPenyesuaianPersediaanCRUD } from "../../../../../service/endPointList.api"
+import { apiPenyesuaianPersediaanCRUD, apiPerintahStokOpnameCRUD } from "../../../../../service/endPointList.api"
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import { initialDataFromEditObject } from "../../../../../helper/select.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
+import FormInput from "../../../../../component/form/FormInput"
+import { parseToRupiahText } from "../../../../../helper/number.helper"
 
 const PenyesuaianPersediaanForm = ({
     setAddPenyesuaianPersediaanEvent = () => { },
@@ -13,133 +15,94 @@ const PenyesuaianPersediaanForm = ({
     getData = () => { }
 }) => {
     const [tanggal, setTanggal] = useState(penyesuaianPersediaanEdit?.tanggal ? penyesuaianPersediaanEdit.tanggal : getHariTanggalFull())
-    const [nomorPenyesuaianPersediaan, setNomorPenyesuaianPersediaan] = useState(penyesuaianPersediaanEdit?.nomor_surat_Hasil ? penyesuaianPersediaanEdit.nomor_surat_Hasil : ``)
-    const [pegawaiPenanggungJawab, setPegawaiPenanggungJawab] = useState(penyesuaianPersediaanEdit?.pegawai_penanggung_jawab ? penyesuaianPersediaanEdit.pegawai_penanggung_jawab : ``)
-    const [pegawaiPelaksana, setPegawaiPelaksana] = useState(penyesuaianPersediaanEdit?.pegawai_pelaksana ? penyesuaianPersediaanEdit.pegawai_pelaksana : ``)
-    const [kategoriBarang, setKategoriBarang] = useState(penyesuaianPersediaanEdit?.kategori_barang ? penyesuaianPersediaanEdit.kategori_barang : ``)
-    const [gudangAsal, setGudangAsal] = useState(penyesuaianPersediaanEdit?.gudang_asal ? penyesuaianPersediaanEdit.gudang_asal : ``)
-    const [validasi, setValidasi] = useState(penyesuaianPersediaanEdit?.validasi ? penyesuaianPersediaanEdit.validasi : ``)
+    const [perintahStokOpname, setPerintahStokOpname] = useState(penyesuaianPersediaanEdit?.uuid ? penyesuaianPersediaanEdit.uuid : ``)
 
-    const [penyesuaaianPersediaan, setPenyesuaianPersediaan] = useState()
+    const [perintahStokOpnameList, setPerintahStokOpnameList] = useState([])
+    const [penyesuaianPersediaanList, setPenyesuaianPersediaanList] = useState([])
 
-    const [pegawaiList, setPegawaiList] = useState([])
-    const [kategoriBarangList, setKategoriBarangList] = useState([])
-    const [gudangAsalList, setGudangAsalList] = useState([])
+    const _savePenyesuaianPersediaan = async (index) => {
+        apiPenyesuaianPersediaanCRUD
+            .custom(`${penyesuaianPersediaanList[index].uuid != "" ? `/${penyesuaianPersediaanList[index].uuid}` : ``}`, penyesuaianPersediaanList[index].uuid != "" ? "PUT" : "POST", null, {
+                data: {
+                    tanggal: tanggal,
+                    perintah_stok_opname: perintahStokOpname.value,
+                    hasil_stok_opname: penyesuaianPersediaanList[index].hasil_stok_opname,
+                    kuantitas: `${penyesuaianPersediaanList[index].kuantitas}`,
+                    stok_tersedia_sistem: `${penyesuaianPersediaanList[index].stok_sistem}`,
+                    tipe_penyesuaian: `${penyesuaianPersediaanList[index].tipe_penyesuaian}`,
+                    jumlah:`${_getJumlahPerbedaan(penyesuaianPersediaanList[index])}`,
+                    keterangan: penyesuaianPersediaanList[index].keterangan
+                }
+            }).then(() => {
+                if (index + 1 < penyesuaianPersediaanList.length) {
+                    _savePenyesuaianPersediaan(index + 1)
+                } else {
+                    getData()
+                    setAddPenyesuaianPersediaanEvent()
+                }
+            }).catch(err => {
+                showError(err)
+            })
+    }
 
-    const _savePenyesuaianPersediaan = async () => {
-        if (await formValidation()) {
-            apiPenyesuaianPersediaanCRUD
-                .custom(`${penyesuaianPersediaanEdit?.uuid ? `/${penyesuaianPersediaanEdit.uuid}` : ``}`, penyesuaianPersediaanEdit ? "PUT" : "POST", null, {
-                    data: {
-                        tanggal: tanggal,
-                        nomor_surat_Hasil: nomorPenyesuaianPersediaan,
-                        pegawai_penanggung_jawab: pegawaiPenanggungJawab.value,
-                        pegawai_pelaksana: pegawaiPelaksana.value,
-                        kategori_barang: kategoriBarang.value,
-                        gudang_asal: gudangAsal.value,
-                        validasi: false
-                    }
-                }).then((resData) => {
+    const _getDataPerintahStokOpname = () => {
+        apiPerintahStokOpnameCRUD
+            .custom("", "GET")
+            .then(resData => {
+                setPerintahStokOpnameList(resData.data.entry)
+                if (resData.data.entry.length > 0) {
                     if (penyesuaianPersediaanEdit) {
-                        setPenyesuaianPersediaan(penyesuaianPersediaanEdit)
-                        showAlert("Berhasil", "Data berhasil diupdate")
-                    } else {
-                        setPenyesuaianPersediaan(resData.data)
-                        showAlert("Berhasil", "Data berhasil disimpan")
+                        initialDataFromEditObject({
+                            editObject: penyesuaianPersediaanEdit.uuid,
+                            dataList: resData.data.entry,
+                            setState: setPerintahStokOpname,
+                            labelKey: "nomor_surat_perintah",
+                            valueKey: "uuid",
+                        })
+                        return
                     }
-                }).catch(err => {
-                    showError(err)
-                })
+                    setPerintahStokOpname({
+                        label: resData.data.entry[0].nomor_surat_perintah,
+                        value: resData.data.entry[0].uuid,
+                    })
+                }
+            }).catch(err => showError(err))
+    }
+
+    const _getDaftarBarangPerintahStokOpname = () => {
+        apiPenyesuaianPersediaanCRUD.custom(`/daftar_barang/${perintahStokOpname.value}`, "GET")
+            .then(resData => {
+                setPenyesuaianPersediaanList(resData.data)
+            }).catch(err => showError(err))
+    }
+
+    const _updateKeterangan = (value, stok_awal_barang) => {
+        let hasilStokOpnameListCopy = penyesuaianPersediaanList
+
+        hasilStokOpnameListCopy = hasilStokOpnameListCopy.map(x => {
+            if (x.stok_awal_barang == stok_awal_barang) {
+                x.keterangan = value
+            }
+            return x
+        })
+        setPenyesuaianPersediaanList(x => x = hasilStokOpnameListCopy)
+    }
+
+    const _getJumlahPerbedaan = (item) => {
+        if (item.tipe_penyesuaian != "SESUAI") {
+            return item.tipe_penyesuaian == "PENGURANGAN" ? parseInt(item.stok_sistem) - parseInt(item.kuantitas) : parseInt(item.kuantitas) - parseInt(item.stok_sistem)
         }
-    }
-
-    const _getDataKategoriBarang = () => {
-        apiKategoriBarangCRUD
-            .custom("", "GET")
-            .then(resData => {
-                setKategoriBarangList(resData.data.entry)
-                if (resData.data.entry.length > 0) {
-                    if (penyesuaianPersediaanEdit) {
-                        initialDataFromEditObject({
-                            editObject: penyesuaianPersediaanEdit.kategori_barang,
-                            dataList: resData.data.entry,
-                            setState: setKategoriBarang,
-                            labelKey: "name",
-                            valueKey: "uuid",
-                        })
-                        return
-                    }
-                    setKategoriBarang({
-                        label: resData.data.entry[0].name,
-                        value: resData.data.entry[0].uuid,
-                    })
-                }
-            }).catch(err => showError(err))
-    }
-
-    const _getDataGudang = () => {
-        apiDaftarGudangCRUD
-            .custom("", "GET")
-            .then(resData => {
-                setGudangAsalList(resData.data.entry)
-                if (resData.data.entry.length > 0) {
-                    if (penyesuaianPersediaanEdit) {
-                        initialDataFromEditObject({
-                            editObject: penyesuaianPersediaanEdit.gudang_asal,
-                            dataList: resData.data.entry,
-                            setState: setGudangAsal,
-                            labelKey: "name",
-                            valueKey: "uuid",
-                        })
-                        return
-                    }
-                    setGudangAsal({
-                        label: resData.data.entry[0].name,
-                        value: resData.data.entry[0].uuid,
-                    })
-                }
-            }).catch(err => showError(err))
-    }
-
-    const _getDataPegawai = () => {
-        apiPegawaiCRUD
-            .custom("", "GET")
-            .then(resData => {
-                setPegawaiList(resData.data.entry)
-                if (resData.data.entry.length > 0) {
-                    if (penyesuaianPersediaanEdit) {
-                        initialDataFromEditObject({
-                            editObject: penyesuaianPersediaanEdit.pegawai_penanggung_jawab,
-                            dataList: resData.data.entry,
-                            setState: setPegawaiPenanggungJawab,
-                            labelKey: "name",
-                            valueKey: "uuid",
-                        })
-                        initialDataFromEditObject({
-                            editObject: penyesuaianPersediaanEdit.pegawai_pelaksana,
-                            dataList: resData.data.entry,
-                            setState: setPegawaiPelaksana,
-                            labelKey: "name",
-                            valueKey: "uuid",
-                        })
-                        return
-                    }
-                    setPegawaiPenanggungJawab({
-                        label: resData.data.entry[0].name,
-                        value: resData.data.entry[0].uuid,
-                    })
-                    setPegawaiPelaksana({
-                        label: resData.data.entry[0].name,
-                        value: resData.data.entry[0].uuid,
-                    })
-                }
-            }).catch(err => showError(err))
+        return "0"
     }
 
     useEffect(() => {
-        _getDataPegawai()
-        _getDataKategoriBarang()
-        _getDataGudang()
+        if (perintahStokOpname) {
+            _getDaftarBarangPerintahStokOpname()
+        }
+    }, [perintahStokOpname])
+
+    useEffect(() => {
+        _getDataPerintahStokOpname()
     }, [])
 
     return <>
@@ -166,73 +129,70 @@ const PenyesuaianPersediaanForm = ({
                         }
                     }
                 />
-                <FormInputWithLabel
-                    label={"Nomor Penyesuaian Persediaan"}
-                    type={"text"}
-                    onchange={(e) => {
-                        setNomorPenyesuaianPersediaan(e.target.value)
-                    }}
-                    others={
-                        {
-                            value: nomorPenyesuaianPersediaan,
-                            name: "nomorPenyesuaianPersediaan"
-                        }
-                    }
-                />
                 <FormSelectWithLabel
-                    label={"Pegawai Penanggung Jawab"}
-                    optionsDataList={pegawaiList}
-                    optionsLabel={"name"}
+                    label={"Perintah Stok Opname"}
+                    optionsDataList={perintahStokOpnameList}
+                    optionsLabel={"nomor_surat_perintah"}
                     optionsValue={"uuid"}
-                    disabled={penyesuaaianPersediaan}
-                    selectValue={pegawaiPenanggungJawab}
+                    selectValue={perintahStokOpname}
                     onchange={(e) => {
-                        setPegawaiPenanggungJawab(e)
+                        setPerintahStokOpname(e)
                     }}
-                    selectName={`pegawaiPenanggungJawab`}
+                    selectName={`perintahStokOpname`}
                 />
             </div>
-            <div className="mt-5 flex gap-x-2">
-                <FormSelectWithLabel
-                    label={"Pegawai Pelaksana"}
-                    optionsDataList={pegawaiList}
-                    optionsLabel={"name"}
-                    optionsValue={"uuid"}
-                    disabled={penyesuaaianPersediaan}
-                    selectValue={pegawaiPelaksana}
-                    onchange={(e) => {
-                        setPegawaiPelaksana(e)
-                    }}
-                    selectName={`pegawaiPelaksana`}
-                />
-                <FormSelectWithLabel
-                    label={"Kategori Barang"}
-                    optionsDataList={kategoriBarangList}
-                    optionsLabel={"name"}
-                    optionsValue={"uuid"}
-                    disabled={penyesuaaianPersediaan}
-                    selectValue={kategoriBarang}
-                    onchange={(e) => {
-                        setKategoriBarang(e)
-                    }}
-                    selectName={`kategoriBarang`}
-                />
-                <FormSelectWithLabel
-                    label={"Gudang Asal"}
-                    optionsDataList={gudangAsalList}
-                    optionsLabel={"name"}
-                    optionsValue={"uuid"}
-                    disabled={penyesuaaianPersediaan}
-                    selectValue={gudangAsal}
-                    onchange={(e) => {
-                        setGudangAsal(e)
-                    }}
-                    selectName={`gudangAsal`}
-                />
+            <div className="overflow-x-auto rounded-md h-max max-h-[90vh] no-scrollbar mt-5 pb-4">
+                <table className="table">
+                    {/* head */}
+                    <thead>
+                        <tr className="sticky top-0 bg-white py-4 text-black">
+                            <th width={12}>No</th>
+                            <th>Kode Barang</th>
+                            <th>Nama Barang</th>
+                            <th>Satuan Barang</th>
+                            <th>Stok Sistem</th>
+                            <th>Kuantitas</th>
+                            <th>Tipe Penyesuaian</th>
+                            <th>Jumlah</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            penyesuaianPersediaanList?.map((item, i) => {
+                                return <>
+                                    <tr key={i}>
+                                        <td>{i + 1}.</td>
+                                        <td>{item.kategori_harga_barang_kode_barang}</td>
+                                        <td>{item.daftar_barang_name}</td>
+                                        <td>{item.satuan_barang_name}</td>
+                                        <td>{item.stok_sistem}</td>
+                                        <td>{item.kuantitas}</td>
+                                        <td>{item.tipe_penyesuaian}</td>
+                                        <td>{_getJumlahPerbedaan(item)}</td>
+                                        <td>
+                                            <FormInput
+                                                name={"keterangan_" + i}
+                                                type={"text"}
+                                                other={{
+                                                    defaultValue: item.keterangan
+                                                }}
+                                                onchange={(e) => {
+                                                    _updateKeterangan(e.target.value, item.stok_awal_barang)
+                                                }}
+                                                value={parseToRupiahText(item.keterangan)}
+                                            />
+                                        </td>
+                                    </tr>
+                                </>
+                            })
+                        }
+                    </tbody>
+                </table>
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"
                 onClick={() => {
-                    _savePenyesuaianPersediaan()
+                    _savePenyesuaianPersediaan(0)
                 }}
             ><FaSave /> Simpan</button>
         </div>
