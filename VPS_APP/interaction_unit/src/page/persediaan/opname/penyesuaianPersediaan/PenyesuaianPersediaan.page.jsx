@@ -2,7 +2,7 @@ import { FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/
 import Wrap from "../../../../component/layout/Wrap"
 import { useDataContext } from "../../../../context/dataContext.context"
 import { useState } from "react"
-import { apiPerintahStokOpnameCRUD } from "../../../../service/endPointList.api"
+import { apiPenyesuaianPersediaanCRUD, apiPerintahStokOpnameCRUD } from "../../../../service/endPointList.api"
 import { useEffect } from "react"
 import Pagination from "../../../../component/general/Pagination"
 import PenyesuaianPersediaanForm from "./component/PenyesuaianPersediaanForm"
@@ -59,16 +59,16 @@ const PenyesuaianPersediaanPage = () => {
     }
 
     const _editPenyesuaianPersediaan = (i) => {
-        let PenyesuaianPersediaanSelected = penyesuaianPersediaan[i]
-        setPenyesuaianPersediaanEdit(PenyesuaianPersediaanSelected)
+        let penyesuaianPersediaanSelected = penyesuaianPersediaan[i]
+        setPenyesuaianPersediaanEdit(penyesuaianPersediaanSelected)
         setAddPenyesuaianPersediaan(!addPenyesuaianPersediaan)
     }
 
     const _deletePenyesuaianPersediaan = async (i) => {
         if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
-            let PenyesuaianPersediaanSelected = penyesuaianPersediaan[i]
-            apiPerintahStokOpnameCRUD
-                .custom(`/${PenyesuaianPersediaanSelected.uuid}`, "DELETE")
+            let penyesuaianPersediaanSelected = penyesuaianPersediaan[i]
+            apiPenyesuaianPersediaanCRUD
+                .custom(`/${penyesuaianPersediaanSelected.uuid}`, "DELETE")
                 .then(() => {
                     showAlert("Berhasil", "Data berhasil dihapus")
                     _getData()
@@ -153,6 +153,15 @@ const PenyesuaianPersediaanPage = () => {
                                                             onClick={() => {
                                                                 _editPenyesuaianPersediaan(i)
                                                             }} />
+
+                                                        {
+                                                            item.penyesuaian_persediaan_count > 0 ? <>
+                                                                <FaTrash size={12} className="text-red-500 cursor-pointer"
+                                                                    onClick={() => {
+                                                                        _deletePenyesuaianPersediaan(i)
+                                                                    }} />
+                                                            </> : <></>
+                                                        }
                                                     </td>
                                                 </tr>
                                             </>

@@ -19,7 +19,7 @@ export const getAllKonversiBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const konversiBarangs = await getAllKonversiBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(konversiBarangs.entry, konversiBarangs.count, konversiBarangs.pageNumber, konversiBarangs.size)
 }
@@ -41,7 +41,7 @@ export const createKonversiBarangService = async (konversiBarangData, req_identi
     LOGGER(logType.INFO, `Start createKonversiBarangService`, konversiBarangData, req_identity)
     konversiBarangData.enabled = 1
 
-    await getStatusPerintahStokOpnameAktifByTanggalService(konversiBarangData.tanggal, req_identity)
+    await getStatusPerintahStokOpnameAktifByTanggalService(konversiBarangData.tanggal, null, req_identity)
 
     const konversiBarang = await createKonversiBarangRepo(konversiBarangData, req_identity)
     return konversiBarang
@@ -51,7 +51,7 @@ export const deleteKonversiBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteKonversiBarangByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getKonversiBarangByUuidService(uuid, req_identity)
 
-    await getStatusPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, req_identity)
+    await getStatusPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, null, req_identity)
 
     await deleteKonversiBarangByUuidRepo(uuid, req_identity)
     return true
@@ -59,10 +59,10 @@ export const deleteKonversiBarangByUuidService = async (uuid, req_identity) => {
 
 export const updateKonversiBarangByUuidService = async (uuid, konversiBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateKonversiBarangByUuidService [${uuid}]`, konversiBarangData, req_identity)
-    
+
     const beforeData = await getKonversiBarangByUuidService(uuid, req_identity)
-    
-    await getStatusPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, req_identity)
+
+    await getStatusPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, null, req_identity)
 
     const konversiBarang = await updateKonversiBarangByUuidRepo(uuid, konversiBarangData, req_identity)
 

@@ -83,6 +83,7 @@ export const getHasilStokOpnameByPerintahStokOpnameRepo = async (perintah_stok_o
             JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab kht ON kht.uuid = sabt.kategori_harga_barang
             JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = kht.satuan_barang 
             WHERE hsot.perintah_stok_opname = "${perintah_stok_opname}"
+            AND hsot.enabled = 1
         `,
         {
             type: Sequelize.QueryTypes.SELECT
@@ -117,7 +118,7 @@ export const deleteHasilStokOpnameByUuidRepo = async (uuid, req_id) => {
             enabled: false
         },
         {
-            uuid
+            perintah_stok_opname: uuid
         }
     )
 }

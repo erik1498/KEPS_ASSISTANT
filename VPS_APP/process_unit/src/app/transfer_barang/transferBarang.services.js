@@ -62,9 +62,9 @@ export const updateTransferBarangByUuidService = async (uuid, transferBarangData
     LOGGER(logType.INFO, `Start updateTransferBarangByUuidService [${uuid}]`, transferBarangData, req_identity)
     const beforeData = await getTransferBarangByUuidService(uuid, req_identity)
 
-    await getStatusPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, req_identity)
+    await getStatusPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, null, req_identity)
 
-    const transferBarang = await updateTransferBarangByUuidRepo(uuid, transferBarangData, null, req_identity)
+    const transferBarang = await updateTransferBarangByUuidRepo(uuid, transferBarangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
         beforeData,

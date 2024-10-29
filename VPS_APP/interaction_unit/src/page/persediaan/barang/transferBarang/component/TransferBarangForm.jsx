@@ -32,7 +32,6 @@ const TransferBarangForm = ({
                         kode_transfer_barang: kodeTransferBarang,
                         daftar_gudang_asal: gudangAsalTransferBarang.value,
                         daftar_gudang_akhir: gudangAkhirTransferBarang.value
-
                     }
                 }).then((resData) => {
                     if (transferBarangEdit) {
@@ -67,7 +66,7 @@ const TransferBarangForm = ({
                 if (resData.data.entry.length > 0) {
                     if (transferBarangEdit) {
                         initialDataFromEditObject({
-                            editObject: transferBarangEdit.gudang_asal,
+                            editObject: transferBarangEdit.daftar_gudang_asal,
                             dataList: resData.data.entry,
                             setState: setGudangAsalTransferBarang,
                             labelKey: "name",
@@ -75,7 +74,7 @@ const TransferBarangForm = ({
                         })
 
                         initialDataFromEditObject({
-                            editObject: transferBarangEdit.gudang_akhir,
+                            editObject: transferBarangEdit.daftar_gudang_akhir,
                             dataList: resData.data.entry,
                             setState: setGudangAkhirTransferBarang,
                             labelKey: "name",

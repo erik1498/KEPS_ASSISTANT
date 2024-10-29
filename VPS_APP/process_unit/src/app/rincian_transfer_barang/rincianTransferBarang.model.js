@@ -34,6 +34,13 @@ const RincianTransferBarangModel = db.define("rincian_transfer_barang_tab",
                 notEmpty:true,
             }
         },
+        stok_awal_barang_tujuan: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        }
     }), {
     freezeTableName: true
 }

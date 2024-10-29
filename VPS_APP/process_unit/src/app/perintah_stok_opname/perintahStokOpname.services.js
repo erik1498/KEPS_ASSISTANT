@@ -42,7 +42,7 @@ export const createPerintahStokOpnameService = async (perintahStokOpnameData, re
     perintahStokOpnameData.enabled = 1
     perintahStokOpnameData.validasi = false
 
-    await getNeracaValidasiByTanggalService(perintahStokOpnameData.tanggal, req_identity)
+    await getNeracaValidasiByTanggalService(null, perintahStokOpnameData.tanggal, req_identity)
 
     await getStatusPerintahStokOpnameAktifByTanggalService(perintahStokOpnameData.tanggal, null, req_identity)
 
@@ -56,7 +56,7 @@ export const deletePerintahStokOpnameByUuidService = async (uuid, req_identity) 
     const allowToUpdatePerintahStokOpname = await perintahStokOpnemeAllowToEdit(uuid, req_identity);
     if (allowToUpdatePerintahStokOpname.length > 0 && (allowToUpdatePerintahStokOpname[0].hasil_stok_opname > 0 || allowToUpdatePerintahStokOpname[0].penyesuaian_persediaan > 0)) {
         throw Error(JSON.stringify({
-            message: "Tidak dapat Dihapus",
+            message: "Tidak dapat Dihapus karena terdapat hasil stok opname atau penyesuaian persediaan pada stok opname ini",
             prop: "error"
         }))
     }
@@ -72,7 +72,7 @@ export const updatePerintahStokOpnameByUuidService = async (uuid, perintahStokOp
     const allowToUpdatePerintahStokOpname = await perintahStokOpnemeAllowToEdit(uuid, req_identity);
     if (allowToUpdatePerintahStokOpname.length > 0 && allowToUpdatePerintahStokOpname[0].hasil_stok_opname > 0 && allowToUpdatePerintahStokOpname[0].penyesuaian_persediaan > 0) {
         throw Error(JSON.stringify({
-            message: "Tidak dapat diedit",
+            message: "Tidak dapat Diedit karena terdapat hasil stok opname atau penyesuaian persediaan pada stok opname ini",
             prop: "error"
         }))
     }

@@ -52,7 +52,19 @@ export const getRincianTransferBarangByTransferBarangUuidRepo = async (transfer_
                     JOIN ${generateDatabaseName(req_id)}.transfer_barang_tab tbt ON tbt.uuid = rtbt.transfer_barang 
                     WHERE tbt.uuid = "${transfer_barang}"
                     AND rtbt.stok_awal_barang = sabt.uuid 
-                ), 0) AS jumlah
+                ), 0) AS jumlah,
+                (
+                    SELECT 
+                        sabt2.uuid
+                    FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt2 
+                    WHERE sabt2.kategori_harga_barang = khbt.uuid 
+                    AND sabt2.daftar_gudang = (
+                        SELECT 
+                            tbt.daftar_gudang_akhir
+                        FROM ${generateDatabaseName(req_id)}.transfer_barang_tab tbt 
+                        WHERE tbt.uuid = "${transfer_barang}"
+                    ) AND sabt2.enabled = 1
+                ) AS stok_awal_barang_tujuan
             FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt
             JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang 
             JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
@@ -91,6 +103,7 @@ export const createRincianTransferBarangRepo = async (rincianTransferBarangData,
             transfer_barang: rincianTransferBarangData.transfer_barang,
             stok_awal_barang: rincianTransferBarangData.stok_awal_barang,
             jumlah: rincianTransferBarangData.jumlah,
+            stok_awal_barang_tujuan: rincianTransferBarangData.stok_awal_barang_tujuan,
             enabled: rincianTransferBarangData.enabled
         }
     )
@@ -119,6 +132,7 @@ export const updateRincianTransferBarangByUuidRepo = async (uuid, rincianTransfe
             transfer_barang: rincianTransferBarangData.transfer_barang,
             stok_awal_barang: rincianTransferBarangData.stok_awal_barang,
             jumlah: rincianTransferBarangData.jumlah,
+            stok_awal_barang_tujuan: rincianTransferBarangData.stok_awal_barang_tujuan,
         },
         {
             uuid

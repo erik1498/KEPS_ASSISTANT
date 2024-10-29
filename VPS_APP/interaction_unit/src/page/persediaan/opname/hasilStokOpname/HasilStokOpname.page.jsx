@@ -2,7 +2,7 @@ import { FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/
 import Wrap from "../../../../component/layout/Wrap"
 import { useDataContext } from "../../../../context/dataContext.context"
 import { useState } from "react"
-import { apiPerintahStokOpnameCRUD } from "../../../../service/endPointList.api"
+import { apiHasilStokOpnameCRUD, apiPerintahStokOpnameCRUD } from "../../../../service/endPointList.api"
 import { useEffect } from "react"
 import Pagination from "../../../../component/general/Pagination"
 import HasilStokOpnameForm from "./component/HasilStokOpnameForm"
@@ -153,6 +153,14 @@ const HasilStokOpnamePage = () => {
                                                             onClick={() => {
                                                                 _editHasilStokOpname(i)
                                                             }} />
+                                                        {
+                                                            item.hasil_stok_opname_count > 0 ? <>
+                                                                <FaTrash size={12} className="text-red-500 cursor-pointer"
+                                                                    onClick={() => {
+                                                                        _deleteHasilStokOpname(i)
+                                                                    }} />
+                                                            </> : <></>
+                                                        }
                                                     </td>
                                                 </tr>
                                             </>

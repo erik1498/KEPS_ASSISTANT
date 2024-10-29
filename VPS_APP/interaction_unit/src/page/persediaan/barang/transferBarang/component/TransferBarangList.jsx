@@ -31,17 +31,26 @@ const TransferBarangList = ({
         setBarangList(x => x = barangListCopy)
     }
 
-    const _saveRincianTransferBarang = () => {
-        barangList.map(async (x) => {
-            await apiRincianTransferBarangCRUD
-                .custom(x.uuid ? `/${x.uuid}` : '', x.uuid ? `PUT` : 'POST', null, {
+    const _saveRincianTransferBarang = (index) => {
+        if (barangList[index].stok_awal_barang_tujuan) {
+            apiRincianTransferBarangCRUD
+                .custom(barangList[index].uuid ? `/${barangList[index].uuid}` : '', barangList[index].uuid ? `PUT` : 'POST', null, {
                     data: {
                         transfer_barang: transferBarang.uuid,
-                        stok_awal_barang: x.stok_awal_barang,
-                        jumlah: x.jumlah
+                        stok_awal_barang: barangList[index].stok_awal_barang,
+                        jumlah: barangList[index].jumlah,
+                        stok_awal_barang_tujuan: barangList[index].stok_awal_barang_tujuan,
                     }
-                }).catch(err => showError(err))
-        })
+                })
+                .then(() => {
+                    if (index < barangList.length) {
+                        _saveRincianTransferBarang(index + 1)
+                    }
+                })
+                .catch(err => showError(err))
+        } else {
+            _saveRincianTransferBarang(index + 1)
+        }
     }
 
     useEffect(() => {
@@ -65,7 +74,7 @@ const TransferBarangList = ({
                     <tbody>
                         {
                             barangList?.map((item, i) => {
-                                return <>
+                                return item.stok_awal_barang_tujuan && <>
                                     <tr key={i}>
                                         <td>{i + 1}.</td>
                                         <td>{item.daftar_barang_nama_barang}</td>
@@ -95,7 +104,7 @@ const TransferBarangList = ({
 
             <button className="btn btn-sm bg-green-800 mt-3 text-white"
                 onClick={() => {
-                    _saveRincianTransferBarang()
+                    _saveRincianTransferBarang(0)
                 }}
             ><FaSave /> Simpan</button>
         </div>

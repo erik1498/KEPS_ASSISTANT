@@ -1,5 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { perintahStokOpnemeAllowToEdit } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createHasilStokOpnameRepo, deleteHasilStokOpnameByUuidRepo, getAllBarangAktifByPerintahStokOpnameRepo, getAllHasilStokOpnameRepo, getHasilStokOpnameByPerintahStokOpnameRepo, getHasilStokOpnameByUuidRepo, updateHasilStokOpnameByUuidRepo } from "./hasilStokOpname.repository.js"
 
 export const getAllHasilStokOpnameService = async (query, req_identity) => {
@@ -60,7 +61,17 @@ export const createHasilStokOpnameService = async (hasilStokOpnameData, req_iden
 
 export const deleteHasilStokOpnameByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteHasilStokOpnameByUuidService [${uuid}]`, null, req_identity)
-    await getHasilStokOpnameByUuidService(uuid, req_identity)
+
+    const beforeData = await getHasilStokOpnameByUuidService(uuid, req_identity)
+
+    const allowToUpdatePerintahStokOpname = await perintahStokOpnemeAllowToEdit(beforeData.perintah_stok_opname, req_identity);
+    if (allowToUpdatePerintahStokOpname.length > 0 && allowToUpdatePerintahStokOpname[0].penyesuaian_persediaan > 0) {
+        throw Error(JSON.stringify({
+            message: "Tidak dapat diedit",
+            prop: "error"
+        }))
+    }
+
     await deleteHasilStokOpnameByUuidRepo(uuid, req_identity)
     return true
 }
@@ -68,6 +79,16 @@ export const deleteHasilStokOpnameByUuidService = async (uuid, req_identity) => 
 export const updateHasilStokOpnameByUuidService = async (uuid, hasilStokOpnameData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateHasilStokOpnameByUuidService [${uuid}]`, hasilStokOpnameData, req_identity)
     const beforeData = await getHasilStokOpnameByUuidService(uuid, req_identity)
+
+    const allowToUpdatePerintahStokOpname = await perintahStokOpnemeAllowToEdit(beforeData.perintah_stok_opname, req_identity)
+
+    if (allowToUpdatePerintahStokOpname.length > 0 && allowToUpdatePerintahStokOpname[0].penyesuaian_persediaan > 0) {
+        throw Error(JSON.stringify({
+            message: "Tidak dapat diedit karena terdapat penyesuaian persediaan pada stok opname ini",
+            prop: "error"
+        }))
+    }
+
     const hasilStokOpname = await updateHasilStokOpnameByUuidRepo(uuid, hasilStokOpnameData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

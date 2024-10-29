@@ -45,7 +45,7 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
     return await db.query(
         `
             SELECT 
-                res.jumlah_awal_stok - res.penjualan + res.retur_penjualan + res.pembelian - res.retur_pembelian AS stok_sistem,
+                res.jumlah_awal_stok - res.penjualan + res.retur_penjualan + res.pembelian - res.retur_pembelian - res.konversi_keluar + res.konversi_masuk AS stok_sistem,
                 CASE 
                     WHEN (res.jumlah_awal_stok - res.penjualan + res.retur_penjualan + res.pembelian - res.retur_pembelian) > res.kuantitas
                     THEN "PENGURANGAN"
@@ -60,11 +60,37 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
             FROM (
                 SELECT 
                     IFNULL((
-                        SELECT ppt.uuid FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt WHERE ppt.hasil_stok_opname = hsot.uuid
+                        SELECT 
+                            ppt.uuid
+                        FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt 
+                        WHERE ppt.hasil_stok_opname = hsot.uuid
+                        AND ppt.enabled = 1
                     ), "") AS uuid,
                     IFNULL((
-                        SELECT ppt.keterangan FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt WHERE ppt.hasil_stok_opname = hsot.uuid
+                        SELECT 
+                            ppt.keterangan 
+                        FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt 
+                        WHERE ppt.hasil_stok_opname = hsot.uuid
+                        AND ppt.enabled = 1
                     ), "") AS keterangan,
+                    IFNULL((
+                        SELECT
+                            SUM(rkbt.jumlah_yang_dikonversi)
+                        FROM ${generateDatabaseName(req_id)}.rincian_konversi_barang_tab rkbt
+                        JOIN ${generateDatabaseName(req_id)}.konversi_barang_tab kbt ON kbt.uuid = rkbt.konversi_barang 
+                        WHERE rkbt.stok_awal_barang = sabt.uuid 
+                        AND rkbt.enabled = 1
+                        AND kbt.enabled = 1
+                    ), 0) AS konversi_keluar,
+                    IFNULL((
+                        SELECT
+                            SUM(rkbt.jumlah_hasil_konversi_kode_barang_tujuan)
+                        FROM ${generateDatabaseName(req_id)}.rincian_konversi_barang_tab rkbt
+                        JOIN ${generateDatabaseName(req_id)}.konversi_barang_tab kbt ON kbt.uuid = rkbt.konversi_barang 
+                        WHERE rkbt.stok_awal_barang_tujuan = sabt.uuid 
+                        AND rkbt.enabled = 1
+                        AND kbt.enabled = 1
+                    ), 0) AS konversi_masuk,
                     IFNULL((
                         SELECT
                             SUM(rppbt.jumlah) 
@@ -114,6 +140,7 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                 JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab kht ON kht.uuid = sabt.kategori_harga_barang
                 JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = kht.satuan_barang 
                 WHERE hsot.perintah_stok_opname = "${perintah_stok_opname}"
+                AND hsot.enabled = 1
             ) AS res
         `,
         {
@@ -150,7 +177,7 @@ export const deletePenyesuaianPersediaanByUuidRepo = async (uuid, req_id) => {
             enabled: false
         },
         {
-            uuid
+            perintah_stok_opname: uuid
         }
     )
 }

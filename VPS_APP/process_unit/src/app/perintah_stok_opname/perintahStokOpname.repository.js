@@ -27,8 +27,15 @@ export const getAllPerintahStokOpnameRepo = async (pageNumber, size, search, req
                         ppt.tanggal 
                     FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt 
                     WHERE ppt.perintah_stok_opname = psot.uuid 
+                    AND ppt.enabled = 1
                     LIMIT 1
                 ), "BELUM SELESAI") AS tanggal_selesai,
+                IFNULL((
+                    SELECT COUNT(0) FROM ${generateDatabaseName(req_id)}.hasil_stok_opname_tab hsot WHERE hsot.perintah_stok_opname = psot.uuid AND hsot.enabled = 1
+                ), 0 ) AS hasil_stok_opname_count,
+                IFNULL((
+                    SELECT COUNT(0) FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt WHERE ppt.perintah_stok_opname = psot.uuid AND ppt.enabled = 1
+                ), 0 ) AS penyesuaian_persediaan_count,
                 pt.name AS pegawai_penanggung_jawab_name,
                 pt2.name AS pegawai_pelaksana_name,
                 kbt.name AS kategori_barang_name,
@@ -148,6 +155,7 @@ export const getStatusPerintahStokOpnameAktifByTanggalRepo = async (tanggal, uui
                 FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
                 WHERE psot.tanggal <= "${tanggal}"
                 ${uuid ? `AND psot.uuid != "${uuid}"` : ``}
+                AND psot.enabled = 1
             ) AS res
         `,
         {
@@ -165,12 +173,14 @@ export const perintahStokOpnameStatusRepo = async (perintah_stok_opname, req_id)
                         COUNT(0) 
                     FROM ${generateDatabaseName(req_id)}.hasil_stok_opname_tab hsot
                     WHERE hsot.perintah_stok_opname = psot.uuid 
+                    AND hsot.enabled = 1
                 ) AS hasil_stok_opname,
                 (
                     SELECT
                         COUNT(0)
                     FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt
                     WHERE ppt.perintah_stok_opname = psot.uuid 
+                    AND ppt.enabled = 1
                 ) AS penyesuaian_persediaan,
                 (
                     SELECT 
@@ -182,6 +192,7 @@ export const perintahStokOpnameStatusRepo = async (perintah_stok_opname, req_id)
                 MONTH(psot.tanggal) AS bulan
             FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
             WHERE psot.uuid = "${perintah_stok_opname}"
+            AND psot.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
