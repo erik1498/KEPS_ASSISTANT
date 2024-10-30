@@ -444,7 +444,7 @@ const Navigasi = ({
                                                     {
                                                         getRolesInCookie("Persediaan_Barang_KonversiBarang") ? <>
                                                             <li>
-                                                                <NavigationLink to="/persediaan/barang/konversiBarang" addClass={"my-1"} label={"Konversi Penjualan"} />
+                                                                <NavigationLink to="/persediaan/barang/konversiBarang" addClass={"my-1"} label={"Konversi Barang"} />
                                                             </li>
                                                         </> : <></>
                                                     }
@@ -525,7 +525,7 @@ const Navigasi = ({
                                                     {
                                                         getRolesInCookie("Persediaan_Opname_JurnalStokOpname") ? <>
                                                             <li>
-                                                                <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Stok Opname"} />
+                                                                <NavigationLink to="/persediaan/opname/jurnalStokOpname" addClass={"my-1"} label={"Jurnal Stok Opname"} />
                                                             </li>
                                                         </> : <></>
                                                     }

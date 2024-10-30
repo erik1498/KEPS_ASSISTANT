@@ -1,5 +1,5 @@
 import { perintahStokOpnameValidation } from "./perintahStokOpname.validation.js"
-import { createPerintahStokOpnameService, deletePerintahStokOpnameByUuidService, getAllPerintahStokOpnameService, getPerintahStokOpnameByUuidService, updatePerintahStokOpnameByUuidService } from "./perintahStokOpname.services.js"
+import { createPerintahStokOpnameService, deletePerintahStokOpnameByUuidService, getAllPerintahStokOpnameService, getJurnalByPerintahStokOpnameService, getPerintahStokOpnameByUuidService, updatePerintahStokOpnameByUuidService } from "./perintahStokOpname.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -11,7 +11,7 @@ export const getAllPerintahStokOpnames = async (req, res) => {
             data: perintahStokOpnames,
             message: "Get Data Success"
         })
-    } catch (error) {    
+    } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
@@ -27,6 +27,24 @@ export const getPerintahStokOpnameByUUID = async (req, res) => {
 
         res.json({
             data: await getPerintahStokOpnameByUuidService(uuid, req.identity),
+            message: "Get Data By UUID Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getJurnalByPerintahStokOpname = async (req, res) => {
+    LOGGER(logType.INFO, "Start getJurnalByPerintahStokOpname", null, req.identity)
+    try {
+        const { uuid } = req.params
+
+        res.json({
+            data: await getJurnalByPerintahStokOpnameService(uuid, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {
@@ -84,7 +102,7 @@ export const deletePerintahStokOpnameByUUID = async (req, res) => {
 
 export const updatePerintahStokOpnameByUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start updatePerintahStokOpnameByUuidController", null, req.identity)
-    try {    
+    try {
         const perintahStokOpnameData = req.body
         const { error, value } = perintahStokOpnameValidation(perintahStokOpnameData)
         if (error) {

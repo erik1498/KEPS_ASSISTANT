@@ -17,7 +17,7 @@ const KonversiBarangForm = ({
     const [kodeKonversiBarang, setKodeKonversiBarang] = useState(konversiBarangEdit?.kode_konversi_barang ? konversiBarangEdit.kode_konversi_barang : ``)
     const [gudangKonversiBarang, setGudangKonversiBarang] = useState(konversiBarangEdit?.daftar_gudang ? konversiBarangEdit.daftar_gudang : ``)
     const [satuanBarangKonversiBarang, setSatuanBarangKonversiBarang] = useState(konversiBarangEdit?.satuan_barang ? konversiBarangEdit.satuan_barang : ``)
-    
+
     const [gudangList, setGudangList] = useState([])
     const [satuanBarangList, setSatuanBarangList] = useState([])
 
@@ -182,6 +182,15 @@ const KonversiBarangForm = ({
                         }}
                     ><FaSave /> Simpan</button>
                 </>
+            }
+            {
+                konversiBarangEdit && !konversiBarang ? <>
+                    <KonversiBarangList
+                        konversiBarang={konversiBarangEdit}
+                        satuanBarangKonversiBarang={{ value: konversiBarangEdit.satuan_barang }}
+                        preview={true}
+                    />
+                </> : <></>
             }
         </div>
     </>

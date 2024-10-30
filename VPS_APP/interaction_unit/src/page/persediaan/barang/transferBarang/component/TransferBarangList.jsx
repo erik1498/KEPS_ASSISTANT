@@ -7,7 +7,8 @@ import FormInput from "../../../../../component/form/FormInput"
 import { FaSave } from "react-icons/fa"
 
 const TransferBarangList = ({
-    transferBarang
+    transferBarang,
+    preview
 }) => {
     const [barangList, setBarangList] = useState([])
 
@@ -81,18 +82,24 @@ const TransferBarangList = ({
                                         <td>{item.kategori_harga_barang_kode_barang}</td>
                                         <td>{item.satuan_barang}</td>
                                         <td>
-                                            <FormInput
-                                                name={"jumlah"}
-                                                type={"text"}
-                                                other={{
-                                                    defaultValue: item.jumlah
-                                                }}
-                                                onchange={(e) => {
-                                                    inputOnlyRupiah(e)
-                                                    _updateJumlah(e.target.value, item.stok_awal_barang)
-                                                }}
-                                                value={parseToRupiahText(item.jumlah)}
-                                            />
+                                            {
+                                                preview ? <>
+                                                    {item.jumlah}
+                                                </> : <>
+                                                    <FormInput
+                                                        name={"jumlah"}
+                                                        type={"text"}
+                                                        other={{
+                                                            defaultValue: item.jumlah
+                                                        }}
+                                                        onchange={(e) => {
+                                                            inputOnlyRupiah(e)
+                                                            _updateJumlah(e.target.value, item.stok_awal_barang)
+                                                        }}
+                                                        value={parseToRupiahText(item.jumlah)}
+                                                    />
+                                                </>
+                                            }
                                         </td>
                                     </tr>
                                 </>
@@ -102,11 +109,15 @@ const TransferBarangList = ({
                 </table>
             </div>
 
-            <button className="btn btn-sm bg-green-800 mt-3 text-white"
-                onClick={() => {
-                    _saveRincianTransferBarang(0)
-                }}
-            ><FaSave /> Simpan</button>
+            {
+                preview ? <></> : <>
+                    <button className="btn btn-sm bg-green-800 mt-3 text-white"
+                        onClick={() => {
+                            _saveRincianTransferBarang(0)
+                        }}
+                    ><FaSave /> Simpan</button>
+                </>
+            }
         </div>
     </>
 }

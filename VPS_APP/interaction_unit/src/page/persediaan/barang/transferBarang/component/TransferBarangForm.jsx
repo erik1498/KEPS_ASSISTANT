@@ -175,6 +175,15 @@ const TransferBarangForm = ({
                     ><FaSave /> Simpan</button>
                 </>
             }
+            {
+                transferBarangEdit && !transferBarang ? <>
+                    <TransferBarangList
+                        transferBarang={transferBarangEdit}
+                        preview={true}
+                    />
+                </>
+                    : <></>
+            }
         </div>
     </>
 }

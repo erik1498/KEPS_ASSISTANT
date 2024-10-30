@@ -1,7 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
-import { createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getStatusPerintahStokOpnameAktifByTanggalRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo } from "./perintahStokOpname.repository.js"
+import { createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getPerintahStokOpnameByUUIDWithTanggalRepo, getRincianPelunasanPenjualanBarangRepo, getStatusPerintahStokOpnameAktifByTanggalRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo } from "./perintahStokOpname.repository.js"
 
 export const getAllPerintahStokOpnameService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPerintahStokOpnameService", null, req_identity)
@@ -35,6 +35,29 @@ export const getPerintahStokOpnameByUuidService = async (uuid, req_identity) => 
         }))
     }
     return perintahStokOpname
+}
+
+export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getJurnalByPerintahStokOpnameService [${uuid}]`, null, req_identity)
+
+    const perintahStokOpname = await getPerintahStokOpnameByUUIDWithTanggalRepo(uuid, req_identity)
+
+    if (perintahStokOpname.length > 0 && perintahStokOpname[0].tanggal_selesai != "BELUM SELESAI") {
+
+        const rincianPelunasanPenjualanBarang = await getRincianPelunasanPenjualanBarangRepo(perintahStokOpname[0].tanggal, perintahStokOpname[0].tanggal_selesai, req_identity)
+
+        return rincianPelunasanPenjualanBarang
+
+        // const fakturPenjualanBarangDendaAktif = await getFakturPenjualanBarangDendaAktifRepo(perintahStokOpname[0].tanggal_selesai)
+
+        // const fakturPenjualanJasaDendaAktif = await getFakturPenjualanJasaDendaAktifRepo(perintahStokOpname[0].tanggal_selesai)
+
+        // const jurnalPerintahStokOpname = await getJurnalByPerintahStokOpnameRepo(perintahStokOpname[0].tanggal, perintahStokOpname[0].tanggal_selesai, fakturPenjualanBarangDendaAktif[0].list, fakturPenjualanJasaDendaAktif[0].list, null, uuid, req_id)
+
+        // return jurnalPerintahStokOpname
+    }
+    return []
+
 }
 
 export const createPerintahStokOpnameService = async (perintahStokOpnameData, req_identity) => {

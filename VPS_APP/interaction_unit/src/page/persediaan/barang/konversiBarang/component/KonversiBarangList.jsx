@@ -10,7 +10,8 @@ import FormSelect from "../../../../../component/form/FormSelect"
 
 const KonversiBarangList = ({
     konversiBarang,
-    satuanBarangKonversiBarang
+    satuanBarangKonversiBarang,
+    preview
 }) => {
     const [barangList, setBarangList] = useState([])
     const [barangListToKonversi, setBarangListToKonversi] = useState([])
@@ -133,45 +134,65 @@ const KonversiBarangList = ({
                                         <td>{item.kategori_harga_barang_kode_barang}</td>
                                         <td>{item.satuan_barang_name}</td>
                                         <td>
-                                            <FormInput
-                                                name={"jumlah_yang_dikonversi"}
-                                                type={"text"}
-                                                other={{
-                                                    defaultValue: item.jumlah_yang_dikonversi
-                                                }}
-                                                onchange={(e) => {
-                                                    inputOnlyRupiah(e)
-                                                    _updateJumlahKonversi(e.target.value, item.stok_awal_barang)
-                                                }}
-                                                value={parseToRupiahText(item.jumlah_yang_dikonversi)}
-                                            />
+                                            {
+                                                preview ? <>
+                                                    {item.jumlah_yang_dikonversi}
+                                                </> : <>
+                                                    <FormInput
+                                                        name={"jumlah_yang_dikonversi"}
+                                                        type={"text"}
+                                                        other={{
+                                                            defaultValue: item.jumlah_yang_dikonversi
+                                                        }}
+                                                        onchange={(e) => {
+                                                            inputOnlyRupiah(e)
+                                                            _updateJumlahKonversi(e.target.value, item.stok_awal_barang)
+                                                        }}
+                                                        value={parseToRupiahText(item.jumlah_yang_dikonversi)}
+                                                    />
+                                                </>
+                                            }
                                         </td>
                                         <td>
-                                            <FormSelect
-                                                optionsDataList={barangListGetKonversi.filter(x => x.daftar_barang_uuid == item.daftar_barang_uuid)}
-                                                optionsLabel={"kategori_harga_barang_kode_barang"}
-                                                optionsValue={"stok_awal_barang"}
-                                                selectValue={_getKategoriHargaBarangKodeBarang(item.stok_awal_barang_tujuan)}
-                                                onchange={(e) => {
-                                                    _updateKodeBarangTujuan(e, item.stok_awal_barang)
-                                                }}
-                                                selectName={`satuanBarangKonversiBarang`}
-                                            />
+                                            {
+                                                preview ? <>{
+                                                    _getKategoriHargaBarangKodeBarang(item.stok_awal_barang_tujuan).label
+                                                }</> : <>
+                                                    <FormSelect
+                                                        optionsDataList={barangListGetKonversi.filter(x => x.daftar_barang_uuid == item.daftar_barang_uuid)}
+                                                        optionsLabel={"kategori_harga_barang_kode_barang"}
+                                                        optionsValue={"stok_awal_barang"}
+                                                        selectValue={_getKategoriHargaBarangKodeBarang(item.stok_awal_barang_tujuan)}
+                                                        onchange={(e) => {
+                                                            _updateKodeBarangTujuan(e, item.stok_awal_barang)
+                                                        }}
+                                                        selectName={`satuanBarangKonversiBarang`}
+                                                    />
+                                                </>
+                                            }
                                         </td>
                                         <td>{_getSatuanBarangTujuan(item.stok_awal_barang_tujuan)}</td>
                                         <td>
-                                            <FormInput
-                                                name={"jumlah"}
-                                                type={"text"}
-                                                other={{
-                                                    defaultValue: item.jumlah_hasil_konversi_kode_barang_tujuan
-                                                }}
-                                                onchange={(e) => {
-                                                    inputOnlyRupiah(e)
-                                                    _updateJumlahHasilKonversi(e.target.value, item.stok_awal_barang)
-                                                }}
-                                                value={parseToRupiahText(item.jumlah_hasil_konversi_kode_barang_tujuan)}
-                                            />
+                                            {
+                                                preview ? <>
+                                                    {
+                                                        item.jumlah_hasil_konversi_kode_barang_tujuan
+                                                    }
+                                                </> : <>
+                                                    <FormInput
+                                                        name={"jumlah"}
+                                                        type={"text"}
+                                                        other={{
+                                                            defaultValue: item.jumlah_hasil_konversi_kode_barang_tujuan
+                                                        }}
+                                                        onchange={(e) => {
+                                                            inputOnlyRupiah(e)
+                                                            _updateJumlahHasilKonversi(e.target.value, item.stok_awal_barang)
+                                                        }}
+                                                        value={parseToRupiahText(item.jumlah_hasil_konversi_kode_barang_tujuan)}
+                                                    />
+                                                </>
+                                            }
                                         </td>
                                     </tr>
                                 </>
@@ -180,12 +201,15 @@ const KonversiBarangList = ({
                     </tbody>
                 </table>
             </div>
-
-            <button className="btn btn-sm bg-green-800 mt-3 text-white"
-                onClick={() => {
-                    _saveRincianKonversiBarang()
-                }}
-            ><FaSave /> Simpan</button>
+            {
+                preview ? <></> : <>
+                    <button className="btn btn-sm bg-green-800 mt-3 text-white"
+                        onClick={() => {
+                            _saveRincianKonversiBarang()
+                        }}
+                    ><FaSave /> Simpan</button>
+                </>
+            }
         </div>
     </>
 }

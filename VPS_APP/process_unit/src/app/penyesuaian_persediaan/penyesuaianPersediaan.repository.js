@@ -45,7 +45,7 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
     return await db.query(
         `
             SELECT 
-                res.jumlah_awal_stok - res.penjualan + res.retur_penjualan + res.pembelian - res.retur_pembelian - res.konversi_keluar + res.konversi_masuk AS stok_sistem,
+                res.jumlah_awal_stok - res.penjualan + res.retur_penjualan + res.pembelian - res.retur_pembelian - res.konversi_keluar + res.konversi_masuk + res.transfer_masuk - res.transfer_keluar AS stok_sistem,
                 CASE 
                     WHEN (res.jumlah_awal_stok - res.penjualan + res.retur_penjualan + res.pembelian - res.retur_pembelian) > res.kuantitas
                     THEN "PENGURANGAN"
@@ -82,6 +82,26 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                         AND rkbt.enabled = 1
                         AND kbt.enabled = 1
                     ), 0) AS konversi_keluar,
+                    IFNULL((
+                        SELECT 
+                            SUM(rtbt.jumlah) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_transfer_barang_tab rtbt 
+                        JOIN ${generateDatabaseName(req_id)}.transfer_barang_tab tbt ON tbt.uuid = rtbt.transfer_barang 
+                        JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt2 ON sabt2.uuid = rtbt.stok_awal_barang 
+                        WHERE tbt.enabled = 1
+                        AND sabt2.daftar_gudang = tbt.daftar_gudang_asal 
+                        AND rtbt.stok_awal_barang_tujuan = sabt.uuid
+                    ), 0) AS transfer_masuk,
+                    IFNULL((
+                        SELECT 
+                            SUM(rtbt.jumlah) 
+                        FROM ${generateDatabaseName(req_id)}.rincian_transfer_barang_tab rtbt 
+                        JOIN ${generateDatabaseName(req_id)}.transfer_barang_tab tbt ON tbt.uuid = rtbt.transfer_barang 
+                        JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt2 ON sabt2.uuid = rtbt.stok_awal_barang 
+                        WHERE tbt.enabled = 1
+                        AND sabt2.daftar_gudang = tbt.daftar_gudang_asal 
+                        AND rtbt.stok_awal_barang = sabt.uuid
+                    ), 0) AS transfer_keluar,
                     IFNULL((
                         SELECT
                             SUM(rkbt.jumlah_hasil_konversi_kode_barang_tujuan)

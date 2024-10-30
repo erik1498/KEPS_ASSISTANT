@@ -20,6 +20,7 @@ const FormInputWithLabel = ({
                     className={`${addClassInput} bg-white input-sm border-b-2 border-gray-800 text-gray-800 outline-none py-2 w-full ${disabled ? "pointer-events-none" : ""}`}
                     {...others}
                     autoComplete="off"
+                    disabled={disabled}
                 />
             </div>
         </label>

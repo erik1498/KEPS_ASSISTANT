@@ -73,6 +73,28 @@ export const getPerintahStokOpnameByUuidRepo = async (uuid, req_id) => {
     )
 }
 
+export const getPerintahStokOpnameByUUIDWithTanggalRepo = async (uuid, req_id) => {
+    const perintahStokOpnames = await db.query(
+        `
+            SELECT 
+                psot.*,
+                IFNULL((
+                    SELECT 
+                        ppt.tanggal 
+                    FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt 
+                    WHERE ppt.perintah_stok_opname = psot.uuid 
+                    AND ppt.enabled = 1
+                    LIMIT 1
+                ), "BELUM SELESAI") AS tanggal_selesai
+            FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot
+            WHERE psot.uuid = "${uuid}"
+            AND psot.enabled = 1 
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return perintahStokOpnames
+}
+
 export const createPerintahStokOpnameRepo = async (perintahStokOpnameData, req_id) => {
     return insertQueryUtil(
         req_id,
@@ -197,4 +219,49 @@ export const perintahStokOpnameStatusRepo = async (perintah_stok_opname, req_id)
         { type: Sequelize.QueryTypes.SELECT }
     )
     return perintahStokOpname
+}
+
+export const getRincianPelunasanPenjualanBarangRepo = async (tanggal_mulai, tanggal_selesai, req_id) => {
+    const fakturPenjualan = await db.query(
+        `
+            SELECT 
+                "NOT_AVAILABLE" AS uuid,
+                ppbt.bukti_transaksi AS bukti_transaksi,
+                ppbt.tanggal AS tanggal,
+                (
+                    CASE WHEN MONTH(ppbt.tanggal) < 10 THEN CONCAT("0", MONTH(ppbt.tanggal)) ELSE MONTH(ppbt.tanggal) END
+                ) AS bulan,
+                CONCAT(YEAR(ppbt.tanggal), "")  AS tahun,
+                0 AS debet,
+                rppbt.nilai_pelunasan AS kredit,
+                ppbt.keterangan AS keterangan,
+                khbt.kode_barang AS kategori_harga_barang_kode_barang,
+                (
+                    SELECT 
+                        CONCAT('["', kapt.uuid, '","', kapt.name, '","', kapt.type, '","', kapt.code, '"]')
+                    FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "453764da-957f-4099-a03d-268367987dc2"
+                ) AS kode_akun_detail,
+                ppbt.uuid AS pelunasan_penjualan_barang,
+                fpbt.bukti_transaksi AS faktur_penjualan_barang,
+                "PELUNASAN PENJUALAN BARANG" AS sumber
+            FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt 
+            JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt2 ON rppbt2.uuid = rppbt.rincian_pesanan_penjualan_barang 
+            JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_penjualan_barang 
+            JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt2.stok_awal_barang 
+            JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
+            JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid= rppbt.pelunasan_penjualan_barang
+            JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang =ppbt2.uuid 
+            WHERE rppbt.enabled = 1
+            AND ppbt.enabled = 1
+            AND rppbt2.enabled = 1
+            AND ppbt2.enabled = 1
+            AND fpbt.enabled = 1
+            AND ppbt.tanggal >= "${tanggal_mulai}" 
+            AND ppbt.tanggal <= "${tanggal_selesai}"
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+    return fakturPenjualan
 }

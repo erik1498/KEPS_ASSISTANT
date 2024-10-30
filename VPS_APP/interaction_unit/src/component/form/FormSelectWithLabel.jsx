@@ -1,3 +1,4 @@
+import FormInput from "./FormInput"
 import FormSelect from "./FormSelect"
 
 const FormSelectWithLabel = ({
@@ -21,27 +22,36 @@ const FormSelectWithLabel = ({
                 <span className={`${addLabelStyle} label-text text-gray-800 font-bold`}>{label}</span>
             </div>
             <div className="w-full relative">
-                <FormSelect
-                    addClass={addClass}
-                    optionsDataList={optionsDataList}
-                    optionsLabel={optionsLabel}
-                    optionsValue={optionsValue}
-                    selectValue={selectValue}
-                    optionsLabelIsArray={optionsLabelIsArray}
-                    optionsDelimiter={optionsDelimiter}
-                    onchange={onchange}
-                    selectName={selectName}
-                    customStyle={
-                        {
-                            ...addSelectStyle,
-                            border: 'none',
-                            boxShadow: 'none',
-                            fontSize: '14px',
-                            minHeight: '20px',
-                            height: '30px'
-                        }
-                    }
-                />
+                {
+                    disabled ? <>
+                        <FormInput
+                            value={selectValue.label}
+                        />
+                        {/* <p>{label}</p> */}
+                    </> : <>
+                        <FormSelect
+                            addClass={addClass}
+                            optionsDataList={optionsDataList}
+                            optionsLabel={optionsLabel}
+                            optionsValue={optionsValue}
+                            selectValue={selectValue}
+                            optionsLabelIsArray={optionsLabelIsArray}
+                            optionsDelimiter={optionsDelimiter}
+                            onchange={onchange}
+                            selectName={selectName}
+                            customStyle={
+                                {
+                                    ...addSelectStyle,
+                                    border: 'none',
+                                    boxShadow: 'none',
+                                    fontSize: '14px',
+                                    minHeight: '20px',
+                                    height: '30px'
+                                }
+                            }
+                        />
+                    </>
+                }
             </div>
         </label>
     </>

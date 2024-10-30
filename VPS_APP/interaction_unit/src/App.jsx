@@ -55,6 +55,7 @@ import konversiBarangPath from './path/persediaan/barang/konversiBarang.path';
 import perintahStokOpnamePath from './path/persediaan/opname/perintahStokOpname.path';
 import hasilStokOpnamePath from './path/persediaan/opname/hasilStokOpname.path';
 import penyesuaianPersediaanPath from './path/persediaan/opname/penyesuaianPersediaan.path';
+import jurnalStokOpnamePath from './path/persediaan/opname/jurnalStokOpname.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -107,7 +108,8 @@ const PenjualanBarangPage = React.lazy(() => import('./page/transaksi/penjualan/
 const PembelianBarangPage = React.lazy(() => import('./page/transaksi/pembelian/pembelianBarang/PembelianBarangPage'))
 const PerintahStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/perintahStokOpname/PerintahStokOpname.page'))
 const HasilStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/hasilStokOpname/HasilStokOpname.page'));
-const PenyesuaianPersediaanPage  = React.lazy(() => import('./page/persediaan/opname/penyesuaianPersediaan/PenyesuaianPersediaan.page'));
+const PenyesuaianPersediaanPage = React.lazy(() => import('./page/persediaan/opname/penyesuaianPersediaan/PenyesuaianPersediaan.page'));
+const JurnalStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/jurnalStokOpname/JurnalStokOpname.page'))
 
 function App() {
   return (
@@ -190,6 +192,9 @@ function App() {
         </Routes>
         <Routes basename={perintahStokOpnamePath.main}>
           <Route path={perintahStokOpnamePath.main} element={<PerintahStokOpnamePage />} />
+        </Routes>
+        <Routes basename={jurnalStokOpnamePath.main}>
+          <Route path={jurnalStokOpnamePath.main} element={<JurnalStokOpnamePage />} />
         </Routes>
         <Routes basename={hasilStokOpnamePath.main}>
           <Route path={hasilStokOpnamePath.main} element={<HasilStokOpnamePage />} />

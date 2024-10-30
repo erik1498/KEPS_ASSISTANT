@@ -1,5 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { perintahStokOpnemeAllowToEdit } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createHasilStokOpnameRepo, deleteHasilStokOpnameByUuidRepo, getAllBarangAktifByPerintahStokOpnameRepo, getAllHasilStokOpnameRepo, getHasilStokOpnameByPerintahStokOpnameRepo, getHasilStokOpnameByUuidRepo, updateHasilStokOpnameByUuidRepo } from "./hasilStokOpname.repository.js"
 
@@ -55,6 +56,8 @@ export const createHasilStokOpnameService = async (hasilStokOpnameData, req_iden
     LOGGER(logType.INFO, `Start createHasilStokOpnameService`, hasilStokOpnameData, req_identity)
     hasilStokOpnameData.enabled = 1
 
+    await getNeracaValidasiByTanggalService(null, hasilStokOpnameData.tanggal, req_identity)
+
     const hasilStokOpname = await createHasilStokOpnameRepo(hasilStokOpnameData, req_identity)
     return hasilStokOpname
 }
@@ -62,9 +65,7 @@ export const createHasilStokOpnameService = async (hasilStokOpnameData, req_iden
 export const deleteHasilStokOpnameByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteHasilStokOpnameByUuidService [${uuid}]`, null, req_identity)
 
-    const beforeData = await getHasilStokOpnameByUuidService(uuid, req_identity)
-
-    const allowToUpdatePerintahStokOpname = await perintahStokOpnemeAllowToEdit(beforeData.perintah_stok_opname, req_identity);
+    const allowToUpdatePerintahStokOpname = await perintahStokOpnemeAllowToEdit(uuid, req_identity);
     if (allowToUpdatePerintahStokOpname.length > 0 && allowToUpdatePerintahStokOpname[0].penyesuaian_persediaan > 0) {
         throw Error(JSON.stringify({
             message: "Tidak dapat diedit",
