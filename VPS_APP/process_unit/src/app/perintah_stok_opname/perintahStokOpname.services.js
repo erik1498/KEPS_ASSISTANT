@@ -1,7 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
-import { createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getPerintahStokOpnameByUUIDWithTanggalRepo, getRincianPelunasanPenjualanBarangRepo, getStatusPerintahStokOpnameAktifByTanggalRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo } from "./perintahStokOpname.repository.js"
+import { createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getPerintahStokOpnameByUUIDWithTanggalRepo, getRincianPelunasanPenjualanBarangRepo, getRincianPelunasanPenjualanJasaRepo, getStatusPerintahStokOpnameAktifByTanggalRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo } from "./perintahStokOpname.repository.js"
 
 export const getAllPerintahStokOpnameService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPerintahStokOpnameService", null, req_identity)
@@ -46,7 +46,9 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
 
         const rincianPelunasanPenjualanBarang = await getRincianPelunasanPenjualanBarangRepo(perintahStokOpname[0].tanggal, perintahStokOpname[0].tanggal_selesai, req_identity)
 
-        return rincianPelunasanPenjualanBarang
+        const rincianPelunasanPenjualanJasa = await getRincianPelunasanPenjualanJasaRepo(perintahStokOpname[0].tanggal, perintahStokOpname[0].tanggal_selesai, req_identity)
+
+        return rincianPelunasanPenjualanBarang.concat(...rincianPelunasanPenjualanJasa)
 
         // const fakturPenjualanBarangDendaAktif = await getFakturPenjualanBarangDendaAktifRepo(perintahStokOpname[0].tanggal_selesai)
 
