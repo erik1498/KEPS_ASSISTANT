@@ -15,7 +15,7 @@ const HasilStokOpnameForm = ({
     hasilStokOpnameEdit,
     getData = () => { }
 }) => {
-    const [tanggal, setTanggal] = useState(hasilStokOpnameEdit?.tanggal ? hasilStokOpnameEdit.tanggal : getHariTanggalFull())
+    const [tanggal, setTanggal] = useState(hasilStokOpnameEdit?.hasil_stok_opname_tanggal ? hasilStokOpnameEdit.hasil_stok_opname_tanggal : getHariTanggalFull())
     const [perintahStokOpname, setPerintahStokOpname] = useState(hasilStokOpnameEdit?.uuid ? hasilStokOpnameEdit.uuid : ``)
 
     const [perintahStokOpnameList, setPerintahStokOpnameList] = useState([])

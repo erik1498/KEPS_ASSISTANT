@@ -92,7 +92,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                         piutang_denda: listPelunasanPenjualanDendaBarang[index].total_denda - listPelunasanPenjualanDendaBarang[index].denda_sudah_dibayar,
                         nilai_pelunasan: `${listPelunasanPenjualanDendaBarang[index].nilai_pelunasan}`,
                     }
-                })
+                }).catch(err => showError(err))
         }
         _getRincianPesananPenjualanDendaBarang()
     }
@@ -108,7 +108,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                         piutang: listPelunasanPenjualanBarang[index].piutang,
                         nilai_pelunasan: `${listPelunasanPenjualanBarang[index].nilai_pelunasan}`
                     }
-                })
+                }).catch(err => showError(err))
         }
         _getRincianPesananPenjualanBarang()
     }
@@ -173,6 +173,11 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
         {
             detailOpen ? <>
                 <div className="ml-4 py-4 px-4">
+                    {
+                        riwayatPelunasanPenjualanBarang.perintah_stok_opname_nomor_surat_perintah
+                        &&
+                        <p className="text-xs font-medium text-green-600 my-3">Telah Tervalidasi Pada Surat Perintah Stok Opname {riwayatPelunasanPenjualanBarang.perintah_stok_opname_nomor_surat_perintah}</p>
+                    }
                     {
                         detailOpen ? <>
                             <table className="text-left text-sm">

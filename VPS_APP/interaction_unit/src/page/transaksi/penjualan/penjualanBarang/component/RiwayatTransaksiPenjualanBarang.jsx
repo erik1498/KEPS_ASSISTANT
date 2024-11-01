@@ -193,7 +193,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                                                         y.type == "pelunasan_penjualan_barang" ? <>
                                                             <RiwayatTransaksiPelunasanPenjualanBarang
                                                                 riwayatPelunasanPenjualanBarang={y}
-                                                                edited={i == 0 && j == 0}
+                                                                edited={y.perintah_stok_opname_nomor_surat_perintah ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>
@@ -202,7 +202,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                                                         y.type == "retur_penjualan_barang" ? <>
                                                             <RiwayatTransaksiReturPenjualanBarang
                                                                 riwayatReturPenjualanBarang={y}
-                                                                edited={i == 0 && j == 0}
+                                                                edited={y.perintah_stok_opname_nomor_surat_perintah ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>
@@ -211,7 +211,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                                                         y.type == "pengembalian_denda_penjualan_barang" ? <>
                                                             <RiwayatTransaksiPengembalianDendaPenjualanBarang
                                                                 riwayatPengembalianDendaPenjualanBarang={y}
-                                                                edited={i == 0 && j == 0}
+                                                                edited={y.perintah_stok_opname_nomor_surat_perintah ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>

@@ -42,7 +42,15 @@ const JurnalStokOpnamePage = () => {
         apiPerintahStokOpnameCRUD
             .custom(`/jurnal/${perintahStokOpname.value}`, "GET")
             .then(resData => {
-                setJurnal(resData.data)
+                const data = resData.data.map(x => {
+                    x.detail_json = JSON.parse(x.detail_json)
+                    x.detail_json.map((y, i) => {
+                        x.detail_json[i].kode_akun_perkiraan = JSON.parse(y.kode_akun_perkiraan)
+                    })
+                    return x
+                })
+                console.log(data)
+                // setJurnal(resData.data)
             }).catch(err => showError(err))
     }
 
@@ -139,6 +147,22 @@ const JurnalStokOpnamePage = () => {
                             addClassInput="border-none px-1"
                             others={{
                                 value: formatDate(_getDataFromPerintahStokOpname()?.tanggal_selesai)
+                            }}
+                        />
+                        <FormInputWithLabel
+                            label={"Tanggal Mulai Transaksi"}
+                            disabled={true}
+                            addClassInput="border-none px-1"
+                            others={{
+                                value: formatDate(_getDataFromPerintahStokOpname()?.tanggal_mulai_transaksi)
+                            }}
+                        />
+                        <FormInputWithLabel
+                            label={"Tanggal Selesai Transaksi"}
+                            disabled={true}
+                            addClassInput="border-none px-1"
+                            others={{
+                                value: formatDate(_getDataFromPerintahStokOpname()?.tanggal_akhir_transaksi)
                             }}
                         />
                     </div>

@@ -97,23 +97,35 @@ const PenjualanBarangForm = ({
                     }
                     setEditNomorPesananPenjualan(x => x = true)
                 })
+                .catch(err => {
+                    showError(err)
+                    if (pesananPenjualanBarangSelected) {
+                        _setCustomer()
+                        setEditNomorPesananPenjualan(x => x = true)
+                        setPesananPenjualanBarang(pesananPenjualanBarangListData.filter(x => x.uuid == pesananPenjualanBarangSelected.value)[0])
+                    }
+                })
+        }
+    }
+
+    const _setCustomer = () => {
+        setCustomer(x => x = null)
+        setTanggalPesananPenjualanBarang(x => x = getHariTanggalFull())
+        setNomorPesananPenjualanBarang(x => x = null)
+        const pesananPenjualanBarangSelectedGet = pesananPenjualanBarangListData.filter(x => x.uuid == pesananPenjualanBarangSelected.value)
+        if (pesananPenjualanBarangSelectedGet.length > 0) {
+            const customerGet = customerList.filter(x => x.uuid == pesananPenjualanBarangSelectedGet[0].customer)
+            if (customerGet.length > 0) {
+                setCustomer(x => x = customerGet[0])
+                setTanggalPesananPenjualanBarang(pesananPenjualanBarangSelectedGet[0].tanggal_pesanan_penjualan_barang)
+                setNomorPesananPenjualanBarang(pesananPenjualanBarangSelectedGet[0].nomor_pesanan_penjualan_barang)
+            }
         }
     }
 
     useEffect(() => {
         if (pesananPenjualanBarangSelected) {
-            setCustomer(x => x = null)
-            setTanggalPesananPenjualanBarang(x => x = getHariTanggalFull())
-            setNomorPesananPenjualanBarang(x => x = null)
-            const pesananPenjualanBarangSelectedGet = pesananPenjualanBarangListData.filter(x => x.uuid == pesananPenjualanBarangSelected.value)
-            if (pesananPenjualanBarangSelectedGet.length > 0) {
-                const customerGet = customerList.filter(x => x.uuid == pesananPenjualanBarangSelectedGet[0].customer)
-                if (customerGet.length > 0) {
-                    setCustomer(x => x = customerGet[0])
-                    setTanggalPesananPenjualanBarang(pesananPenjualanBarangSelectedGet[0].tanggal_pesanan_penjualan_barang)
-                    setNomorPesananPenjualanBarang(pesananPenjualanBarangSelectedGet[0].nomor_pesanan_penjualan_barang)
-                }
-            }
+            _setCustomer()
         }
     }, [pesananPenjualanBarangSelected])
 

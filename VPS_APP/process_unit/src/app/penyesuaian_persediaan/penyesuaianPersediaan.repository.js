@@ -74,6 +74,13 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                         AND ppt.enabled = 1
                     ), "") AS keterangan,
                     IFNULL((
+                        SELECT 
+                            ppt.tanggal 
+                        FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt 
+                        WHERE ppt.hasil_stok_opname = hsot.uuid
+                        AND ppt.enabled = 1
+                    ), "") AS tanggal,
+                    IFNULL((
                         SELECT
                             SUM(rkbt.jumlah_yang_dikonversi)
                         FROM ${generateDatabaseName(req_id)}.rincian_konversi_barang_tab rkbt

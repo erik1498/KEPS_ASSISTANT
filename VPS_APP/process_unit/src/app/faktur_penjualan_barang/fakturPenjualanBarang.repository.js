@@ -44,6 +44,16 @@ export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo =
                     ppbt.keterangan AS keterangan,
                     ppbt.kode_akun_perkiraan AS kode_akun_perkiraan,
                     kapt.name AS kode_akun_perkiraan_name,
+                    (
+                        SELECT 
+                            psot.nomor_surat_perintah 
+                        FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
+                        WHERE psot.enabled = 1
+                        AND psot.validasi = 1
+                        AND psot.tanggal_mulai_transaksi <= ppbt.tanggal
+                        AND psot.tanggal_akhir_transaksi >= ppbt.tanggal
+                        LIMIT 1
+                    ) AS perintah_stok_opname_nomor_surat_perintah,
                     IFNULL((
                         SELECT 
                             SUM(rppbt.nilai_pelunasan)
@@ -74,6 +84,16 @@ export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo =
                     rpbt.keterangan AS keterangan,
                     rpbt.kode_akun_perkiraan AS kode_akun_perkiraan,
                     kapt.name AS kode_akun_perkiraan_name,
+                    (
+                        SELECT 
+                            psot.nomor_surat_perintah 
+                        FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
+                        WHERE psot.enabled = 1
+                        AND psot.validasi = 1
+                        AND psot.tanggal_mulai_transaksi <= rpbt.tanggal
+                        AND psot.tanggal_akhir_transaksi >= rpbt.tanggal
+                        LIMIT 1
+                    ) AS perintah_stok_opname_nomor_surat_perintah,
                     IFNULL((
                         SELECT 
                             SUM(rrpbt.nilai_retur)
@@ -96,6 +116,16 @@ export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo =
                     pdpbt.keterangan AS keterangan,
                     pdpbt.kode_akun_perkiraan AS kode_akun_perkiraan,
                     kapt.name AS kode_akun_perkiraan_name,
+                    (
+                        SELECT 
+                            psot.nomor_surat_perintah 
+                        FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
+                        WHERE psot.enabled = 1
+                        AND psot.validasi = 1
+                        AND psot.tanggal_mulai_transaksi <= pdpbt.tanggal
+                        AND psot.tanggal_akhir_transaksi >= pdpbt.tanggal
+                        LIMIT 1
+                    ) AS perintah_stok_opname_nomor_surat_perintah,
                     0 AS total,
                     "pengembalian_denda_penjualan_barang" AS type
                 FROM ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpbt 

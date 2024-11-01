@@ -1,7 +1,8 @@
+import { formatDate } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
-import { createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getPerintahStokOpnameByUUIDWithTanggalRepo, getRincianPelunasanPenjualanBarangRepo, getRincianPelunasanPenjualanJasaRepo, getStatusPerintahStokOpnameAktifByTanggalRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo } from "./perintahStokOpname.repository.js"
+import { checkPerintahStokOpnameAktifRepo, createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getPerintahStokOpnameByUUIDWithTanggalRepo, getRincianPenjualanBarangRepo, getRincianPelunasanPenjualanJasaRepo, getStatusPerintahStokOpnameAktifByTanggalRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo } from "./perintahStokOpname.repository.js"
 
 export const getAllPerintahStokOpnameService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPerintahStokOpnameService", null, req_identity)
@@ -44,19 +45,10 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
 
     if (perintahStokOpname.length > 0 && perintahStokOpname[0].tanggal_selesai != "BELUM SELESAI") {
 
-        const rincianPelunasanPenjualanBarang = await getRincianPelunasanPenjualanBarangRepo(perintahStokOpname[0].tanggal, perintahStokOpname[0].tanggal_selesai, req_identity)
+        const rincianPenjualanBarang = await getRincianPenjualanBarangRepo(perintahStokOpname[0].tanggal_mulai_transaksi, perintahStokOpname[0].tanggal_akhir_transaksi, req_identity)
 
-        const rincianPelunasanPenjualanJasa = await getRincianPelunasanPenjualanJasaRepo(perintahStokOpname[0].tanggal, perintahStokOpname[0].tanggal_selesai, req_identity)
+        return rincianPenjualanBarang
 
-        return rincianPelunasanPenjualanBarang.concat(...rincianPelunasanPenjualanJasa)
-
-        // const fakturPenjualanBarangDendaAktif = await getFakturPenjualanBarangDendaAktifRepo(perintahStokOpname[0].tanggal_selesai)
-
-        // const fakturPenjualanJasaDendaAktif = await getFakturPenjualanJasaDendaAktifRepo(perintahStokOpname[0].tanggal_selesai)
-
-        // const jurnalPerintahStokOpname = await getJurnalByPerintahStokOpnameRepo(perintahStokOpname[0].tanggal, perintahStokOpname[0].tanggal_selesai, fakturPenjualanBarangDendaAktif[0].list, fakturPenjualanJasaDendaAktif[0].list, null, uuid, req_id)
-
-        // return jurnalPerintahStokOpname
     }
     return []
 
@@ -142,6 +134,23 @@ export const getStatusPerintahStokOpnameAktifByTanggalService = async (tanggal, 
     }
 
     await getNeracaValidasiByTanggalService(null, tanggal, req_identity)
+
+    return
+}
+
+export const checkPerintahStokOpnameAktifByTanggalService = async (tanggal, req_identity) => {
+    LOGGER(logType.INFO, `Start checkPerintahStokOpnameAktifByTanggalService`, { tanggal }, req_identity)
+
+    await getNeracaValidasiByTanggalService(null, tanggal, req_identity)
+
+    const perintahStokOpname = await checkPerintahStokOpnameAktifRepo(tanggal, req_identity);
+
+    if (perintahStokOpname.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Tidak Bisa Di Eksekusi Karena Termasuk Dalam Waktu Transaksi Perintah Stok Opname Tervalidasi ${perintahStokOpname[0].nomor_surat_perintah} (${formatDate(perintahStokOpname[0].tanggal_mulai_transaksi)} Hingga ${formatDate(perintahStokOpname[0].tanggal_akhir_transaksi)})`,
+            prop: "error"
+        }))
+    }
 
     return
 }

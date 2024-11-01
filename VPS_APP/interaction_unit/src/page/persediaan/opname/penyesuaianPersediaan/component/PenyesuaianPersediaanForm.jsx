@@ -14,7 +14,7 @@ const PenyesuaianPersediaanForm = ({
     penyesuaianPersediaanEdit,
     getData = () => { }
 }) => {
-    const [tanggal, setTanggal] = useState(penyesuaianPersediaanEdit?.tanggal ? penyesuaianPersediaanEdit.tanggal : getHariTanggalFull())
+    const [tanggal, setTanggal] = useState(penyesuaianPersediaanEdit?.penyesuaian_persediaan_tanggal ? penyesuaianPersediaanEdit.penyesuaian_persediaan_tanggal : getHariTanggalFull())
     const [perintahStokOpname, setPerintahStokOpname] = useState(penyesuaianPersediaanEdit?.uuid ? penyesuaianPersediaanEdit.uuid : ``)
 
     const [perintahStokOpnameList, setPerintahStokOpnameList] = useState([])

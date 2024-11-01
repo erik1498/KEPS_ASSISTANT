@@ -101,6 +101,11 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = ({
             detailOpen ? <>
                 <div className="ml-4 py-4 px-4">
                     {
+                        riwayatPengembalianDendaPenjualanBarang.perintah_stok_opname_nomor_surat_perintah
+                        &&
+                        <p className="text-xs font-medium text-green-600 my-3">Telah Tervalidasi Pada Surat Perintah Stok Opname {riwayatPengembalianDendaPenjualanBarang.perintah_stok_opname_nomor_surat_perintah}</p>
+                    }
+                    {
                         detailOpen ? <>
                             <table className="text-left text-sm">
                                 <tr>

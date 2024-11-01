@@ -13,6 +13,8 @@ const PerintahStokOpnameForm = ({
     getData = () => { }
 }) => {
     const [tanggal, setTanggal] = useState(perintahStokOpnameEdit?.tanggal ? perintahStokOpnameEdit.tanggal : getHariTanggalFull())
+    const [tanggal_mulai_transaksi, setTanggalMulaiTransaksi] = useState(perintahStokOpnameEdit?.tanggal_mulai_transaksi ? perintahStokOpnameEdit.tanggal_mulai_transaksi : getHariTanggalFull())
+    const [tanggal_akhir_transaksi, setTanggalAkhirTransaksi] = useState(perintahStokOpnameEdit?.tanggal_akhir_transaksi ? perintahStokOpnameEdit.tanggal_akhir_transaksi : getHariTanggalFull())
     const [nomorPerintahStokOpname, setNomorPerintahStokOpname] = useState(perintahStokOpnameEdit?.nomor_surat_perintah ? perintahStokOpnameEdit.nomor_surat_perintah : ``)
     const [pegawaiPenanggungJawab, setPegawaiPenanggungJawab] = useState(perintahStokOpnameEdit?.pegawai_penanggung_jawab ? perintahStokOpnameEdit.pegawai_penanggung_jawab : ``)
     const [pegawaiPelaksana, setPegawaiPelaksana] = useState(perintahStokOpnameEdit?.pegawai_pelaksana ? perintahStokOpnameEdit.pegawai_pelaksana : ``)
@@ -32,6 +34,8 @@ const PerintahStokOpnameForm = ({
                 .custom(`${perintahStokOpnameEdit?.uuid ? `/${perintahStokOpnameEdit.uuid}` : ``}`, perintahStokOpnameEdit ? "PUT" : "POST", null, {
                     data: {
                         tanggal: tanggal,
+                        tanggal_mulai_transaksi: tanggal_mulai_transaksi,
+                        tanggal_akhir_transaksi: tanggal_akhir_transaksi,
                         nomor_surat_perintah: nomorPerintahStokOpname,
                         pegawai_penanggung_jawab: pegawaiPenanggungJawab.value,
                         pegawai_pelaksana: pegawaiPelaksana.value,
@@ -163,6 +167,32 @@ const PerintahStokOpnameForm = ({
                         {
                             value: tanggal,
                             name: "tanggal"
+                        }
+                    }
+                />
+                <FormInputWithLabel
+                    label={"Tanggal Mulai Transaksi"}
+                    type={"datetime-local"}
+                    onchange={(e) => {
+                        setTanggalMulaiTransaksi(e.target.value)
+                    }}
+                    others={
+                        {
+                            value: tanggal_mulai_transaksi,
+                            name: "tanggal_mulai_transaksi"
+                        }
+                    }
+                />
+                <FormInputWithLabel
+                    label={"Tanggal Akhir Transaksi"}
+                    type={"datetime-local"}
+                    onchange={(e) => {
+                        setTanggalAkhirTransaksi(e.target.value)
+                    }}
+                    others={
+                        {
+                            value: tanggal_akhir_transaksi,
+                            name: "tanggal_akhir_transaksi"
                         }
                     }
                 />
