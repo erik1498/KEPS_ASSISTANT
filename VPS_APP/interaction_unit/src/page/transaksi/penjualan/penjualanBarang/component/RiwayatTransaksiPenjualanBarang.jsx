@@ -46,35 +46,33 @@ const RiwayatTransaksiPenjualanBarang = ({
 
     const _saveRiwayatTransaksi = async (e) => {
         e.preventDefault()
-        if (riwayatTransaksi?.at(0)?.data?.at(0)?.bukti_transaksi != "EMPTY" && riwayatTransaksi?.at(0)?.data?.at(0)?.nomor_transaksi != "EMPTY") {
-            if (await formValidation(e.target)) {
-                let apiCall = apiPelunasanPenjualanBarangCRUD
+        if (await formValidation(e.target)) {
+            let apiCall = apiPelunasanPenjualanBarangCRUD
 
-                if (tipeTransaksi.value == "Retur") {
-                    apiCall = apiReturPenjualanBarangCRUD
-                }
-
-                if (tipeTransaksi.value == "Pengembalian_Denda") {
-                    apiCall = apiPengembalianDendaPenjualanBarangCRUD
-                }
-
-                const data = {
-                    faktur_penjualan_barang: fakturPenjualanBarang.uuid,
-                    tanggal: tanggal,
-                    bukti_transaksi: "EMPTY",
-                    kode_akun_perkiraan: kodeAkun.value,
-                    keterangan: "EMPTY"
-                }
-
-                data[`nomor_${tipeTransaksi.value.toLowerCase()}_penjualan_barang`] = "EMPTY"
-
-                apiCall.custom("", "POST", null, {
-                    data
-                }).then(() => {
-                    _getDaftarRiwayatTransaksi()
-                    setTanggal(getHariTanggalFull())
-                }).catch(err => showError(err))
+            if (tipeTransaksi.value == "Retur") {
+                apiCall = apiReturPenjualanBarangCRUD
             }
+
+            if (tipeTransaksi.value == "Pengembalian_Denda") {
+                apiCall = apiPengembalianDendaPenjualanBarangCRUD
+            }
+
+            const data = {
+                faktur_penjualan_barang: fakturPenjualanBarang.uuid,
+                tanggal: tanggal,
+                bukti_transaksi: "EMPTY",
+                kode_akun_perkiraan: kodeAkun.value,
+                keterangan: "EMPTY"
+            }
+
+            data[`nomor_${tipeTransaksi.value.toLowerCase()}_penjualan_barang`] = "EMPTY"
+
+            apiCall.custom("", "POST", null, {
+                data
+            }).then(() => {
+                _getDaftarRiwayatTransaksi()
+                setTanggal(getHariTanggalFull())
+            }).catch(err => showError(err))
         }
     }
 

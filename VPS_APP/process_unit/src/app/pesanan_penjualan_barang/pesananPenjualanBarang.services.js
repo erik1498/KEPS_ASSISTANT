@@ -1,6 +1,8 @@
 import { formatDate } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
+import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createPesananPenjualanBarangRepo, deletePesananPenjualanBarangByUuidRepo, getAllPesananPenjualanBarangRepo, getPesananPenjualanBarangByUuidRepo, getTanggalTransaksiTerakhirByPesananPenjualanRepo, updatePesananPenjualanBarangByUuidRepo } from "./pesananPenjualanBarang.repository.js"
 
 export const getAllPesananPenjualanBarangService = async (query, req_identity) => {
@@ -19,7 +21,7 @@ export const getAllPesananPenjualanBarangService = async (query, req_identity) =
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const pesananPenjualanBarangs = await getAllPesananPenjualanBarangRepo(pageNumber, size, search, tahun, req_identity)
     return generatePaginationResponse(pesananPenjualanBarangs.entry, pesananPenjualanBarangs.count, pesananPenjualanBarangs.pageNumber, pesananPenjualanBarangs.size)
 }
@@ -41,7 +43,9 @@ export const createPesananPenjualanBarangService = async (pesananPenjualanBarang
     LOGGER(logType.INFO, `Start createPesananPenjualanBarangService`, pesananPenjualanBarangData, req_identity)
     pesananPenjualanBarangData.enabled = 1
 
-    // await checkPerintahStokOpnameAktifByTanggalService(pesananPenjualanBarangData.tanggal_pesanan_penjualan_barang, req_identity)
+    await getNeracaValidasiByTanggalService(null, pesananPenjualanBarangData.tanggal_pesanan_penjualan_barang, req_identity)
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pesananPenjualanBarangData.tanggal_pesanan_penjualan_barang, null, req_identity)
 
     const pesananPenjualanBarang = await createPesananPenjualanBarangRepo(pesananPenjualanBarangData, req_identity)
     return pesananPenjualanBarang
@@ -49,18 +53,18 @@ export const createPesananPenjualanBarangService = async (pesananPenjualanBarang
 
 export const deletePesananPenjualanBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deletePesananPenjualanBarangByUuidService [${uuid}]`, null, req_identity)
-    
+
     const beforeData = await getPesananPenjualanBarangByUuidService(uuid, req_identity)
-    
+
     const allowToEdit = await getTanggalTransaksiTerakhirByPesananPenjualanService(uuid, beforeData.tanggal_pesanan_penjualan_barang, req_identity);
-    
+
     if (!allowToEdit.allow) {
         throw Error(JSON.stringify({
             message: "Tidak Bisa Dihapus Karena Tanggal Terakhir Transaksi Adalah " + formatDate(allowToEdit.tanggal_minimum),
             field: "error"
         }))
     }
-    
+
     await deletePesananPenjualanBarangByUuidRepo(uuid, req_identity)
     return true
 }
@@ -70,7 +74,7 @@ export const updatePesananPenjualanBarangByUuidService = async (uuid, pesananPen
     const beforeData = await getPesananPenjualanBarangByUuidService(uuid, req_identity)
 
     const allowToEdit = await getTanggalTransaksiTerakhirByPesananPenjualanService(uuid, beforeData.tanggal_pesanan_penjualan_barang, req_identity);
-    
+
     if (!allowToEdit.allow) {
         throw Error(JSON.stringify({
             message: "Tidak Bisa Diedit Karena Tanggal Terakhir Transaksi Adalah " + formatDate(allowToEdit.tanggal_minimum),
@@ -93,14 +97,14 @@ export const getTanggalTransaksiTerakhirByPesananPenjualanService = async (pesan
     LOGGER(logType.INFO, `Start getTanggalTransaksiTerakhirByPesananPenjualanService`, { pesanan_penjualan, tanggal }, req_identity)
 
     const tanggalMinimum = await getTanggalTransaksiTerakhirByPesananPenjualanRepo(pesanan_penjualan, req_identity)
-    
+
     if (tanggalMinimum.length > 0) {
         if (tanggalMinimum[0].tanggal_terakhir_transaksi == tanggal) {
             return {
                 allow: true,
                 tanggal_minimum: tanggalMinimum[0].tanggal_terakhir_transaksi
             }
-        }else{
+        } else {
             return {
                 allow: false,
                 tanggal_minimum: tanggalMinimum[0].tanggal_terakhir_transaksi

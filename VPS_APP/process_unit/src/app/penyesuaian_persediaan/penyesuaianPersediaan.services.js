@@ -61,7 +61,7 @@ export const deletePenyesuaianPersediaanByUuidService = async (uuid, req_identit
 
     const beforeData = await getPerintahStokOpnameByUuidService(uuid, req_identity)
 
-    await perintahStokOpnemeAllowToEdit(beforeData.perintah_stok_opname, req_identity)
+    await perintahStokOpnemeAllowToEdit(uuid, req_identity)
 
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 

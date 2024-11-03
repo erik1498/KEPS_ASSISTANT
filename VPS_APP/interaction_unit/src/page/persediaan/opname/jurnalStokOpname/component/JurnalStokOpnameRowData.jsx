@@ -48,10 +48,18 @@ const JurnalStokOpnameRowData = ({
                                                     <b>{item3.kategori_harga_barang_kode_barang} ( {item3.daftar_gudang_name} )</b>
                                                     <p className="mb-1">{item3.daftar_barang_name}</p>
                                                     <div className="w-full flex gap-x-4">
-                                                        <p className="mb-2 text-xs">x{item3.jumlah} {item3.satuan_barang_name}</p>
-                                                        <p className="mb-2 text-xs">Harga Rp.{parseToRupiahText(item3.harga)}</p>
-                                                        <p className="mb-2 text-xs">PPN Rp.{parseToRupiahText(item3.ppn)}</p>
-                                                        <p className="mb-2 text-xs">Diskon {item3.diskon_persentase} %</p>
+                                                        {
+                                                            item3.jumlah && <p className="mb-2 text-xs">x{item3.jumlah} {item3.satuan_barang_name}</p>
+                                                        }
+                                                        {
+                                                            item3.harga && <p className="mb-2 text-xs">Harga Rp.{parseToRupiahText(item3.harga)}</p>
+                                                        }
+                                                        {
+                                                            item3.ppn && <p className="mb-2 text-xs">PPN Rp.{parseToRupiahText(item3.ppn)}</p>
+                                                        }
+                                                        {
+                                                            item3.diskon_persentase && <p className="mb-2 text-xs">Diskon {item3.diskon_persentase} %</p>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
