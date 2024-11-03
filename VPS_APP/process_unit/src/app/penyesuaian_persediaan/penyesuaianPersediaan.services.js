@@ -1,7 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
-import { getPerintahStokOpnameByUuidService } from "../perintah_stok_opname/perintahStokOpname.services.js"
+import { getPerintahStokOpnameByUuidService, perintahStokOpnemeAllowToEdit } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createPenyesuaianPersediaanRepo, deletePenyesuaianPersediaanByUuidRepo, getAllPenyesuaianPersediaanRepo, getPenyesuaianPersediaanByPerintahStokOpnameRepo, getPenyesuaianPersediaanByUuidRepo, updatePenyesuaianPersediaanByUuidRepo } from "./penyesuaianPersediaan.repository.js"
 
 export const getAllPenyesuaianPersediaanService = async (query, req_identity) => {
@@ -48,6 +48,8 @@ export const createPenyesuaianPersediaanService = async (penyesuaianPersediaanDa
     LOGGER(logType.INFO, `Start createPenyesuaianPersediaanService`, penyesuaianPersediaanData, req_identity)
     penyesuaianPersediaanData.enabled = 1
 
+    await perintahStokOpnemeAllowToEdit(penyesuaianPersediaanData.perintah_stok_opname, req_identity)
+
     await getNeracaValidasiByTanggalService(null, penyesuaianPersediaanData.tanggal, req_identity)
 
     const penyesuaianPersediaan = await createPenyesuaianPersediaanRepo(penyesuaianPersediaanData, req_identity)
@@ -57,9 +59,11 @@ export const createPenyesuaianPersediaanService = async (penyesuaianPersediaanDa
 export const deletePenyesuaianPersediaanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deletePenyesuaianPersediaanByUuidService [${uuid}]`, null, req_identity)
 
-    const perintahStokOpnameBefore = await getPerintahStokOpnameByUuidService(uuid, req_identity)
+    const beforeData = await getPerintahStokOpnameByUuidService(uuid, req_identity)
 
-    await getNeracaValidasiByTanggalService(null, perintahStokOpnameBefore.tanggal, req_identity)
+    await perintahStokOpnemeAllowToEdit(beforeData.perintah_stok_opname, req_identity)
+
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await deletePenyesuaianPersediaanByUuidRepo(uuid, req_identity)
     return true
@@ -68,6 +72,8 @@ export const deletePenyesuaianPersediaanByUuidService = async (uuid, req_identit
 export const updatePenyesuaianPersediaanByUuidService = async (uuid, penyesuaianPersediaanData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updatePenyesuaianPersediaanByUuidService [${uuid}]`, penyesuaianPersediaanData, req_identity)
     const beforeData = await getPenyesuaianPersediaanByUuidService(uuid, req_identity)
+
+    await perintahStokOpnemeAllowToEdit(beforeData.perintah_stok_opname, req_identity)
 
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 

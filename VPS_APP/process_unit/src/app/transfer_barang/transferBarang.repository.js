@@ -3,7 +3,7 @@ import db from "../../config/Database.js";
 import TransferBarangModel from "./transferBarang.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 
-export const getAllTransferBarangRepo = async (pageNumber, size, search, req_id) => {
+export const getAllTransferBarangRepo = async (pageNumber, size, search, tahun, req_id) => {
     const transferBarangsCount = await db.query(
         `
             SELECT
@@ -13,7 +13,7 @@ export const getAllTransferBarangRepo = async (pageNumber, size, search, req_id)
             JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt_akhir ON dgt_akhir.uuid = tbt.daftar_gudang_akhir 
             WHERE tbt.tanggal LIKE '%${search}%'
             AND tbt.enabled = 1
-            GROUP BY tbt.kode_transfer_barang
+            AND YEAR(tbt.tanggal) = ${tahun}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -36,7 +36,7 @@ export const getAllTransferBarangRepo = async (pageNumber, size, search, req_id)
             JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt_akhir ON dgt_akhir.uuid = tbt.daftar_gudang_akhir 
             WHERE tbt.tanggal LIKE '%${search}%'
             AND tbt.enabled = 1
-            GROUP BY tbt.kode_transfer_barang
+            AND YEAR(tbt.tanggal) = ${tahun}
             LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }

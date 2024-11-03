@@ -1,5 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
+import { getReturPenjualanBarangByUuidService } from "../retur_penjualan_barang/returPenjualanBarang.services.js"
 import { createRincianReturPenjualanBarangRepo, deleteRincianReturPenjualanBarangByUuidRepo, getAllRincianPesananPenjualanBarangByReturPenjualanRepo, getAllRincianReturPenjualanBarangRepo, getRincianReturPenjualanBarangByUuidRepo, updateRincianReturPenjualanBarangByUuidRepo } from "./rincianReturPenjualanBarang.repository.js"
 
 export const getAllRincianReturPenjualanBarangService = async (query, req_identity) => {
@@ -46,20 +48,36 @@ export const createRincianReturPenjualanBarangService = async (rincianReturPenju
     LOGGER(logType.INFO, `Start createRincianReturPenjualanBarangService`, rincianReturPenjualanBarangData, req_identity)
     rincianReturPenjualanBarangData.enabled = 1
 
+    const returPenjualanBarang = await getReturPenjualanBarangByUuidService(rincianReturPenjualanBarangData.retur_penjualan_barang, req_identity)
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarang.tanggal, null, req_identity)
+
     const rincianReturPenjualanBarang = await createRincianReturPenjualanBarangRepo(rincianReturPenjualanBarangData, req_identity)
     return rincianReturPenjualanBarang
 }
 
 export const deleteRincianReturPenjualanBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteRincianReturPenjualanBarangByUuidService [${uuid}]`, null, req_identity)
+
+    const returPenjualanBarang = await getReturPenjualanBarangByUuidService(rincianReturPenjualanBarangData.retur_penjualan_barang, req_identity)
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarang.tanggal, null, req_identity)
+
     await getRincianReturPenjualanBarangByUuidService(uuid, req_identity)
+
     await deleteRincianReturPenjualanBarangByUuidRepo(uuid, req_identity)
     return true
 }
 
 export const updateRincianReturPenjualanBarangByUuidService = async (uuid, rincianReturPenjualanBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateRincianReturPenjualanBarangByUuidService [${uuid}]`, rincianReturPenjualanBarangData, req_identity)
+
+    const returPenjualanBarang = await getReturPenjualanBarangByUuidService(rincianReturPenjualanBarangData.retur_penjualan_barang, req_identity)
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarang.tanggal, null, req_identity)
+
     const beforeData = await getRincianReturPenjualanBarangByUuidService(uuid, req_identity)
+
     const rincianReturPenjualanBarang = await updateRincianReturPenjualanBarangByUuidRepo(uuid, rincianReturPenjualanBarangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

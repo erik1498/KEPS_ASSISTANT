@@ -1,7 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getJumlahRincianTransaksiDendaOnTableByTanggalService, getJumlahRincianTransaksiOnTableByTanggalService, getTanggalTransaksiTerakhirByFakturPenjualanService } from "../faktur_penjualan_barang/fakturPenjualanBarang.services.js"
-import { checkPerintahStokOpnameAktifByTanggalService } from "../perintah_stok_opname/perintahStokOpname.services.js"
+import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanService } from "../rincian_pelunasan_penjualan_denda_barang/rincianPelunasanPenjualanDendaBarang.services.js"
 import { createPelunasanPenjualanBarangRepo, deletePelunasanPenjualanBarangByUuidRepo, getAllPelunasanPenjualanBarangRepo, getCekDendaByPelunasanPenjualanUUIDRepo, getPelunasanPenjualanBarangByUuidRepo, updatePelunasanPenjualanBarangByUuidRepo } from "./pelunasanPenjualanBarang.repository.js"
 
@@ -49,7 +49,7 @@ export const createPelunasanPenjualanBarangService = async (pelunasanPenjualanBa
     LOGGER(logType.INFO, `Start createPelunasanPenjualanBarangService`, pelunasanPenjualanBarangData, req_identity)
     pelunasanPenjualanBarangData.enabled = 1
 
-    await checkPerintahStokOpnameAktifByTanggalService(pelunasanPenjualanBarangData.tanggal, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarangData.tanggal, null, req_identity)
 
     const tanggalValid = await getTanggalTransaksiTerakhirByFakturPenjualanService(pelunasanPenjualanBarangData.faktur_penjualan_barang, pelunasanPenjualanBarangData.tanggal, pelunasanPenjualanBarangData.tanggal, false, req_identity)
 
@@ -81,7 +81,7 @@ export const deletePelunasanPenjualanBarangByUuidService = async (uuid, req_iden
     
     const beforeData = await getPelunasanPenjualanBarangByUuidService(uuid, req_identity)
 
-    await checkPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, req_identity)
 
     await deletePelunasanPenjualanBarangByUuidRepo(uuid, req_identity)
     return true
@@ -91,7 +91,7 @@ export const updatePelunasanPenjualanBarangByUuidService = async (uuid, pelunasa
     LOGGER(logType.INFO, `Start updatePelunasanPenjualanBarangByUuidService [${uuid}]`, pelunasanPenjualanBarangData, req_identity)
     const beforeData = await getPelunasanPenjualanBarangByUuidService(uuid, req_identity)
 
-    await checkPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, req_identity)
 
     await getTanggalTransaksiTerakhirByFakturPenjualanService(beforeData.faktur_penjualan_barang, beforeData.tanggal, pelunasanPenjualanBarangData.tanggal, true, req_identity)
 

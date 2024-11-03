@@ -24,18 +24,50 @@ const JurnalStokOpnameRowData = ({
                         <>
                             <hr />
                             {
-                                j <= item2.length ?
+                                j <= item2.length ? <>
+                                    {
+                                        j == 0 ? <>
+                                            <div className="px-1">
+                                                <div className="px-2 bg-gray-600 py-3 text-white font-bold text-md flex justify-between">
+                                                    <div>
+                                                        <h1>{item3.sumber}</h1>
+                                                        <h1>No. Pesanan {item3.pesanan_penjualan_barang}</h1>
+                                                    </div>
+                                                    <div>
+                                                        <h1 className="text-right">{item3.customer_name}</h1>
+                                                        <h1 className="text-right">Kode Customer {item3.customer_code}</h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </> : <></>
+                                    }
+                                    {
+                                        item3.waktu_show ? <>
+                                            <div className="px-1">
+                                                <div className="bg-gray-200 px-2 py-1">
+                                                    <b>{item3.kategori_harga_barang_kode_barang} ( {item3.daftar_gudang_name} )</b>
+                                                    <p className="mb-1">{item3.daftar_barang_name}</p>
+                                                    <div className="w-full flex gap-x-4">
+                                                        <p className="mb-2 text-xs">x{item3.jumlah} {item3.satuan_barang_name}</p>
+                                                        <p className="mb-2 text-xs">Harga Rp.{parseToRupiahText(item3.harga)}</p>
+                                                        <p className="mb-2 text-xs">PPN Rp.{parseToRupiahText(item3.ppn)}</p>
+                                                        <p className="mb-2 text-xs">Diskon {item3.diskon_persentase} %</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </> : <></>
+                                    }
                                     <div className="grid grid-cols-12 items-start py-1">
                                         <div className="col-span-1 px-2 text-black">
                                             {
-                                                convertTo12HoursFormat(item3.waktu)
+                                                item3.waktu_show && convertTo12HoursFormat(item3.waktu)
                                             }
                                         </div>
                                         <div className={`col-span-2 text-gray-900 flex flex-col px-2 ${parseRupiahToFloat(item3.kredit) > 0 && item3.uuid != "NERACA" ? "text-right" : ""}`}>
                                             <p>{item3.kode_akun} - {item3.nama_akun}</p>
                                         </div>
                                         <div className={`${forPrint ? "col-span-5" : "col-span-4"} text-gray-900 flex flex-col px-2`}>
-                                            <p>{item3.uraian}</p>
+
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">
                                             {
@@ -47,7 +79,8 @@ const JurnalStokOpnameRowData = ({
                                                 item3.kredit != "0" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(item3.kredit)}</h1> : <></>
                                             }
                                         </div>
-                                    </div> : <></>
+                                    </div>
+                                </> : <></>
                             }
                             {
                                 j == item2.length - 1 && i == item1.data.length - 1 ?

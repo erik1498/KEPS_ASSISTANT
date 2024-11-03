@@ -7,13 +7,13 @@ export const perintahStokOpnameValidation = (payload) => {
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        tanggal_mulai_transaksi: Joi.string().required().messages({
-            'string.base': "Harus Berupa Text",
+        bulan_transaksi: Joi.number().required().messages({
+            'string.base': "Harus Berupa Number",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        tanggal_akhir_transaksi: Joi.string().required().messages({
-            'string.base': "Harus Berupa Text",
+        tahun: Joi.number().required().messages({
+            'string.base': "Harus Berupa Number",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),

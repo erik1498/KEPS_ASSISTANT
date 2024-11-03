@@ -103,7 +103,7 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = ({
                     {
                         riwayatPengembalianDendaPenjualanBarang.perintah_stok_opname_nomor_surat_perintah
                         &&
-                        <p className="text-xs font-medium text-green-600 my-3">Telah Tervalidasi Pada Surat Perintah Stok Opname {riwayatPengembalianDendaPenjualanBarang.perintah_stok_opname_nomor_surat_perintah}</p>
+                        <p className="text-xs font-medium text-green-600 my-3">Telah Terdaftar Pada Surat Perintah Stok Opname {riwayatPengembalianDendaPenjualanBarang.perintah_stok_opname_nomor_surat_perintah}</p>
                     }
                     {
                         detailOpen ? <>

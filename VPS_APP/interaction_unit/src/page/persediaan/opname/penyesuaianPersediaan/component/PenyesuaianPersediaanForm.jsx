@@ -8,12 +8,16 @@ import { initialDataFromEditObject } from "../../../../../helper/select.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInput from "../../../../../component/form/FormInput"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
+import { useDataContext } from "../../../../../context/dataContext.context"
 
 const PenyesuaianPersediaanForm = ({
     setAddPenyesuaianPersediaanEvent = () => { },
     penyesuaianPersediaanEdit,
     getData = () => { }
 }) => {
+    const dataContext = useDataContext()
+    const { data } = dataContext
+    
     const [tanggal, setTanggal] = useState(penyesuaianPersediaanEdit?.penyesuaian_persediaan_tanggal ? penyesuaianPersediaanEdit.penyesuaian_persediaan_tanggal : getHariTanggalFull())
     const [perintahStokOpname, setPerintahStokOpname] = useState(penyesuaianPersediaanEdit?.uuid ? penyesuaianPersediaanEdit.uuid : ``)
 
@@ -30,7 +34,7 @@ const PenyesuaianPersediaanForm = ({
                     kuantitas: `${penyesuaianPersediaanList[index].kuantitas}`,
                     stok_tersedia_sistem: `${penyesuaianPersediaanList[index].stok_sistem}`,
                     tipe_penyesuaian: `${penyesuaianPersediaanList[index].tipe_penyesuaian}`,
-                    jumlah:`${_getJumlahPerbedaan(penyesuaianPersediaanList[index])}`,
+                    jumlah: `${_getJumlahPerbedaan(penyesuaianPersediaanList[index])}`,
                     keterangan: penyesuaianPersediaanList[index].keterangan
                 }
             }).then(() => {
@@ -47,7 +51,7 @@ const PenyesuaianPersediaanForm = ({
 
     const _getDataPerintahStokOpname = () => {
         apiPerintahStokOpnameCRUD
-            .custom("", "GET")
+            .custom(`?tahun=${data.tahun}`, "GET")
             .then(resData => {
                 setPerintahStokOpnameList(resData.data.entry)
                 if (resData.data.entry.length > 0) {
@@ -134,6 +138,7 @@ const PenyesuaianPersediaanForm = ({
                     optionsDataList={perintahStokOpnameList}
                     optionsLabel={"nomor_surat_perintah"}
                     optionsValue={"uuid"}
+                    disabled={true}
                     selectValue={perintahStokOpname}
                     onchange={(e) => {
                         setPerintahStokOpname(e)

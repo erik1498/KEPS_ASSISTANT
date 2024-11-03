@@ -1,12 +1,12 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { getStatusPerintahStokOpnameAktifByTanggalService } from "../perintah_stok_opname/perintahStokOpname.services.js"
+import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createKonversiBarangRepo, deleteKonversiBarangByUuidRepo, getAllKonversiBarangRepo, getKonversiBarangByUuidRepo, updateKonversiBarangByUuidRepo } from "./konversiBarang.repository.js"
 
 export const getAllKonversiBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllKonversiBarangService", null, req_identity)
 
-    let { page, size, search } = query
+    let { page, size, search, tahun } = query
     page = page ? page : null
     size = size ? size : null
     if (size == "all") {
@@ -20,7 +20,7 @@ export const getAllKonversiBarangService = async (query, req_identity) => {
         pageNumber, size, search
     }, req_identity)
 
-    const konversiBarangs = await getAllKonversiBarangRepo(pageNumber, size, search, req_identity)
+    const konversiBarangs = await getAllKonversiBarangRepo(pageNumber, size, search, tahun, req_identity)
     return generatePaginationResponse(konversiBarangs.entry, konversiBarangs.count, konversiBarangs.pageNumber, konversiBarangs.size)
 }
 
@@ -41,7 +41,7 @@ export const createKonversiBarangService = async (konversiBarangData, req_identi
     LOGGER(logType.INFO, `Start createKonversiBarangService`, konversiBarangData, req_identity)
     konversiBarangData.enabled = 1
 
-    await getStatusPerintahStokOpnameAktifByTanggalService(konversiBarangData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, konversiBarangData.tanggal, null, req_identity)
 
     const konversiBarang = await createKonversiBarangRepo(konversiBarangData, req_identity)
     return konversiBarang
@@ -51,7 +51,7 @@ export const deleteKonversiBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteKonversiBarangByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getKonversiBarangByUuidService(uuid, req_identity)
 
-    await getStatusPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, req_identity)
 
     await deleteKonversiBarangByUuidRepo(uuid, req_identity)
     return true
@@ -62,7 +62,7 @@ export const updateKonversiBarangByUuidService = async (uuid, konversiBarangData
 
     const beforeData = await getKonversiBarangByUuidService(uuid, req_identity)
 
-    await getStatusPerintahStokOpnameAktifByTanggalService(beforeData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, req_identity)
 
     const konversiBarang = await updateKonversiBarangByUuidRepo(uuid, konversiBarangData, req_identity)
 

@@ -1,13 +1,12 @@
 import { formatDate } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { checkPerintahStokOpnameAktifByTanggalService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createPesananPenjualanBarangRepo, deletePesananPenjualanBarangByUuidRepo, getAllPesananPenjualanBarangRepo, getPesananPenjualanBarangByUuidRepo, getTanggalTransaksiTerakhirByPesananPenjualanRepo, updatePesananPenjualanBarangByUuidRepo } from "./pesananPenjualanBarang.repository.js"
 
 export const getAllPesananPenjualanBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPesananPenjualanBarangService", null, req_identity)
 
-    let { page, size, search } = query
+    let { page, size, search, tahun } = query
     page = page ? page : null
     size = size ? size : null
     if (size == "all") {
@@ -21,7 +20,7 @@ export const getAllPesananPenjualanBarangService = async (query, req_identity) =
         pageNumber, size, search
     }, req_identity)
     
-    const pesananPenjualanBarangs = await getAllPesananPenjualanBarangRepo(pageNumber, size, search, req_identity)
+    const pesananPenjualanBarangs = await getAllPesananPenjualanBarangRepo(pageNumber, size, search, tahun, req_identity)
     return generatePaginationResponse(pesananPenjualanBarangs.entry, pesananPenjualanBarangs.count, pesananPenjualanBarangs.pageNumber, pesananPenjualanBarangs.size)
 }
 
@@ -42,7 +41,7 @@ export const createPesananPenjualanBarangService = async (pesananPenjualanBarang
     LOGGER(logType.INFO, `Start createPesananPenjualanBarangService`, pesananPenjualanBarangData, req_identity)
     pesananPenjualanBarangData.enabled = 1
 
-    await checkPerintahStokOpnameAktifByTanggalService(pesananPenjualanBarangData.tanggal_pesanan_penjualan_barang, req_identity)
+    // await checkPerintahStokOpnameAktifByTanggalService(pesananPenjualanBarangData.tanggal_pesanan_penjualan_barang, req_identity)
 
     const pesananPenjualanBarang = await createPesananPenjualanBarangRepo(pesananPenjualanBarangData, req_identity)
     return pesananPenjualanBarang

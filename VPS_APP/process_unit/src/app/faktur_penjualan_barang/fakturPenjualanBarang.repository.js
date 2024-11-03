@@ -49,9 +49,8 @@ export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo =
                             psot.nomor_surat_perintah 
                         FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
                         WHERE psot.enabled = 1
-                        AND psot.validasi = 1
-                        AND psot.tanggal_mulai_transaksi <= ppbt.tanggal
-                        AND psot.tanggal_akhir_transaksi >= ppbt.tanggal
+                        AND psot.bulan_transaksi = MONTH(ppbt.tanggal)
+                        AND psot.tahun = YEAR(ppbt.tanggal)
                         LIMIT 1
                     ) AS perintah_stok_opname_nomor_surat_perintah,
                     IFNULL((
@@ -89,9 +88,8 @@ export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo =
                             psot.nomor_surat_perintah 
                         FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
                         WHERE psot.enabled = 1
-                        AND psot.validasi = 1
-                        AND psot.tanggal_mulai_transaksi <= rpbt.tanggal
-                        AND psot.tanggal_akhir_transaksi >= rpbt.tanggal
+                        AND psot.bulan_transaksi = MONTH(rpbt.tanggal)
+                        AND psot.tahun = YEAR(rpbt.tanggal)
                         LIMIT 1
                     ) AS perintah_stok_opname_nomor_surat_perintah,
                     IFNULL((
@@ -121,9 +119,8 @@ export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo =
                             psot.nomor_surat_perintah 
                         FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
                         WHERE psot.enabled = 1
-                        AND psot.validasi = 1
-                        AND psot.tanggal_mulai_transaksi <= pdpbt.tanggal
-                        AND psot.tanggal_akhir_transaksi >= pdpbt.tanggal
+                        AND psot.bulan_transaksi = MONTH(pdpbt.tanggal)
+                        AND psot.tahun = YEAR(pdpbt.tanggal)
                         LIMIT 1
                     ) AS perintah_stok_opname_nomor_surat_perintah,
                     0 AS total,

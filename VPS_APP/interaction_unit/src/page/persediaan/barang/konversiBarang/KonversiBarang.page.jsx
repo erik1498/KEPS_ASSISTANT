@@ -46,7 +46,7 @@ const KonversiBarangPage = () => {
         }
         setIsLoading(true)
         apiKonversiBarangCRUD
-            .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
+            .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}&tahun=${data.tahun}`, "GET")
             .then(resData => {
 
                 setSearchStatus(searchParam.length < 1)

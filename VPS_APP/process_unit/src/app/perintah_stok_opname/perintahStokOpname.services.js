@@ -1,13 +1,14 @@
 import { formatDate } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+import { getBulanText } from "../../utils/mathUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
-import { checkPerintahStokOpnameAktifRepo, createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getPerintahStokOpnameByUUIDWithTanggalRepo, getRincianPenjualanBarangRepo, getRincianPelunasanPenjualanJasaRepo, getStatusPerintahStokOpnameAktifByTanggalRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo } from "./perintahStokOpname.repository.js"
+import { checkPerintahStokOpnameAktifRepo, createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getPerintahStokOpnameByUUIDWithTanggalRepo, getRincianPenjualanBarangRepo, getRincianPelunasanPenjualanJasaRepo, getStatusPerintahStokOpnameAktifByTanggalRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo, checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo, validasiPerintahStokOpnameByUuidRepo } from "./perintahStokOpname.repository.js"
 
 export const getAllPerintahStokOpnameService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPerintahStokOpnameService", null, req_identity)
 
-    let { page, size, search } = query
+    let { page, size, search, tahun } = query
     page = page ? page : null
     size = size ? size : null
     if (size == "all") {
@@ -21,7 +22,7 @@ export const getAllPerintahStokOpnameService = async (query, req_identity) => {
         pageNumber, size, search
     }, req_identity)
 
-    const perintahStokOpnames = await getAllPerintahStokOpnameRepo(pageNumber, size, search, req_identity)
+    const perintahStokOpnames = await getAllPerintahStokOpnameRepo(pageNumber, size, search, tahun, req_identity)
     return generatePaginationResponse(perintahStokOpnames.entry, perintahStokOpnames.count, perintahStokOpnames.pageNumber, perintahStokOpnames.size)
 }
 
@@ -43,9 +44,9 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
 
     const perintahStokOpname = await getPerintahStokOpnameByUUIDWithTanggalRepo(uuid, req_identity)
 
-    if (perintahStokOpname.length > 0 && perintahStokOpname[0].tanggal_selesai != "BELUM SELESAI") {
+    if (perintahStokOpname.length > 0) {
 
-        const rincianPenjualanBarang = await getRincianPenjualanBarangRepo(perintahStokOpname[0].tanggal_mulai_transaksi, perintahStokOpname[0].tanggal_akhir_transaksi, req_identity)
+        const rincianPenjualanBarang = await getRincianPenjualanBarangRepo(perintahStokOpname[0].bulan_transaksi, perintahStokOpname[0].tahun, req_identity)
 
         return rincianPenjualanBarang
 
@@ -61,7 +62,7 @@ export const createPerintahStokOpnameService = async (perintahStokOpnameData, re
 
     await getNeracaValidasiByTanggalService(null, perintahStokOpnameData.tanggal, req_identity)
 
-    await getStatusPerintahStokOpnameAktifByTanggalService(perintahStokOpnameData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(perintahStokOpnameData.nomor_surat_perintah, perintahStokOpnameData.bulan_transaksi, null, req_identity)
 
     const perintahStokOpname = await createPerintahStokOpnameRepo(perintahStokOpnameData, req_identity)
     return perintahStokOpname
@@ -71,6 +72,7 @@ export const deletePerintahStokOpnameByUuidService = async (uuid, req_identity) 
     LOGGER(logType.INFO, `Start deletePerintahStokOpnameByUuidService [${uuid}]`, null, req_identity)
 
     const allowToUpdatePerintahStokOpname = await perintahStokOpnemeAllowToEdit(uuid, req_identity);
+
     if (allowToUpdatePerintahStokOpname.length > 0 && (allowToUpdatePerintahStokOpname[0].hasil_stok_opname > 0 || allowToUpdatePerintahStokOpname[0].penyesuaian_persediaan > 0)) {
         throw Error(JSON.stringify({
             message: "Tidak dapat Dihapus karena terdapat hasil stok opname atau penyesuaian persediaan pada stok opname ini",
@@ -83,10 +85,10 @@ export const deletePerintahStokOpnameByUuidService = async (uuid, req_identity) 
     return true
 }
 
-export const updatePerintahStokOpnameByUuidService = async (uuid, perintahStokOpnameData, req_identity, req_original_url, req_method) => {
+export const updatePerintahStokOpnameByUuidService = async (perintahStokOpnameData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updatePerintahStokOpnameByUuidService [${uuid}]`, perintahStokOpnameData, req_identity)
 
-    const allowToUpdatePerintahStokOpname = await perintahStokOpnemeAllowToEdit(uuid, req_identity);
+    const allowToUpdatePerintahStokOpname = await perintahStokOpnemeAllowToEdit(perintahStokOpnameData.uuid, req_identity);
     if (allowToUpdatePerintahStokOpname.length > 0 && allowToUpdatePerintahStokOpname[0].hasil_stok_opname > 0 && allowToUpdatePerintahStokOpname[0].penyesuaian_persediaan > 0) {
         throw Error(JSON.stringify({
             message: "Tidak dapat Diedit karena terdapat hasil stok opname atau penyesuaian persediaan pada stok opname ini",
@@ -94,9 +96,9 @@ export const updatePerintahStokOpnameByUuidService = async (uuid, perintahStokOp
         }))
     }
 
-    const beforeData = await getPerintahStokOpnameByUuidService(uuid, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(perintahStokOpnameData.nomor_surat_perintah, perintahStokOpnameData.bulan_transaksi, uuid, req_identity)
 
-    await getStatusPerintahStokOpnameAktifByTanggalService(perintahStokOpnameData.tanggal, uuid, req_identity)
+    const beforeData = await getPerintahStokOpnameByUuidService(uuid, req_identity)
 
     const perintahStokOpname = await updatePerintahStokOpnameByUuidRepo(uuid, perintahStokOpnameData, req_identity)
 
@@ -108,49 +110,71 @@ export const updatePerintahStokOpnameByUuidService = async (uuid, perintahStokOp
     return perintahStokOpname
 }
 
+
+export const validasiPerintahStokOpnameByUuidService = async (perintahStokOpnameData, req_identity, req_original_url, req_method) => {
+    LOGGER(logType.INFO, `Start validasiPerintahStokOpnameByUuidService`, perintahStokOpnameData, req_identity)
+
+    const beforeData = await getPerintahStokOpnameByUuidService(perintahStokOpnameData.perintah_stok_opname, req_identity)
+
+    const perintahStokOpname = await validasiPerintahStokOpnameByUuidRepo(perintahStokOpnameData, req_identity)
+
+    LOGGER_MONITOR(req_original_url, req_method, {
+        beforeData,
+        perintahStokOpnameData
+    }, req_identity)
+
+    return perintahStokOpname
+}
+
 export const perintahStokOpnemeAllowToEdit = async (perintah_stok_opname, req_identity) => {
     LOGGER(logType.INFO, `Start perintahStokOpnemeAllowToEdit`, { perintah_stok_opname }, req_identity)
-    const hasilStokOpname = await perintahStokOpnameStatusRepo(perintah_stok_opname, req_identity)
 
-    if (hasilStokOpname.length > 0 && hasilStokOpname[0].status_validasi > 0) {
-        throw Error(JSON.stringify({
-            message: `Neraca sudah divalidasi untuk Bulan ${hasilStokOpname[0].bulan} Dan Tahun ${hasilStokOpname[0].tahun}`,
-            prop: "error"
-        }))
-    }
-
-    return hasilStokOpname;
-}
-
-export const getStatusPerintahStokOpnameAktifByTanggalService = async (tanggal, uuid, req_identity) => {
-    LOGGER(logType.INFO, `Start getStatusPerintahStokOpnameAktifByTanggalService`, { tanggal, uuid }, req_identity)
-    const perintahStokOpname = await getStatusPerintahStokOpnameAktifByTanggalRepo(tanggal, uuid, req_identity);
-
-    if (perintahStokOpname.length > 0 && perintahStokOpname[0].allowToExecute == 0) {
-        throw Error(JSON.stringify({
-            message: `Perintah Stok Opname ${perintahStokOpname[0].nomor_surat_perintah} Berjalan Pada ${perintahStokOpname[0].tanggal} Hingga ${perintahStokOpname[0].tanggal_selesai}`,
-            prop: "error"
-        }))
-    }
-
-    await getNeracaValidasiByTanggalService(null, tanggal, req_identity)
-
-    return
-}
-
-export const checkPerintahStokOpnameAktifByTanggalService = async (tanggal, req_identity) => {
-    LOGGER(logType.INFO, `Start checkPerintahStokOpnameAktifByTanggalService`, { tanggal }, req_identity)
-
-    await getNeracaValidasiByTanggalService(null, tanggal, req_identity)
-
-    const perintahStokOpname = await checkPerintahStokOpnameAktifRepo(tanggal, req_identity);
+    const perintahStokOpname = await perintahStokOpnameStatusRepo(perintah_stok_opname, req_identity)
 
     if (perintahStokOpname.length > 0) {
-        throw Error(JSON.stringify({
-            message: `Tidak Bisa Di Eksekusi Karena Termasuk Dalam Waktu Transaksi Perintah Stok Opname Tervalidasi ${perintahStokOpname[0].nomor_surat_perintah} (${formatDate(perintahStokOpname[0].tanggal_mulai_transaksi)} Hingga ${formatDate(perintahStokOpname[0].tanggal_akhir_transaksi)})`,
-            prop: "error"
-        }))
+        if (perintahStokOpname[0].validasi > 0) {
+            throw Error(JSON.stringify({
+                message: `Perintah Stok Opname sudah divalidasi`,
+                prop: "error"
+            }))
+        }
+        if (perintahStokOpname[0].status_validasi > 0) {
+            throw Error(JSON.stringify({
+                message: `Neraca sudah divalidasi untuk Bulan ${perintahStokOpname[0].bulan} Dan Tahun ${perintahStokOpname[0].tahun}`,
+                prop: "error"
+            }))
+        }
     }
 
-    return
+    return perintahStokOpname;
+}
+
+export const checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService = async (nomor_surat_perintah, bulan_transaksi, uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService`, { nomor_surat_perintah, bulan_transaksi }, req_identity)
+    const perintahStokOpname = await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo(nomor_surat_perintah, bulan_transaksi, uuid, req_identity)
+
+    if (perintahStokOpname.length > 0) {
+        if (bulan_transaksi.length > 2) {
+            throw Error(JSON.stringify({
+                message: `Tidak Bisa Di Eksekusi Karena Bulan Transaksi Sudah Terdaftar Pada ${perintahStokOpname[0].nomor_surat_perintah} ( ${getBulanText(perintahStokOpname[0].bulan_transaksi - 1)} )`,
+                prop: "error"
+            }))
+        }
+
+        const perintahStokOpnameNomorSuratPerintahGet = perintahStokOpname.filter(x => x.nomor_surat_perintah == nomor_surat_perintah)
+        if (perintahStokOpnameNomorSuratPerintahGet.length > 0) {
+            throw Error(JSON.stringify({
+                message: `Tidak Bisa Di Eksekusi Karena Nomor Surat Perintah Sudah Terdaftar`,
+                prop: "error"
+            }))
+        }
+
+        const perintahStokOpnameBulanTransaksiGet = perintahStokOpname.filter(x => x.bulan_transaksi == bulan_transaksi)
+        if (perintahStokOpnameBulanTransaksiGet.length > 0) {
+            throw Error(JSON.stringify({
+                message: `Tidak Bisa Di Eksekusi Karena Bulan Transaksi Sudah Terdaftar Pada ${perintahStokOpnameBulanTransaksiGet[0].nomor_surat_perintah}`,
+                prop: "error"
+            }))
+        }
+    }
 }

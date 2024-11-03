@@ -3,13 +3,14 @@ import db from "../../config/Database.js";
 import KonversiBarangModel from "./konversiBarang.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 
-export const getAllKonversiBarangRepo = async (pageNumber, size, search, req_id) => {
+export const getAllKonversiBarangRepo = async (pageNumber, size, search, tahun, req_id) => {
     const konversiBarangsCount = await db.query(
         `
             SELECT 
                 COUNT(0) AS count
             FROM ${generateDatabaseName(req_id)}.konversi_barang_tab kbt 
             WHERE kbt.kode_konversi_barang LIKE '%${search}%'
+            AND YEAR(kbt.tanggal) = ${tahun}
             AND kbt.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
@@ -25,6 +26,7 @@ export const getAllKonversiBarangRepo = async (pageNumber, size, search, req_id)
             FROM ${generateDatabaseName(req_id)}.konversi_barang_tab kbt 
             WHERE kbt.kode_konversi_barang LIKE '%${search}%'
             AND kbt.enabled = 1
+            AND YEAR(kbt.tanggal) = ${tahun}
             LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }

@@ -9,12 +9,16 @@ import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLab
 import FormInput from "../../../../../component/form/FormInput"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
+import { useDataContext } from "../../../../../context/dataContext.context"
 
 const HasilStokOpnameForm = ({
     setAddHasilStokOpnameEvent = () => { },
     hasilStokOpnameEdit,
     getData = () => { }
 }) => {
+    const dataContext = useDataContext()
+    const { data } = dataContext
+
     const [tanggal, setTanggal] = useState(hasilStokOpnameEdit?.hasil_stok_opname_tanggal ? hasilStokOpnameEdit.hasil_stok_opname_tanggal : getHariTanggalFull())
     const [perintahStokOpname, setPerintahStokOpname] = useState(hasilStokOpnameEdit?.uuid ? hasilStokOpnameEdit.uuid : ``)
 
@@ -44,7 +48,7 @@ const HasilStokOpnameForm = ({
 
     const _getDataPerintahStokOpname = () => {
         apiPerintahStokOpnameCRUD
-            .custom("", "GET")
+            .custom(`?tahun=${data.tahun}`, "GET")
             .then(resData => {
                 setPerintahStokOpnameList(resData.data.entry)
                 if (resData.data.entry.length > 0) {
@@ -124,6 +128,7 @@ const HasilStokOpnameForm = ({
                     optionsDataList={perintahStokOpnameList}
                     optionsLabel={"nomor_surat_perintah"}
                     optionsValue={"uuid"}
+                    disabled={true}
                     selectValue={perintahStokOpname}
                     onchange={(e) => {
                         setPerintahStokOpname(e)

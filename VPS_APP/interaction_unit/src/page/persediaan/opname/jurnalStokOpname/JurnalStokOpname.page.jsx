@@ -5,11 +5,14 @@ import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
 import { apiPerintahStokOpnameCRUD } from "../../../../service/endPointList.api"
 import { showError } from "../../../../helper/form.helper"
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
-import { formatDate } from "../../../../helper/date.helper"
+import { formatDate, getBulanByIndex } from "../../../../helper/date.helper"
 import { normalizeDataJurnalUmum } from "../../../../helper/jurnalUmum.helper"
 import JurnalStokOpnameRow from "./component/JurnalStokOpnameRow"
+import { useDataContext } from "../../../../context/dataContext.context"
 
 const JurnalStokOpnamePage = () => {
+    const dataContext = useDataContext()
+    const { data } = dataContext
 
     const [isLoading, setIsLoading] = useState(false)
 
@@ -18,12 +21,14 @@ const JurnalStokOpnamePage = () => {
 
     const [jurnal, setJurnal] = useState([])
 
+    const [validasi, setValidasi] = useState(false)
+
     const [jurnalNormalized, setJurnalNormalized] = useState([])
 
     const _getDataPerintahStokOpname = () => {
         setIsLoading(x => x = true)
         apiPerintahStokOpnameCRUD
-            .custom("", "GET")
+            .custom(`?tahun=${data.tahun}`, "GET")
             .then(resData => {
                 setIsLoading(x => x = false)
                 setPerintahStokOpnameList(x => x = resData.data.entry)
@@ -42,25 +47,81 @@ const JurnalStokOpnamePage = () => {
         apiPerintahStokOpnameCRUD
             .custom(`/jurnal/${perintahStokOpname.value}`, "GET")
             .then(resData => {
-                const data = resData.data.map(x => {
-                    x.detail_json = JSON.parse(x.detail_json)
-                    x.detail_json.map((y, i) => {
-                        x.detail_json[i].kode_akun_perkiraan = JSON.parse(y.kode_akun_perkiraan)
-                    })
-                    return x
-                })
-                console.log(data)
-                // setJurnal(resData.data)
+                setJurnal(resData.data)
             }).catch(err => showError(err))
     }
 
     const normalizeData = async () => {
-        let normalizedData = await normalizeDataJurnalUmum(jurnal.map(x => {
+        let listDaftarData = []
+        jurnal.map((x, ix) => {
+            x.detail_json = JSON.parse(x.detail_json)
+            x.detail_data = JSON.parse(x.detail_data)
+            x.detail_json.map((y, iy) => {
+                x.detail_json[iy].kode_akun_perkiraan = JSON.parse(y.kode_akun_perkiraan)
+
+                let dataInput = {
+                    uuid: x.uuid,
+                    bukti_transaksi: x.bukti_transaksi,
+                    sumber: x.sumber,
+                    tahun: x.tahun,
+                    bulan: x.bulan,
+                    tanggal: x.tanggal,
+                    waktu: x.tanggal,
+                    transaksi: 1,
+                    uraian: x.uraian,
+                    kode_akun: x.detail_json[iy].kode_akun_perkiraan.code,
+                    type_akun: x.detail_json[iy].kode_akun_perkiraan.type,
+                    nama_akun: x.detail_json[iy].kode_akun_perkiraan.name,
+                    debet: x.detail_json[iy].debet,
+                    kredit: x.detail_json[iy].kredit,
+                }
+
+                if (iy == 0) {
+                    dataInput["satuan_barang_name"] = x.detail_data.satuan_barang_name
+                    dataInput["faktur_penjualan_barang"] = x.detail_data.faktur_penjualan_barang
+                    dataInput["kategori_harga_barang_kode_barang"] = x.detail_data.kategori_harga_barang_kode_barang
+                    dataInput["pesanan_penjualan_barang"] = x.detail_data.pesanan_penjualan_barang
+                    dataInput["customer_name"] = x.detail_data.customer_name
+                    dataInput["customer_code"] = x.detail_data.customer_code
+                    dataInput["daftar_gudang_name"] = x.detail_data.daftar_gudang_name
+                    dataInput["daftar_barang_name"] = x.detail_data.daftar_barang_name
+                    dataInput["jumlah"] = x.detail_data.jumlah
+                    dataInput["harga"] = x.detail_data.harga
+                    dataInput["ppn"] = x.detail_data.ppn
+                    dataInput["diskon_persentase"] = x.detail_data.diskon_persentase
+                    dataInput["waktu_show"] = true
+                }
+
+                listDaftarData.push(dataInput)
+            })
+        })
+
+        let normalizedData = await normalizeDataJurnalUmum(listDaftarData.map(x => {
             x.waktu = x.waktu.split("T")[1].replace(".000", "")
             x.tanggal = x.tanggal.length > 2 ? new Date(x.tanggal).getDate() : x.tanggal
             return x
         }))
+
         setJurnalNormalized(normalizedData?.returnData)
+    }
+
+    const _validasiPerintahStokOpname = () => {
+        apiPerintahStokOpnameCRUD
+            .custom("/validasi", "PUT", null, {
+                data: {
+                    validasi: !_getDataFromPerintahStokOpname()?.validasi,
+                    perintah_stok_opname: _getDataFromPerintahStokOpname()?.uuid
+                }
+            }).then(() => {
+                const index = perintahStokOpnameList.findIndex(x => x.uuid == _getDataFromPerintahStokOpname()?.uuid)
+                const perintahStokOpnameListCopy = perintahStokOpnameList
+                perintahStokOpnameListCopy[index].validasi = !_getDataFromPerintahStokOpname().validasi
+
+                setValidasi(perintahStokOpnameListCopy[index].validasi)
+
+                setPerintahStokOpnameList(x => x = perintahStokOpnameListCopy)
+
+            }).catch(err => showError(err))
     }
 
     useEffect(() => {
@@ -69,6 +130,10 @@ const JurnalStokOpnamePage = () => {
 
     useEffect(() => {
         if (perintahStokOpname) {
+
+            const perintahStokOpname = perintahStokOpnameList.filter(x => x.uuid == _getDataFromPerintahStokOpname()?.uuid)
+            setValidasi(perintahStokOpname.at(0).validasi)
+
             _getDataJurnalPerintahStokOpname()
         }
     }, [perintahStokOpname])
@@ -146,25 +211,27 @@ const JurnalStokOpnamePage = () => {
                             disabled={true}
                             addClassInput="border-none px-1"
                             others={{
-                                value: formatDate(_getDataFromPerintahStokOpname()?.tanggal_selesai)
+                                value: _getDataFromPerintahStokOpname()?.tanggal_selesai != "BELUM SELESAI" ? formatDate(_getDataFromPerintahStokOpname()?.tanggal_selesai) : "BELUM SELESAI"
                             }}
                         />
                         <FormInputWithLabel
-                            label={"Tanggal Mulai Transaksi"}
+                            label={"Bulan Transaksi"}
                             disabled={true}
                             addClassInput="border-none px-1"
                             others={{
-                                value: formatDate(_getDataFromPerintahStokOpname()?.tanggal_mulai_transaksi)
+                                value: getBulanByIndex(_getDataFromPerintahStokOpname()?.bulan_transaksi - 1)
                             }}
                         />
-                        <FormInputWithLabel
-                            label={"Tanggal Selesai Transaksi"}
-                            disabled={true}
-                            addClassInput="border-none px-1"
-                            others={{
-                                value: formatDate(_getDataFromPerintahStokOpname()?.tanggal_akhir_transaksi)
-                            }}
-                        />
+                    </div>
+                    <div className="mt-5 flex">
+                        {
+                            validasi ? <button
+                                onClick={() => _validasiPerintahStokOpname()}
+                                className="btn btn-sm bg-red-900 text-white">Batal Validasi</button>
+                                : <button
+                                    onClick={() => _validasiPerintahStokOpname()}
+                                    className="btn btn-sm bg-green-900 text-white">Validasi</button>
+                        }
                     </div>
                 </div>
             </div>

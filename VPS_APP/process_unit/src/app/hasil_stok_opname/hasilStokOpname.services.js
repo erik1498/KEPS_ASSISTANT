@@ -56,6 +56,8 @@ export const createHasilStokOpnameService = async (hasilStokOpnameData, req_iden
     LOGGER(logType.INFO, `Start createHasilStokOpnameService`, hasilStokOpnameData, req_identity)
     hasilStokOpnameData.enabled = 1
 
+    await perintahStokOpnemeAllowToEdit(hasilStokOpnameData.perintah_stok_opname, req_identity)
+
     await getNeracaValidasiByTanggalService(null, hasilStokOpnameData.tanggal, req_identity)
 
     const hasilStokOpname = await createHasilStokOpnameRepo(hasilStokOpnameData, req_identity)
@@ -68,7 +70,7 @@ export const deleteHasilStokOpnameByUuidService = async (uuid, req_identity) => 
     const allowToUpdatePerintahStokOpname = await perintahStokOpnemeAllowToEdit(uuid, req_identity);
     if (allowToUpdatePerintahStokOpname.length > 0 && allowToUpdatePerintahStokOpname[0].penyesuaian_persediaan > 0) {
         throw Error(JSON.stringify({
-            message: "Tidak dapat diedit",
+            message: "Tidak dapat dihapus",
             prop: "error"
         }))
     }

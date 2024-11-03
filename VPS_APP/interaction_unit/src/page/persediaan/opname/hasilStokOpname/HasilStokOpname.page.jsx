@@ -46,7 +46,7 @@ const HasilStokOpnamePage = () => {
         }
         setIsLoading(true)
         apiPerintahStokOpnameCRUD
-            .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
+            .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}&tahun=${data.tahun}`, "GET")
             .then(resData => {
 
                 setSearchStatus(searchParam.length < 1)
@@ -128,6 +128,7 @@ const HasilStokOpnamePage = () => {
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
                                         <th>Tanggal</th>
+                                        <th>Bulan Transaksi</th>
                                         <th>Nomor Perintah Stok Opname</th>
                                         <th>Pegawai Penanggung Jawab</th>
                                         <th>Pegawai Pelaksana</th>
@@ -142,7 +143,8 @@ const HasilStokOpnamePage = () => {
                                             return <>
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
-                                                    <td>{formatDate(item.tanggal, true)}</td>
+                                                    <td>{formatDate(item.hasil_stok_opname_tanggal, true)}</td>
+                                                    <td>{getBulanByIndex(item.bulan_transaksi - 1)}</td>
                                                     <td>{item.nomor_surat_perintah}</td>
                                                     <td>{item.pegawai_penanggung_jawab_name}</td>
                                                     <td>{item.pegawai_pelaksana_name}</td>

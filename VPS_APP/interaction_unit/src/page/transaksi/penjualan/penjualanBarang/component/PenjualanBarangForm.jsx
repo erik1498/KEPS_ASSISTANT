@@ -9,10 +9,14 @@ import Pagination from "../../../../../component/general/Pagination"
 import FormInput from "../../../../../component/form/FormInput"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FakturPenjualanBarangForm from "./FakturPenjualanBarangForm"
+import { useDataContext } from "../../../../../context/dataContext.context"
 
 const PenjualanBarangForm = ({
     setAddPenjualanBarang = () => { }
 }) => {
+    const dataContext = useDataContext()
+    const { data } = dataContext
+
     const [tanggalTransaksiAkhir, setTanggalTransaksiAkhir] = useState(getHariTanggalFull())
     const [fakturStatus, setFakturStatus] = useState(false)
     const [ppnStatus, setPPNStatus] = useState(false)
@@ -131,7 +135,7 @@ const PenjualanBarangForm = ({
 
     const _getAllPesananPenjualanBarang = () => {
         apiPesananPenjualanBarangCRUD
-            .custom("", "GET")
+            .custom(`?tahun=${data.tahun}`, "GET")
             .then(resData => {
                 setPesananPenjualanBarangListData(x => x = resData.data.entry)
                 if (resData.data.entry.length > 0) {

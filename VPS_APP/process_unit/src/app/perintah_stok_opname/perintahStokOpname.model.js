@@ -13,15 +13,15 @@ const PerintahStokOpnameModel = db.define("perintah_stok_opname_tab",
                 notEmpty:true
             }
         },
-        tanggal_mulai_transaksi: {
-            type: DataTypes.STRING,
+        bulan_transaksi: {
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate:{
                 notEmpty:true,
             }
         },
-        tanggal_akhir_transaksi: {
-            type: DataTypes.STRING,
+        tahun: {
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate:{
                 notEmpty:true,

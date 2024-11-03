@@ -1,7 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getPelunasanPenjualanBarangByUuidService } from "../pelunasan_penjualan_barang/pelunasanPenjualanBarang.services.js"
-import { checkPerintahStokOpnameAktifByTanggalService } from "../perintah_stok_opname/perintahStokOpname.services.js"
+import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createRincianPelunasanPenjualanBarangRepo, deleteRincianPelunasanPenjualanBarangByUuidRepo, getAllRincianPelunasanPenjualanBarangRepo, getAllRincianPesananPenjualanBarangByPelunasanPenjualanRepo, getRincianPelunasanPenjualanBarangByUuidRepo, updateRincianPelunasanPenjualanBarangByUuidRepo } from "./rincianPelunasanPenjualanBarang.repository.js"
 
 export const getAllRincianPelunasanPenjualanBarangService = async (query, req_identity) => {
@@ -56,7 +56,7 @@ export const createRincianPelunasanPenjualanBarangService = async (rincianPeluna
 
     const pelunasanPenjualanBarang = await getPelunasanPenjualanBarangByUuidService(rincianPelunasanPenjualanBarangData.pelunasan_penjualan_barang, req_identity)
 
-    await checkPerintahStokOpnameAktifByTanggalService(pelunasanPenjualanBarang.tanggal, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarang.tanggal, null, req_identity)
 
     const rincianPelunasanPenjualanBarang = await createRincianPelunasanPenjualanBarangRepo(rincianPelunasanPenjualanBarangData, req_identity)
     return rincianPelunasanPenjualanBarang
@@ -69,7 +69,7 @@ export const deleteRincianPelunasanPenjualanBarangByUuidService = async (uuid, r
 
     const pelunasanPenjualanBarang = await getPelunasanPenjualanBarangByUuidService(beforeData.pelunasan_penjualan_barang, req_identity)
 
-    await checkPerintahStokOpnameAktifByTanggalService(pelunasanPenjualanBarang.tanggal, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarang.tanggal, null, req_identity)
 
     await deleteRincianPelunasanPenjualanBarangByUuidRepo(uuid, req_identity)
     return true
@@ -82,7 +82,7 @@ export const updateRincianPelunasanPenjualanBarangByUuidService = async (uuid, r
 
     const pelunasanPenjualanBarang = await getPelunasanPenjualanBarangByUuidService(beforeData.pelunasan_penjualan_barang, req_identity)
 
-    await checkPerintahStokOpnameAktifByTanggalService(pelunasanPenjualanBarang.tanggal, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarang.tanggal, null, req_identity)
 
     const rincianPelunasanPenjualanBarang = await updateRincianPelunasanPenjualanBarangByUuidRepo(uuid, rincianPelunasanPenjualanBarangData, req_identity)
 
