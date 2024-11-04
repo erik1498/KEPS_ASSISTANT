@@ -55,6 +55,13 @@ const DaftarBarangModel = db.define("daftar_barang_tab",
                 notEmpty: true,
             }
         },
+        enabled: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
     }), {
     freezeTableName: true
 }

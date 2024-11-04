@@ -26,7 +26,7 @@ export const getAllHasilStokOpnameService = async (query, req_identity) => {
 }
 
 export const getAllBarangAktifByPerintahStokOpnameService = async (perintah_stok_opname, req_identity) => {
-    LOGGER(logType.INFO, `Start getAllBarangAktifByPerintahStokOpnameService [${perintah_stok_opname}]`, null, req_identity)
+    LOGGER(logType.INFO, `Start getAllBarangAktifByPerintahStokOpnameService`, { perintah_stok_opname }, req_identity)
 
     const hasilStokOpnameOld = await getHasilStokOpnameByPerintahStokOpnameRepo(perintah_stok_opname, req_identity)
 

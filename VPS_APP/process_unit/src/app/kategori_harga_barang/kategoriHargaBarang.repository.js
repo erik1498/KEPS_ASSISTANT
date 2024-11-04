@@ -14,7 +14,7 @@ export const getAllKategoriHargaBarangRepo = async (daftar_barang, pageNumber, s
             JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
             WHERE sbt.name LIKE '%${search}%'
             AND sbt.enabled = 1 
-            AND dbt.status = 1 
+            AND dbt.enabled = 1 
             AND khbt.enabled = 1
             AND khbt.daftar_barang = "${daftar_barang}"
         `,
@@ -35,7 +35,7 @@ export const getAllKategoriHargaBarangRepo = async (daftar_barang, pageNumber, s
             JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
             WHERE sbt.name LIKE '%${search}%'
             AND sbt.enabled = 1 
-            AND dbt.status = 1 
+            AND dbt.enabled = 1 
             AND khbt.enabled = 1
             AND khbt.daftar_barang = "${daftar_barang}"
             LIMIT ${pageNumber}, ${size}
@@ -71,15 +71,15 @@ export const createKategoriHargaBarangRepo = async (kategoriHargaBarangData, req
         req_id,
         generateDatabaseName(req_id),
         KategoriHargaBarangModel,
-        {   
-        daftar_barang: kategoriHargaBarangData.daftar_barang,
-        kode_barang: kategoriHargaBarangData.kode_barang,
-        satuan_barang: kategoriHargaBarangData.satuan_barang,
-        harga_1: kategoriHargaBarangData.harga_1,
-        harga_2: kategoriHargaBarangData.harga_2,
-        harga_3: kategoriHargaBarangData.harga_3,
-        harga_4: kategoriHargaBarangData.harga_4,
-        harga_5: kategoriHargaBarangData.harga_5,
+        {
+            daftar_barang: kategoriHargaBarangData.daftar_barang,
+            kode_barang: kategoriHargaBarangData.kode_barang,
+            satuan_barang: kategoriHargaBarangData.satuan_barang,
+            harga_1: kategoriHargaBarangData.harga_1,
+            harga_2: kategoriHargaBarangData.harga_2,
+            harga_3: kategoriHargaBarangData.harga_3,
+            harga_4: kategoriHargaBarangData.harga_4,
+            harga_5: kategoriHargaBarangData.harga_5,
             enabled: kategoriHargaBarangData.enabled
         }
     )
@@ -108,14 +108,14 @@ export const updateKategoriHargaBarangByUuidRepo = async (uuid, kategoriHargaBar
         generateDatabaseName(req_id),
         KategoriHargaBarangModel,
         {
-        daftar_barang: kategoriHargaBarangData.daftar_barang,
-        kode_barang: kategoriHargaBarangData.kode_barang,
-        satuan_barang: kategoriHargaBarangData.satuan_barang,
-        harga_1: kategoriHargaBarangData.harga_1,
-        harga_2: kategoriHargaBarangData.harga_2,
-        harga_3: kategoriHargaBarangData.harga_3,
-        harga_4: kategoriHargaBarangData.harga_4,
-        harga_5: kategoriHargaBarangData.harga_5,
+            daftar_barang: kategoriHargaBarangData.daftar_barang,
+            kode_barang: kategoriHargaBarangData.kode_barang,
+            satuan_barang: kategoriHargaBarangData.satuan_barang,
+            harga_1: kategoriHargaBarangData.harga_1,
+            harga_2: kategoriHargaBarangData.harga_2,
+            harga_3: kategoriHargaBarangData.harga_3,
+            harga_4: kategoriHargaBarangData.harga_4,
+            harga_5: kategoriHargaBarangData.harga_5,
         },
         {
             uuid
@@ -123,14 +123,18 @@ export const updateKategoriHargaBarangByUuidRepo = async (uuid, kategoriHargaBar
     )
 }
 
-export const getKategoriHargaBarangByKodeBarangRepo = async (kode_barang, req_id) => {
-    return selectOneQueryUtil(
-        generateDatabaseName(req_id),
-        KategoriHargaBarangModel,
-        null,
+export const getKategoriHargaBarangByKodeBarangRepo = async (uuid, kode_barang, req_id) => {
+    return await db.query(
+        `
+            SELECT
+                khbt.*
+            FROM ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt
+            ${uuid ? `WHERE khbt.uuid != "${uuid}"` : ``}
+            ${uuid ? `AND khbt.kode_barang = "${kode_barang}"` : `WHERE khbt.kode_barang = "${kode_barang}"`}
+            AND khbt.enabled = 1
+        `,
         {
-            kode_barang,
-            enabled: true
+            type: Sequelize.QueryTypes.SELECT
         }
     )
 }

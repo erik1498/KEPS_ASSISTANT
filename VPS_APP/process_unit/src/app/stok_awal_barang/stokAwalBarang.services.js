@@ -1,6 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getDaftarGudangBarangByKategoriHargaBarangUUIDRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
+import { checkDaftarBarangAllowToEditService } from "../daftar_barang/daftarBarang.services.js"
+import { createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getDaftarGudangBarangByKategoriHargaBarangUUIDRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, getStokAwalBarangByUuidRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
 
 export const getAllStokAwalBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllStokAwalBarangService", null, req_identity)
@@ -21,6 +22,14 @@ export const getAllStokAwalBarangService = async (query, req_identity) => {
 
     const stokAwalBarangs = await getAllStokAwalBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(stokAwalBarangs.entry, stokAwalBarangs.count, stokAwalBarangs.pageNumber, stokAwalBarangs.size)
+}
+
+export const getStokAwalBarangByUuidService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getStokAwalBarangByUuidService`, {
+        uuid
+    }, req_identity)
+    const daftarGudangBarangs = await getStokAwalBarangByUuidRepo(uuid, req_identity)
+    return daftarGudangBarangs
 }
 
 export const getDaftarGudangBarangByKategoriHargaBarangUUIDService = async (kategori_harga_barang_uuid, req_identity) => {
@@ -63,7 +72,10 @@ export const createStokAwalBarangService = async (stokAwalBarangData, req_identi
 
 export const deleteStokAwalBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteStokAwalBarangByUuidService [${uuid}]`, null, req_identity)
-    await getStokAwalBarangByUuidService(uuid, req_identity)
+    const beforeData = await getStokAwalBarangByUuidService(uuid, req_identity)
+
+    await checkDaftarBarangAllowToEditService(false, beforeData.daftar_barang, req_identity)
+
     await deleteStokAwalBarangByUuidRepo(uuid, req_identity)
     return true
 }
@@ -71,6 +83,9 @@ export const deleteStokAwalBarangByUuidService = async (uuid, req_identity) => {
 export const updateStokAwalBarangByUuidService = async (uuid, stokAwalBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateStokAwalBarangByUuidService [${uuid}]`, stokAwalBarangData, req_identity)
     const beforeData = await getStokAwalBarangByUuidService(uuid, req_identity)
+
+    await checkDaftarBarangAllowToEditService(false, beforeData.daftar_barang, req_identity)
+
     const stokAwalBarang = await updateStokAwalBarangByUuidRepo(uuid, stokAwalBarangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

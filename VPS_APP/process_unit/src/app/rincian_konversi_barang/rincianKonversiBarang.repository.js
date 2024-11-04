@@ -83,7 +83,7 @@ export const getRincianKonversiBarangByKonversiBarangUuidRepo = async (konversi_
                 FROM ${generateDatabaseName(req_id)}.konversi_barang_tab kbt 
                 WHERE kbt.uuid = "${konversi_barang}"
             )
-            AND dbt.status = 1
+            AND dbt.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

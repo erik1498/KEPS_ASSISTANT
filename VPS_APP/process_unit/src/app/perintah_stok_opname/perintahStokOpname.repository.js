@@ -757,12 +757,183 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
         AND YEAR(pdpbt.tanggal) = ${tahun}
     `
 
+    const fakturPenjualanBarangDendaBulanIniQuery = `
+        SELECT 
+            JSON_ARRAY(
+                JSON_OBJECT (
+                    'debet', (
+                        SELECT
+                            CASE
+                                WHEN res.piutang_denda > 0
+                                THEN res.piutang_denda
+                                ELSE 0
+                            END
+                    ),
+                    'kredit', 0,
+                    'kode_akun_perkiraan',
+                    (
+                        SELECT 
+                            JSON_OBJECT (
+                                'uuid', kapt.uuid,
+                                'name', kapt.name,
+                                'type', kapt.type,
+                                'code', kapt.code
+                            ) 
+                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "eb5b6dcd-1146-4550-a9f0-1fe8439b085f"	
+                    )
+                ),
+                JSON_OBJECT (
+                    'debet', 0,
+                    'kredit', (
+                        SELECT
+                            CASE
+                                WHEN res.piutang_denda > 0
+                                THEN res.piutang_denda
+                                ELSE 0
+                            END
+                    ),
+                    'kode_akun_perkiraan',
+                    (
+                        SELECT 
+                            JSON_OBJECT (
+                                'uuid', kapt.uuid,
+                                'name', kapt.name,
+                                'type', kapt.type,
+                                'code', kapt.code
+                            ) 
+                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "ddb0e69f-9704-4555-b427-5748365034f7"		
+                    )
+                )
+            ) AS detail_json,
+            "NOT_AVAILABLE" AS uuid,
+            res.bukti_transaksi AS bukti_transaksi,
+            "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59" AS tanggal,
+            (
+                CASE WHEN MONTH("${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59") < 10 THEN CONCAT("0", MONTH("${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59")) ELSE MONTH("${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59") END
+            ) AS bulan,
+            YEAR("${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59") AS tahun,
+            "DENDA PENJUALAN BARANG" AS uraian,
+            res.detail_data,
+            "DENDA PENJUALAN BARANG" AS sumber
+        FROM (
+            SELECT 
+                (res.piutang * (res.syarat_pembayaran_denda / 100) * res.hari_terlewat) AS total_denda,
+                (res.piutang * (res.syarat_pembayaran_denda / 100) * res.hari_terlewat) - res.denda_sudah_dibayar AS piutang_denda,
+                res.*
+            FROM (
+                SELECT 
+                    (res.sudah_dibayar - res.nilai_retur) AS sudah_dibayar_fix,
+                    CASE
+                        WHEN ((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.nilai_retur) > 0
+                        THEN ((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.nilai_retur)
+                        ELSE 0
+                    END AS piutang,
+                    res.*
+                FROM (
+                    SELECT 
+                        IFNULL((
+                            SELECT 
+                                SUM(rrpbt.retur) 
+                            FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+                            JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_penjualan_barang 
+                            WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
+                            AND rrpbt.enabled = 1
+                            AND rpbt.enabled = 1
+                            AND rpbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59"
+                        ), 0) AS retur,
+                        IFNULL((
+                            SELECT 
+                                SUM(rrpbt.nilai_retur) 
+                            FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+                            JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_penjualan_barang 
+                            WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
+                            AND rrpbt.enabled = 1
+                            AND rpbt.enabled = 1
+                            AND rpbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59"
+                        ), 0) AS nilai_retur,
+                        IFNULL((
+                            SELECT 
+                                SUM(rppbt2.nilai_pelunasan) 
+                            FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt2
+                            JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pelunasan_penjualan_barang
+                            WHERE rppbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
+                            AND ppbt2.enabled = 1
+                            AND ppbt2.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59"
+                        ), 0) AS sudah_dibayar,
+                        IFNULL((
+                            SELECT 
+                                SUM(rppdbt.nilai_pelunasan)
+                                - IFNULL((
+                                    SELECT 
+                                        SUM(rpdpbt.denda_yang_dikembalikan) 
+                                    FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_penjualan_barang_tab rpdpbt 
+                                    JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_penjualan_barang
+                                    WHERE rpdpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
+                                    AND pdpbt.enabled = 1
+                                    AND rpdpbt.enabled = 1
+                                ), 0) 
+                            FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt
+                            JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppdbt.pelunasan_penjualan_barang
+                            WHERE rppdbt.rincian_pesanan_penjualan_barang = rppbt.uuid
+                            AND ppbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59"
+                            AND rppdbt.enabled = 1
+                            AND ppbt.enabled = 1
+                        ), 0) AS denda_sudah_dibayar, 
+                        (
+                            DATEDIFF(
+                                "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59"
+                                ,
+                                (
+                                    ADDDATE( fpbt.tanggal, INTERVAL spt.hari_kadaluarsa DAY )
+                                )
+                            )
+                        ) AS hari_terlewat,
+                        rppbt.harga_setelah_diskon,
+                        rppbt.ppn_setelah_diskon,
+                        rppbt.jumlah,
+                        rppbt.diskon_angka,
+                        rppbt.diskon_persentase,
+                        spt.denda AS syarat_pembayaran_denda,
+                        fpbt.bukti_transaksi,
+                        rppbt.id,
+                        JSON_OBJECT (
+                            'satuan_barang_name', sbt.name,
+                            'faktur_penjualan_barang', fpbt.nomor_faktur_penjualan_barang,
+                            'kategori_harga_barang_kode_barang', khbt.kode_barang,
+                            'pesanan_penjualan_barang', ppbt.nomor_pesanan_penjualan_barang,
+                            'customer_name', ct.name,
+                            'customer_code', ct.code,
+                            'daftar_gudang_name', dgt.name,
+                            'daftar_barang_name', dbt.name
+                        ) AS detail_data
+                    FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
+                    JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang
+                    JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 
+                    JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt.stok_awal_barang 
+                    JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
+                    JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang
+                    JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang
+                    JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt.uuid 
+                    JOIN ${generateDatabaseName(req_id)}.syarat_pembayaran_tab spt ON spt.uuid = fpbt.syarat_pembayaran
+                    JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer
+                    WHERE rppbt.enabled = 1
+                    AND ppbt.enabled = 1
+                    AND fpbt.enabled = 1
+                ) AS res
+            ) AS res
+        ) AS res
+    `
+
+
+    console.log(fakturPenjualanBarangDendaBulanIniQuery)
+
     const queryList = [
         pesananPenjualanBarangQuery,
         pelunasanPenjualanBarangQuery,
         pelunasanDendaPenjualanBarangQuery,
         returPenjualanBarangQuery,
-        pengembalianDendaPenjualanBarangQuery
+        pengembalianDendaPenjualanBarangQuery,
+        fakturPenjualanBarangDendaBulanIniQuery
     ]
 
     const penjualanBarang = await db.query(
@@ -932,6 +1103,24 @@ export const checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo = 
             ) AS psot
             WHERE psot.enabled = 1
             ${uuid ? `AND psot.uuid != "${uuid}"` : ""}
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
+export const checkPerintahStokOpnameSudahAdaBulanTransaksiSebelumOrSesudahRepo = async (uuid, sesudah, perintahStokOpname, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                COUNT(0) AS count
+            FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
+            WHERE psot.bulan_transaksi ${sesudah ? ` > ${perintahStokOpname.bulan_transaksi}` : ` = ${perintahStokOpname.bulan_transaksi - 1}`}
+            AND psot.enabled = 1
+            AND psot.kategori_barang = "${perintahStokOpname.kategori_barang}"
+            AND psot.gudang_asal = "${perintahStokOpname.gudang_asal}"
+            ${uuid ? `AND psot.uuid != "${uuid}"` : ``}
         `,
         {
             type: Sequelize.QueryTypes.SELECT

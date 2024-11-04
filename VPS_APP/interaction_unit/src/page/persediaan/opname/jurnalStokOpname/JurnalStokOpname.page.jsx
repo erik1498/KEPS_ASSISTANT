@@ -9,6 +9,7 @@ import { formatDate, getBulanByIndex } from "../../../../helper/date.helper"
 import { normalizeDataJurnalUmum } from "../../../../helper/jurnalUmum.helper"
 import JurnalStokOpnameRow from "./component/JurnalStokOpnameRow"
 import { useDataContext } from "../../../../context/dataContext.context"
+import DebetKreditStatusCard from "../../../../component/card/DebetKreditStatusCard"
 
 const JurnalStokOpnamePage = () => {
     const dataContext = useDataContext()
@@ -17,7 +18,10 @@ const JurnalStokOpnamePage = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     const [perintahStokOpnameList, setPerintahStokOpnameList] = useState([])
-    const [perintahStokOpname, setPerintahStokOpname] = useState()
+    const [perintahStokOpname, setPerintahStokOpname] = useState(null)
+
+    const [debet, setDebet] = useState(0)
+    const [kredit, setKredit] = useState(0)
 
     const [jurnal, setJurnal] = useState([])
 
@@ -31,7 +35,7 @@ const JurnalStokOpnamePage = () => {
             .custom(`?tahun=${data.tahun}`, "GET")
             .then(resData => {
                 setIsLoading(x => x = false)
-                setPerintahStokOpnameList(x => x = resData.data.entry)
+                setPerintahStokOpnameList(x => x = resData.data.entry.filter(x => x.penyesuaian_persediaan_count > 0))
             }).catch(err => {
                 setIsLoading(x => x = false)
                 showError(err)
@@ -53,7 +57,7 @@ const JurnalStokOpnamePage = () => {
 
     const normalizeData = async () => {
         let listDaftarData = []
-        jurnal.map((x, ix) => {
+        jurnal.map((x) => {
             x.detail_json = JSON.parse(x.detail_json)
             x.detail_data = JSON.parse(x.detail_data)
             x.detail_json.map((y, iy) => {
@@ -96,12 +100,16 @@ const JurnalStokOpnamePage = () => {
             })
         })
 
+        console.log(listDaftarData)
+
         let normalizedData = await normalizeDataJurnalUmum(listDaftarData.map(x => {
-            x.waktu = x.waktu.split("T")[1].replace(".000", "")
             x.tanggal = x.tanggal.length > 2 ? new Date(x.tanggal).getDate() : x.tanggal
+            x.waktu = x.waktu.split("T")[1].replace(".000", "")
             return x
         }))
 
+        setDebet(normalizedData.totalDebet)
+        setKredit(normalizedData.totalKredit)
         setJurnalNormalized(normalizedData?.returnData)
     }
 
@@ -152,7 +160,7 @@ const JurnalStokOpnamePage = () => {
                         <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-2">Perintah Stok Opname</h1>
                     </div>
 
-                    <div className="flex gap-x-2">
+                    <div className="flex gap-y-2">
                         <FormSelectWithLabel
                             label={"Perintah Stok Opname"}
                             optionsDataList={perintahStokOpnameList}
@@ -225,7 +233,7 @@ const JurnalStokOpnamePage = () => {
                     </div>
                     <div className="mt-5 flex">
                         {
-                            validasi ? <button
+                            validasi && perintahStokOpname ? <button
                                 onClick={() => _validasiPerintahStokOpname()}
                                 className="btn btn-sm bg-red-900 text-white">Batal Validasi</button>
                                 : <button
@@ -236,23 +244,26 @@ const JurnalStokOpnamePage = () => {
                 </div>
             </div>
 
-
-            <div className="bg-white rounded-md shadow-sm h-max mt-5">
-
-                <div className="py-5 px-6 h-max w-full z-10">
-                    <div className="flex justify-between items-center">
-                        <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-2">Jurnal Stok Opname</h1>
-                    </div>
-                    <div className="flex flex-col h-full overflow-y-scroll no-scrollbar w-full rounded-md">
-                        {
-                            jurnalNormalized.map((item, i) => {
-                                return <JurnalStokOpnameRow
-                                    item={item}
-                                    key={i}
-                                    forPrint={true}
-                                />
-                            })
-                        }
+            <div className="grid grid-cols-6 gap-x-2 mt-2">
+                <div className="col-span-1">
+                    <DebetKreditStatusCard
+                        debet={debet}
+                        kredit={kredit}
+                    />
+                </div>
+                <div className="col-span-5">
+                    <div className="h-[65vh]">
+                        <div className="flex flex-col h-full overflow-y-scroll no-scrollbar w-full rounded-md">
+                            {
+                                jurnalNormalized.map((item, i) => {
+                                    return <JurnalStokOpnameRow
+                                        item={item}
+                                        key={i}
+                                        forPrint={false}
+                                    />
+                                })
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

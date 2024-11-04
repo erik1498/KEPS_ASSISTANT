@@ -49,7 +49,8 @@ export const getAllBarangAktifByPerintahStokOpnameRepo = async (perintah_stok_op
             AND dbt.kategori_barang = (
                 SELECT psot.kategori_barang FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot WHERE psot.uuid = "${perintah_stok_opname}"
             )
-            AND dbt.status = 1
+            AND dbt.enabled = 1
+            AND sabt.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -84,6 +85,7 @@ export const getHasilStokOpnameByPerintahStokOpnameRepo = async (perintah_stok_o
             JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = kht.satuan_barang 
             WHERE hsot.perintah_stok_opname = "${perintah_stok_opname}"
             AND hsot.enabled = 1
+            AND dbt.enabled = 1
         `,
         {
             type: Sequelize.QueryTypes.SELECT

@@ -5,8 +5,8 @@ import { authTokenMiddleware } from "../../middleware/auth.js"
 const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllHasilStokOpnames)
+router.get("/daftar_barang/:perintah_stok_opname", authTokenMiddleware(), getAllBarangAktifByPerintahStokOpname)
 router.get("/:uuid", authTokenMiddleware(), getHasilStokOpnameByUUID)
-router.get("/daftar_barang/:perintah_stok_opname", getAllBarangAktifByPerintahStokOpname)
 router.post("/", authTokenMiddleware(), postCreateHasilStokOpname)
 router.put("/:uuid", authTokenMiddleware(), updateHasilStokOpnameByUUID)
 router.delete("/:uuid", authTokenMiddleware(), deleteHasilStokOpnameByUUID)

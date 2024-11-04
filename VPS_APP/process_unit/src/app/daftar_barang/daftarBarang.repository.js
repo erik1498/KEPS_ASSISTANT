@@ -13,7 +13,7 @@ export const getAllDaftarBarangRepo = async (pageNumber, size, search, req_id) =
             JOIN ${generateDatabaseName(req_id)}.jenis_barang_tab jbt ON jbt.uuid = dbt.jenis_barang 
             JOIN ${generateDatabaseName(req_id)}.jenis_penjualan_barang_tab jpbt ON jpbt.uuid = dbt.jenis_penjualan_barang 
             WHERE dbt.name LIKE '%${search}%' 
-            AND dbt.status = 1
+            AND dbt.enabled = 1
             AND kbt.enabled = 1
             AND jbt.enabled = 1
             AND jpbt.enabled = 1
@@ -36,7 +36,7 @@ export const getAllDaftarBarangRepo = async (pageNumber, size, search, req_id) =
             JOIN ${generateDatabaseName(req_id)}.jenis_barang_tab jbt ON jbt.uuid = dbt.jenis_barang 
             JOIN ${generateDatabaseName(req_id)}.jenis_penjualan_barang_tab jpbt ON jpbt.uuid = dbt.jenis_penjualan_barang 
             WHERE dbt.name LIKE '%${search}%' 
-            AND dbt.status = 1
+            AND dbt.enabled = 1
             AND kbt.enabled = 1
             AND jbt.enabled = 1
             AND jpbt.enabled = 1
@@ -79,7 +79,8 @@ export const getAllDaftarBarangUntukTransaksiRepo = async (req_id) => {
             JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
             JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang 
             JOIN ${generateDatabaseName(req_id)}.jenis_barang_tab jbt ON jbt.uuid = dbt.jenis_barang
-            WHERE dbt.status = true
+            WHERE dbt.enabled = 1
+            AND dbt.status = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -144,6 +145,78 @@ export const updateDaftarBarangByUuidRepo = async (uuid, daftarBarangData, req_i
         },
         {
             uuid
+        }
+    )
+}
+
+export const checkDaftarBarangAllowToEditRepo = async (by_kategori_harga_barang, uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                (
+                    SELECT 
+                        JSON_OBJECT(
+                            'nomor_pesanan_penjualan_barang', ppbt.nomor_pesanan_penjualan_barang,
+                            'tanggal', ppbt.tanggal_pesanan_penjualan_barang
+                        ) 
+                    FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
+                    JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang 
+                    WHERE rppbt.stok_awal_barang = sabt.uuid
+                    AND rppbt.enabled = 1
+                    LIMIT 1
+                ) AS pesanan_penjualan_barang, 
+                (
+                    SELECT 
+                        JSON_OBJECT(
+                            'nomor_pesanan_pembelian_barang', ppbt.nomor_pesanan_pembelian_barang,
+                            'tanggal', ppbt.tanggal_pesanan_pembelian_barang
+                        ) 
+                    FROM ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt 
+                    JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_pembelian_barang 
+                    WHERE rppbt.stok_awal_barang = sabt.uuid
+                    AND rppbt.enabled = 1
+                    LIMIT 1
+                ) AS pesanan_pembelian_barang,
+                (
+                    SELECT 
+                        JSON_OBJECT(
+                            'kode_transfer_barang', tbt.kode_transfer_barang,
+                            'tanggal', tbt.tanggal 
+                        ) 
+                    FROM ${generateDatabaseName(req_id)}.rincian_transfer_barang_tab rtbt 
+                    JOIN ${generateDatabaseName(req_id)}.transfer_barang_tab tbt ON tbt.uuid = rtbt.transfer_barang 
+                    WHERE rtbt.enabled = 1
+                    AND tbt.enabled = 1
+                    AND (
+                        rtbt.stok_awal_barang = sabt.uuid 
+                        OR rtbt.stok_awal_barang_tujuan = sabt.uuid 
+                    )
+                    LIMIT 1
+                ) AS transfer_barang,
+                (
+                    SELECT 
+                        JSON_OBJECT(
+                            'kode_konversi_barang', kbt.kode_konversi_barang,
+                            'tanggal', kbt.tanggal 
+                        )
+                    FROM ${generateDatabaseName(req_id)}.rincian_konversi_barang_tab rkbt 
+                    JOIN ${generateDatabaseName(req_id)}.konversi_barang_tab kbt ON kbt.uuid = rkbt.konversi_barang 
+                    WHERE rkbt.enabled = 1
+                    AND kbt.enabled = 1
+                    AND (
+                        rkbt.stok_awal_barang = sabt.uuid
+                        OR rkbt.stok_awal_barang_tujuan = sabt.uuid
+                    )
+                    LIMIT 1
+                ) AS konversi_barang,
+                sabt.*
+            FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt 
+            ${by_kategori_harga_barang ? `WHERE sabt.kategori_harga_barang = "${uuid}"` : `WHERE sabt.daftar_barang = "${uuid}"`
+        }
+            AND sabt.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
         }
     )
 }

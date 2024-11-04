@@ -75,7 +75,7 @@ export const getRincianTransferBarangByTransferBarangUuidRepo = async (transfer_
                     tbt.daftar_gudang_asal
                 FROM ${generateDatabaseName(req_id)}.transfer_barang_tab tbt 
                 WHERE tbt.uuid = "${transfer_barang}"
-            ) AND dbt.status = 1
+            ) AND dbt.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

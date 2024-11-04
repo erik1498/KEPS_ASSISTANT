@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllPerintahStokOpnames)
 router.get("/:uuid", authTokenMiddleware(), getPerintahStokOpnameByUUID)
-router.get("/jurnal/:uuid", getJurnalByPerintahStokOpname)
+router.get("/jurnal/:uuid", authTokenMiddleware(), getJurnalByPerintahStokOpname)
 router.post("/", authTokenMiddleware(), postCreatePerintahStokOpname)
 router.put("/validasi", authTokenMiddleware(), validasiPerintahStokOpname)
 router.put("/:uuid", authTokenMiddleware(), updatePerintahStokOpnameByUUID)

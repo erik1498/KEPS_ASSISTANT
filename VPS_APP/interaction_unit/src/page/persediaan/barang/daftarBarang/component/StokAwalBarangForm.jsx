@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
-import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
-import { FaSave } from "react-icons/fa"
+import { inputOnlyNumber, inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
+import { FaCheck, FaPen, FaSave, FaTrash } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiDaftarGudangCRUD, apiStokAwalBarangCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
+import FormInput from "../../../../../component/form/FormInput"
 
 const StokAwalBarangForm = ({
     idDaftarBarang,
@@ -31,7 +32,7 @@ const StokAwalBarangForm = ({
                         daftar_barang: idDaftarBarang,
                         daftar_gudang: gudangBarang.value,
                         kategori_harga_barang: kategoriHargaBarang.value,
-                        jumlah: jumlah
+                        jumlah: `${jumlah}`
                     }
                 }).then(() => {
                     _getStokAwalBarang()
@@ -67,11 +68,41 @@ const StokAwalBarangForm = ({
             })
     }
 
-    useEffect(() => {
-        _getGudangBarang()
-    }, [stokAwalBarangList])
+    const _updateJumlahStokAwalBarang = (value, uuid) => {
+        const indexStokAwalBarang = stokAwalBarangList.findIndex(x => x.uuid == uuid)
+        if (indexStokAwalBarang != -1) {
+            let stokAwalBarangListCopy = stokAwalBarangList
+            stokAwalBarangListCopy.at(indexStokAwalBarang).jumlah = parseToRupiahText(value)
+
+            setStokAwalBarangList(x => x = stokAwalBarangListCopy)
+        }
+    }
+
+    const _updateStokAwalBarang = (item) => {
+        apiStokAwalBarangCRUD
+            .custom(`/${item.uuid}`, "PUT", null, {
+                data: {
+                    daftar_gudang: item.daftar_gudang,
+                    daftar_barang: item.daftar_barang,
+                    kategori_harga_barang: item.kategori_harga_barang,
+                    jumlah: `${item.jumlah}`
+                }
+            })
+            .catch(err => {
+                showError(err)
+            }).finally(() => _getStokAwalBarang())
+    }
+
+    const _deleteStokAwalBarang = (item) => {
+        apiStokAwalBarangCRUD
+            .custom(`/${item.uuid}`, "DELETE")
+            .catch(err => {
+                showError(err)
+            }).finally(() => _getStokAwalBarang())
+    }
 
     useEffect(() => {
+        _getGudangBarang()
         _getStokAwalBarang()
     }, [])
 
@@ -119,16 +150,50 @@ const StokAwalBarangForm = ({
             </div>
         </form>
         <table className="table table-sm table-zebra">
+            <thead className="py-4 text-black">
+                <th>No</th>
+                <th>Daftar Gudang Name</th>
+                <th>Kode Barang</th>
+                <th>Satuan</th>
+                <th>Jumlah</th>
+                <th>Aksi</th>
+            </thead>
             <tbody>
                 {
-                    stokAwalBarangList.map((x, i) => {
+                    stokAwalBarangList.map((item, i) => {
                         return <>
                             <tr>
                                 <td>{i + 1}</td>
-                                <td>{x.daftar_gudang_name}</td>
-                                <td>{x.kategori_harga_barang_kode_barang}</td>
-                                <td>{x.satuan_barang_name}</td>
-                                <td>{parseToRupiahText(x.jumlah)}</td>
+                                <td>{item.daftar_gudang_name}</td>
+                                <td>{item.kategori_harga_barang_kode_barang}</td>
+                                <td>{item.satuan_barang_name}</td>
+                                <td width={150}>
+                                    <FormInput
+                                        name={"jumlah_item_" + i}
+                                        type={"text"}
+                                        other={{
+                                            defaultValue: parseToRupiahText(item.jumlah)
+                                        }}
+                                        onchange={(e) => {
+                                            inputOnlyRupiah(e)
+                                            _updateJumlahStokAwalBarang(e.target.value, item.uuid)
+                                        }}
+                                    />
+                                </td>
+                                <td width={100}>
+                                    <div className="flex gap-x-2">
+                                        <FaSave
+                                            onClick={() => _updateStokAwalBarang(item)}
+                                            className="text-green-800 cursor-pointer"
+                                            size={12}
+                                        />
+                                        <FaTrash
+                                            onClick={() => _deleteStokAwalBarang(item)}
+                                            className="text-red-500 cursor-pointer"
+                                            size={12}
+                                        />
+                                    </div>
+                                </td>
                             </tr>
                         </>
                     })

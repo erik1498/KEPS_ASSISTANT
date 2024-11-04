@@ -5,9 +5,10 @@ import { apiKategoriHargaBarangCRUD, apiSatuanBarangCRUD } from "../../../../../
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
-import { FaSave } from "react-icons/fa"
+import { FaSave, FaTrash } from "react-icons/fa"
 import StokAwalBarangForm from "./StokAwalBarangForm"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
+import FormInput from "../../../../../component/form/FormInput"
 
 const KategoriHargaForm = ({
     idDaftarbarang
@@ -73,6 +74,59 @@ const KategoriHargaForm = ({
             .catch(err => {
                 showError(err)
             })
+    }
+
+    const _updateKategoriHargaBarang = (item) => {
+        let data = {
+            daftar_barang: item.daftar_barang,
+            satuan_barang: item.satuan_barang,
+            kode_barang: item.kode_barang
+        }
+
+        kodeHargaList.map((x, i) => {
+            data[`harga_${x.value}`] = `${item[`harga_${i + 1}`]}`
+        })
+
+        apiKategoriHargaBarangCRUD.custom(`/${item.uuid}`, `PUT`, null, {
+            data
+        }).catch(err => {
+            showError(err)
+        }).finally(() => _getDataKategoriHargaBarang())
+    }
+
+    const _deleteKategoriHargaBarang = (item) => {
+        let data = {
+            daftar_barang: item.daftar_barang,
+            satuan_barang: item.satuan_barang,
+            kode_barang: item.kode_barang
+        }
+
+        kodeHargaList.map((x, i) => {
+            data[`harga_${x.value}`] = `${item[`harga_${i + 1}`]}`
+        })
+
+        apiKategoriHargaBarangCRUD.custom(`/${item.uuid}`, `DELETE`)
+            .catch(err => {
+                showError(err)
+            }).finally(() => _getDataKategoriHargaBarang())
+    }
+
+    const _updateHarga = (value, harga_index, uuid) => {
+        const indexKategoriHargaBarang = kategoriHargaBarangList.findIndex(x => x.uuid == uuid)
+        if (indexKategoriHargaBarang != -1) {
+            let kategoriHargaBarangListCopy = kategoriHargaBarangList
+            kategoriHargaBarangListCopy.at(indexKategoriHargaBarang)[`harga_${harga_index}`] = parseToRupiahText(value)
+            setKategoriHargaBarangList(x => x = kategoriHargaBarangListCopy)
+        }
+    }
+
+    const _updateKodeBarang = (value, uuid) => {
+        const indexKategoriHargaBarang = kategoriHargaBarangList.findIndex(x => x.uuid == uuid)
+        if (indexKategoriHargaBarang != -1) {
+            let kategoriHargaBarangListCopy = kategoriHargaBarangList
+            kategoriHargaBarangListCopy.at(indexKategoriHargaBarang).kode_barang = value
+            setKategoriHargaBarangList(x => x = kategoriHargaBarangListCopy)
+        }
     }
 
     useEffect(() => {
@@ -147,6 +201,7 @@ const KategoriHargaForm = ({
                 {
                     kodeHargaList.map(x => <th>{x.label}</th>)
                 }
+                <th>Aksi</th>
             </thead>
             <tbody>
                 {
@@ -155,10 +210,47 @@ const KategoriHargaForm = ({
                             <tr>
                                 <td>{i + 1}</td>
                                 <td>{x.satuan_barang_name}</td>
-                                <td>{x.kode_barang}</td>
+                                <td>
+                                    <FormInput
+                                        name={"kode_barang" + i}
+                                        type={"text"}
+                                        other={{
+                                            defaultValue: x.kode_barang
+                                        }}
+                                        onchange={(e) => {
+                                            _updateKodeBarang(e.target.value, x.uuid)
+                                        }}
+                                    />
+                                </td>
                                 {
-                                    kodeHargaList.map((_, j) => <td>{parseToRupiahText(x[`harga_${j + 1}`])}</td>)
+                                    kodeHargaList.map((_, j) => <td width={150}>
+                                        <FormInput
+                                            name={"harga_" + i}
+                                            type={"text"}
+                                            other={{
+                                                defaultValue: parseToRupiahText(x[`harga_${j + 1}`])
+                                            }}
+                                            onchange={(e) => {
+                                                inputOnlyRupiah(e)
+                                                _updateHarga(e.target.value, j + 1, x.uuid)
+                                            }}
+                                        />
+                                    </td>)
                                 }
+                                <td width={100}>
+                                    <div className="flex gap-x-2">
+                                        <FaSave
+                                            onClick={() => _updateKategoriHargaBarang(x)}
+                                            className="text-green-800 cursor-pointer"
+                                            size={12}
+                                        />
+                                        <FaTrash
+                                            onClick={() => _deleteKategoriHargaBarang(x)}
+                                            className="text-red-500 cursor-pointer"
+                                            size={12}
+                                        />
+                                    </div>
+                                </td>
                             </tr>
                         </>
                     })

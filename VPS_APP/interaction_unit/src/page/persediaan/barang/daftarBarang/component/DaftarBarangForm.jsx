@@ -55,6 +55,8 @@ const DaftarBarangForm = ({
                     setKategoriHargaForm(x => x = true)
                 }).catch(err => {
                     showError(err)
+                    setUuidDaftarBarang(daftarBarangEdit.uuid)
+                    setKategoriHargaForm(x => x = true)
                 })
         }
     }
