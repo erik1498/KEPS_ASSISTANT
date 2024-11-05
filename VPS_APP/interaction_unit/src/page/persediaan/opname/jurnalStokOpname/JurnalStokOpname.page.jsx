@@ -78,6 +78,7 @@ const JurnalStokOpnamePage = () => {
                     nama_akun: x.detail_json[iy].kode_akun_perkiraan.name,
                     debet: x.detail_json[iy].debet,
                     kredit: x.detail_json[iy].kredit,
+                    detail_data: x.detail_data
                 }
 
                 if (iy == 0) {
@@ -100,10 +101,8 @@ const JurnalStokOpnamePage = () => {
             })
         })
 
-        console.log(listDaftarData)
-
         let normalizedData = await normalizeDataJurnalUmum(listDaftarData.map(x => {
-            x.tanggal = x.tanggal.length > 2 ? new Date(x.tanggal).getDate() : x.tanggal
+            x.tanggal = `${x.tanggal.length}` > 2 ? new Date(`${x.tanggal}`).getDate() : x.tanggal
             x.waktu = x.waktu.split("T")[1].replace(".000", "")
             return x
         }))

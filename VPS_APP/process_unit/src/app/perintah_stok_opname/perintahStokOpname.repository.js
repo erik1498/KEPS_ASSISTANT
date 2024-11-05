@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import PerintahStokOpnameModel from "./perintahStokOpname.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { getTanggalTerakhirPadaBulan } from "../../utils/jurnalUmumUtil.js";
 
 export const getAllPerintahStokOpnameRepo = async (pageNumber, size, search, tahun, req_id) => {
     const perintahStokOpnamesCount = await db.query(
@@ -807,13 +808,11 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
             ) AS detail_json,
             "NOT_AVAILABLE" AS uuid,
             res.bukti_transaksi AS bukti_transaksi,
-            "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59" AS tanggal,
-            (
-                CASE WHEN MONTH("${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59") < 10 THEN CONCAT("0", MONTH("${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59")) ELSE MONTH("${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59") END
-            ) AS bulan,
-            YEAR("${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59") AS tahun,
+            "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59" AS tanggal,
+            ${bulan < 10 ? `0${bulan}` : bulan} AS bulan,
+            YEAR("${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59") AS tahun,
             "DENDA PENJUALAN BARANG" AS uraian,
-            res.detail_data,
+            res.detail_data_2 AS detail_data,
             "DENDA PENJUALAN BARANG" AS sumber
         FROM (
             SELECT 
@@ -828,6 +827,15 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
                         THEN ((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.nilai_retur)
                         ELSE 0
                     END AS piutang,
+                    JSON_MERGE_PRESERVE (
+                        res.detail_data_1,
+                        JSON_OBJECT(
+                            'denda_sudah_dibayar', res.denda_sudah_dibayar,
+                            'hari_terlewat', res.hari_terlewat,
+                            'sudah_dibayar', res.sudah_dibayar,
+                            'retur', res.nilai_retur
+                        )
+                    ) AS detail_data_2,
                     res.*
                 FROM (
                     SELECT 
@@ -839,7 +847,7 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
                             WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
                             AND rrpbt.enabled = 1
                             AND rpbt.enabled = 1
-                            AND rpbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59"
+                            AND rpbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59"
                         ), 0) AS retur,
                         IFNULL((
                             SELECT 
@@ -849,7 +857,7 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
                             WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
                             AND rrpbt.enabled = 1
                             AND rpbt.enabled = 1
-                            AND rpbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59"
+                            AND rpbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59"
                         ), 0) AS nilai_retur,
                         IFNULL((
                             SELECT 
@@ -858,7 +866,7 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
                             JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pelunasan_penjualan_barang
                             WHERE rppbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
                             AND ppbt2.enabled = 1
-                            AND ppbt2.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59"
+                            AND ppbt2.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59"
                         ), 0) AS sudah_dibayar,
                         IFNULL((
                             SELECT 
@@ -875,13 +883,13 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
                             FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt
                             JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppdbt.pelunasan_penjualan_barang
                             WHERE rppdbt.rincian_pesanan_penjualan_barang = rppbt.uuid
-                            AND ppbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59"
+                            AND ppbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59"
                             AND rppdbt.enabled = 1
                             AND ppbt.enabled = 1
                         ), 0) AS denda_sudah_dibayar, 
                         (
                             DATEDIFF(
-                                "${tahun + "-" + (bulan < 10 ? `0${bulan}`: `${bulan}`) + "-31"}T23:59:59"
+                                "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59"
                                 ,
                                 (
                                     ADDDATE( fpbt.tanggal, INTERVAL spt.hari_kadaluarsa DAY )
@@ -904,8 +912,10 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
                             'customer_name', ct.name,
                             'customer_code', ct.code,
                             'daftar_gudang_name', dgt.name,
-                            'daftar_barang_name', dbt.name
-                        ) AS detail_data
+                            'daftar_barang_name', dbt.name,
+                            'jatuh_tempo', ADDDATE( fpbt.tanggal, INTERVAL spt.hari_kadaluarsa DAY ),
+                            'tanggal_faktur', fpbt.tanggal
+                        ) AS detail_data_1
                     FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
                     JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang
                     JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 

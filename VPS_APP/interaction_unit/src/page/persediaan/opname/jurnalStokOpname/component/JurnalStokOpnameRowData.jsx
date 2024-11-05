@@ -28,14 +28,27 @@ const JurnalStokOpnameRowData = ({
                                     {
                                         j == 0 ? <>
                                             <div className="px-1">
-                                                <div className="px-2 bg-gray-600 py-3 text-white font-bold text-md flex justify-between">
-                                                    <div>
-                                                        <h1>{item3.sumber}</h1>
-                                                        <h1>No. Pesanan {item3.pesanan_penjualan_barang}</h1>
+                                                <div className="px-2 bg-gray-600 py-3 text-white font-bold text-md flex flex-col justify-between">
+                                                    <div className="flex justify-between">
+                                                        <div>
+                                                            <h1>{item3.sumber}</h1>
+                                                            <h1>No. Pesanan {item3.pesanan_penjualan_barang}</h1>
+                                                        </div>
+                                                        <div>
+                                                            <h1 className="text-right">{item3.customer_name}</h1>
+                                                            <h1 className="text-right">Kode Customer {item3.customer_code}</h1>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <h1 className="text-right">{item3.customer_name}</h1>
-                                                        <h1 className="text-right">Kode Customer {item3.customer_code}</h1>
+                                                    <div className="mt-3 flex font-normal gap-x-2">
+                                                        {
+                                                            item3.detail_data?.tanggal_faktur && <p className="mb-2 text-xs">Tanggal Faktur {formatDate(item3.detail_data?.tanggal_faktur)}</p>
+                                                        }
+                                                        {
+                                                            item3.detail_data?.jatuh_tempo && <p className="mb-2 text-xs">Jatuh Tempo {formatDate(item3.detail_data?.jatuh_tempo)}</p>
+                                                        }
+                                                        {
+                                                            item3.detail_data?.hari_terlewat && <p className="mb-2 text-xs">{item3.detail_data?.hari_terlewat} Hari Terlewat</p>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>

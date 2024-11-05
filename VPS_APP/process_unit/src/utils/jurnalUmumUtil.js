@@ -1,6 +1,10 @@
 import { parseToRupiahText } from "./numberParsingUtil.js"
 import { convertByPlusMinusValue } from "./validateKreditDebetTypeUtil.js"
 
+export const getTanggalTerakhirPadaBulan = (tahun, bulan) => {
+    return new Date(tahun, bulan, 0).getDate();
+}
+
 export const formatDate = (dateString, withHours = true) => {
     if (!dateString) {
         return ""

@@ -6,7 +6,7 @@ const JurnalStokOpnameRow = ({
     balanceStatus = true,
     forPrint = false
 }) => {
-    return <div className={`flex flex-col px-3 w-full bg-white text-[13px] ${forPrint ? '' : 'shadow-md'}`}>
+    return item.total.debet != 0 && item.total.kredit != 0 ? <div className={`flex flex-col px-3 w-full bg-white text-[13px] ${forPrint ? '' : 'shadow-md'}`}>
         <div className="grid grid-cols-12 sticky top-0 bg-white py-2 border-b-2">
             <div className="p-2 col-span-9 text-black flex items-end">
                 <div className="text-[28px] font-bold">
@@ -51,7 +51,7 @@ const JurnalStokOpnameRow = ({
             })
         }
 
-    </div>
+    </div> : <></>
 };
 
 export default JurnalStokOpnameRow;
