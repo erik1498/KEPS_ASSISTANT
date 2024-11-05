@@ -8,7 +8,7 @@ import { createPesananPenjualanBarangRepo, deletePesananPenjualanBarangByUuidRep
 export const getAllPesananPenjualanBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPesananPenjualanBarangService", null, req_identity)
 
-    let { page, size, search, tahun } = query
+    let { page, size, search } = query
     page = page ? page : null
     size = size ? size : null
     if (size == "all") {
@@ -22,7 +22,7 @@ export const getAllPesananPenjualanBarangService = async (query, req_identity) =
         pageNumber, size, search
     }, req_identity)
 
-    const pesananPenjualanBarangs = await getAllPesananPenjualanBarangRepo(pageNumber, size, search, tahun, req_identity)
+    const pesananPenjualanBarangs = await getAllPesananPenjualanBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(pesananPenjualanBarangs.entry, pesananPenjualanBarangs.count, pesananPenjualanBarangs.pageNumber, pesananPenjualanBarangs.size)
 }
 
@@ -45,7 +45,7 @@ export const createPesananPenjualanBarangService = async (pesananPenjualanBarang
 
     await getNeracaValidasiByTanggalService(null, pesananPenjualanBarangData.tanggal_pesanan_penjualan_barang, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pesananPenjualanBarangData.tanggal_pesanan_penjualan_barang, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pesananPenjualanBarangData.tanggal_pesanan_penjualan_barang, null, null, req_identity)
 
     const pesananPenjualanBarang = await createPesananPenjualanBarangRepo(pesananPenjualanBarangData, req_identity)
     return pesananPenjualanBarang

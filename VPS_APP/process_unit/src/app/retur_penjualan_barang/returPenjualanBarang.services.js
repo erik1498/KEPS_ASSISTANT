@@ -48,7 +48,7 @@ export const createReturPenjualanBarangService = async (returPenjualanBarangData
     LOGGER(logType.INFO, `Start createReturPenjualanBarangService`, returPenjualanBarangData, req_identity)
     returPenjualanBarangData.enabled = 1
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarangData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarangData.tanggal, null, null, req_identity)
 
     const tanggalValid = await getTanggalTransaksiTerakhirByFakturPenjualanService(returPenjualanBarangData.faktur_penjualan_barang, returPenjualanBarangData.tanggal, returPenjualanBarangData.tanggal, false, req_identity)
 
@@ -78,7 +78,7 @@ export const deleteReturPenjualanBarangByUuidService = async (uuid, req_identity
     
     const beforeData = await getReturPenjualanBarangByUuidService(uuid, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)
 
     await deleteReturPenjualanBarangByUuidRepo(uuid, req_identity)
     return true
@@ -88,7 +88,7 @@ export const updateReturPenjualanBarangByUuidService = async (uuid, returPenjual
     LOGGER(logType.INFO, `Start updateReturPenjualanBarangByUuidService [${uuid}]`, returPenjualanBarangData, req_identity)
     const beforeData = await getReturPenjualanBarangByUuidService(uuid, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)
 
     await getTanggalTransaksiTerakhirByFakturPenjualanService(beforeData.faktur_penjualan_barang, beforeData.tanggal, returPenjualanBarangData.tanggal, true, req_identity);
 

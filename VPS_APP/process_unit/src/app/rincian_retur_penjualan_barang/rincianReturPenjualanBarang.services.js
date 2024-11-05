@@ -50,7 +50,7 @@ export const createRincianReturPenjualanBarangService = async (rincianReturPenju
 
     const returPenjualanBarang = await getReturPenjualanBarangByUuidService(rincianReturPenjualanBarangData.retur_penjualan_barang, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarang.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarang.tanggal, null, null, req_identity)
 
     const rincianReturPenjualanBarang = await createRincianReturPenjualanBarangRepo(rincianReturPenjualanBarangData, req_identity)
     return rincianReturPenjualanBarang
@@ -61,7 +61,7 @@ export const deleteRincianReturPenjualanBarangByUuidService = async (uuid, req_i
 
     const returPenjualanBarang = await getReturPenjualanBarangByUuidService(rincianReturPenjualanBarangData.retur_penjualan_barang, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarang.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarang.tanggal, null, null, req_identity)
 
     await getRincianReturPenjualanBarangByUuidService(uuid, req_identity)
 
@@ -74,7 +74,7 @@ export const updateRincianReturPenjualanBarangByUuidService = async (uuid, rinci
 
     const returPenjualanBarang = await getReturPenjualanBarangByUuidService(rincianReturPenjualanBarangData.retur_penjualan_barang, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarang.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarang.tanggal, null, null, req_identity)
 
     const beforeData = await getRincianReturPenjualanBarangByUuidService(uuid, req_identity)
 

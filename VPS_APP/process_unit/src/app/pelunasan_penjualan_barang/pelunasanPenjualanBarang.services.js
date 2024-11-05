@@ -49,7 +49,7 @@ export const createPelunasanPenjualanBarangService = async (pelunasanPenjualanBa
     LOGGER(logType.INFO, `Start createPelunasanPenjualanBarangService`, pelunasanPenjualanBarangData, req_identity)
     pelunasanPenjualanBarangData.enabled = 1
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarangData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarangData.tanggal, null, null, req_identity)
 
     const tanggalValid = await getTanggalTransaksiTerakhirByFakturPenjualanService(pelunasanPenjualanBarangData.faktur_penjualan_barang, pelunasanPenjualanBarangData.tanggal, pelunasanPenjualanBarangData.tanggal, false, req_identity)
 
@@ -81,7 +81,7 @@ export const deletePelunasanPenjualanBarangByUuidService = async (uuid, req_iden
     
     const beforeData = await getPelunasanPenjualanBarangByUuidService(uuid, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)
 
     await deletePelunasanPenjualanBarangByUuidRepo(uuid, req_identity)
     return true
@@ -91,7 +91,7 @@ export const updatePelunasanPenjualanBarangByUuidService = async (uuid, pelunasa
     LOGGER(logType.INFO, `Start updatePelunasanPenjualanBarangByUuidService [${uuid}]`, pelunasanPenjualanBarangData, req_identity)
     const beforeData = await getPelunasanPenjualanBarangByUuidService(uuid, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)
 
     await getTanggalTransaksiTerakhirByFakturPenjualanService(beforeData.faktur_penjualan_barang, beforeData.tanggal, pelunasanPenjualanBarangData.tanggal, true, req_identity)
 

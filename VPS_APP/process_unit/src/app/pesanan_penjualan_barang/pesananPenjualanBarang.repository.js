@@ -3,7 +3,7 @@ import db from "../../config/Database.js";
 import PesananPenjualanBarangModel from "./pesananPenjualanBarang.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 
-export const getAllPesananPenjualanBarangRepo = async (pageNumber, size, search, tahun, req_id) => {
+export const getAllPesananPenjualanBarangRepo = async (pageNumber, size, search, req_id) => {
     const pesananPenjualanBarangsCount = await db.query(
         `
             SELECT 
@@ -11,7 +11,6 @@ export const getAllPesananPenjualanBarangRepo = async (pageNumber, size, search,
             FROM ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab 
             WHERE nomor_pesanan_penjualan_barang LIKE '%${search}%' 
             AND enabled = 1
-            AND YEAR(tanggal_pesanan_penjualan_barang) = ${tahun}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -26,7 +25,6 @@ export const getAllPesananPenjualanBarangRepo = async (pageNumber, size, search,
             FROM ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab 
             WHERE nomor_pesanan_penjualan_barang LIKE '%${search}%' 
             AND enabled = 1 
-            AND YEAR(tanggal_pesanan_penjualan_barang) = ${tahun}
             LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }

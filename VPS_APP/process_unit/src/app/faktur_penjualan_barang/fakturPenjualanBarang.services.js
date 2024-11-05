@@ -128,7 +128,7 @@ export const createFakturPenjualanBarangService = async (fakturPenjualanBarangDa
 
     await getNeracaValidasiByTanggalService(null, fakturPenjualanBarangData.tanggal, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, fakturPenjualanBarangData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, fakturPenjualanBarangData.tanggal, null, null, req_identity)
 
     const fakturPenjualanBarang = await createFakturPenjualanBarangRepo(fakturPenjualanBarangData, req_identity)
     return fakturPenjualanBarang
@@ -140,7 +140,7 @@ export const deleteFakturPenjualanBarangByUuidService = async (uuid, req_identit
 
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)
 
     await deleteFakturPenjualanBarangByUuidRepo(uuid, req_identity)
     return true
@@ -152,8 +152,8 @@ export const updateFakturPenjualanBarangByUuidService = async (uuid, fakturPenju
 
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, req_identity)
-    
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)
+
     const fakturPenjualanBarang = await updateFakturPenjualanBarangByUuidRepo(uuid, fakturPenjualanBarangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

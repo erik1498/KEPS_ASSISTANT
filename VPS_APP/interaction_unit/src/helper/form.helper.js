@@ -99,7 +99,7 @@ export const showError = async (error) => {
         titleH1.innerHTML = `Peringatan...!!!`
 
         const messageError = document.createElement("p")
-        messageError.className = "text-2xl"
+        messageError.className = "text-xl"
         messageError.innerHTML = errorMessage.message
 
         const buttonClose = document.createElement("button")

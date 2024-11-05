@@ -135,7 +135,7 @@ const PenjualanBarangForm = ({
 
     const _getAllPesananPenjualanBarang = () => {
         apiPesananPenjualanBarangCRUD
-            .custom(`?tahun=${data.tahun}`, "GET")
+            .custom(``, "GET")
             .then(resData => {
                 setPesananPenjualanBarangListData(x => x = resData.data.entry)
                 if (resData.data.entry.length > 0) {

@@ -1099,7 +1099,7 @@ export const checkPerintahStokOpnameAktifRepo = async (tanggal, req_id) => {
     )
 }
 
-export const checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo = async (nomor_surat_perintah, bulan_transaksi, uuid, req_id) => {
+export const checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo = async (nomor_surat_perintah, bulan_transaksi, tahun, uuid, req_id) => {
     return await db.query(
         `
             SELECT
@@ -1112,6 +1112,7 @@ export const checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo = 
                 ${nomor_surat_perintah ? `OR psot.nomor_surat_perintah = "${nomor_surat_perintah}"` : ``}
             ) AS psot
             WHERE psot.enabled = 1
+            ${tahun ? `AND psot.tahun = ${tahun}` : `AND psot.tahun = YEAR("${bulan_transaksi}")`}
             ${uuid ? `AND psot.uuid != "${uuid}"` : ""}
         `,
         {

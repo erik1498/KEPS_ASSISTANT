@@ -1,5 +1,6 @@
 import { getLabaRugiReport } from "../../utils/labaRugiUtil.js"
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
+import { getBulanText } from "../../utils/mathUtil.js"
 import { getNeracaSaldoReport } from "../../utils/neracaSaldoUtil.js"
 import { getNeracaReport } from "../../utils/neracaUtils.js"
 import { getAllNeracaSaldoByBulanService } from "../neraca_saldo/neracaSaldo.services.js"
@@ -68,7 +69,7 @@ export const getNeracaValidasiByTanggalService = async (addMessage, tanggal, req
 
     if (neracaValidasi.length > 0 && neracaValidasi[0].count > 0) {
         throw Error(JSON.stringify({
-            message: `${addMessage ? addMessage : ""}Neraca sudah divalidasi untuk Bulan ${neracaValidasi[0].bulan} Dan Tahun ${neracaValidasi[0].tahun}`,
+            message: `${addMessage ? addMessage : ""}Neraca sudah divalidasi untuk Bulan ${getBulanText(neracaValidasi[0].bulan - 1)} Tahun ${neracaValidasi[0].tahun}`,
             prop: "error"
         }))
     }

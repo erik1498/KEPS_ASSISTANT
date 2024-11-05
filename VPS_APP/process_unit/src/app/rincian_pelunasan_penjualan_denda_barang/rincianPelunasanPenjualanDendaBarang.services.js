@@ -50,7 +50,7 @@ export const createRincianPelunasanPenjualanDendaBarangService = async (rincianP
 
     const pelunasanPenjualanBarang = await getPelunasanPenjualanBarangByUuidService(rincianPelunasanPenjualanDendaBarangData.pelunasan_penjualan_barang, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarang.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarang.tanggal, null, null, req_identity)
 
     const rincianPelunasanPenjualanDendaBarang = await createRincianPelunasanPenjualanDendaBarangRepo(rincianPelunasanPenjualanDendaBarangData, req_identity)
     return rincianPelunasanPenjualanDendaBarang
@@ -61,7 +61,7 @@ export const deleteRincianPelunasanPenjualanDendaBarangByUuidService = async (uu
 
     const pelunasanPenjualanBarang = await getPelunasanPenjualanBarangByUuidService(rincianPelunasanPenjualanDendaBarangData.pelunasan_penjualan_barang, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarang.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarang.tanggal, null, null, req_identity)
 
     const beforeData = await getRincianPelunasanPenjualanDendaBarangByUuidService(uuid, req_identity)
 
@@ -74,7 +74,7 @@ export const updateRincianPelunasanPenjualanDendaBarangByUuidService = async (uu
 
     const pelunasanPenjualanBarang = await getPelunasanPenjualanBarangByUuidService(rincianPelunasanPenjualanDendaBarangData.pelunasan_penjualan_barang, req_identity)
 
-    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarang.tanggal, null, req_identity)
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPenjualanBarang.tanggal, null, null, req_identity)
 
     const beforeData = await getRincianPelunasanPenjualanDendaBarangByUuidService(uuid, req_identity)
 
