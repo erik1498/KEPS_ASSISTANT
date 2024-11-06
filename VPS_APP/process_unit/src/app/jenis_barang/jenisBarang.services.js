@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createJenisBarangRepo, deleteJenisBarangByUuidRepo, getAllJenisBarangRepo, getJenisBarangByUuidRepo, updateJenisBarangByUuidRepo } from "./jenisBarang.repository.js"
+import { checkJenisBarangAllowToEditRepo, createJenisBarangRepo, deleteJenisBarangByUuidRepo, getAllJenisBarangRepo, getJenisBarangByUuidRepo, updateJenisBarangByUuidRepo } from "./jenisBarang.repository.js"
 
 export const getAllJenisBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllJenisBarangService", null, req_identity)
@@ -18,7 +18,7 @@ export const getAllJenisBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const jenisBarangs = await getAllJenisBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(jenisBarangs.entry, jenisBarangs.count, jenisBarangs.pageNumber, jenisBarangs.size)
 }
@@ -46,6 +46,8 @@ export const createJenisBarangService = async (jenisBarangData, req_identity) =>
 
 export const deleteJenisBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteJenisBarangByUuidService [${uuid}]`, null, req_identity)
+
+    await checkJenisBarangAllowToEditService(uuid, req_identity)
     await getJenisBarangByUuidService(uuid, req_identity)
     await deleteJenisBarangByUuidRepo(uuid, req_identity)
     return true
@@ -62,4 +64,19 @@ export const updateJenisBarangByUuidService = async (uuid, jenisBarangData, req_
     }, req_identity)
 
     return jenisBarang
+}
+
+export const checkJenisBarangAllowToEditService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkJenisBarangAllowToEditService`, {
+        uuid
+    }, req_identity)
+
+    const daftarBarangUsed = await checkJenisBarangAllowToEditRepo(uuid, req_identity)
+
+    if (daftarBarangUsed.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Jenis Barang Sudah Terpakai Pada Barang ${daftarBarangUsed[0].name}`,
+            prop: "error"
+        }))
+    }
 }

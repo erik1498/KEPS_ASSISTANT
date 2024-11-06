@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createKategoriBarangRepo, deleteKategoriBarangByUuidRepo, getAllKategoriBarangRepo, getKategoriBarangByUuidRepo, updateKategoriBarangByUuidRepo } from "./kategoriBarang.repository.js"
+import { checkKategoriBarangAllowToEditRepo, createKategoriBarangRepo, deleteKategoriBarangByUuidRepo, getAllKategoriBarangRepo, getKategoriBarangByUuidRepo, updateKategoriBarangByUuidRepo } from "./kategoriBarang.repository.js"
 
 export const getAllKategoriBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllKategoriBarangService", null, req_identity)
@@ -18,7 +18,7 @@ export const getAllKategoriBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const kategoriBarangs = await getAllKategoriBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(kategoriBarangs.entry, kategoriBarangs.count, kategoriBarangs.pageNumber, kategoriBarangs.size)
 }
@@ -46,6 +46,9 @@ export const createKategoriBarangService = async (kategoriBarangData, req_identi
 
 export const deleteKategoriBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteKategoriBarangByUuidService [${uuid}]`, null, req_identity)
+
+    await checkKategoriBarangAllowToEditService(uuid, req_identity)
+    
     await getKategoriBarangByUuidService(uuid, req_identity)
     await deleteKategoriBarangByUuidRepo(uuid, req_identity)
     return true
@@ -62,4 +65,19 @@ export const updateKategoriBarangByUuidService = async (uuid, kategoriBarangData
     }, req_identity)
 
     return kategoriBarang
+}
+
+export const checkKategoriBarangAllowToEditService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkKategoriBarangAllowToEditService`, {
+        uuid
+    }, req_identity)
+
+    const daftarBarangUsed = await checkKategoriBarangAllowToEditRepo(uuid, req_identity)
+
+    if (daftarBarangUsed.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Kategori Barang Sudah Terpakai Pada Barang ${daftarBarangUsed[0].name}`,
+            prop: "error"
+        }))
+    }
 }

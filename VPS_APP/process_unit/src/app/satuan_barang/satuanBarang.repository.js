@@ -46,8 +46,8 @@ export const createSatuanBarangRepo = async (satuanBarangData, req_id) => {
         req_id,
         generateDatabaseName(req_id),
         SatuanBarangModel,
-        {   
-        name: satuanBarangData.name,
+        {
+            name: satuanBarangData.name,
             enabled: satuanBarangData.enabled
         }
     )
@@ -73,10 +73,25 @@ export const updateSatuanBarangByUuidRepo = async (uuid, satuanBarangData, req_i
         generateDatabaseName(req_id),
         SatuanBarangModel,
         {
-        name: satuanBarangData.name,
+            name: satuanBarangData.name,
         },
         {
             uuid
+        }
+    )
+}
+
+export const checkSatuanBarangAllowToEditRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT
+                khbt.*
+            FROM ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt 
+            WHERE khbt.satuan_barang = "${uuid}"
+            AND khbt.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
         }
     )
 }

@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createSatuanBarangRepo, deleteSatuanBarangByUuidRepo, getAllSatuanBarangRepo, getSatuanBarangByUuidRepo, updateSatuanBarangByUuidRepo } from "./satuanBarang.repository.js"
+import { checkSatuanBarangAllowToEditRepo, createSatuanBarangRepo, deleteSatuanBarangByUuidRepo, getAllSatuanBarangRepo, getSatuanBarangByUuidRepo, updateSatuanBarangByUuidRepo } from "./satuanBarang.repository.js"
 
 export const getAllSatuanBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllSatuanBarangService", null, req_identity)
@@ -18,7 +18,7 @@ export const getAllSatuanBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const satuanBarangs = await getAllSatuanBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(satuanBarangs.entry, satuanBarangs.count, satuanBarangs.pageNumber, satuanBarangs.size)
 }
@@ -47,6 +47,9 @@ export const createSatuanBarangService = async (satuanBarangData, req_identity) 
 export const deleteSatuanBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteSatuanBarangByUuidService [${uuid}]`, null, req_identity)
     await getSatuanBarangByUuidService(uuid, req_identity)
+
+    await checkSatuanBarangAllowToEditService(uuid, req_identity)
+
     await deleteSatuanBarangByUuidRepo(uuid, req_identity)
     return true
 }
@@ -54,6 +57,9 @@ export const deleteSatuanBarangByUuidService = async (uuid, req_identity) => {
 export const updateSatuanBarangByUuidService = async (uuid, satuanBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateSatuanBarangByUuidService [${uuid}]`, satuanBarangData, req_identity)
     const beforeData = await getSatuanBarangByUuidService(uuid, req_identity)
+
+    await checkSatuanBarangAllowToEditService(uuid, req_identity)
+
     const satuanBarang = await updateSatuanBarangByUuidRepo(uuid, satuanBarangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
@@ -62,4 +68,19 @@ export const updateSatuanBarangByUuidService = async (uuid, satuanBarangData, re
     }, req_identity)
 
     return satuanBarang
+}
+
+export const checkSatuanBarangAllowToEditService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkSatuanBarangAllowToEditService`, {
+        uuid
+    }, req_identity)
+
+    const kategoriHargaBarangUsed = await checkSatuanBarangAllowToEditRepo(uuid, req_identity)
+
+    if (kategoriHargaBarangUsed.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Satuan Barang Sudah Terpakai Pada Kategori Harga Barang ${kategoriHargaBarangUsed[0].kode_barang}`,
+            prop: "error"
+        }))
+    }
 }

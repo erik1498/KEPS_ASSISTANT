@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createJenisPenjualanBarangRepo, deleteJenisPenjualanBarangByUuidRepo, getAllJenisPenjualanBarangRepo, getJenisPenjualanBarangByUuidRepo, updateJenisPenjualanBarangByUuidRepo } from "./jenisPenjualanBarang.repository.js"
+import { checkJenisPenjualanBarangAllowToEditRepo, createJenisPenjualanBarangRepo, deleteJenisPenjualanBarangByUuidRepo, getAllJenisPenjualanBarangRepo, getJenisPenjualanBarangByUuidRepo, updateJenisPenjualanBarangByUuidRepo } from "./jenisPenjualanBarang.repository.js"
 
 export const getAllJenisPenjualanBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllJenisPenjualanBarangService", null, req_identity)
@@ -18,7 +18,7 @@ export const getAllJenisPenjualanBarangService = async (query, req_identity) => 
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const jenisPenjualanBarangs = await getAllJenisPenjualanBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(jenisPenjualanBarangs.entry, jenisPenjualanBarangs.count, jenisPenjualanBarangs.pageNumber, jenisPenjualanBarangs.size)
 }
@@ -46,6 +46,9 @@ export const createJenisPenjualanBarangService = async (jenisPenjualanBarangData
 
 export const deleteJenisPenjualanBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteJenisPenjualanBarangByUuidService [${uuid}]`, null, req_identity)
+
+    await checkJenisPenjualanBarangAllowToEditService(uuid, req_identity)
+
     await getJenisPenjualanBarangByUuidService(uuid, req_identity)
     await deleteJenisPenjualanBarangByUuidRepo(uuid, req_identity)
     return true
@@ -62,4 +65,19 @@ export const updateJenisPenjualanBarangByUuidService = async (uuid, jenisPenjual
     }, req_identity)
 
     return jenisPenjualanBarang
+}
+
+export const checkJenisPenjualanBarangAllowToEditService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkJenisPenjualanBarangAllowToEditService`, {
+        uuid
+    }, req_identity)
+
+    const daftarBarangUsed = await checkJenisPenjualanBarangAllowToEditRepo(uuid, req_identity)
+
+    if (daftarBarangUsed.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Jenis Penjualan Barang Sudah Terpakai Pada Barang ${daftarBarangUsed[0].name}`,
+            prop: "error"
+        }))
+    }
 }
