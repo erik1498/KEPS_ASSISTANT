@@ -100,31 +100,33 @@ export const generatePerintahStokOpnameQueryService = async (uuid, bulan, tahun,
                             kredit: y.kredit,
                             detail_data: x.detail_data
                         }
-    
+
                         listDataSelected.push(dataInput)
                     }
                 }
-            }else{
-                let dataInput = {
-                    uuid: x.uuid,
-                    bukti_transaksi: x.bukti_transaksi,
-                    sumber: x.sumber,
-                    tahun: x.tahun,
-                    bulan: x.bulan,
-                    tanggal: x.tanggal,
-                    waktu: x.waktu ? x.waktu : x.tanggal,
-                    transaksi: 1,
-                    uraian: x.uraian,
-                    kode_akun: JSON.parse(y.kode_akun_perkiraan).code,
-                    type_akun: JSON.parse(y.kode_akun_perkiraan).type,
-                    nama_akun: JSON.parse(y.kode_akun_perkiraan).name,
-                    uuid_akun: JSON.parse(y.kode_akun_perkiraan).uuid,
-                    debet: y.debet,
-                    kredit: y.kredit,
-                    detail_data: x.detail_data
-                }
+            } else {
+                if (y.debet > 0 || y.kredit > 0) {
+                    let dataInput = {
+                        uuid: x.uuid,
+                        bukti_transaksi: x.bukti_transaksi,
+                        sumber: x.sumber,
+                        tahun: x.tahun,
+                        bulan: x.bulan,
+                        tanggal: x.tanggal,
+                        waktu: x.waktu ? x.waktu : x.tanggal,
+                        transaksi: 1,
+                        uraian: x.uraian,
+                        kode_akun: JSON.parse(y.kode_akun_perkiraan).code,
+                        type_akun: JSON.parse(y.kode_akun_perkiraan).type,
+                        nama_akun: JSON.parse(y.kode_akun_perkiraan).name,
+                        uuid_akun: JSON.parse(y.kode_akun_perkiraan).uuid,
+                        debet: y.debet,
+                        kredit: y.kredit,
+                        detail_data: x.detail_data
+                    }
 
-                listDataSelected.push(dataInput)
+                    listDataSelected.push(dataInput)
+                }
             }
         })
     })
