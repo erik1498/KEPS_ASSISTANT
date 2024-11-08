@@ -120,7 +120,7 @@ export const updatePerintahStokOpnameByUuidService = async (uuid, perintahStokOp
 
 export const validasiPerintahStokOpnameByUuidService = async (perintahStokOpnameData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start validasiPerintahStokOpnameByUuidService`, { perintahStokOpnameData }, req_identity)
-    
+
     const beforeData = await getPerintahStokOpnameByUuidService(perintahStokOpnameData.perintah_stok_opname, req_identity)
 
     await getNeracaValidasiByTanggalService(null, `${beforeData.tahun}-${beforeData.bulan_transaksi}-${getTanggalTerakhirPadaBulan(beforeData.tahun, beforeData.bulan_transaksi)}`, req_identity)
@@ -164,10 +164,14 @@ export const checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService
 
     if (perintahStokOpname.length > 0) {
         if (bulan_transaksi.length > 2) {
-            throw Error(JSON.stringify({
-                message: `Tidak Bisa Di Eksekusi Karena Bulan Transaksi Sudah Terdaftar Pada ${perintahStokOpname[0].nomor_surat_perintah} Bulan ${getBulanText(perintahStokOpname[0].bulan_transaksi - 1)} Tahun ${perintahStokOpname[0].tahun}`,
-                prop: "error"
-            }))
+            if (perintahStokOpname[0].hasil_stok_opname_count > 0) {
+                throw Error(JSON.stringify({
+                    message: `Tidak Bisa Di Eksekusi Karena Bulan Transaksi Sudah Terdaftar Pada ${perintahStokOpname[0].nomor_surat_perintah} Bulan ${getBulanText(perintahStokOpname[0].bulan_transaksi - 1)} Tahun ${perintahStokOpname[0].tahun}`,
+                    prop: "error"
+                }))
+            } else {
+                return
+            }
         }
 
         const perintahStokOpnameNomorSuratPerintahGet = perintahStokOpname.filter(x => x.nomor_surat_perintah == nomor_surat_perintah)

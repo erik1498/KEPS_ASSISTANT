@@ -3,7 +3,7 @@ import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/num
 import { FaCheck, FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa"
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 import { apiPengembalianDendaPenjualanBarangCRUD, apiRincianPengembalianDendaPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
-import { deleteAllFormMessage, formValidation, showError } from "../../../../../helper/form.helper"
+import { deleteAllFormMessage, formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import FormInput from "../../../../../component/form/FormInput"
 
 const RiwayatTransaksiPengembalianDendaPenjualanBarang = ({
@@ -27,6 +27,7 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = ({
             .custom(`/pesanan/${riwayatPengembalianDendaPenjualanBarang.uuid}`)
             .then(resData => {
                 setListPengembalianDendaPenjualanBarang(resData.data)
+                setTotalPengembalianDenda(x => x = resData.data.reduce((c, p) => { return p.denda_yang_dikembalikan + c }, 0))
             }).catch(err => showError(err))
     }
 
@@ -39,6 +40,8 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = ({
                         rincian_pesanan_penjualan_barang: listPengembalianDendaPenjualanBarang[index].uuid,
                         denda_yang_dikembalikan: `${listPengembalianDendaPenjualanBarang[index].denda_yang_dikembalikan}`,
                     }
+                }).then(() => {
+                    showAlert("Berhasil", "Data Berhasil Disimpan")
                 })
         }
         _getRincianPengembalianDendaPenjualanBarang()
@@ -101,9 +104,9 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = ({
             detailOpen ? <>
                 <div className="ml-4 py-4 px-4">
                     {
-                        riwayatPengembalianDendaPenjualanBarang.perintah_stok_opname_nomor_surat_perintah
-                        &&
-                        <p className="text-xs font-medium text-green-600 my-3">Telah Terdaftar Pada Surat Perintah Stok Opname {riwayatPengembalianDendaPenjualanBarang.perintah_stok_opname_nomor_surat_perintah}</p>
+                        JSON.parse(riwayatPengembalianDendaPenjualanBarang.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count == 0 ? <></>
+                            :
+                            <p className="text-xs font-medium text-green-600 my-3">Telah Terdaftar Pada Surat Perintah Stok Opname {JSON.parse(riwayatPelunasanPenjualanBarang.perintah_stok_opname_nomor_surat_perintah).nomor_perintah_stok_opname}</p>
                     }
                     {
                         detailOpen ? <>
@@ -139,7 +142,7 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = ({
                                 <tr>
                                     <td className={`${edited ? "pb-5" : ""}`}>Kode Akun</td>
                                     <td className={`px-5 ${edited ? "pb-5" : ""}`}>:</td>
-                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatPengembalianDendaPenjualanBarang.kode_akun_perkiraan_name}</td>
+                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatPengembalianDendaPenjualanBarang.kode_akun_perkiraan_code} - {riwayatPengembalianDendaPenjualanBarang.kode_akun_perkiraan_name}</td>
                                 </tr>
                                 <tr>
                                     <td className={`${edited ? "pb-3" : ""}`}>Total PengembalianDenda</td>

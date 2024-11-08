@@ -1,6 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getJumlahRincianTransaksiDendaOnTableByTanggalService, getJumlahRincianTransaksiOnTableByTanggalService, getTanggalTransaksiTerakhirByFakturPenjualanService } from "../faktur_penjualan_barang/fakturPenjualanBarang.services.js"
+import { getKodeAkunPerkiraanByUuidService } from "../kode_akun_perkiraan/kodeAkunPerkiraan.services.js"
 import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanService } from "../rincian_pelunasan_penjualan_denda_barang/rincianPelunasanPenjualanDendaBarang.services.js"
 import { createPelunasanPenjualanBarangRepo, deletePelunasanPenjualanBarangByUuidRepo, getAllPelunasanPenjualanBarangRepo, getCekDendaByPelunasanPenjualanUUIDRepo, getPelunasanPenjualanBarangByUuidRepo, updatePelunasanPenjualanBarangByUuidRepo } from "./pelunasanPenjualanBarang.repository.js"
@@ -73,12 +74,29 @@ export const createPelunasanPenjualanBarangService = async (pelunasanPenjualanBa
     }
 
     const pelunasanPenjualanBarang = await createPelunasanPenjualanBarangRepo(pelunasanPenjualanBarangData, req_identity)
+
+    const checkDenda = await getCekDendaByPelunasanPenjualanUUIDService(pelunasanPenjualanBarang.uuid, req_identity)
+
+    if (checkDenda == 1) {
+
+        const kodeAkunPerkiraan = await getKodeAkunPerkiraanByUuidService("eb5b6dcd-1146-4550-a9f0-1fe8439b085f", req_identity)
+
+        await updatePelunasanPenjualanBarangByUuidRepo(pelunasanPenjualanBarang.uuid, {
+            faktur_penjualan_barang: pelunasanPenjualanBarang.faktur_penjualan_barang,
+            tanggal: pelunasanPenjualanBarang.tanggal,
+            bukti_transaksi: pelunasanPenjualanBarang.bukti_transaksi,
+            nomor_pelunasan_penjualan_barang: pelunasanPenjualanBarang.nomor_pelunasan_penjualan_barang,
+            kode_akun_perkiraan: kodeAkunPerkiraan.uuid,
+            keterangan: pelunasanPenjualanBarang.keterangan,
+        }, req_identity)
+    }
+
     return pelunasanPenjualanBarang
 }
 
 export const deletePelunasanPenjualanBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deletePelunasanPenjualanBarangByUuidService [${uuid}]`, null, req_identity)
-    
+
     const beforeData = await getPelunasanPenjualanBarangByUuidService(uuid, req_identity)
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)

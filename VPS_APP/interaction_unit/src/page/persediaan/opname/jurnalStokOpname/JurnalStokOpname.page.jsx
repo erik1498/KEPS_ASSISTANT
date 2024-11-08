@@ -35,7 +35,7 @@ const JurnalStokOpnamePage = () => {
             .custom(`?tahun=${data.tahun}`, "GET")
             .then(resData => {
                 setIsLoading(x => x = false)
-                setPerintahStokOpnameList(x => x = resData.data.entry.filter(x => x.penyesuaian_persediaan_count > 0))
+                setPerintahStokOpnameList(x => x = resData.data.entry)
             }).catch(err => {
                 setIsLoading(x => x = false)
                 showError(err)
@@ -101,7 +101,7 @@ const JurnalStokOpnamePage = () => {
             })
         })
 
-        let normalizedData = await normalizeDataJurnalUmum(listDaftarData.map(x => {
+        let normalizedData = await normalizeDataJurnalUmum(listDaftarData.filter(x => x.debet > 0 || x.kredit > 0).map(x => {
             x.tanggal = `${x.tanggal.length}` > 2 ? new Date(`${x.tanggal}`).getDate() : x.tanggal
             x.waktu = x.waktu.split("T")[1].replace(".000", "")
             return x

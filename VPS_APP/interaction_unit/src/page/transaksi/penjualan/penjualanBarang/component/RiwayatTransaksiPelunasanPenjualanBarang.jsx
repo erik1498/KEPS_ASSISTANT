@@ -3,7 +3,7 @@ import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/num
 import { FaCheck, FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa"
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 import { apiPelunasanPenjualanBarangCRUD, apiRincianPelunasanPenjualanBarangCRUD, apiRincianPelunasanPenjualanDendaBarangCRUD } from "../../../../../service/endPointList.api"
-import { deleteAllFormMessage, formValidation, showError } from "../../../../../helper/form.helper"
+import { deleteAllFormMessage, formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import FormInput from "../../../../../component/form/FormInput"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 
@@ -92,7 +92,10 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                         piutang_denda: listPelunasanPenjualanDendaBarang[index].total_denda - listPelunasanPenjualanDendaBarang[index].denda_sudah_dibayar,
                         nilai_pelunasan: `${listPelunasanPenjualanDendaBarang[index].nilai_pelunasan}`,
                     }
-                }).catch(err => showError(err))
+                }).then(() => {
+                    showAlert("Berhasil", "Data Berhasil Disimpan")
+                })
+                .catch(err => showError(err))
         }
         _getRincianPesananPenjualanDendaBarang()
     }
@@ -108,6 +111,8 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                         piutang: listPelunasanPenjualanBarang[index].piutang,
                         nilai_pelunasan: `${listPelunasanPenjualanBarang[index].nilai_pelunasan}`
                     }
+                }).then(() => {
+                    showAlert("Berhasil", "Data Berhasil Disimpan")
                 }).catch(err => showError(err))
         }
         _getRincianPesananPenjualanBarang()
@@ -135,6 +140,8 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                         tanggal: riwayatPelunasanPenjualanBarang.tanggal,
                         kode_akun_perkiraan: riwayatPelunasanPenjualanBarang.kode_akun_perkiraan,
                     }
+                }).then(() => {
+                    showAlert("Berhasil", "Data Berhasil Disimpan")
                 }).catch(err => showError(err))
         }
     }
@@ -174,9 +181,9 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
             detailOpen ? <>
                 <div className="ml-4 py-4 px-4">
                     {
-                        riwayatPelunasanPenjualanBarang.perintah_stok_opname_nomor_surat_perintah
-                        &&
-                        <p className="text-xs font-medium text-green-600 my-3">Telah Terdaftar Pada Surat Perintah Stok Opname {riwayatPelunasanPenjualanBarang.perintah_stok_opname_nomor_surat_perintah}</p>
+                        JSON.parse(riwayatPelunasanPenjualanBarang.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count == 0 ? <></>
+                            :
+                            <p className="text-xs font-medium text-green-600 my-3">Telah Terdaftar Pada Surat Perintah Stok Opname {JSON.parse(riwayatPelunasanPenjualanBarang.perintah_stok_opname_nomor_surat_perintah).nomor_perintah_stok_opname}</p>
                     }
                     {
                         detailOpen ? <>
@@ -212,7 +219,7 @@ const RiwayatTransaksiPelunasanPenjualanBarang = ({
                                 <tr>
                                     <td className={`${edited ? "pb-5" : ""}`}>Kode Akun</td>
                                     <td className={`px-5 ${edited ? "pb-5" : ""}`}>:</td>
-                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatPelunasanPenjualanBarang.kode_akun_perkiraan_name}</td>
+                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatPelunasanPenjualanBarang.kode_akun_perkiraan_code} - {riwayatPelunasanPenjualanBarang.kode_akun_perkiraan_name}</td>
                                 </tr>
                                 <tr>
                                     <td className={`${edited ? "pb-3" : ""}`}>Total Pelunasan</td>

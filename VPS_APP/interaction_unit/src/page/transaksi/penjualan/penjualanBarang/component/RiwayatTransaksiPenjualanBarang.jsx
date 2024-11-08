@@ -6,7 +6,7 @@ import { formatDate, getHariTanggalFormated, getHariTanggalFull } from "../../..
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { FaSave } from "react-icons/fa"
-import { formValidation, showError } from "../../../../../helper/form.helper"
+import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import RiwayatTransaksiReturPenjualanBarang from "./RiwayatTransaksiReturPenjualanBarang"
 import RiwayatTransaksiPengembalianDendaPenjualanBarang from "./RiwayatTransaksiPengembalianDendaPenjualanBarang"
 
@@ -28,9 +28,17 @@ const RiwayatTransaksiPenjualanBarang = ({
     const [riwayatTransaksi, setRiwayatTransaksi] = useState([])
     const [reloadRiwayat, setReloadRiwayat] = useState(true)
 
+    const [tipeTransaksiList, setTipeTransaksiList] = useState([])
+
     const _getDaftarRiwayatTransaksi = () => {
         setReloadRiwayat(x => x = false)
         setFakturCancel(x => x = true)
+        setTipeTransaksiList(x => x = tipeTransaksiPenjualanBarang.filter(x => x != "Pengembalian_Denda").map(x => {
+            return {
+                label: x.replace("_", " "),
+                value: x
+            }
+        }))
         if (fakturPenjualanBarang) {
             apiFakturPenjualanBarangCRUD
                 .custom("/riwayat_transaksi/" + fakturPenjualanBarang.uuid)
@@ -38,6 +46,14 @@ const RiwayatTransaksiPenjualanBarang = ({
                     if (resData.data.length > 0) {
                         setFakturCancel(x => x = false)
                         setTanggalTransaksiAkhir(x => x = resData.data[0].tanggal)
+                        if (resData.data.filter(x => x.type == "retur_penjualan_barang").length > 0) {
+                            setTipeTransaksiList(x => x = tipeTransaksiPenjualanBarang.map(x => {
+                                return {
+                                    label: x.replace("_", " "),
+                                    value: x
+                                }
+                            }))
+                        }
                     }
                     setRiwayatTransaksi(x => x = getNormalizedByDate(resData.data))
                 })
@@ -70,6 +86,7 @@ const RiwayatTransaksiPenjualanBarang = ({
             apiCall.custom("", "POST", null, {
                 data
             }).then(() => {
+                showAlert("Berhasil", "Data Berhasil Disimpan")
                 _getDaftarRiwayatTransaksi()
                 setTanggal(getHariTanggalFull())
             }).catch(err => showError(err))
@@ -110,10 +127,34 @@ const RiwayatTransaksiPenjualanBarang = ({
     }, [riwayatTransaksi])
 
     useEffect(() => {
-        if (tipeTransaksi.value == "Retur" && riwayatTransaksi.length == 0) {
-            setKodeAkunList(x => x = [])
-            setKodeAkun(x => x = null)
+        setKodeAkunList(x => x = [])
+        setKodeAkun(x => x = null)
+        _getKodeAkunKasBank()
+        if (tipeTransaksi.value == "Retur") {
             _getKodeAkunPiutangUsaha()
+
+            if (riwayatTransaksi.length > 0) {
+
+                const pelunasanPenjualanBarangGet = riwayatTransaksi.filter(x => {
+                    return x.data.filter(y => y.type == "pelunasan_penjualan_barang").length > 0
+                })
+
+
+                if (pelunasanPenjualanBarangGet.length > 0) {
+                    const pelunasanPenjualanBarangGetData = pelunasanPenjualanBarangGet[0].data.filter(x => x.type == "pelunasan_penjualan_barang")
+
+                    if (pelunasanPenjualanBarangGetData.length > 0) {
+
+                        apiPelunasanPenjualanBarangCRUD
+                            .custom(`/cek_denda_pelunasan_penjualan/${pelunasanPenjualanBarangGetData[0].uuid}`, "GET")
+                            .then(resData => {
+                                if (resData.data == 0) {
+                                    _getKodeAkunKasBank()
+                                }
+                            }).catch(err => showError(err))
+                    }
+                }
+            }
         }
     }, [tipeTransaksi])
 
@@ -143,12 +184,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                     <FormSelectWithLabel
                         label={"Tipe Transaksi"}
                         addClass={"z-50"}
-                        optionsDataList={tipeTransaksiPenjualanBarang.map(x => {
-                            return {
-                                label: x.replace("_", " "),
-                                value: x
-                            }
-                        })}
+                        optionsDataList={tipeTransaksiList}
                         onchange={(e) => {
                             setTipeTransaksi(e)
                         }}
@@ -191,7 +227,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                                                         y.type == "pelunasan_penjualan_barang" ? <>
                                                             <RiwayatTransaksiPelunasanPenjualanBarang
                                                                 riwayatPelunasanPenjualanBarang={y}
-                                                                edited={y.perintah_stok_opname_nomor_surat_perintah ? false : i == 0 && j == 0}
+                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>
@@ -200,7 +236,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                                                         y.type == "retur_penjualan_barang" ? <>
                                                             <RiwayatTransaksiReturPenjualanBarang
                                                                 riwayatReturPenjualanBarang={y}
-                                                                edited={y.perintah_stok_opname_nomor_surat_perintah ? false : i == 0 && j == 0}
+                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>
@@ -209,7 +245,7 @@ const RiwayatTransaksiPenjualanBarang = ({
                                                         y.type == "pengembalian_denda_penjualan_barang" ? <>
                                                             <RiwayatTransaksiPengembalianDendaPenjualanBarang
                                                                 riwayatPengembalianDendaPenjualanBarang={y}
-                                                                edited={y.perintah_stok_opname_nomor_surat_perintah ? false : i == 0 && j == 0}
+                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>

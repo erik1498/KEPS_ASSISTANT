@@ -50,6 +50,13 @@ export const createRincianReturPenjualanBarangService = async (rincianReturPenju
 
     const returPenjualanBarang = await getReturPenjualanBarangByUuidService(rincianReturPenjualanBarangData.retur_penjualan_barang, req_identity)
 
+    if (returPenjualanBarang.nomor_retur_penjualan_barang == "EMPTY" || returPenjualanBarang.bukti_transaksi == "EMPTY") {
+        throw Error(JSON.stringify({
+            message: "Nomor Retur Penjualan Barang Atau Bukti Transaksi Tidak Boleh Kosong",
+            prop: "error"
+        }))
+    }
+
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanBarang.tanggal, null, null, req_identity)
 
     const rincianReturPenjualanBarang = await createRincianReturPenjualanBarangRepo(rincianReturPenjualanBarangData, req_identity)

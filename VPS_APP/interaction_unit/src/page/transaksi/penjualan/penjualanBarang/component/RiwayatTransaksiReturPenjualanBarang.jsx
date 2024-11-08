@@ -3,7 +3,7 @@ import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/num
 import { FaCheck, FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa"
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 import { apiReturPenjualanBarangCRUD, apiRincianReturPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
-import { deleteAllFormMessage, formValidation, showError } from "../../../../../helper/form.helper"
+import { deleteAllFormMessage, formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import FormInput from "../../../../../component/form/FormInput"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 
@@ -67,7 +67,8 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                         retur_sebelum: `${listReturPenjualanBarang[index].retur_sebelum}`,
                         nilai_retur_sebelum: `${listReturPenjualanBarang[index].nilai_retur_sebelum}`
                     }
-                }).catch(err => showError(err))
+                }).then(() => showAlert("Berhasil", "Data Berhasil Disimpan"))
+                .catch(err => showError(err))
         }
         _getRincianPesananPenjualanBarang()
     }
@@ -94,7 +95,8 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                         tanggal: riwayatReturPenjualanBarang.tanggal,
                         kode_akun_perkiraan: riwayatReturPenjualanBarang.kode_akun_perkiraan,
                     }
-                }).catch(err => showError(err))
+                }).then(() => showAlert("Berhasil", "Data Berhasil Disimpan"))
+                .catch(err => showError(err))
         }
     }
 
@@ -126,9 +128,9 @@ const RiwayatTransaksiReturPenjualanBarang = ({
             detailOpen ? <>
                 <div className="ml-4 py-4 px-4">
                     {
-                        riwayatReturPenjualanBarang.perintah_stok_opname_nomor_surat_perintah
-                        &&
-                        <p className="text-xs font-medium text-green-600 my-3">Telah Terdaftar Pada Surat Perintah Stok Opname {riwayatReturPenjualanBarang.perintah_stok_opname_nomor_surat_perintah}</p>
+                        JSON.parse(riwayatReturPenjualanBarang.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count == 0 ? <></>
+                            :
+                            <p className="text-xs font-medium text-green-600 my-3">Telah Terdaftar Pada Surat Perintah Stok Opname {JSON.parse(riwayatReturPenjualanBarang.perintah_stok_opname_nomor_surat_perintah).nomor_perintah_stok_opname}</p>
                     }
                     {
                         detailOpen ? <>
@@ -164,7 +166,7 @@ const RiwayatTransaksiReturPenjualanBarang = ({
                                 <tr>
                                     <td className={`${edited ? "pb-5" : ""}`}>Kode Akun</td>
                                     <td className={`px-5 ${edited ? "pb-5" : ""}`}>:</td>
-                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatReturPenjualanBarang.kode_akun_perkiraan_name}</td>
+                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatReturPenjualanBarang.kode_akun_perkiraan_code} - {riwayatReturPenjualanBarang.kode_akun_perkiraan_name}</td>
                                 </tr>
                                 <tr>
                                     <td className={`${edited ? "pb-3" : ""}`}>Total Retur</td>

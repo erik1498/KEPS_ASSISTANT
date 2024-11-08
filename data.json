@@ -1,0 +1,42 @@
+[
+    {
+        "debet": 100000,
+        "kredit": 0,
+        "kode_akun_perkiraan": {
+            "uuid": "eb5b6dcd-1146-4550-a9f0-1fe8439b085f",
+            "name": "Piutang Denda Barang",
+            "type": "Harta",
+            "code": "133"
+        }
+    },
+    {
+        "debet": 0,
+        "kredit": 100000,
+        "kode_akun_perkiraan": {
+            "uuid": "ddb0e69f-9704-4555-b427-5748365034f7",
+            "name": "Pendapatan Denda Penjualan Barang",
+            "type": "Pendapatan Lain - Lain",
+            "code": "605"
+        }
+    },
+    {
+        "debet": 100000,
+        "kredit": 0,
+        "kode_akun_perkiraan": {
+            "uuid": "76072236-7685-426b-8f10-6f2acf797c22",
+            "name": "Kas Besar",
+            "type": "Harta",
+            "code": "101"
+        }
+    },
+    {
+        "debet": 0,
+        "kredit": 100000,
+        "kode_akun_perkiraan": {
+            "uuid": "eb5b6dcd-1146-4550-a9f0-1fe8439b085f",
+            "name": "Piutang Denda Barang",
+            "type": "Harta",
+            "code": "133"
+        }
+    }
+]

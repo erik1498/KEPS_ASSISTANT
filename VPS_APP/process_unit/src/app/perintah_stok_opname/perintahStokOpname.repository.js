@@ -491,7 +491,7 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
                                 'type', kapt.type,
                                 'code', kapt.code
                             ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = ppbt2.kode_akun_perkiraan		
+                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "ddb0e69f-9704-4555-b427-5748365034f7"		
                     )
                 ),
                 JSON_OBJECT (
@@ -506,7 +506,7 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
                                 'type', kapt.type,
                                 'code', kapt.code
                             ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "ddb0e69f-9704-4555-b427-5748365034f7"		
+                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = ppbt2.kode_akun_perkiraan		
                     )
                 )
             ) AS detail_json,
@@ -527,7 +527,9 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
                 'customer_code', ct.code,
                 'daftar_gudang_name', dgt.name,
                 'daftar_barang_name', dbt.name,
-                'hari_terlewat', rppdbt.hari_terlewat
+                'hari_terlewat', rppdbt.hari_terlewat,
+                'jatuh_tempo', ADDDATE( fpbt.tanggal, INTERVAL spt.hari_kadaluarsa DAY ),
+                'tanggal_faktur', fpbt.tanggal
             ) AS detail_data,
             "PELUNASAN DENDA PENJUALAN BARANG" AS sumber
         FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt 
@@ -540,6 +542,7 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
         JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
         JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 ON ppbt2.uuid= rppdbt.pelunasan_penjualan_barang
         JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt.uuid 
+        JOIN ${generateDatabaseName(req_id)}.syarat_pembayaran_tab spt ON spt.uuid = fpbt.syarat_pembayaran
         JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer 
         WHERE rppbt.enabled = 1
         AND ppbt.enabled = 1
@@ -934,9 +937,6 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
         ) AS res
     `
 
-
-    console.log(fakturPenjualanBarangDendaBulanIniQuery)
-
     const queryList = [
         pesananPenjualanBarangQuery,
         pelunasanPenjualanBarangQuery,
@@ -1104,6 +1104,12 @@ export const checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo = 
         `
             SELECT
                 psot.*
+                ${
+                    bulan_transaksi.length > 2 ? `,
+                    IFNULL((
+                        SELECT COUNT(0) FROM ${generateDatabaseName(req_id)}.hasil_stok_opname_tab hsot WHERE hsot.perintah_stok_opname = psot.uuid AND hsot.enabled = 1
+                    ), 0) AS hasil_stok_opname_count ` : ""
+                }
             FROM (
                 SELECT 
                     psot.* 
