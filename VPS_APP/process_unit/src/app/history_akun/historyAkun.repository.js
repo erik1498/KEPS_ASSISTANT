@@ -2,13 +2,14 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import { generateDatabaseName } from "../../utils/databaseUtil.js";
 
-export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, search, req_id) => {
+export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, search, addQuery, req_id) => {
     const historyAkun = await db.query(
         `
             SELECT 
                 res.*
             FROM
             (
+                ${addQuery}
                 SELECT 
                     jut.uuid,
                     jut.bukti_transaksi,

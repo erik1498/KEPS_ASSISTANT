@@ -96,3 +96,25 @@ export const updatePerintahStokOpnameJurnalByUuidRepo = async (uuid, perintahSto
         }
     )
 }
+
+export const generatePerintahStokOpnameQueryRepo = async (uuid, bulan, tahun, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                psojt.*
+            FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab psojt 
+            ${uuid ? `WHERE JSON_UNQUOTE(
+                JSON_EXTRACT(
+                    psojt.detail_json, 
+                        '$[*].kode_akun_perkiraan'
+                )
+            ) LIKE '%${uuid}%'` : ``
+        }
+            ${uuid ? `AND` : `WHERE`} psojt.bulan = ${bulan}
+            AND psojt.tahun = ${tahun}
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}

@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import { generateDatabaseName } from "../../utils/databaseUtil.js";
 
-export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) => {
+export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, addQuery, req_id) => {
     const neracaSaldo = await db.query(
         `   
             SELECT 
@@ -14,6 +14,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 kapt.code AS kode_akun_perkiraan_code,
                 kapt.type AS kode_akun_perkiraan_type
             FROM (
+                ${addQuery}
                 SELECT
                     jut.kode_akun_uuid AS kode_akun_perkiraan,
                     jut.bulan,
