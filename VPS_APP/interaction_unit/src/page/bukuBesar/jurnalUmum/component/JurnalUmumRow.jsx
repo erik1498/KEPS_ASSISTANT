@@ -5,6 +5,7 @@ import BankRowData from "../../../transaksi/kasDanBank/bank/component/BankRowDat
 import KasRowData from "../../../transaksi/kasDanBank/kas/component/KasRowData";
 import PendapatanRowData from "../../../transaksi/payroll/pendapatanPegawai/component/PendapatanRowData";
 import PotonganRowData from "../../../transaksi/payroll/potonganPegawai/component/PotonganRowData";
+import JurnalStokOpnameRowData from "../../../persediaan/opname/jurnalStokOpname/component/JurnalStokOpnameRowData";
 
 const JurnalUmumRow = ({
     item,
@@ -196,6 +197,21 @@ const JurnalUmumRow = ({
                                                 forPrint={forPrint}
                                             />
                                         </> : <></>
+                                }
+                                {
+                                    [
+                                        "FAKTUR PENJUALAN BARANG",
+                                        "PELUNASAN PENJUALAN BARANG",
+                                        "PELUNASAN DENDA PENJUALAN BARANG",
+                                        "RETUR PENJUALAN BARANG",
+                                        "PENGEMBALIAN DENDA PENJUALAN BARANG",
+                                        "DENDA PENJUALAN BARANG"
+                                    ].indexOf(item1.sumber) > -1 ? 
+                                    <JurnalStokOpnameRowData
+                                        forPrint={forPrint}
+                                        item1={item1}
+                                        balanceStatus={false}
+                                    /> : <></>
                                 }
                             </>
                     }

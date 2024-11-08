@@ -5,7 +5,7 @@ import { FaPlus, FaPrint, FaSearch, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import { useEffect } from "react";
 import { apiJurnalUmumCRUD } from "../../../service/endPointList.api";
-import { normalizeDataJurnalUmum, normalizeDataJurnalUmumEdit } from "../../../helper/jurnalUmum.helper";
+import { normalizeDataJurnalPerintahStokOpname, normalizeDataJurnalUmum, normalizeDataJurnalUmumEdit } from "../../../helper/jurnalUmum.helper";
 import JurnalUmumForm from "./component/JurnalUmumForm";
 import { useDataContext } from "../../../context/dataContext.context";
 import DebetKreditStatusCard from "../../../component/card/DebetKreditStatusCard";
@@ -59,7 +59,38 @@ const JurnalUmumPage = () => {
         dataCopy.dashboard.biaya[bulan] = null
         setData(dataCopy)
 
-        let normalizedData = await normalizeDataJurnalUmum(resData?.data)
+        const normalData = resData.data.filter(x => {
+          return [
+            "FAKTUR PENJUALAN BARANG",
+            "PELUNASAN PENJUALAN BARANG",
+            "PELUNASAN DENDA PENJUALAN BARANG",
+            "RETUR PENJUALAN BARANG",
+            "PENGEMBALIAN DENDA PENJUALAN BARANG",
+            "DENDA PENJUALAN BARANG"
+          ].indexOf(x.sumber) == -1
+        })
+
+        const penjualanBarangJurnal = resData.data.filter(x => {
+          return [
+            "FAKTUR PENJUALAN BARANG",
+            "PELUNASAN PENJUALAN BARANG",
+            "PELUNASAN DENDA PENJUALAN BARANG",
+            "RETUR PENJUALAN BARANG",
+            "PENGEMBALIAN DENDA PENJUALAN BARANG",
+            "DENDA PENJUALAN BARANG"
+          ].indexOf(x.sumber) > -1
+        })
+
+        const perintahStokOpname = penjualanBarangJurnal.map(x => {
+          x.detail_json = JSON.parse(x.uraian).json
+          x.detail_data = JSON.parse(x.uraian).detail
+          return x
+        })
+
+        const normalizedDataPerintahStokOpname = normalizeDataJurnalPerintahStokOpname(perintahStokOpname)
+
+
+        let normalizedData = await normalizeDataJurnalUmum(normalData.concat(...normalizedDataPerintahStokOpname))
 
 
         setBalanceStatus(searchParam.length < 1)

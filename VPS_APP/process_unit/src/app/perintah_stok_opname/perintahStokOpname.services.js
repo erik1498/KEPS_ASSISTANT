@@ -3,7 +3,7 @@ import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { getBulanText } from "../../utils/mathUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
-import { checkPerintahStokOpnameAktifRepo, createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getPerintahStokOpnameByUUIDWithTanggalRepo, getRincianPenjualanBarangRepo, getRincianPelunasanPenjualanJasaRepo, getStatusPerintahStokOpnameAktifByTanggalRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo, checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo, validasiPerintahStokOpnameByUuidRepo, checkPerintahStokOpnameSudahAdaBulanTransaksiSebelumOrSesudahRepo } from "./perintahStokOpname.repository.js"
+import { createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getPerintahStokOpnameByUUIDWithTanggalRepo, getJurnalPerintahStokOpnameRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo, checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo, validasiPerintahStokOpnameByUuidRepo, checkPerintahStokOpnameSudahAdaBulanTransaksiSebelumOrSesudahRepo, removeJurnalPerintahStokOpanameRepo } from "./perintahStokOpname.repository.js"
 
 export const getAllPerintahStokOpnameService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPerintahStokOpnameService", null, req_identity)
@@ -46,9 +46,9 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
 
     if (perintahStokOpname.length > 0) {
 
-        const rincianPenjualanBarang = await getRincianPenjualanBarangRepo(perintahStokOpname[0].bulan_transaksi, perintahStokOpname[0].tahun, req_identity)
+        const jurnalPerintahStokOpname = await getJurnalPerintahStokOpnameRepo(perintahStokOpname[0].bulan_transaksi, perintahStokOpname[0].tahun, false, req_identity)
 
-        return rincianPenjualanBarang
+        return jurnalPerintahStokOpname
 
     }
     return []
@@ -126,6 +126,12 @@ export const validasiPerintahStokOpnameByUuidService = async (perintahStokOpname
     await getNeracaValidasiByTanggalService(null, `${beforeData.tahun}-${beforeData.bulan_transaksi}-${getTanggalTerakhirPadaBulan(beforeData.tahun, beforeData.bulan_transaksi)}`, req_identity)
 
     const perintahStokOpname = await validasiPerintahStokOpnameByUuidRepo(perintahStokOpnameData, req_identity)
+
+    if (perintahStokOpnameData.validasi == 1) {
+        await getJurnalPerintahStokOpnameRepo(beforeData.bulan_transaksi, beforeData.tahun, beforeData.uuid, req_identity)
+    }else{
+        await removeJurnalPerintahStokOpanameRepo(beforeData.uuid, req_identity)
+    }
 
     LOGGER_MONITOR(req_original_url, req_method, {
         beforeData,

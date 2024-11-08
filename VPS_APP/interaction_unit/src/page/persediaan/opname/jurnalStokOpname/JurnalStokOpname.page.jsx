@@ -6,7 +6,7 @@ import { apiPerintahStokOpnameCRUD } from "../../../../service/endPointList.api"
 import { showError } from "../../../../helper/form.helper"
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
 import { formatDate, getBulanByIndex } from "../../../../helper/date.helper"
-import { normalizeDataJurnalUmum } from "../../../../helper/jurnalUmum.helper"
+import { normalizeDataJurnalPerintahStokOpname, normalizeDataJurnalUmum } from "../../../../helper/jurnalUmum.helper"
 import JurnalStokOpnameRow from "./component/JurnalStokOpnameRow"
 import { useDataContext } from "../../../../context/dataContext.context"
 import DebetKreditStatusCard from "../../../../component/card/DebetKreditStatusCard"
@@ -56,56 +56,8 @@ const JurnalStokOpnamePage = () => {
     }
 
     const normalizeData = async () => {
-        let listDaftarData = []
-        jurnal.map((x) => {
-            x.detail_json = JSON.parse(x.detail_json)
-            x.detail_data = JSON.parse(x.detail_data)
-            x.detail_json.map((y, iy) => {
-                x.detail_json[iy].kode_akun_perkiraan = JSON.parse(y.kode_akun_perkiraan)
 
-                let dataInput = {
-                    uuid: x.uuid,
-                    bukti_transaksi: x.bukti_transaksi,
-                    sumber: x.sumber,
-                    tahun: x.tahun,
-                    bulan: x.bulan,
-                    tanggal: x.tanggal,
-                    waktu: x.tanggal,
-                    transaksi: 1,
-                    uraian: x.uraian,
-                    kode_akun: x.detail_json[iy].kode_akun_perkiraan.code,
-                    type_akun: x.detail_json[iy].kode_akun_perkiraan.type,
-                    nama_akun: x.detail_json[iy].kode_akun_perkiraan.name,
-                    debet: x.detail_json[iy].debet,
-                    kredit: x.detail_json[iy].kredit,
-                    detail_data: x.detail_data
-                }
-
-                if (iy == 0) {
-                    dataInput["satuan_barang_name"] = x.detail_data.satuan_barang_name
-                    dataInput["faktur_penjualan_barang"] = x.detail_data.faktur_penjualan_barang
-                    dataInput["kategori_harga_barang_kode_barang"] = x.detail_data.kategori_harga_barang_kode_barang
-                    dataInput["pesanan_penjualan_barang"] = x.detail_data.pesanan_penjualan_barang
-                    dataInput["customer_name"] = x.detail_data.customer_name
-                    dataInput["customer_code"] = x.detail_data.customer_code
-                    dataInput["daftar_gudang_name"] = x.detail_data.daftar_gudang_name
-                    dataInput["daftar_barang_name"] = x.detail_data.daftar_barang_name
-                    dataInput["jumlah"] = x.detail_data.jumlah
-                    dataInput["harga"] = x.detail_data.harga
-                    dataInput["ppn"] = x.detail_data.ppn
-                    dataInput["diskon_persentase"] = x.detail_data.diskon_persentase
-                    dataInput["waktu_show"] = true
-                }
-
-                listDaftarData.push(dataInput)
-            })
-        })
-
-        let normalizedData = await normalizeDataJurnalUmum(listDaftarData.filter(x => x.debet > 0 || x.kredit > 0).map(x => {
-            x.tanggal = `${x.tanggal.length}` > 2 ? new Date(`${x.tanggal}`).getDate() : x.tanggal
-            x.waktu = x.waktu.split("T")[1].replace(".000", "")
-            return x
-        }))
+        const normalizedData = await normalizeDataJurnalUmum(normalizeDataJurnalPerintahStokOpname(jurnal))
 
         setDebet(normalizedData.totalDebet)
         setKredit(normalizedData.totalKredit)

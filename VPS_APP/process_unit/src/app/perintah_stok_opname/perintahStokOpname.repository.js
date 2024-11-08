@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import PerintahStokOpnameModel from "./perintahStokOpname.model.js";
-import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { generateDatabaseName, getUserIdFromRequestIdentity, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { getTanggalTerakhirPadaBulan } from "../../utils/jurnalUmumUtil.js";
 
 export const getAllPerintahStokOpnameRepo = async (pageNumber, size, search, tahun, req_id) => {
@@ -235,7 +235,7 @@ export const perintahStokOpnameStatusRepo = async (perintah_stok_opname, req_id)
     return perintahStokOpname
 }
 
-export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
+export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, saveToPerintahStokOpnameJurnal, req_id) => {
     const pesananPenjualanBarangQuery = `
         SELECT 
             JSON_ARRAY(
@@ -948,15 +948,53 @@ export const getRincianPenjualanBarangRepo = async (bulan, tahun, req_id) => {
 
     const penjualanBarang = await db.query(
         `
+            ${saveToPerintahStokOpnameJurnal ? `
+                INSERT INTO 
+                    ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab
+                (
+                    uuid, 
+                    perintah_stok_opname, 
+                    bukti_transaksi, 
+                    bulan, 
+                    detail_data, 
+                    detail_json, 
+                    sumber, 
+                    tahun, 
+                    tanggal, 
+                    uraian, 
+                    enabled, 
+                    createdBy, 
+                    updatedBy, 
+                    createdAt,
+                    updatedAt
+                )
+                ` : ``}
             SELECT 
-                res.*
+                ${saveToPerintahStokOpnameJurnal ? `
+                        UUID() AS uuid,
+                        "${saveToPerintahStokOpnameJurnal}" AS perintah_stok_opname,
+                        res.bukti_transaksi,
+                        res.bulan,
+                        res.detail_data,
+                        res.detail_json,
+                        res.sumber,
+                        res.tahun,
+                        res.tanggal,
+                        res.uraian,
+                        1,
+                        "${getUserIdFromRequestIdentity(req_id)}" AS createdBy,
+                        "" AS updatedBy,
+                        NOW() AS createdAt,
+                        NOW() AS updatedBy
+                    ` : `res.*`
+        }
             FROM (
                 ${queryList.join("UNION ALL")}
             ) AS res
             ORDER BY res.tanggal ASC
         `,
         {
-            type: Sequelize.QueryTypes.SELECT
+            type: saveToPerintahStokOpnameJurnal ? Sequelize.QueryTypes.INSERT : Sequelize.QueryTypes.SELECT
         }
     )
     return penjualanBarang
@@ -1104,12 +1142,11 @@ export const checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo = 
         `
             SELECT
                 psot.*
-                ${
-                    bulan_transaksi.length > 2 ? `,
+                ${bulan_transaksi.length > 2 ? `,
                     IFNULL((
                         SELECT COUNT(0) FROM ${generateDatabaseName(req_id)}.hasil_stok_opname_tab hsot WHERE hsot.perintah_stok_opname = psot.uuid AND hsot.enabled = 1
                     ), 0) AS hasil_stok_opname_count ` : ""
-                }
+        }
             FROM (
                 SELECT 
                     psot.* 
@@ -1141,6 +1178,17 @@ export const checkPerintahStokOpnameSudahAdaBulanTransaksiSebelumOrSesudahRepo =
         `,
         {
             type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
+export const removeJurnalPerintahStokOpanameRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            DELETE FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab WHERE perintah_stok_opname = "${uuid}"
+        `,
+        {
+            type: Sequelize.QueryTypes.DELETE
         }
     )
 }
