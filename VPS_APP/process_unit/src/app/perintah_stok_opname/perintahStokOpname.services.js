@@ -3,7 +3,7 @@ import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { getBulanText } from "../../utils/mathUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
-import { createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getPerintahStokOpnameByUUIDWithTanggalRepo, getJurnalPerintahStokOpnameRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo, checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo, validasiPerintahStokOpnameByUuidRepo, checkPerintahStokOpnameSudahAdaBulanTransaksiSebelumOrSesudahRepo, removeJurnalPerintahStokOpanameRepo } from "./perintahStokOpname.repository.js"
+import { createPerintahStokOpnameRepo, deletePerintahStokOpnameByUuidRepo, getAllPerintahStokOpnameRepo, getPerintahStokOpnameByUuidRepo, getPerintahStokOpnameByUUIDWithTanggalRepo, getJurnalPerintahStokOpnameRepo, perintahStokOpnameStatusRepo, updatePerintahStokOpnameByUuidRepo, checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiRepo, validasiPerintahStokOpnameByUuidRepo, checkPerintahStokOpnameSudahAdaBulanTransaksiSebelumOrSesudahRepo, removeJurnalPerintahStokOpanameRepo, perintahStokOpnemeAllowToValidasiRepo } from "./perintahStokOpname.repository.js"
 
 export const getAllPerintahStokOpnameService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPerintahStokOpnameService", null, req_identity)
@@ -125,11 +125,13 @@ export const validasiPerintahStokOpnameByUuidService = async (perintahStokOpname
 
     await getNeracaValidasiByTanggalService(null, `${beforeData.tahun}-${beforeData.bulan_transaksi}-${getTanggalTerakhirPadaBulan(beforeData.tahun, beforeData.bulan_transaksi)}`, req_identity)
 
+    await perintahStokOpnemeAllowToValidasiService(perintahStokOpnameData.validasi, perintahStokOpnameData.perintah_stok_opname, req_identity)
+
     const perintahStokOpname = await validasiPerintahStokOpnameByUuidRepo(perintahStokOpnameData, req_identity)
 
     if (perintahStokOpnameData.validasi == 1) {
         await getJurnalPerintahStokOpnameRepo(beforeData.bulan_transaksi, beforeData.tahun, beforeData.uuid, req_identity)
-    }else{
+    } else {
         await removeJurnalPerintahStokOpanameRepo(beforeData.uuid, req_identity)
     }
 
@@ -139,6 +141,34 @@ export const validasiPerintahStokOpnameByUuidService = async (perintahStokOpname
     }, req_identity)
 
     return perintahStokOpname
+}
+
+const perintahStokOpnemeAllowToValidasiService = async (validasi, perintah_stok_opname, req_identity) => {
+    LOGGER(logType.INFO, `Start perintahStokOpnemeAllowToValidasiService`, { validasi, perintah_stok_opname }, req_identity)
+
+    const perintahStokOpnameData = await perintahStokOpnemeAllowToValidasiRepo(perintah_stok_opname, req_identity)
+
+    if (perintahStokOpnameData.length > 0) {
+        if (perintahStokOpnameData[0].tanggal_selesai == "BELUM SELESAI") {
+            throw Error(JSON.stringify({
+                message: `Perintah Stok Opname ${perintahStokOpnameData[0].nomor_surat_perintah} Belum Mengisi Penyesuaian Persediaan`,
+                prop: "error"
+            }))
+        }
+        if (validasi == 1 && perintahStokOpnameData[0].sudah_divalidasi_bulan_sebelum != null) {
+            throw Error(JSON.stringify({
+                message: `Perintah Stok Opname ${perintahStokOpnameData[0].sudah_divalidasi_bulan_sebelum} Belum Divalidasi`,
+                prop: "error"
+            }))
+        }
+        if (validasi == 0 && perintahStokOpnameData[0].sudah_divalidasi_bulan_sesudah != null) {
+            throw Error(JSON.stringify({
+                message: `Perintah Stok Opname Tidak Bisa Di Batal Validasi Karena ${perintahStokOpnameData[0].sudah_divalidasi_bulan_sesudah} Telah Divalidasi`,
+                prop: "error"
+            }))
+        }
+    }
+
 }
 
 export const perintahStokOpnemeAllowToEdit = async (perintah_stok_opname, req_identity) => {

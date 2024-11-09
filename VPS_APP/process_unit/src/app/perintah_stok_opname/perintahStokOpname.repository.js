@@ -1192,3 +1192,50 @@ export const removeJurnalPerintahStokOpanameRepo = async (uuid, req_id) => {
         }
     )
 }
+
+export const perintahStokOpnemeAllowToValidasiRepo = async (perintah_stok_opname, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                (
+                    SELECT
+                        psot2.nomor_surat_perintah
+                    FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot2 
+                    WHERE psot2.enabled = 1
+                    AND psot2.validasi = 0
+                    AND psot2.kategori_barang = psot.kategori_barang 
+                    AND psot2.gudang_asal = psot.gudang_asal
+                    AND psot2.bulan_transaksi = psot.bulan_transaksi - 1 
+                    AND psot2.tahun = psot.tahun 
+                    LIMIT 1
+                ) AS sudah_divalidasi_bulan_sebelum,
+                (
+                    SELECT
+                        psot2.nomor_surat_perintah
+                    FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot2 
+                    WHERE psot2.enabled = 1
+                    AND psot2.validasi = 1
+                    AND psot2.kategori_barang = psot.kategori_barang 
+                    AND psot2.gudang_asal = psot.gudang_asal
+                    AND psot2.bulan_transaksi = psot.bulan_transaksi + 1
+                    AND psot2.tahun = psot.tahun 
+                    LIMIT 1
+                ) AS sudah_divalidasi_bulan_sesudah,
+                IFNULL((
+                    SELECT 
+                        ppt.tanggal 
+                    FROM ${generateDatabaseName(req_id)}.penyesuaian_persediaan_tab ppt 
+                    WHERE ppt.perintah_stok_opname = psot.uuid 
+                    AND ppt.enabled = 1
+                    LIMIT 1
+                ), "BELUM SELESAI") AS tanggal_selesai,
+                psot.nomor_surat_perintah
+            FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
+            WHERE psot.uuid = "${perintah_stok_opname}"
+            AND psot.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
