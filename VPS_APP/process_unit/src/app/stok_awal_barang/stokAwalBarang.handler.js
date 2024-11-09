@@ -1,5 +1,5 @@
 import { stokAwalBarangValidation } from "./stokAwalBarang.validation.js"
-import { createStokAwalBarangService, deleteStokAwalBarangByUuidService, getAllStokAwalBarangService, getDaftarGudangBarangByKategoriHargaBarangUUIDService, getStokAwalBarangByBarangUUIDService, updateStokAwalBarangByUuidService } from "./stokAwalBarang.services.js"
+import { createStokAwalBarangService, deleteStokAwalBarangByUuidService, getAllStokAwalBarangService, getDaftarGudangBarangByKategoriHargaBarangUUIDService, getRiwayatTransaksiByStokAwalBarangUuidService, getStokAwalBarangByBarangUUIDService, updateStokAwalBarangByUuidService } from "./stokAwalBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -44,6 +44,24 @@ export const getStokAwalBarangByBarangUUID = async (req, res) => {
 
         res.json({
             data: await getStokAwalBarangByBarangUUIDService(uuid, req.identity),
+            message: "Get Data By UUID Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getRiwayatTransaksiByStokAwalBarangUuid = async (req, res) => {
+    LOGGER(logType.INFO, "Start getRiwayatTransaksiByStokAwalBarangUuid", null, req.identity)
+    try {
+        const { uuid } = req.params
+
+        res.json({
+            data: await getRiwayatTransaksiByStokAwalBarangUuidService(uuid, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {

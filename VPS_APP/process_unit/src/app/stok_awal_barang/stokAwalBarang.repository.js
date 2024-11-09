@@ -148,3 +148,108 @@ export const getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo = async (
         }
     )
 }
+
+export const getRiwayatTransaksiByStokAwalBarangUuidRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                res.*
+            FROM (
+                SELECT 
+                    ppbt.nomor_pesanan_penjualan_barang AS bukti_transaksi,
+                    "pesanan_penjualan" AS type,
+                    ppbt.tanggal_pesanan_penjualan_barang AS tanggal,
+                    ct.name AS customer
+                FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer
+                WHERE rppbt.stok_awal_barang = "${uuid}"
+                AND rppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    fpbt.bukti_transaksi,
+                    "faktur_penjualan_barang" AS type,
+                    fpbt.tanggal,
+                    ct.name AS customer
+                FROM ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = fpbt.pesanan_penjualan_barang 
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer 
+                WHERE fpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND (
+                    SELECT 
+                        COUNT(0)
+                    FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
+                    WHERE rppbt.pesanan_penjualan_barang = ppbt.uuid 
+                    AND rppbt.stok_awal_barang = "${uuid}"
+                    AND rppbt.enabled = 1
+                ) > 0
+                UNION ALL
+                SELECT 
+                    ppbt.bukti_transaksi,
+                    "pelunasan_penjualan" AS type,
+                    ppbt.tanggal,
+                    ct.name AS customer
+                FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt2 On rppbt2.uuid = rppbt.rincian_pesanan_penjualan_barang
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_penjualan_barang
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer
+                JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pelunasan_penjualan_barang 
+                WHERE rppbt2.stok_awal_barang = "${uuid}"
+                AND rppbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    ppbt.bukti_transaksi,
+                    "pelunasan_denda_penjualan" AS type,
+                    ppbt.tanggal,
+                    ct.name AS customer
+                FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt2 On rppbt2.uuid = rppdbt.rincian_pesanan_penjualan_barang
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_penjualan_barang
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer
+                JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppdbt.pelunasan_penjualan_barang 
+                WHERE rppbt2.stok_awal_barang = "${uuid}"
+                AND rppdbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    rpbt.bukti_transaksi,
+                    "retur_penjualan_barang" AS type,
+                    rpbt.tanggal,
+                    ct.name AS customer
+                FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt ON rppbt.uuid = rrpbt.rincian_pesanan_penjualan_barang 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer
+                JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rrpbt.uuid = rrpbt.retur_penjualan_barang 
+                WHERE rppbt.stok_awal_barang = "${uuid}"
+                AND rrpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND rpbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    pdpbt.bukti_transaksi,
+                    "pengembalian_denda_penjualan_barang" AS type,
+                    pdpbt.tanggal,
+                    ct.name AS customer
+                FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_penjualan_barang_tab rpdpbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt ON rppbt.uuid = rpdpbt.rincian_pesanan_penjualan_barang 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer
+                JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_penjualan_barang 
+                WHERE rppbt.stok_awal_barang = "${uuid}"
+                AND rpdpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND pdpbt.enabled = 1
+            ) AS res
+            ORDER BY res.tanggal ASC
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
