@@ -1,0 +1,247 @@
+import { generateDatabaseName } from "../../utils/databaseUtil"
+
+export const returPenjualanBarangViewQueryBuilder = (req_id) => {
+    return `
+        CREATE VIEW retur_penjualan_barang_view AS
+        SELECT 
+            "NOT_AVAILABLE" AS uuid,
+            rpbt.bukti_transaksi AS bukti_transaksi,
+            rpbt.tanggal AS tanggal,
+            (
+                CASE WHEN MONTH(rpbt.tanggal) < 10 THEN CONCAT("0", MONTH(rpbt.tanggal)) ELSE MONTH(rpbt.tanggal) END
+            ) AS bulan,
+            YEAR(rpbt.tanggal) AS tahun,
+            0 AS transaksi,
+            (
+                SELECT 
+                    CASE 
+                        WHEN (rppbt2.harga_setelah_diskon + rppbt2.ppn_setelah_diskon) * rrpbt.retur > rrpbt.nilai_retur 
+                        THEN ((100 - rppbt2.diskon_persentase) * rrpbt.nilai_retur) / 100
+                        ELSE rppbt2.harga_setelah_diskon  * rrpbt.retur
+                    END
+            ) AS debet,
+            0 AS kredit,
+            kapt.name AS nama_akun,
+            kapt.code AS kode_akun,
+            kapt.type AS type_akun,
+            kapt.uuid AS uuid_akun,
+            rpbt.keterangan AS uraian,
+            JSON_OBJECT (
+                'satuan_barang_name', sbt.name,
+                'faktur_penjualan_barang', fpbt.bukti_transaksi,
+                'kategori_harga_barang_kode_barang', khbt.kode_barang,
+                'pesanan_penjualan_barang', ppbt2.nomor_pesanan_penjualan_barang,
+                'customer_name', ct.name,
+                'customer_code', ct.code,
+                'daftar_gudang_name', dgt.name,
+                'daftar_barang_name', dbt.name,
+                'jumlah', rrpbt.retur,
+                'harga', rppbt2.harga,
+                'ppn', rppbt2.ppn,
+                'diskon_persentase', rppbt2.diskon_persentase
+            ) AS detail_data,
+            "RETUR PENJUALAN BARANG" AS sumber
+        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+        JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt2 ON rppbt2.uuid = rrpbt.rincian_pesanan_penjualan_barang 
+        JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_penjualan_barang 
+        JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt2.stok_awal_barang 
+        JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
+        JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang 
+        JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
+        JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
+        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.uuid= rrpbt.retur_penjualan_barang
+        JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt2.uuid 
+        JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f3827c1b-b8d8-4c1f-94e9-8249e9292a03"	
+        WHERE rrpbt.enabled = 1
+        AND rpbt.enabled = 1
+        AND rppbt2.enabled = 1
+        AND ppbt2.enabled = 1
+        AND fpbt.enabled = 1
+        UNION ALL
+        SELECT 
+            "NOT_AVAILABLE" AS uuid,
+            rpbt.bukti_transaksi AS bukti_transaksi,
+            rpbt.tanggal AS tanggal,
+            (
+                CASE WHEN MONTH(rpbt.tanggal) < 10 THEN CONCAT("0", MONTH(rpbt.tanggal)) ELSE MONTH(rpbt.tanggal) END
+            ) AS bulan,
+            YEAR(rpbt.tanggal) AS tahun,
+            1 AS transaksi,
+            0 AS debet,
+            (
+                SELECT 
+                    CASE 
+                        WHEN (rppbt2.harga_setelah_diskon + rppbt2.ppn_setelah_diskon) * rrpbt.retur > rrpbt.nilai_retur 
+                        THEN ((100 - rppbt2.diskon_persentase) * rrpbt.nilai_retur) / 100
+                        ELSE rppbt2.harga_setelah_diskon  * rrpbt.retur
+                    END
+            ) AS kredit,
+            kapt.name AS nama_akun,
+            kapt.code AS kode_akun,
+            kapt.type AS type_akun,
+            kapt.uuid AS uuid_akun,
+            rpbt.keterangan AS uraian,
+            JSON_OBJECT (
+                'satuan_barang_name', sbt.name,
+                'faktur_penjualan_barang', fpbt.bukti_transaksi,
+                'kategori_harga_barang_kode_barang', khbt.kode_barang,
+                'pesanan_penjualan_barang', ppbt2.nomor_pesanan_penjualan_barang,
+                'customer_name', ct.name,
+                'customer_code', ct.code,
+                'daftar_gudang_name', dgt.name,
+                'daftar_barang_name', dbt.name,
+                'jumlah', rrpbt.retur,
+                'harga', rppbt2.harga,
+                'ppn', rppbt2.ppn,
+                'diskon_persentase', rppbt2.diskon_persentase
+            ) AS detail_data,
+            "RETUR PENJUALAN BARANG" AS sumber
+        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+        JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt2 ON rppbt2.uuid = rrpbt.rincian_pesanan_penjualan_barang 
+        JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_penjualan_barang 
+        JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt2.stok_awal_barang 
+        JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
+        JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang 
+        JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
+        JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
+        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.uuid= rrpbt.retur_penjualan_barang
+        JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt2.uuid 
+        JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = rpbt.kode_akun_perkiraan
+        WHERE rrpbt.enabled = 1
+        AND rpbt.enabled = 1
+        AND rppbt2.enabled = 1
+        AND ppbt2.enabled = 1
+        AND fpbt.enabled = 1
+        UNION ALL
+        SELECT 
+            "NOT_AVAILABLE" AS uuid,
+            rpbt.bukti_transaksi AS bukti_transaksi,
+            rpbt.tanggal AS tanggal,
+            (
+                CASE WHEN MONTH(rpbt.tanggal) < 10 THEN CONCAT("0", MONTH(rpbt.tanggal)) ELSE MONTH(rpbt.tanggal) END
+            ) AS bulan,
+            YEAR(rpbt.tanggal) AS tahun,
+            2 AS transaksi,
+            (
+                SELECT 
+                    CASE 
+                        WHEN (rppbt2.harga_setelah_diskon + rppbt2.ppn_setelah_diskon) * rrpbt.retur > rrpbt.nilai_retur 
+                        THEN (rppbt2.diskon_persentase * rrpbt.nilai_retur) / 100
+                        ELSE rppbt2.ppn_setelah_diskon  * rrpbt.retur
+                    END
+            ) AS debet,
+            0 AS kredit,
+            kapt.name AS nama_akun,
+            kapt.code AS kode_akun,
+            kapt.type AS type_akun,
+            kapt.uuid AS uuid_akun,
+            rpbt.keterangan AS uraian,
+            JSON_OBJECT (
+                'satuan_barang_name', sbt.name,
+                'faktur_penjualan_barang', fpbt.bukti_transaksi,
+                'kategori_harga_barang_kode_barang', khbt.kode_barang,
+                'pesanan_penjualan_barang', ppbt2.nomor_pesanan_penjualan_barang,
+                'customer_name', ct.name,
+                'customer_code', ct.code,
+                'daftar_gudang_name', dgt.name,
+                'daftar_barang_name', dbt.name,
+                'jumlah', rrpbt.retur,
+                'harga', rppbt2.harga,
+                'ppn', rppbt2.ppn,
+                'diskon_persentase', rppbt2.diskon_persentase
+            ) AS detail_data,
+            "RETUR PENJUALAN BARANG" AS sumber
+        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+        JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt2 ON rppbt2.uuid = rrpbt.rincian_pesanan_penjualan_barang 
+        JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_penjualan_barang 
+        JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt2.stok_awal_barang 
+        JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
+        JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang 
+        JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
+        JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
+        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.uuid= rrpbt.retur_penjualan_barang
+        JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt2.uuid 
+        JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "c457def6-7f3c-478d-9190-15ab0b70e630"		
+        WHERE rrpbt.enabled = 1
+        AND rpbt.enabled = 1
+        AND rppbt2.enabled = 1
+        AND ppbt2.enabled = 1
+        AND fpbt.enabled = 1
+        UNION ALL
+        SELECT 
+            "NOT_AVAILABLE" AS uuid,
+            rpbt.bukti_transaksi AS bukti_transaksi,
+            rpbt.tanggal AS tanggal,
+            (
+                CASE WHEN MONTH(rpbt.tanggal) < 10 THEN CONCAT("0", MONTH(rpbt.tanggal)) ELSE MONTH(rpbt.tanggal) END
+            ) AS bulan,
+            YEAR(rpbt.tanggal) AS tahun,
+            3 AS transaksi,
+            0 AS debet,
+            (
+                SELECT 
+                    CASE 
+                        WHEN (rppbt2.harga_setelah_diskon + rppbt2.ppn_setelah_diskon) * rrpbt.retur > rrpbt.nilai_retur 
+                        THEN (rppbt2.diskon_persentase * rrpbt.nilai_retur) / 100
+                        ELSE rppbt2.ppn_setelah_diskon  * rrpbt.retur
+                    END
+            ) AS kredit,
+            kapt.name AS nama_akun,
+            kapt.code AS kode_akun,
+            kapt.type AS type_akun,
+            kapt.uuid AS uuid_akun,
+            rpbt.keterangan AS uraian,
+            JSON_OBJECT (
+                'satuan_barang_name', sbt.name,
+                'faktur_penjualan_barang', fpbt.bukti_transaksi,
+                'kategori_harga_barang_kode_barang', khbt.kode_barang,
+                'pesanan_penjualan_barang', ppbt2.nomor_pesanan_penjualan_barang,
+                'customer_name', ct.name,
+                'customer_code', ct.code,
+                'daftar_gudang_name', dgt.name,
+                'daftar_barang_name', dbt.name,
+                'jumlah', rrpbt.retur,
+                'harga', rppbt2.harga,
+                'ppn', rppbt2.ppn,
+                'diskon_persentase', rppbt2.diskon_persentase
+            ) AS detail_data,
+            "RETUR PENJUALAN BARANG" AS sumber
+        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
+        JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt2 ON rppbt2.uuid = rrpbt.rincian_pesanan_penjualan_barang 
+        JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_penjualan_barang 
+        JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt2.stok_awal_barang 
+        JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
+        JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang 
+        JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
+        JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
+        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.uuid= rrpbt.retur_penjualan_barang
+        JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt2.uuid 
+        JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = rpbt.kode_akun_perkiraan		
+        WHERE rrpbt.enabled = 1
+        AND rpbt.enabled = 1
+        AND rppbt2.enabled = 1
+        AND ppbt2.enabled = 1
+        AND fpbt.enabled = 1
+    `
+}
+
+export const getDataFromReturPenjualanBarangViewQuery = (bulan, tahun, kode_akun_perkiraan, req_id) => {
+    return `
+        SELECT 
+            rpbv.* 
+        FROM ${generateDatabaseName(req_id)}.${generateDatabaseName(req_id)}.retur_penjualan_barang_view rpbv
+        ${kode_akun_perkiraan ? `WHERE rpbv.uuid_akun = "${kode_akun_perkiraan}"` : ``}
+        ${kode_akun_perkiraan ? `
+            AND rpbv.bulan = "${bulan}"
+            AND rpbv.tahun = "${tahun}
+        ` : `
+            WHERE rpbv.bulan = "${bulan}"
+            AND rpbv.tahun = "${tahun}
+        `}
+        ORDER BY rpbv.tanggal ASC, rpbv.transaksi ASC
+    `
+}
