@@ -29,7 +29,7 @@ export const validasiNeracaServices = async (bulan, tahun, req_identity) => {
         return neraca
     } else {
         throw Error(JSON.stringify({
-            message: "Neraca bulan sebelumnya belum divalidasi",
+            message: `Neraca bulan ${getBulanText(parseInt(bulan) - 2)} belum divalidasi`,
             prop: "error"
         }))
     }
