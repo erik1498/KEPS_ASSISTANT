@@ -8,6 +8,7 @@ import { getDataFromPelunasanPenjualanBarangViewQuery } from "../../config/viewD
 import { getDataFromPelunasanPenjualanDendaBarangViewQuery } from "../../config/viewDatabase/pelunasanPenjualanDendaBarangViewQueryBuilder.js";
 import { getDataFromReturPenjualanBarangViewQuery } from "../../config/viewDatabase/returPenjualanBarangViewQueryBuilder.js";
 import { getDataFrompengembalianDendaPenjualanBarangViewQuery } from "../../config/viewDatabase/pengembalianDendaPenjualanBarangViewQueryBuilder.js";
+import { fakturPenjualanBarangQueryBuilder } from "../../config/viewDatabase/fakturPenjualanBarangViewQueryBuilder.js";
 
 export const getAllPerintahStokOpnameRepo = async (pageNumber, size, search, tahun, req_id) => {
     const perintahStokOpnamesCount = await db.query(
@@ -240,7 +241,7 @@ export const perintahStokOpnameStatusRepo = async (perintah_stok_opname, req_id)
     return perintahStokOpname
 }
 
-export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, req_id) => {
+export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, saveToPerintahStokOpnameJurnal, req_id) => {
     const pesananPenjualanBarangQuery = getDataFromPesananPenjualanBarangViewQuery(bulan, tahun, null, req_id)
 
     const pelunasanPenjualanBarangQuery = getDataFromPelunasanPenjualanBarangViewQuery(bulan, tahun, null, req_id)
@@ -251,9 +252,7 @@ export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, req_id) => {
 
     const pengembalianDendaPenjualanBarangQuery = getDataFrompengembalianDendaPenjualanBarangViewQuery(bulan, tahun, null, req_id)
 
-    const fakturPenjualanBarangDendaBulanIniQuery = `
-        
-    `
+    const fakturPenjualanBarangDendaBulanIniQuery = fakturPenjualanBarangQueryBuilder(bulan, tahun, req_id)
 
     const queryList = [
         pesananPenjualanBarangQuery,
@@ -261,22 +260,64 @@ export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, req_id) => {
         pelunasanDendaPenjualanBarangQuery,
         returPenjualanBarangQuery,
         pengembalianDendaPenjualanBarangQuery,
-        // fakturPenjualanBarangDendaBulanIniQuery
+        fakturPenjualanBarangDendaBulanIniQuery
     ]
-
-    console.log("QUERY LIST", queryList.join("UNION ALL"))
 
     const penjualanBarang = await db.query(
         `
-            SELECT
-                res.*
+            ${saveToPerintahStokOpnameJurnal ? `
+                INSERT INTO 
+                    ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab
+                (
+                    uuid,
+                    perintah_stok_opname, 
+                    bukti_transaksi, 
+                    bulan, 
+                    detail_data, 
+                    kode_akun_perkiraan,
+                    debet,
+                    kredit,
+                    transaksi,
+                    sumber, 
+                    tahun, 
+                    tanggal, 
+                    uraian, 
+                    enabled, 
+                    createdBy, 
+                    updatedBy, 
+                    createdAt,
+                    updatedAt
+                )
+                ` : ``}
+            SELECT 
+                ${saveToPerintahStokOpnameJurnal ? `
+                        UUID() AS uuid,
+                        "${saveToPerintahStokOpnameJurnal}" AS perintah_stok_opname,
+                        res.bukti_transaksi,
+                        res.bulan,
+                        res.detail_data,
+                        res.uuid_akun AS kode_akun_perkiraan,
+                        res.debet,
+                        res.kredit,
+                        res.transaksi,
+                        res.sumber,
+                        res.tahun,
+                        res.tanggal,
+                        res.uraian,
+                        1,
+                        "${getUserIdFromRequestIdentity(req_id)}" AS createdBy,
+                        "" AS updatedBy,
+                        NOW() AS createdAt,
+                        NOW() AS updatedBy
+                    ` : `res.*`
+        }
             FROM (
                 ${queryList.join("UNION ALL")}
             ) AS res
             ORDER BY res.tanggal ASC, res.transaksi ASC
         `,
         {
-            type: Sequelize.QueryTypes.SELECT
+            type: saveToPerintahStokOpnameJurnal ? Sequelize.QueryTypes.INSERT : Sequelize.QueryTypes.SELECT
         }
     )
 

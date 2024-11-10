@@ -1227,6 +1227,36 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     WHERE pkt.enabled = 1
                     AND kapt.enabled = 1
                     AND pt.enabled = 1
+                    UNION ALL
+                    SELECT 
+                        psojt.uuid,
+                        psojt.bukti_transaksi,
+                        psojt.transaksi,
+                        LPAD(DAY(psojt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(psojt.tanggal), 2, '0') AS bulan,
+                        YEAR(psojt.tanggal) AS tahun,
+                        TIME(psojt.tanggal) AS waktu,
+                        psojt.debet,
+                        psojt.kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        JSON_OBJECT(
+                            'detail', psojt.detail_data
+                        ) AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        psojt.sumber,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        NULL AS pegawai_name,
+                        NULL AS periode,
+                        psojt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab psojt 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = psojt.kode_akun_perkiraan 
                 ) AS res
                 WHERE res.bulan = :bulan AND res.tahun = :tahun
                 AND (
@@ -1238,7 +1268,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     OR res.debet LIKE :search
                     OR res.kredit LIKE :search
                 )
-            ${sorting == "bukti_transaksi" ? 'ORDER BY res.tanggal ASC, res.waktu ASC, res.bukti_transaksi ASC' : 'ORDER BY res.tanggal ASC'}
+            ${sorting == "bukti_transaksi" ? 'ORDER BY res.tanggal ASC, res.waktu ASC, res.bukti_transaksi ASC, res.transaksi ASC' : 'ORDER BY res.tanggal ASC'}
         `,
         {
             replacements: {

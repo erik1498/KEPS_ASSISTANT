@@ -2,6 +2,16 @@
 
 export const AKUN_TIDAK_BOLEH_DIUPDATE = ["101", "102", "301", "302", "303", "398", "399", "401", "405", "701", "702", "799"]
 
+
+export const PERINTAHSTOKOPNAMESUMBERLIST = [
+    "FAKTUR PENJUALAN BARANG",
+    "PELUNASAN PENJUALAN BARANG",
+    "PELUNASAN DENDA PENJUALAN BARANG",
+    "RETUR PENJUALAN BARANG",
+    "PENGEMBALIAN DENDA PENJUALAN BARANG",
+    "DENDA PENJUALAN BARANG"
+]
+
 export const tipeDokumenList = [
     {
         title: "Notaris",

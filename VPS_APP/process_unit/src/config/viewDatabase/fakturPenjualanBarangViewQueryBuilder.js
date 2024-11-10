@@ -1,14 +1,14 @@
 import { generateDatabaseName } from "../../utils/databaseUtil.js"
+import { getTanggalTerakhirPadaBulan } from "../../utils/jurnalUmumUtil.js"
 
-export const fakturPenjualanBarangViewQueryBuilder = (req_id) => {
+export const fakturPenjualanBarangQueryBuilder = (bulan, tahun, req_id) => {
     return `
-        CREATE VIEW ${generateDatabaseName(req_id)}.faktur_penjualan_barang_view AS
         SELECT 
             "NOT_AVAILABLE" AS uuid,
             res.bukti_transaksi,
-            "2024-11-30T23:59:59" AS tanggal,
-            11 AS bulan,
-            YEAR("2024-11-30T23:59:59") AS tahun,
+            "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59" AS tanggal,
+            ${`${bulan}`.padStart(2, '0')} AS bulan,
+            YEAR("${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59") AS tahun,
             0 AS transaksi,
             (
                 SELECT
@@ -59,7 +59,7 @@ export const fakturPenjualanBarangViewQueryBuilder = (req_id) => {
                             WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
                             AND rrpbt.enabled = 1
                             AND rpbt.enabled = 1
-                            AND rpbt.tanggal < "2024-11-30T23:59:59"
+                            AND rpbt.tanggal < "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59"
                         ), 0) AS retur,
                         IFNULL((
                             SELECT 
@@ -69,7 +69,7 @@ export const fakturPenjualanBarangViewQueryBuilder = (req_id) => {
                             WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
                             AND rrpbt.enabled = 1
                             AND rpbt.enabled = 1
-                            AND rpbt.tanggal < "2024-11-30T23:59:59"
+                            AND rpbt.tanggal < "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59"
                         ), 0) AS nilai_retur,
                         IFNULL((
                             SELECT 
@@ -78,7 +78,7 @@ export const fakturPenjualanBarangViewQueryBuilder = (req_id) => {
                             JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pelunasan_penjualan_barang
                             WHERE rppbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
                             AND ppbt2.enabled = 1
-                            AND ppbt2.tanggal < "2024-11-30T23:59:59"
+                            AND ppbt2.tanggal < "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59"
                         ), 0) AS sudah_dibayar,
                         IFNULL((
                             SELECT 
@@ -95,13 +95,13 @@ export const fakturPenjualanBarangViewQueryBuilder = (req_id) => {
                             FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt
                             JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppdbt.pelunasan_penjualan_barang
                             WHERE rppdbt.rincian_pesanan_penjualan_barang = rppbt.uuid
-                            AND ppbt.tanggal < "2024-11-30T23:59:59"
+                            AND ppbt.tanggal < "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59"
                             AND rppdbt.enabled = 1
                             AND ppbt.enabled = 1
                         ), 0) AS denda_sudah_dibayar, 
                         (
                             DATEDIFF(
-                                "2024-11-30T23:59:59"
+                                "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59"
                                 ,
                                 (
                                     ADDDATE( fpbt.tanggal, INTERVAL spt.hari_kadaluarsa DAY )
@@ -149,9 +149,9 @@ export const fakturPenjualanBarangViewQueryBuilder = (req_id) => {
         SELECT 
             "NOT_AVAILABLE" AS uuid,
             res.bukti_transaksi,
-            "2024-11-30T23:59:59" AS tanggal,
-            11 AS bulan,
-            YEAR("2024-11-30T23:59:59") AS tahun,
+            "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59" AS tanggal,
+            ${`${bulan}`.padStart(2, '0')} AS bulan,
+            YEAR("${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59") AS tahun,
             1 AS transaksi,
             0 AS debet,
             (
@@ -202,7 +202,7 @@ export const fakturPenjualanBarangViewQueryBuilder = (req_id) => {
                             WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
                             AND rrpbt.enabled = 1
                             AND rpbt.enabled = 1
-                            AND rpbt.tanggal < "2024-11-30T23:59:59"
+                            AND rpbt.tanggal < "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59"
                         ), 0) AS retur,
                         IFNULL((
                             SELECT 
@@ -212,7 +212,7 @@ export const fakturPenjualanBarangViewQueryBuilder = (req_id) => {
                             WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
                             AND rrpbt.enabled = 1
                             AND rpbt.enabled = 1
-                            AND rpbt.tanggal < "2024-11-30T23:59:59"
+                            AND rpbt.tanggal < "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59"
                         ), 0) AS nilai_retur,
                         IFNULL((
                             SELECT 
@@ -221,7 +221,7 @@ export const fakturPenjualanBarangViewQueryBuilder = (req_id) => {
                             JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pelunasan_penjualan_barang
                             WHERE rppbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
                             AND ppbt2.enabled = 1
-                            AND ppbt2.tanggal < "2024-11-30T23:59:59"
+                            AND ppbt2.tanggal < "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59"
                         ), 0) AS sudah_dibayar,
                         IFNULL((
                             SELECT 
@@ -238,13 +238,13 @@ export const fakturPenjualanBarangViewQueryBuilder = (req_id) => {
                             FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt
                             JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppdbt.pelunasan_penjualan_barang
                             WHERE rppdbt.rincian_pesanan_penjualan_barang = rppbt.uuid
-                            AND ppbt.tanggal < "2024-11-30T23:59:59"
+                            AND ppbt.tanggal < "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59"
                             AND rppdbt.enabled = 1
                             AND ppbt.enabled = 1
                         ), 0) AS denda_sudah_dibayar, 
                         (
                             DATEDIFF(
-                                "2024-11-30T23:59:59"
+                                "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59"
                                 ,
                                 (
                                     ADDDATE( fpbt.tanggal, INTERVAL spt.hari_kadaluarsa DAY )
@@ -287,7 +287,7 @@ export const fakturPenjualanBarangViewQueryBuilder = (req_id) => {
                 ) AS res
             ) AS res
         ) AS res
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "eb5b6dcd-1146-4550-a9f0-1fe8439b085f"
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "ddb0e69f-9704-4555-b427-5748365034f7"
     `
 }
 

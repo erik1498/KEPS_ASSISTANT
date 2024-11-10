@@ -2,7 +2,6 @@ import { selectedJurnalUmumByKodeAkunCode } from "../../utils/historyAkunUtil.js
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
 import { getJurnalUmumByBulanSebelumService } from "../jurnal_umum/jurnalUmum.services.js"
 import { getKodeAkunPerkiraanByUuidService } from "../kode_akun_perkiraan/kodeAkunPerkiraan.services.js"
-import { generatePerintahStokOpnameQueryService } from "../perintah_stok_opname_jurnal/perintahStokOpnameJurnal.services.js"
 import { getHistoryAkunByUuidAndBulanRepo } from "./historyAkun.repository.js"
 
 export const getAllHistoryAkunByUUIDAndBulanService = async (uuid, bulan, tahun, search, req_identity) => {
@@ -18,8 +17,6 @@ export const getAllHistoryAkunByUUIDAndBulanService = async (uuid, bulan, tahun,
     const kodeAkunPerkiraan = await getKodeAkunPerkiraanByUuidService(uuid, req_identity);
     const historyAkunTerpilih = await selectedJurnalUmumByKodeAkunCode(historyAkunsBulanSebelumnya, kodeAkunPerkiraan?.code)
 
-    const perintahStokOpnameGenerateQuery = await generatePerintahStokOpnameQueryService(uuid, bulan, tahun, false, req_identity)
-
-    const historyAkuns = historyAkunTerpilih.concat(...await getHistoryAkunByUuidAndBulanRepo(uuid, bulan, tahun, search, perintahStokOpnameGenerateQuery, req_identity))
+    const historyAkuns = historyAkunTerpilih.concat(...await getHistoryAkunByUuidAndBulanRepo(uuid, bulan, tahun, search, req_identity))
     return historyAkuns
 }

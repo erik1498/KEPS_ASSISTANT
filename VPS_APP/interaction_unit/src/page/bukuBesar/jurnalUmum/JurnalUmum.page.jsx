@@ -15,6 +15,7 @@ import { showAlert, showDialog, showError } from "../../../helper/form.helper";
 import { JurnalUmumPrint } from "./component/JurnalUmumPrint";
 import { useReactToPrint } from "react-to-print"
 import { useRef } from "react";
+import { PERINTAHSTOKOPNAMESUMBERLIST } from "../../../config/objectList.config";
 
 const JurnalUmumPage = () => {
 
@@ -60,25 +61,11 @@ const JurnalUmumPage = () => {
         setData(dataCopy)
 
         const normalData = resData.data.filter(x => {
-          return [
-            "FAKTUR PENJUALAN BARANG",
-            "PELUNASAN PENJUALAN BARANG",
-            "PELUNASAN DENDA PENJUALAN BARANG",
-            "RETUR PENJUALAN BARANG",
-            "PENGEMBALIAN DENDA PENJUALAN BARANG",
-            "DENDA PENJUALAN BARANG"
-          ].indexOf(x.sumber) == -1
+          return PERINTAHSTOKOPNAMESUMBERLIST.indexOf(x.sumber) == -1
         })
 
         const penjualanBarangJurnal = resData.data.filter(x => {
-          return [
-            "FAKTUR PENJUALAN BARANG",
-            "PELUNASAN PENJUALAN BARANG",
-            "PELUNASAN DENDA PENJUALAN BARANG",
-            "RETUR PENJUALAN BARANG",
-            "PENGEMBALIAN DENDA PENJUALAN BARANG",
-            "DENDA PENJUALAN BARANG"
-          ].indexOf(x.sumber) > -1
+          return PERINTAHSTOKOPNAMESUMBERLIST.indexOf(x.sumber) > -1
         })
 
         const perintahStokOpname = penjualanBarangJurnal.map(x => {

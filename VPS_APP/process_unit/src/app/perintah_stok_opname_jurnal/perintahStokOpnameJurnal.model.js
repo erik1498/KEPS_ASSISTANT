@@ -41,8 +41,29 @@ const PerintahStokOpnameJurnalModel = db.define("perintah_stok_opname_jurnal_tab
                 notEmpty:true,
             }
         },
-        detail_json: {
-            type: DataTypes.TEXT,
+        debet: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
+        kredit: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
+        kode_akun_perkiraan: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
+        transaksi: {
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate:{
                 notEmpty:true,

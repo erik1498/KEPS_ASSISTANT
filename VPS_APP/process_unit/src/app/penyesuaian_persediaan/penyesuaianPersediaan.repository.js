@@ -103,6 +103,8 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                             WHERE rkbt.stok_awal_barang = sabt.uuid 
                             AND rkbt.enabled = 1
                             AND kbt.enabled = 1
+                            AND MONTH(kbt.tanggal) = psot.bulan_transaksi
+                            AND YEAR(kbt.tanggal) = psot.tahun
                         ), 0) AS konversi_keluar,
                         IFNULL((
                             SELECT 
@@ -113,6 +115,8 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                             WHERE tbt.enabled = 1
                             AND sabt2.daftar_gudang = tbt.daftar_gudang_asal 
                             AND rtbt.stok_awal_barang_tujuan = sabt.uuid
+                            AND MONTH(tbt.tanggal) = psot.bulan_transaksi
+                            AND YEAR(tbt.tanggal) = psot.tahun
                         ), 0) AS transfer_masuk,
                         IFNULL((
                             SELECT 
@@ -123,6 +127,8 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                             WHERE tbt.enabled = 1
                             AND sabt2.daftar_gudang = tbt.daftar_gudang_asal 
                             AND rtbt.stok_awal_barang = sabt.uuid
+                            AND MONTH(tbt.tanggal) = psot.bulan_transaksi
+                            AND YEAR(tbt.tanggal) = psot.tahun
                         ), 0) AS transfer_keluar,
                         IFNULL((
                             SELECT
@@ -132,6 +138,8 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                             WHERE rkbt.stok_awal_barang_tujuan = sabt.uuid 
                             AND rkbt.enabled = 1
                             AND kbt.enabled = 1
+                            AND MONTH(kbt.tanggal) = psot.bulan_transaksi
+                            AND YEAR(kbt.tanggal) = psot.tahun
                         ), 0) AS konversi_masuk,
                         IFNULL((
                             SELECT
@@ -141,15 +149,20 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                             WHERE rppbt.stok_awal_barang = sabt.uuid 
                             AND ppbt.enabled = 1 
                             AND rppbt.enabled = 1
+                            AND MONTH(ppbt.tanggal_pesanan_pembelian_barang) = psot.bulan_transaksi
+                            AND YEAR(ppbt.tanggal_pesanan_pembelian_barang) = psot.tahun
                         ), 0) AS pembelian,
                         IFNULL((
                             SELECT 
                                 SUM(rrpbt.jumlah) 
                             FROM ${generateDatabaseName(req_id)}.rincian_retur_pembelian_barang_tab rrpbt 
+                            JOIN ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_pembelian_barang
                             JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt ON rppbt.uuid = rrpbt.rincian_pesanan_pembelian_barang
                             WHERE rppbt.stok_awal_barang = sabt.uuid 
                             AND rrpbt.enabled = 1
                             AND rppbt.enabled = 1
+                            AND MONTH(rpbt.tanggal) = psot.bulan_transaksi
+                            AND YEAR(rpbt.tanggal) = psot.tahun
                         ), 0) AS retur_pembelian,
                         IFNULL((
                             SELECT
@@ -159,6 +172,8 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                             WHERE rppbt.stok_awal_barang = sabt.uuid 
                             AND ppbt.enabled = 1 
                             AND rppbt.enabled = 1
+                            AND MONTH(ppbt.tanggal_pesanan_penjualan_barang) = psot.bulan_transaksi
+                            AND YEAR(ppbt.tanggal_pesanan_penjualan_barang) = psot.tahun
                         ), 0) AS penjualan,
                         IFNULL((
                             SELECT 
@@ -170,13 +185,14 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                             AND rrpbt.enabled = 1
                             AND rppbt.enabled = 1
                             AND rpbt.enabled = 1
+                            AND MONTH(rpbt.tanggal) = psot.bulan_transaksi
+                            AND YEAR(rpbt.tanggal) = psot.tahun
                         ), 0) AS retur_penjualan,
                         IFNULL((
                             SELECT
                                 psot2.uuid
                             FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot2 
                             WHERE psot2.enabled = 1
-                            AND psot2.validasi = 1
                             AND psot2.kategori_barang = psot.kategori_barang 
                             AND psot2.gudang_asal = psot.gudang_asal
                             AND psot2.bulan_transaksi = psot.bulan_transaksi - 1 

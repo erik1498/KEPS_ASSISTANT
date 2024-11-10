@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import { generateDatabaseName } from "../../utils/databaseUtil.js";
 
-export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, addQuery, req_id) => {
+export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) => {
     const neracaSaldo = await db.query(
         `   
             SELECT 
@@ -14,7 +14,6 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, addQuery,
                 kapt.code AS kode_akun_perkiraan_code,
                 kapt.type AS kode_akun_perkiraan_type
             FROM (
-                ${addQuery}
                 SELECT
                     jut.kode_akun_uuid AS kode_akun_perkiraan,
                     jut.bulan,
@@ -291,6 +290,14 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, addQuery,
                 JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
                 WHERE tut.enabled = 1
                 AND pt.enabled = 1
+                UNION ALL
+                    SELECT 
+                    psojt.kode_akun_perkiraan,
+                    LPAD(MONTH(psojt.tanggal), 2, '0') AS bulan,
+                    YEAR(psojt.tanggal) AS tahun,
+                    psojt.debet,
+                    psojt.kredit 
+                FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab psojt
             ) AS res
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = res.kode_akun_perkiraan
             AND res.bulan = "${bulan}" 

@@ -1,5 +1,7 @@
 import { parseToRupiahText } from "../../../../helper/number.helper";
 import { convertTo12HoursFormat } from "../../../../helper/date.helper";
+import { PERINTAHSTOKOPNAMESUMBERLIST } from "../../../../config/objectList.config";
+import PerintahStokOpnameUraian from "./PerintahStokOpnameUraian";
 
 const HistoryAkunRow = ({
     item,
@@ -71,7 +73,9 @@ const HistoryAkunRow = ({
                                     {convertTo12HoursFormat(item1.waktu)}
                                 </div>
                                 <div className="col-span-3 text-gray-900 flex flex-col px-2">
-                                    <p>{item1.uraian}</p>
+                                    {
+                                        PERINTAHSTOKOPNAMESUMBERLIST.indexOf(item1.sumber) < 0 ? <p>{item1.uraian}</p> : <PerintahStokOpnameUraian item={item1} />
+                                    }
                                 </div>
                                 <div className="text-right px-2 col-span-2 text-gray-900">
                                     {
@@ -84,14 +88,10 @@ const HistoryAkunRow = ({
                                     }
                                 </div>
                                 <div className="text-right px-2 col-span-2 text-gray-900">
-                                    {
-                                        item1.saldoDebet != "0" ? <h1 className=" text-green-900 font-bold">{parseToRupiahText(item1.saldoDebet)}</h1> : <></>
-                                    }
+                                    <h1 className=" text-green-900 font-bold">{parseToRupiahText(item1.saldoDebet)}</h1>
                                 </div>
                                 <div className="text-right px-2 col-span-2 text-gray-900">
-                                    {
-                                        item1.saldoKredit != "0" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(item1.saldoKredit)}</h1> : <></>
-                                    }
+                                    <h1 className=" text-red-900 font-bold">{parseToRupiahText(item1.saldoKredit)}</h1>
                                 </div>
                             </div> : <></>
                     }

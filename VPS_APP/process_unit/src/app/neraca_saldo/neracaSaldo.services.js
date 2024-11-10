@@ -2,7 +2,6 @@ import { LOGGER, logType } from "../../utils/loggerUtil.js"
 import { getSumOfStringValue } from "../../utils/mathUtil.js"
 import { convertJurnalUmumToNeracaSaldo } from "../../utils/neracaSaldoUtil.js"
 import { getJurnalUmumByBulanSebelumService } from "../jurnal_umum/jurnalUmum.services.js"
-import { generatePerintahStokOpnameQueryService } from "../perintah_stok_opname_jurnal/perintahStokOpnameJurnal.services.js"
 import { getNeracaSaldoByBulanRepo } from "./neracaSaldo.repository.js"
 
 export const getAllNeracaSaldoByBulanService = async (bulan, tahun, whereIN, req_identity) => {
@@ -11,9 +10,7 @@ export const getAllNeracaSaldoByBulanService = async (bulan, tahun, whereIN, req
     LOGGER(logType.INFO, `Start getAllNeracaSaldoByBulanService [${bulan} ${tahun}]`, whereIN, req_identity)
     let jurnalUmumBulanSebelum = await convertJurnalUmumToNeracaSaldo(await getJurnalUmumByBulanSebelumService(bulan, tahun, req_identity))
 
-    const perintahStokOpnameQuery = await generatePerintahStokOpnameQueryService(whereIN, bulan, tahun, true, req_identity)
-
-    let historyAkuns = await getNeracaSaldoByBulanRepo(bulan, tahun, whereIN, perintahStokOpnameQuery, req_identity)
+    let historyAkuns = await getNeracaSaldoByBulanRepo(bulan, tahun, whereIN, req_identity)
 
     jurnalUmumBulanSebelum.map((item) => {
         const getHistory = historyAkuns.filter((history) => history.kode_akun_perkiraan_code == item.kode_akun_perkiraan_code)

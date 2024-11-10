@@ -2,14 +2,13 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import { generateDatabaseName } from "../../utils/databaseUtil.js";
 
-export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, search, addQuery, req_id) => {
+export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, search, req_id) => {
     const historyAkun = await db.query(
         `
             SELECT 
                 res.*
             FROM
             (
-                ${addQuery}
                 SELECT 
                     jut.uuid,
                     jut.bukti_transaksi,
@@ -17,6 +16,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     jut.bulan,
                     jut.tahun,
                     jut.waktu,
+                    jut.transaksi,
                     jut.debet,
                     jut.kredit,
                     kapt.code AS kode_akun,
@@ -36,6 +36,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tkt.tanggal), 2, '0') AS bulan,
                     YEAR(tkt.tanggal) AS tahun,
                     TIME(tkt.tanggal) AS waktu,
+                    0 AS transaksi,
                     CASE 
                         WHEN tkt.type = 1
                         THEN tkt.nilai
@@ -63,6 +64,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tkt.tanggal), 2, '0') AS bulan,
                     YEAR(tkt.tanggal) AS tahun,
                     rtkt.waktu,
+                    0 AS transaksi,
                     CASE 
                         WHEN tkt.type = 2
                         THEN rtkt.nilai
@@ -91,6 +93,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tbt.tanggal), 2, '0') AS bulan,
                     YEAR(tbt.tanggal) AS tahun,
                     TIME(tbt.tanggal) AS waktu,
+                    0 AS transaksi,
                     CASE 
                         WHEN tbt.type = 1
                         THEN tbt.nilai
@@ -118,6 +121,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tbt.tanggal), 2, '0') AS bulan,
                     YEAR(tbt.tanggal) AS tahun,
                     rtbt.waktu,
+                    0 AS transaksi,
                     CASE 
                         WHEN tbt.type = 2
                         THEN rtbt.nilai
@@ -146,6 +150,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(gt.tanggal), 2, '0') AS bulan,
                     YEAR(gt.tanggal) AS tahun,
                     TIME(gt.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     gt.nilai AS kredit,
                     kapt.code AS kode_akun,
@@ -168,6 +173,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(gt.tanggal), 2, '0') AS bulan,
                     YEAR(gt.tanggal) AS tahun,
                     TIME(gt.tanggal) AS waktu,
+                    0 AS transaksi,
                     gt.nilai AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -190,6 +196,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     tut.bonus + tut.insentif + tut.thr AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -211,6 +218,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     tut.bonus AS kredit,
                     kapt.code AS kode_akun,
@@ -232,6 +240,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     tut.insentif AS kredit,
                     kapt.code AS kode_akun,
@@ -253,6 +262,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     tut.thr AS kredit,
                     kapt.code AS kode_akun,
@@ -274,6 +284,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     tut.jp AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -295,6 +306,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     tut.jht AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -316,6 +328,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     tut.jkm AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -337,6 +350,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     tut.jkk AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -358,6 +372,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     tut.jp AS debet,
                     kapt.code AS kode_akun,
@@ -379,6 +394,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     tut.jht AS kredit,
                     kapt.code AS kode_akun,
@@ -400,6 +416,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     tut.jkm AS kredit,
                     kapt.code AS kode_akun,
@@ -421,6 +438,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     tut.jkk AS kredit,
                     kapt.code AS kode_akun,
@@ -442,6 +460,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     tut.bpjs_kesehatan AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -463,6 +482,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     tut.bpjs_karyawan AS kredit,
                     kapt.code AS kode_akun,
@@ -484,6 +504,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     tut.jp_karyawan AS kredit,
                     kapt.code AS kode_akun,
@@ -505,6 +526,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
                     YEAR(tut.tanggal) AS tahun,
                     TIME(tut.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     tut.jht_karyawan AS kredit,
                     kapt.code AS kode_akun,
@@ -526,6 +548,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(lt.tanggal), 2, '0') AS bulan,
                     YEAR(lt.tanggal) AS tahun,
                     TIME(lt.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     lt.total_bayaran AS kredit,
                     kapt.code AS kode_akun,
@@ -547,6 +570,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(lt.tanggal), 2, '0') AS bulan,
                     YEAR(lt.tanggal) AS tahun,
                     TIME(lt.tanggal) AS waktu,
+                    0 AS transaksi,
                     lt.total_bayaran AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -568,6 +592,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(ht.tanggal), 2, '0') AS bulan,
                     YEAR(ht.tanggal) AS tahun,
                     TIME(ht.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     ht.nilai AS kredit,
                     kapt.code AS kode_akun,
@@ -589,6 +614,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(ht.tanggal), 2, '0') AS bulan,
                     YEAR(ht.tanggal) AS tahun,
                     TIME(ht.tanggal) AS waktu,
+                    0 AS transaksi,
                     ht.nilai AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -610,6 +636,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
                     YEAR(ppt.tanggal) AS tahun,
                     TIME(ppt.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     ppt.nilai AS kredit,
                     kapt.code AS kode_akun,
@@ -631,6 +658,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
                     YEAR(ppt.tanggal) AS tahun,
                     TIME(ppt.tanggal) AS waktu,
+                    0 AS transaksi,
                     ppt.nilai AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -652,6 +680,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(llt.tanggal), 2, '0') AS bulan,
                     YEAR(llt.tanggal) AS tahun,
                     TIME(llt.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     llt.nilai AS kredit,
                     kapt.code AS kode_akun,
@@ -673,6 +702,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(llt.tanggal), 2, '0') AS bulan,
                     YEAR(llt.tanggal) AS tahun,
                     TIME(llt.tanggal) AS waktu,
+                    0 AS transaksi,
                     llt.nilai AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -694,6 +724,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(kt.tanggal), 2, '0') AS bulan,
                     YEAR(kt.tanggal) AS tahun,
                     TIME(kt.tanggal) AS waktu,
+                    0 AS transaksi,
                     0 AS debet,
                     kt.nilai AS kredit,
                     kapt.code AS kode_akun,
@@ -715,6 +746,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(kt.tanggal), 2, '0') AS bulan,
                     YEAR(kt.tanggal) AS tahun,
                     TIME(kt.tanggal) AS waktu,
+                    0 AS transaksi,
                     kt.nilai AS debet,
                     0 AS kredit,
                     kapt.code AS kode_akun,
@@ -736,6 +768,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(pkt.tanggal), 2, '0') AS bulan,
                     YEAR(pkt.tanggal) AS tahun,
                     TIME(pkt.tanggal) AS waktu,
+                    0 AS transaksi,
                     CASE 
                         WHEN pkt.type = 0
                         THEN pkt.nilai
@@ -765,6 +798,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                     LPAD(MONTH(pkt.tanggal), 2, '0') AS bulan,
                     YEAR(pkt.tanggal) AS tahun,
                     TIME(pkt.tanggal) AS waktu,
+                    0 AS transaksi,
                     CASE 
                         WHEN pkt.type = 1
                         THEN pkt.nilai
@@ -786,12 +820,33 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                 JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = pkt.pegawai 
                 WHERE pkt.enabled = 1
                 AND kapt.enabled = 1
+                UNION ALL -- PERINTAH STOK OPNAME START
+                SELECT 
+                    psojt.uuid,
+                    psojt.bukti_transaksi,
+                    LPAD(DAY(psojt.tanggal), 2, '0') AS tanggal,
+                    LPAD(MONTH(psojt.tanggal), 2, '0') AS bulan,
+                    YEAR(psojt.tanggal) AS tahun,
+                    TIME(psojt.tanggal) AS waktu,
+                    psojt.transaksi,
+                    psojt.debet,
+                    psojt.kredit,
+                    kapt.code AS kode_akun,
+                    kapt.name AS nama_akun,
+                    kapt.type AS type_akun,
+                    JSON_OBJECT(
+                        'detail', psojt.detail_data
+                    ) AS uraian,
+                    psojt.sumber,
+                    psojt.enabled 
+                FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab psojt 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = psojt.kode_akun_perkiraan 
             ) AS res
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.code = res.kode_akun
             WHERE res.bulan = "${bulan}" AND res.tahun = "${tahun}"
             AND res.uraian LIKE '%${search}%'
             AND kapt.uuid = "${uuid}"
-            ORDER BY res.tahun ASC, res.bulan ASC, res.tanggal ASC, res.waktu ASC
+            ORDER BY res.tahun ASC, res.bulan ASC, res.tanggal ASC, res.waktu ASC, res.transaksi ASC
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

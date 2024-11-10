@@ -22,12 +22,27 @@ export const perintahStokOpnameJurnalValidation = (payload) => {
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        detail_json: Joi.string().required().messages({
+        sumber: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        sumber: Joi.string().required().messages({
+        kode_akun_perkiraan: Joi.string().required().messages({
+            'string.base': "Harus Berupa Text",
+            "string.empty": "Harus Diisi",
+            "any.required": "Harus Diisi",
+        }),
+        debet: Joi.string().required().messages({
+            'string.base': "Harus Berupa Text",
+            "string.empty": "Harus Diisi",
+            "any.required": "Harus Diisi",
+        }),
+        kredit: Joi.string().required().messages({
+            'string.base': "Harus Berupa Text",
+            "string.empty": "Harus Diisi",
+            "any.required": "Harus Diisi",
+        }),
+        transaksi: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",

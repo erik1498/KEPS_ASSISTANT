@@ -81,7 +81,7 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
             await createViewRepo(pengembalianDendaPenjualanBarangViewQueryBuilder(req_identity))
         }
 
-        const jurnalPerintahStokOpname = await getJurnalPerintahStokOpnameRepo(perintahStokOpname[0].bulan_transaksi, perintahStokOpname[0].tahun, req_identity)
+        const jurnalPerintahStokOpname = await getJurnalPerintahStokOpnameRepo(perintahStokOpname[0].bulan_transaksi, perintahStokOpname[0].tahun, false, req_identity)
 
         return jurnalPerintahStokOpname
 
@@ -163,6 +163,12 @@ export const validasiPerintahStokOpnameByUuidService = async (perintahStokOpname
     await perintahStokOpnemeAllowToValidasiService(perintahStokOpnameData.validasi, perintahStokOpnameData.perintah_stok_opname, req_identity)
 
     const perintahStokOpname = await validasiPerintahStokOpnameByUuidRepo(perintahStokOpnameData, req_identity)
+
+    if (perintahStokOpnameData.validasi == 1) {
+        await getJurnalPerintahStokOpnameRepo(beforeData.bulan_transaksi, beforeData.tahun, beforeData.uuid, req_identity)
+    }else{
+        await removeJurnalPerintahStokOpanameRepo(beforeData.uuid, req_identity)
+    }
 
     LOGGER_MONITOR(req_original_url, req_method, {
         beforeData,
