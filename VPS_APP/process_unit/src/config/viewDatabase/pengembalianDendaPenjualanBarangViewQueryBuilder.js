@@ -1,8 +1,8 @@
-import { generateDatabaseName } from "../../utils/databaseUtil"
+import { generateDatabaseName } from "../../utils/databaseUtil.js"
 
 export const pengembalianDendaPenjualanBarangViewQueryBuilder = (req_id) => {
     return `
-        CREATE VIEW pengembalian_denda_penjualan_barang_view AS
+        CREATE VIEW ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_view AS
         SELECT
             "NOT_AVAILABLE" AS uuid,
             pdpbt.bukti_transaksi AS bukti_transaksi,
@@ -95,6 +95,16 @@ export const pengembalianDendaPenjualanBarangViewQueryBuilder = (req_id) => {
     `
 }
 
+export const getPengembalianDendaPenjualanBarangViewQuery = (req_id) => {
+    return `
+        SELECT 
+            COUNT(0) AS count
+        FROM INFORMATION_SCHEMA.VIEWS
+        WHERE TABLE_SCHEMA = '${generateDatabaseName(req_id)}' 
+        AND TABLE_NAME = 'pengembalian_denda_penjualan_barang_view';
+    `
+}
+
 export const getDataFrompengembalianDendaPenjualanBarangViewQuery = (bulan, tahun, kode_akun_perkiraan, req_id) => {
     return `
         SELECT 
@@ -102,12 +112,11 @@ export const getDataFrompengembalianDendaPenjualanBarangViewQuery = (bulan, tahu
         FROM ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_view pdpbv
         ${kode_akun_perkiraan ? `WHERE pdpbv.uuid_akun = "${kode_akun_perkiraan}"` : ``}
         ${kode_akun_perkiraan ? `
-            AND pdpbv.bulan = "${bulan}"
-            AND pdpbv.tahun = "${tahun}
+            AND pdpbv.bulan = ${bulan}
+            AND pdpbv.tahun = ${tahun}
         ` : `
-            WHERE pdpbv.bulan = "${bulan}"
-            AND pdpbv.tahun = "${tahun}
+            WHERE pdpbv.bulan = ${bulan}
+            AND pdpbv.tahun = ${tahun}
         `}
-        ORDER BY pdpbv.tanggal ASC, pdpbv.transaksi ASC
     `
 }

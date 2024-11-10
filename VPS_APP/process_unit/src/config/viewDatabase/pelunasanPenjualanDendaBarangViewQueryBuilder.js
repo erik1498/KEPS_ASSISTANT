@@ -1,8 +1,8 @@
-import { generateDatabaseName } from "../../utils/databaseUtil"
+import { generateDatabaseName } from "../../utils/databaseUtil.js"
 
 export const pelunasanPenjualanDendaBarangViewQueryBuilder = (req_id) => {
     return `
-        CREATE VIEW pelunasan_penjualan_denda_barang_view AS
+        CREATE VIEW ${generateDatabaseName(req_id)}.pelunasan_penjualan_denda_barang_view AS
         SELECT 
             "NOT_AVAILABLE" AS uuid,
             ppbt2.bukti_transaksi AS bukti_transaksi,
@@ -60,7 +60,7 @@ export const pelunasanPenjualanDendaBarangViewQueryBuilder = (req_id) => {
                 CASE WHEN MONTH(ppbt2.tanggal) < 10 THEN CONCAT("0", MONTH(ppbt2.tanggal)) ELSE MONTH(ppbt2.tanggal) END
             ) AS bulan,
             YEAR(ppbt2.tanggal) AS tahun,
-            0 AS transaksi,
+            1 AS transaksi,
             0 AS debet,
             rppdbt.nilai_pelunasan AS kredit,
             kapt.name AS nama_akun,
@@ -103,19 +103,28 @@ export const pelunasanPenjualanDendaBarangViewQueryBuilder = (req_id) => {
     `
 }
 
+export const getPelunasanPenjualanDendaBarangViewQuery = (req_id) => {
+    return `
+        SELECT 
+            COUNT(0) AS count
+        FROM INFORMATION_SCHEMA.VIEWS
+        WHERE TABLE_SCHEMA = '${generateDatabaseName(req_id)}' 
+        AND TABLE_NAME = 'pelunasan_penjualan_denda_barang_view';
+    `
+}
+
 export const getDataFromPelunasanPenjualanDendaBarangViewQuery = (bulan, tahun, kode_akun_perkiraan, req_id) => {
     return `
         SELECT 
             ppdbv.* 
-        FROM ${generateDatabaseName(req_id)}.${generateDatabaseName(req_id)}.pelunasan_penjualan_denda_barang_view ppdbv
+        FROM ${generateDatabaseName(req_id)}.pelunasan_penjualan_denda_barang_view ppdbv
         ${kode_akun_perkiraan ? `WHERE ppdbv.uuid_akun = "${kode_akun_perkiraan}"` : ``}
         ${kode_akun_perkiraan ? `
-            AND ppdbv.bulan = "${bulan}"
-            AND ppdbv.tahun = "${tahun}
+            AND ppdbv.bulan = ${bulan}
+            AND ppdbv.tahun = ${tahun}
         ` : `
-            WHERE ppdbv.bulan = "${bulan}"
-            AND ppdbv.tahun = "${tahun}
+            WHERE ppdbv.bulan = ${bulan}
+            AND ppdbv.tahun = ${tahun}
         `}
-        ORDER BY ppdbv.tanggal ASC, ppdbv.transaksi ASC
     `
 }

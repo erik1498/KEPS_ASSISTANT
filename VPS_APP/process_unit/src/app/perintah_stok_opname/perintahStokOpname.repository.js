@@ -3,6 +3,11 @@ import db from "../../config/Database.js";
 import PerintahStokOpnameModel from "./perintahStokOpname.model.js";
 import { generateDatabaseName, getUserIdFromRequestIdentity, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { getTanggalTerakhirPadaBulan } from "../../utils/jurnalUmumUtil.js";
+import { getDataFromPesananPenjualanBarangViewQuery } from "../../config/viewDatabase/pesananPenjualanBarangViewQueryBuilder.js";
+import { getDataFromPelunasanPenjualanBarangViewQuery } from "../../config/viewDatabase/pelunasanPenjualanBarangViewQueryBuilder.js";
+import { getDataFromPelunasanPenjualanDendaBarangViewQuery } from "../../config/viewDatabase/pelunasanPenjualanDendaBarangViewQueryBuilder.js";
+import { getDataFromReturPenjualanBarangViewQuery } from "../../config/viewDatabase/returPenjualanBarangViewQueryBuilder.js";
+import { getDataFrompengembalianDendaPenjualanBarangViewQuery } from "../../config/viewDatabase/pengembalianDendaPenjualanBarangViewQueryBuilder.js";
 
 export const getAllPerintahStokOpnameRepo = async (pageNumber, size, search, tahun, req_id) => {
     const perintahStokOpnamesCount = await db.query(
@@ -235,706 +240,19 @@ export const perintahStokOpnameStatusRepo = async (perintah_stok_opname, req_id)
     return perintahStokOpname
 }
 
-export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, saveToPerintahStokOpnameJurnal, req_id) => {
-    const pesananPenjualanBarangQuery = `
-        SELECT 
-            JSON_ARRAY(
-                JSON_OBJECT (
-                    'debet', rppbt.harga * rppbt.jumlah,
-                    'kredit', 0,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "33105460-6ac0-4744-a56c-6822bb4d4ba3"		
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', 0,
-                    'kredit', rppbt.harga * rppbt.jumlah,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "453764da-957f-4099-a03d-268367987dc2"	
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', rppbt.ppn * rppbt.jumlah,
-                    'kredit', 0,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "33105460-6ac0-4744-a56c-6822bb4d4ba3"		
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', 0,
-                    'kredit', rppbt.ppn * rppbt.jumlah,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "c457def6-7f3c-478d-9190-15ab0b70e630"	
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', rppbt.diskon_angka * rppbt.jumlah,
-                    'kredit', 0,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "5b04e881-b908-4400-a7f4-b78c34cc7a8c"		
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', 0,
-                    'kredit', rppbt.diskon_angka * rppbt.jumlah,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "33105460-6ac0-4744-a56c-6822bb4d4ba3"		
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', (rppbt.ppn - rppbt.ppn_setelah_diskon) * rppbt.jumlah,
-                    'kredit', 0,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "5b04e881-b908-4400-a7f4-b78c34cc7a8c"		
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', 0,
-                    'kredit', (rppbt.ppn - rppbt.ppn_setelah_diskon) * rppbt.jumlah,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "c457def6-7f3c-478d-9190-15ab0b70e630"		
-                    )
-                )
-            ) AS detail_json,
-            "NOT_AVAILABLE" AS uuid,
-            fpbt.bukti_transaksi AS bukti_transaksi,
-            fpbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(fpbt.tanggal) < 10 THEN CONCAT("0", MONTH(fpbt.tanggal)) ELSE MONTH(fpbt.tanggal) END
-            ) AS bulan,
-            YEAR(fpbt.tanggal) AS tahun,
-            fpbt.keterangan AS uraian,
-            JSON_OBJECT (
-                'satuan_barang_name', sbt.name,
-                'faktur_penjualan_barang', fpbt.bukti_transaksi,
-                'kategori_harga_barang_kode_barang', khbt.kode_barang,
-                'pesanan_penjualan_barang', ppbt.nomor_pesanan_penjualan_barang,
-                'customer_name', ct.name,
-                'customer_code', ct.code,
-                'daftar_gudang_name', dgt.name,
-                'daftar_barang_name', dbt.name,
-                'jumlah', rppbt.jumlah,
-                'harga', rppbt.harga,
-                'ppn', rppbt.ppn,
-                'diskon_persentase', rppbt.diskon_persentase
-            ) AS detail_data,
-            "FAKTUR PENJUALAN BARANG" AS sumber
-        FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
-        JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt.stok_awal_barang 
-        JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
-        JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang 
-        JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
-        JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
-        JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang 
-        JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt.uuid 
-        JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer 
-        WHERE ppbt.enabled = 1 
-        AND rppbt.enabled = 1
-        AND fpbt.enabled = 1
-        AND MONTH(fpbt.tanggal) = ${bulan} 
-        AND YEAR(fpbt.tanggal) = ${tahun}
-    `
+export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, req_id) => {
+    const pesananPenjualanBarangQuery = getDataFromPesananPenjualanBarangViewQuery(bulan, tahun, null, req_id)
 
-    const pelunasanPenjualanBarangQuery = `
-        SELECT 
-            JSON_ARRAY(
-                JSON_OBJECT (
-                    'debet', rppbt.nilai_pelunasan,
-                    'kredit', 0,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = ppbt.kode_akun_perkiraan		
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', 0,
-                    'kredit', rppbt.nilai_pelunasan,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "33105460-6ac0-4744-a56c-6822bb4d4ba3"		
-                    )
-                )
-            ) AS detail_json,
-            "NOT_AVAILABLE" AS uuid,
-            ppbt.bukti_transaksi AS bukti_transaksi,
-            ppbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(ppbt.tanggal) < 10 THEN CONCAT("0", MONTH(ppbt.tanggal)) ELSE MONTH(ppbt.tanggal) END
-            ) AS bulan,
-            YEAR(ppbt.tanggal) AS tahun,
-            ppbt.keterangan AS uraian,
-            JSON_OBJECT (
-                'satuan_barang_name', sbt.name,
-                'faktur_penjualan_barang', fpbt.bukti_transaksi,
-                'kategori_harga_barang_kode_barang', khbt.kode_barang,
-                'pesanan_penjualan_barang', ppbt2.nomor_pesanan_penjualan_barang,
-                'customer_name', ct.name,
-                'customer_code', ct.code,
-                'daftar_gudang_name', dgt.name,
-                'daftar_barang_name', dbt.name,
-                'jumlah', rppbt2.jumlah,
-                'harga', rppbt2.harga,
-                'ppn', rppbt2.ppn,
-                'diskon_persentase', rppbt2.diskon_persentase
-            ) AS detail_data,
-            "PELUNASAN PENJUALAN BARANG" AS sumber
-        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt 
-        JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt2 ON rppbt2.uuid = rppbt.rincian_pesanan_penjualan_barang 
-        JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_penjualan_barang 
-        JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt2.stok_awal_barang 
-        JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
-        JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang 
-        JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
-        JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
-        JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid= rppbt.pelunasan_penjualan_barang
-        JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt2.uuid 
-        JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer 
-        WHERE rppbt.enabled = 1
-        AND ppbt.enabled = 1
-        AND rppbt2.enabled = 1
-        AND ppbt2.enabled = 1
-        AND fpbt.enabled = 1
-        AND MONTH(ppbt.tanggal) = ${bulan} 
-        AND YEAR(ppbt.tanggal) = ${tahun}
-    `
+    const pelunasanPenjualanBarangQuery = getDataFromPelunasanPenjualanBarangViewQuery(bulan, tahun, null, req_id)
 
-    const pelunasanDendaPenjualanBarangQuery = `
-        SELECT 
-            JSON_ARRAY(
-                JSON_OBJECT (
-                    'debet', rppdbt.nilai_pelunasan,
-                    'kredit', 0,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "ddb0e69f-9704-4555-b427-5748365034f7"		
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', 0,
-                    'kredit', rppdbt.nilai_pelunasan,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = ppbt2.kode_akun_perkiraan		
-                    )
-                )
-            ) AS detail_json,
-            "NOT_AVAILABLE" AS uuid,
-            ppbt2.bukti_transaksi AS bukti_transaksi,
-            ppbt2.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(ppbt2.tanggal) < 10 THEN CONCAT("0", MONTH(ppbt2.tanggal)) ELSE MONTH(ppbt2.tanggal) END
-            ) AS bulan,
-            YEAR(ppbt2.tanggal) AS tahun,
-            ppbt2.keterangan AS uraian,
-            JSON_OBJECT (
-                'satuan_barang_name', sbt.name,
-                'faktur_penjualan_barang', fpbt.bukti_transaksi,
-                'kategori_harga_barang_kode_barang', khbt.kode_barang,
-                'pesanan_penjualan_barang', ppbt.nomor_pesanan_penjualan_barang,
-                'customer_name', ct.name,
-                'customer_code', ct.code,
-                'daftar_gudang_name', dgt.name,
-                'daftar_barang_name', dbt.name,
-                'hari_terlewat', rppdbt.hari_terlewat,
-                'jatuh_tempo', ADDDATE( fpbt.tanggal, INTERVAL spt.hari_kadaluarsa DAY ),
-                'tanggal_faktur', fpbt.tanggal
-            ) AS detail_data,
-            "PELUNASAN DENDA PENJUALAN BARANG" AS sumber
-        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt 
-        JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt ON rppbt.uuid = rppdbt.rincian_pesanan_penjualan_barang 
-        JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang 
-        JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt.stok_awal_barang 
-        JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
-        JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang 
-        JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
-        JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
-        JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 ON ppbt2.uuid= rppdbt.pelunasan_penjualan_barang
-        JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt.uuid 
-        JOIN ${generateDatabaseName(req_id)}.syarat_pembayaran_tab spt ON spt.uuid = fpbt.syarat_pembayaran
-        JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer 
-        WHERE rppbt.enabled = 1
-        AND ppbt.enabled = 1
-        AND rppbt.enabled = 1
-        AND ppbt2.enabled = 1
-        AND fpbt.enabled = 1
-        AND MONTH(ppbt2.tanggal) = ${bulan}
-        AND YEAR(ppbt2.tanggal) = ${tahun}
-    `
+    const pelunasanDendaPenjualanBarangQuery = getDataFromPelunasanPenjualanDendaBarangViewQuery(bulan, tahun, null, req_id)
 
-    const returPenjualanBarangQuery = `
-        SELECT 
-            JSON_ARRAY (
-                JSON_OBJECT (
-                    'debet', (
-                        SELECT 
-                            CASE 
-                                WHEN (rppbt2.harga_setelah_diskon + rppbt2.ppn_setelah_diskon) * rrpbt.retur > rrpbt.nilai_retur 
-                                THEN ((100 - rppbt2.diskon_persentase) * rrpbt.nilai_retur) / 100
-                                ELSE rppbt2.harga_setelah_diskon  * rrpbt.retur
-                            END
-                    ),
-                    'kredit', 0,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "f3827c1b-b8d8-4c1f-94e9-8249e9292a03"		
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', 0,
-                    'kredit', (
-                        SELECT 
-                            CASE 
-                                WHEN (rppbt2.harga_setelah_diskon + rppbt2.ppn_setelah_diskon) * rrpbt.retur > rrpbt.nilai_retur 
-                                THEN ((100 - rppbt2.diskon_persentase) * rrpbt.nilai_retur) / 100
-                                ELSE rppbt2.harga_setelah_diskon  * rrpbt.retur
-                            END
-                    ),
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = rpbt.kode_akun_perkiraan		
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', (
-                        SELECT 
-                            CASE 
-                                WHEN (rppbt2.harga_setelah_diskon + rppbt2.ppn_setelah_diskon) * rrpbt.retur > rrpbt.nilai_retur 
-                                THEN (rppbt2.diskon_persentase * rrpbt.nilai_retur) / 100
-                                ELSE rppbt2.ppn_setelah_diskon  * rrpbt.retur
-                            END
-                    ),
-                    'kredit', 0,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "c457def6-7f3c-478d-9190-15ab0b70e630"	
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', 0,
-                    'kredit', (
-                        SELECT 
-                            CASE 
-                                WHEN (rppbt2.harga_setelah_diskon + rppbt2.ppn_setelah_diskon) * rrpbt.retur > rrpbt.nilai_retur 
-                                THEN (rppbt2.diskon_persentase * rrpbt.nilai_retur) / 100
-                                ELSE rppbt2.ppn_setelah_diskon  * rrpbt.retur
-                            END
-                    ),
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = rpbt.kode_akun_perkiraan		
-                    )
-                )
-            ) AS detail_json,
-            "NOT_AVAILABLE" AS uuid,
-            rpbt.bukti_transaksi AS bukti_transaksi,
-            rpbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(rpbt.tanggal) < 10 THEN CONCAT("0", MONTH(rpbt.tanggal)) ELSE MONTH(rpbt.tanggal) END
-            ) AS bulan,
-            YEAR(rpbt.tanggal) AS tahun,
-            rpbt.keterangan AS uraian,
-            JSON_OBJECT (
-                'satuan_barang_name', sbt.name,
-                'faktur_penjualan_barang', fpbt.bukti_transaksi,
-                'kategori_harga_barang_kode_barang', khbt.kode_barang,
-                'pesanan_penjualan_barang', ppbt2.nomor_pesanan_penjualan_barang,
-                'customer_name', ct.name,
-                'customer_code', ct.code,
-                'daftar_gudang_name', dgt.name,
-                'daftar_barang_name', dbt.name,
-                'jumlah', rrpbt.retur,
-                'harga', rppbt2.harga,
-                'ppn', rppbt2.ppn,
-                'diskon_persentase', rppbt2.diskon_persentase
-            ) AS detail_data,
-            "RETUR PENJUALAN BARANG" AS sumber
-        FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
-        JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt2 ON rppbt2.uuid = rrpbt.rincian_pesanan_penjualan_barang 
-        JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_penjualan_barang 
-        JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt2.stok_awal_barang 
-        JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
-        JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang 
-        JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
-        JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
-        JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.uuid= rrpbt.retur_penjualan_barang
-        JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt2.uuid 
-        JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer 
-        WHERE rrpbt.enabled = 1
-        AND rpbt.enabled = 1
-        AND rppbt2.enabled = 1
-        AND ppbt2.enabled = 1
-        AND fpbt.enabled = 1
-        AND MONTH(rpbt.tanggal) = ${bulan} 
-        AND YEAR(rpbt.tanggal) = ${tahun}
-    `
+    const returPenjualanBarangQuery = getDataFromReturPenjualanBarangViewQuery(bulan, tahun, null, req_id)
 
-    const pengembalianDendaPenjualanBarangQuery = `
-        SELECT
-            JSON_ARRAY(
-                JSON_OBJECT (
-                    'debet', 0,
-                    'kredit', rpdpbt.denda_yang_dikembalikan,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = pdpbt.kode_akun_perkiraan		
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', rpdpbt.denda_yang_dikembalikan ,
-                    'kredit', 0,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "ddb0e69f-9704-4555-b427-5748365034f7"		
-                    )
-                )
-            ) AS detail_json,
-            "NOT_AVAILABLE" AS uuid,
-            pdpbt.bukti_transaksi AS bukti_transaksi,
-            pdpbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(pdpbt.tanggal) < 10 THEN CONCAT("0", MONTH(pdpbt.tanggal)) ELSE MONTH(pdpbt.tanggal) END
-            ) AS bulan,
-            YEAR(pdpbt.tanggal) AS tahun,
-            pdpbt.keterangan AS uraian,
-            JSON_OBJECT (
-                'satuan_barang_name', sbt.name,
-                'faktur_penjualan_barang', fpbt.bukti_transaksi,
-                'kategori_harga_barang_kode_barang', khbt.kode_barang,
-                'pesanan_penjualan_barang', ppbt.nomor_pesanan_penjualan_barang,
-                'customer_name', ct.name,
-                'customer_code', ct.code,
-                'daftar_gudang_name', dgt.name,
-                'daftar_barang_name', dbt.name
-            ) AS detail_data,
-            "PENGEMBALIAN DENDA PENJUALAN BARANG" AS sumber
-        FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_penjualan_barang_tab rpdpbt 
-        JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt ON rppbt.uuid = rpdpbt.rincian_pesanan_penjualan_barang 
-        JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang 
-        JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt.stok_awal_barang 
-        JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
-        JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang 
-        JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
-        JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
-        JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpbt ON pdpbt.uuid= rpdpbt.pengembalian_denda_penjualan_barang 
-        JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt.uuid 
-        JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer 
-        WHERE rppbt.enabled = 1
-        AND ppbt.enabled = 1
-        AND rppbt.enabled = 1
-        AND pdpbt.enabled = 1
-        AND fpbt.enabled = 1
-        AND MONTH(pdpbt.tanggal) = ${bulan}
-        AND YEAR(pdpbt.tanggal) = ${tahun}
-    `
+    const pengembalianDendaPenjualanBarangQuery = getDataFrompengembalianDendaPenjualanBarangViewQuery(bulan, tahun, null, req_id)
 
     const fakturPenjualanBarangDendaBulanIniQuery = `
-        SELECT 
-            JSON_ARRAY(
-                JSON_OBJECT (
-                    'debet', (
-                        SELECT
-                            CASE
-                                WHEN res.piutang_denda > 0
-                                THEN res.piutang_denda
-                                ELSE 0
-                            END
-                    ),
-                    'kredit', 0,
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "eb5b6dcd-1146-4550-a9f0-1fe8439b085f"	
-                    )
-                ),
-                JSON_OBJECT (
-                    'debet', 0,
-                    'kredit', (
-                        SELECT
-                            CASE
-                                WHEN res.piutang_denda > 0
-                                THEN res.piutang_denda
-                                ELSE 0
-                            END
-                    ),
-                    'kode_akun_perkiraan',
-                    (
-                        SELECT 
-                            JSON_OBJECT (
-                                'uuid', kapt.uuid,
-                                'name', kapt.name,
-                                'type', kapt.type,
-                                'code', kapt.code
-                            ) 
-                        FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.uuid = "ddb0e69f-9704-4555-b427-5748365034f7"		
-                    )
-                )
-            ) AS detail_json,
-            "NOT_AVAILABLE" AS uuid,
-            res.bukti_transaksi AS bukti_transaksi,
-            "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59" AS tanggal,
-            ${bulan < 10 ? `0${bulan}` : bulan} AS bulan,
-            YEAR("${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59") AS tahun,
-            "DENDA PENJUALAN BARANG" AS uraian,
-            res.detail_data_2 AS detail_data,
-            "DENDA PENJUALAN BARANG" AS sumber
-        FROM (
-            SELECT 
-                (res.piutang * (res.syarat_pembayaran_denda / 100) * res.hari_terlewat) AS total_denda,
-                (res.piutang * (res.syarat_pembayaran_denda / 100) * res.hari_terlewat) - res.denda_sudah_dibayar AS piutang_denda,
-                res.*
-            FROM (
-                SELECT 
-                    (res.sudah_dibayar - res.nilai_retur) AS sudah_dibayar_fix,
-                    CASE
-                        WHEN ((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.nilai_retur) > 0
-                        THEN ((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.nilai_retur)
-                        ELSE 0
-                    END AS piutang,
-                    JSON_MERGE_PRESERVE (
-                        res.detail_data_1,
-                        JSON_OBJECT(
-                            'denda_sudah_dibayar', res.denda_sudah_dibayar,
-                            'hari_terlewat', res.hari_terlewat,
-                            'sudah_dibayar', res.sudah_dibayar,
-                            'retur', res.nilai_retur
-                        )
-                    ) AS detail_data_2,
-                    res.*
-                FROM (
-                    SELECT 
-                        IFNULL((
-                            SELECT 
-                                SUM(rrpbt.retur) 
-                            FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
-                            JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_penjualan_barang 
-                            WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
-                            AND rrpbt.enabled = 1
-                            AND rpbt.enabled = 1
-                            AND rpbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59"
-                        ), 0) AS retur,
-                        IFNULL((
-                            SELECT 
-                                SUM(rrpbt.nilai_retur) 
-                            FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_barang_tab rrpbt 
-                            JOIN ${generateDatabaseName(req_id)}.retur_penjualan_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_penjualan_barang 
-                            WHERE rrpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
-                            AND rrpbt.enabled = 1
-                            AND rpbt.enabled = 1
-                            AND rpbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59"
-                        ), 0) AS nilai_retur,
-                        IFNULL((
-                            SELECT 
-                                SUM(rppbt2.nilai_pelunasan) 
-                            FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_barang_tab rppbt2
-                            JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pelunasan_penjualan_barang
-                            WHERE rppbt2.rincian_pesanan_penjualan_barang = rppbt.uuid
-                            AND ppbt2.enabled = 1
-                            AND ppbt2.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59"
-                        ), 0) AS sudah_dibayar,
-                        IFNULL((
-                            SELECT 
-                                SUM(rppdbt.nilai_pelunasan)
-                                - IFNULL((
-                                    SELECT 
-                                        SUM(rpdpbt.denda_yang_dikembalikan) 
-                                    FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_penjualan_barang_tab rpdpbt 
-                                    JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_penjualan_barang
-                                    WHERE rpdpbt.rincian_pesanan_penjualan_barang = rppbt.uuid
-                                    AND pdpbt.enabled = 1
-                                    AND rpdpbt.enabled = 1
-                                ), 0) 
-                            FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_barang_tab rppdbt
-                            JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_barang_tab ppbt ON ppbt.uuid = rppdbt.pelunasan_penjualan_barang
-                            WHERE rppdbt.rincian_pesanan_penjualan_barang = rppbt.uuid
-                            AND ppbt.tanggal < "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59"
-                            AND rppdbt.enabled = 1
-                            AND ppbt.enabled = 1
-                        ), 0) AS denda_sudah_dibayar, 
-                        (
-                            DATEDIFF(
-                                "${tahun + "-" + (bulan < 10 ? `0${bulan}` : `${bulan}`) + `-${getTanggalTerakhirPadaBulan(tahun, bulan)}`}T23:59:59"
-                                ,
-                                (
-                                    ADDDATE( fpbt.tanggal, INTERVAL spt.hari_kadaluarsa DAY )
-                                )
-                            )
-                        ) AS hari_terlewat,
-                        rppbt.harga_setelah_diskon,
-                        rppbt.ppn_setelah_diskon,
-                        rppbt.jumlah,
-                        rppbt.diskon_angka,
-                        rppbt.diskon_persentase,
-                        spt.denda AS syarat_pembayaran_denda,
-                        fpbt.bukti_transaksi,
-                        rppbt.id,
-                        JSON_OBJECT (
-                            'satuan_barang_name', sbt.name,
-                            'faktur_penjualan_barang', fpbt.nomor_faktur_penjualan_barang,
-                            'kategori_harga_barang_kode_barang', khbt.kode_barang,
-                            'pesanan_penjualan_barang', ppbt.nomor_pesanan_penjualan_barang,
-                            'customer_name', ct.name,
-                            'customer_code', ct.code,
-                            'daftar_gudang_name', dgt.name,
-                            'daftar_barang_name', dbt.name,
-                            'jatuh_tempo', ADDDATE( fpbt.tanggal, INTERVAL spt.hari_kadaluarsa DAY ),
-                            'tanggal_faktur', fpbt.tanggal
-                        ) AS detail_data_1
-                    FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
-                    JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang
-                    JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 
-                    JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt.stok_awal_barang 
-                    JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
-                    JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang
-                    JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang
-                    JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt.uuid 
-                    JOIN ${generateDatabaseName(req_id)}.syarat_pembayaran_tab spt ON spt.uuid = fpbt.syarat_pembayaran
-                    JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer
-                    WHERE rppbt.enabled = 1
-                    AND ppbt.enabled = 1
-                    AND fpbt.enabled = 1
-                ) AS res
-            ) AS res
-        ) AS res
+        
     `
 
     const queryList = [
@@ -943,60 +261,25 @@ export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, saveToPerint
         pelunasanDendaPenjualanBarangQuery,
         returPenjualanBarangQuery,
         pengembalianDendaPenjualanBarangQuery,
-        fakturPenjualanBarangDendaBulanIniQuery
+        // fakturPenjualanBarangDendaBulanIniQuery
     ]
+
+    console.log("QUERY LIST", queryList.join("UNION ALL"))
 
     const penjualanBarang = await db.query(
         `
-            ${saveToPerintahStokOpnameJurnal ? `
-                INSERT INTO 
-                    ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab
-                (
-                    uuid, 
-                    perintah_stok_opname, 
-                    bukti_transaksi, 
-                    bulan, 
-                    detail_data, 
-                    detail_json, 
-                    sumber, 
-                    tahun, 
-                    tanggal, 
-                    uraian, 
-                    enabled, 
-                    createdBy, 
-                    updatedBy, 
-                    createdAt,
-                    updatedAt
-                )
-                ` : ``}
-            SELECT 
-                ${saveToPerintahStokOpnameJurnal ? `
-                        UUID() AS uuid,
-                        "${saveToPerintahStokOpnameJurnal}" AS perintah_stok_opname,
-                        res.bukti_transaksi,
-                        res.bulan,
-                        res.detail_data,
-                        res.detail_json,
-                        res.sumber,
-                        res.tahun,
-                        res.tanggal,
-                        res.uraian,
-                        1,
-                        "${getUserIdFromRequestIdentity(req_id)}" AS createdBy,
-                        "" AS updatedBy,
-                        NOW() AS createdAt,
-                        NOW() AS updatedBy
-                    ` : `res.*`
-        }
+            SELECT
+                res.*
             FROM (
                 ${queryList.join("UNION ALL")}
             ) AS res
-            ORDER BY res.tanggal ASC
+            ORDER BY res.tanggal ASC, res.transaksi ASC
         `,
         {
-            type: saveToPerintahStokOpnameJurnal ? Sequelize.QueryTypes.INSERT : Sequelize.QueryTypes.SELECT
+            type: Sequelize.QueryTypes.SELECT
         }
     )
+
     return penjualanBarang
 }
 
@@ -1236,6 +519,24 @@ export const perintahStokOpnemeAllowToValidasiRepo = async (perintah_stok_opname
         `,
         {
             type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
+export const getCountOfViewRepo = async (query) => {
+    return await db.query(
+        query,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
+export const createViewRepo = async (query) => {
+    return await db.query(
+        query,
+        {
+            type: Sequelize.QueryTypes.RAW
         }
     )
 }

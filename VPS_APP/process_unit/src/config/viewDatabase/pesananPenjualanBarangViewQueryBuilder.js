@@ -1,8 +1,8 @@
-import { generateDatabaseName } from "../../utils/databaseUtil"
+import { generateDatabaseName } from "../../utils/databaseUtil.js"
 
 export const pesananPenjualanBarangViewQueryBuilder = (req_id) => {
     return `
-        CREATE VIEW pesanan_penjualan_barang_view AS
+        CREATE VIEW ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_view AS
             SELECT 
                 "NOT_AVAILABLE" AS uuid,
                 fpbt.bukti_transaksi AS bukti_transaksi,
@@ -365,6 +365,16 @@ export const pesananPenjualanBarangViewQueryBuilder = (req_id) => {
         `
 }
 
+export const getPesananPenjualanBarangViewQuery = (req_id) => {
+    return `
+        SELECT 
+            COUNT(0) AS count
+        FROM INFORMATION_SCHEMA.VIEWS
+        WHERE TABLE_SCHEMA = '${generateDatabaseName(req_id)}' 
+        AND TABLE_NAME = 'pesanan_penjualan_barang_view';
+    `
+}
+
 export const getDataFromPesananPenjualanBarangViewQuery = (bulan, tahun, kode_akun_perkiraan, req_id) => {
     return `
         SELECT 
@@ -372,12 +382,11 @@ export const getDataFromPesananPenjualanBarangViewQuery = (bulan, tahun, kode_ak
         FROM ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_view ppbv
         ${kode_akun_perkiraan ? `WHERE ppbv.uuid_akun = "${kode_akun_perkiraan}"` : ``}
         ${kode_akun_perkiraan ? `
-            AND ppbv.bulan = "${bulan}"
-            AND ppbv.tahun = "${tahun}
+            AND ppbv.bulan = ${bulan}
+            AND ppbv.tahun = ${tahun}
         ` : `
-            WHERE ppbv.bulan = "${bulan}"
-            AND ppbv.tahun = "${tahun}
+            WHERE ppbv.bulan = ${bulan}
+            AND ppbv.tahun = ${tahun}
         `}
-        ORDER BY ppbv.tanggal ASC, ppbv.transaksi ASC
     `
 }

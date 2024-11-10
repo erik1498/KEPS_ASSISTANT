@@ -25,48 +25,45 @@ export const getNormalizedByDate = (data) => {
 
 export const normalizeDataJurnalPerintahStokOpname = (data) => {
     let listDaftarData = []
-    data.map((x) => {
-        x.detail_json = JSON.parse(x.detail_json)
-        x.detail_data = JSON.parse(x.detail_data)
-        x.detail_json.map((y, iy) => {
-            x.detail_json[iy].kode_akun_perkiraan = JSON.parse(y.kode_akun_perkiraan)
+    data.map((x, i) => {
 
-            let dataInput = {
-                uuid: x.uuid,
-                bukti_transaksi: x.bukti_transaksi,
-                sumber: x.sumber,
-                tahun: x.tahun,
-                bulan: x.bulan,
-                tanggal: x.tanggal,
-                waktu: x.waktu ? x.waktu : x.tanggal,
-                transaksi: 1,
-                uraian: x.uraian,
-                kode_akun: x.detail_json[iy].kode_akun_perkiraan.code,
-                type_akun: x.detail_json[iy].kode_akun_perkiraan.type,
-                nama_akun: x.detail_json[iy].kode_akun_perkiraan.name,
-                debet: x.detail_json[iy].debet,
-                kredit: x.detail_json[iy].kredit,
-                detail_data: x.detail_data
-            }
+        const detail_data = JSON.parse(x.detail_data)
 
-            if (iy == 0) {
-                dataInput["satuan_barang_name"] = x.detail_data?.satuan_barang_name
-                dataInput["faktur_penjualan_barang"] = x.detail_data?.faktur_penjualan_barang
-                dataInput["kategori_harga_barang_kode_barang"] = x.detail_data?.kategori_harga_barang_kode_barang
-                dataInput["pesanan_penjualan_barang"] = x.detail_data?.pesanan_penjualan_barang
-                dataInput["customer_name"] = x.detail_data?.customer_name
-                dataInput["customer_code"] = x.detail_data?.customer_code
-                dataInput["daftar_gudang_name"] = x.detail_data?.daftar_gudang_name
-                dataInput["daftar_barang_name"] = x.detail_data?.daftar_barang_name
-                dataInput["jumlah"] = x.detail_data?.jumlah
-                dataInput["harga"] = x.detail_data?.harga
-                dataInput["ppn"] = x.detail_data?.ppn
-                dataInput["diskon_persentase"] = x.detail_data?.diskon_persentase
-                dataInput["waktu_show"] = true
-            }
+        let dataInput = {
+            uuid: x.uuid,
+            bukti_transaksi: x.bukti_transaksi,
+            sumber: x.sumber,
+            tahun: x.tahun,
+            bulan: x.bulan,
+            tanggal: x.tanggal,
+            waktu: x.waktu ? x.waktu : x.tanggal.split("T")[1].replace(".000", ""),
+            transaksi: x.transaksi,
+            uraian: x.uraian,
+            kode_akun: x.kode_akun,
+            type_akun: x.type_akun,
+            nama_akun: x.nama_akun,
+            debet: x.debet,
+            kredit: x.kredit,
+            detail_data: detail_data
+        }
 
-            listDaftarData.push(dataInput)
-        })
+        if (x.transaksi == 0) {
+            dataInput["satuan_barang_name"] = detail_data.satuan_barang_name
+            dataInput["faktur_penjualan_barang"] = detail_data.faktur_penjualan_barang
+            dataInput["kategori_harga_barang_kode_barang"] = detail_data.kategori_harga_barang_kode_barang
+            dataInput["pesanan_penjualan_barang"] = detail_data.pesanan_penjualan_barang
+            dataInput["customer_name"] = detail_data.customer_name
+            dataInput["customer_code"] = detail_data.customer_code
+            dataInput["daftar_gudang_name"] = detail_data.daftar_gudang_name
+            dataInput["daftar_barang_name"] = detail_data.daftar_barang_name
+            dataInput["jumlah"] = detail_data.jumlah
+            dataInput["harga"] = detail_data.harga
+            dataInput["ppn"] = detail_data.ppn
+            dataInput["diskon_persentase"] = detail_data.diskon_persentase
+            dataInput["waktu_show"] = true
+        }
+
+        listDaftarData.push(dataInput)
     })
 
     return listDaftarData.filter(x => x.debet > 0 || x.kredit > 0).map(x => {

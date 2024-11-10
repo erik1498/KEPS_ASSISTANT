@@ -1227,36 +1227,6 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     WHERE pkt.enabled = 1
                     AND kapt.enabled = 1
                     AND pt.enabled = 1
-                    UNION ALL
-                    SELECT 
-                        "NOT_AVAILABLE" AS uuid,
-                        psojt.bukti_transaksi,
-                        0 AS transaksi,
-                        LPAD(DAY(psojt.tanggal), 2, '0') AS tanggal,
-                        LPAD(MONTH(psojt.tanggal), 2, '0') AS bulan,
-                        YEAR(psojt.tanggal) AS tahun,
-                        TIME(psojt.tanggal) AS waktu,
-                        0 AS debet,
-                        0 AS kredit,
-                        "" AS kode_akun,
-                        "" AS nama_akun,
-                        "" AS type_akun,
-                        JSON_OBJECT(
-                            'detail', psojt.detail_data,
-                            'json', psojt.detail_json
-                        ) AS uraian,
-                        NULL AS deskripsi_kerja,
-                        NULL AS keterangan_kerja,
-                        psojt.sumber,
-                        NULL AS waktu_mulai,
-                        NULL AS waktu_selesai,
-                        NULL AS total_jam,
-                        NULL AS total_menit,
-                        NULL AS nilai_lembur_per_menit,
-                        NULL AS pegawai_name,
-                        NULL AS periode,
-                        psojt.enabled 
-                    FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab psojt 
                 ) AS res
                 WHERE res.bulan = :bulan AND res.tahun = :tahun
                 AND (

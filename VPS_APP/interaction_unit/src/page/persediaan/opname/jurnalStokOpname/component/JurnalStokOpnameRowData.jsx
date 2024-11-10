@@ -26,7 +26,7 @@ const JurnalStokOpnameRowData = ({
                             {
                                 j <= item2.length ? <>
                                     {
-                                        j == 0 ? <>
+                                        item3.waktu_show ? <>
                                             <div className="px-1">
                                                 <div className="px-2 bg-gray-600 py-3 text-white font-bold text-md flex flex-col justify-between">
                                                     <div className="flex justify-between">
@@ -52,10 +52,6 @@ const JurnalStokOpnameRowData = ({
                                                     </div>
                                                 </div>
                                             </div>
-                                        </> : <></>
-                                    }
-                                    {
-                                        item3.waktu_show ? <>
                                             <div className="px-1">
                                                 <div className="bg-gray-200 px-2 py-1">
                                                     <b>{item3.kategori_harga_barang_kode_barang} ( {item3.daftar_gudang_name} )</b>
