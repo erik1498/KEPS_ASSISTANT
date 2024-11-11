@@ -102,10 +102,8 @@ const AktivitasDokumen = ({
                     label: res.data.jenis_dokumen,
                     value: res.data.jenis_dokumen
                 })
-                setPenanggungJawab(x => x = {
-                    label: res.data.penanggung_jawab,
-                    value: res.data.penanggung_jawab
-                })
+
+                _getDataPegawai(res.data.penanggung_jawab)
                 setStatusAktivitasDokumen(x => x = {
                     label: res.data.status,
                     value: res.data.status
@@ -115,11 +113,20 @@ const AktivitasDokumen = ({
             })
     }
 
-    const _getDataPegawai = () => {
+    const _getDataPegawai = (uuid) => {
         apiPegawaiCRUD
             .custom("", "GET")
             .then(resData => {
                 setPegawaiList(x => x = resData.data.entry)
+                if (uuid) {
+                    const dataPegawai = resData.data.entry.filter(x => x.uuid == uuid)
+                    if (dataPegawai.length > 0) {
+                        setPenanggungJawab({
+                            label: dataPegawai[0].name,
+                            value: dataPegawai[0].uuid,
+                        })
+                    }
+                }
             }).catch(err => showError(err))
     }
 

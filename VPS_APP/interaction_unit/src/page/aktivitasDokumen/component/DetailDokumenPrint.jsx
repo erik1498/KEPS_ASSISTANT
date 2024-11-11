@@ -19,7 +19,7 @@ export const DetailDokumenPrint = React.forwardRef((props, ref) => {
             />
             <div className="bg-white py-5 rounded-md">
                 <div className="flex justify-between items-center">
-                    <p className="text-md">Tanggal {formatDate(props?.data?.tanggal)} | {props?.data?.penanggung_jawab}</p>
+                    <p className="text-md">Tanggal {formatDate(props?.data?.tanggal)} | {props?.data?.penanggung_jawab_name}</p>
                 </div>
                 <p className="text-sm mb-4">Status Dokumen ( {props?.data?.status} )</p>
                 <p className="py-1 w-max rounded font-bold">No. Surat : {props?.data?.no_surat}</p>
