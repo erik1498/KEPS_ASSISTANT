@@ -10,17 +10,20 @@ export const getAllRiwayatPembayaranAktivitasDokumensRepo = async (tahun, req_id
             SELECT 
                 adt.no_surat,
                 adt.biaya,
+                pt.name AS penanggung_jawab_name,
                 (
                     SELECT
                         GROUP_CONCAT('{"',
-                            CONCAT('tanggal":"',rpadt.tanggal, '","nilai_pembayaran":"', rpadt.nilai_pembayaran, '","pegawai_penerima":"', rpadt.pegawai_penerima, '","nomor_kwitansi_tanda_terima":"', rpadt.nomor_kwitansi_tanda_terima, '","aktivitas_dokumen":"', rpadt.aktivitas_dokumen) 
+                            CONCAT('tanggal":"',rpadt.tanggal, '","nilai_pembayaran":"', rpadt.nilai_pembayaran, '","pegawai_penerima":"', rpadt.pegawai_penerima, '","pegawai_penerima_name":"', pt.name, '","nomor_kwitansi_tanda_terima":"', rpadt.nomor_kwitansi_tanda_terima, '","aktivitas_dokumen":"', rpadt.aktivitas_dokumen) 
                         ,'"}')
                     FROM ${generateDatabaseName(req_id)}.riwayat_pembayaran_aktivitas_dokumen_tab rpadt 
+                    JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = rpadt.pegawai_penerima
                     WHERE rpadt.aktivitas_dokumen = adt.uuid 
                     AND adt.enabled = 1
                     AND rpadt.enabled = 1
                 ) AS list_pembayaran
             FROM ${generateDatabaseName(req_id)}.aktivitas_dokumen_tab adt 
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = adt.penanggung_jawab
             WHERE adt.enabled = 1
             AND adt.tahun = "${tahun}"
         `,
@@ -32,7 +35,14 @@ export const getAllRiwayatPembayaranAktivitasDokumensRepo = async (tahun, req_id
 export const getAllRiwayatPembayaranAktivitasDokumenRepo = async (aktivitas_dokumen, pageNumber, size, search, req_id) => {
     const riwayatPembayaranAktivitasDokumensCount = await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.riwayat_pembayaran_aktivitas_dokumen_tab WHERE aktivitas_dokumen = "${aktivitas_dokumen}" AND nomor_kwitansi_tanda_terima LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                COUNT(0) AS count 
+            FROM ${generateDatabaseName(req_id)}.riwayat_pembayaran_aktivitas_dokumen_tab rpadt
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid =  rpadt.pegawai_penerima
+            WHERE aktivitas_dokumen = "${aktivitas_dokumen}" 
+            AND nomor_kwitansi_tanda_terima 
+            LIKE '%${search}%' 
+            AND rpadt.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -42,7 +52,16 @@ export const getAllRiwayatPembayaranAktivitasDokumenRepo = async (aktivitas_doku
 
     const riwayatPembayaranAktivitasDokumens = await db.query(
         `
-            SELECT * FROM ${generateDatabaseName(req_id)}.riwayat_pembayaran_aktivitas_dokumen_tab WHERE aktivitas_dokumen = "${aktivitas_dokumen}" AND nomor_kwitansi_tanda_terima LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
+            SELECT 
+                rpadt.*,
+                pt.name AS pegawai_penerima_name 
+            FROM ${generateDatabaseName(req_id)}.riwayat_pembayaran_aktivitas_dokumen_tab rpadt
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid =  rpadt.pegawai_penerima
+            WHERE aktivitas_dokumen = "${aktivitas_dokumen}" 
+            AND nomor_kwitansi_tanda_terima 
+            LIKE '%${search}%' 
+            AND rpadt.enabled = 1 
+            LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

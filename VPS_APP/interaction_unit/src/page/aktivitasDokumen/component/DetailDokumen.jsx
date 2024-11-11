@@ -22,7 +22,7 @@ const DetailDokumen = ({
 
     return <div className="bg-white px-4 py-5 rounded-md">
         <div className="flex justify-between items-center">
-            <p className="text-md">Tanggal {formatDate(item.tanggal)} | {item.penanggung_jawab}</p>
+            <p className="text-md">Tanggal {formatDate(item.tanggal)} | {item.penanggung_jawab_name}</p>
             <div className="flex items-center gap-x-3">
                 <button
                     className="btn btn-xs shadow-none border-0 bg-red-500 text-white"

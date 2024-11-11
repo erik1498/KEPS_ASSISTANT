@@ -25,7 +25,14 @@ export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasRepo = async (t
 export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayatAktivitasDokumenRepo = async (status_riwayat_aktivitas_dokumen, pageNumber, size, search, req_id) => {
     const statusRiwayatAktivitasDokumenPegawaiPelaksanasCount = await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.status_riwayat_aktivitas_dokumen_pegawai_pelaksana_tab WHERE status_riwayat_aktivitas_dokumen = "${status_riwayat_aktivitas_dokumen}" AND enabled = 1 AND pegawai_pelaksana LIKE '%${search}%'
+            SELECT 
+                COUNT(0) AS count 
+            FROM ${generateDatabaseName(req_id)}.status_riwayat_aktivitas_dokumen_pegawai_pelaksana_tab sradppt
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = sradppt.pegawai_pelaksana
+            WHERE status_riwayat_aktivitas_dokumen = "${status_riwayat_aktivitas_dokumen}" 
+            AND sradppt.enabled = 1 
+            AND sradppt.pegawai_pelaksana 
+            LIKE '%${search}%'
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -35,7 +42,15 @@ export const getAllStatusRiwayatAktivitasDokumenPegawaiPelaksanasByStatusRiwayat
 
     const statusRiwayatAktivitasDokumenPegawaiPelaksanas = await db.query(
         `
-            SELECT * FROM ${generateDatabaseName(req_id)}.status_riwayat_aktivitas_dokumen_pegawai_pelaksana_tab WHERE status_riwayat_aktivitas_dokumen = "${status_riwayat_aktivitas_dokumen}" AND enabled = 1 AND pegawai_pelaksana LIKE '%${search}%' LIMIT ${pageNumber}, ${size}
+            SELECT 
+                sradppt.*,
+                pt.name AS pegawai_pelaksana_name 
+            FROM ${generateDatabaseName(req_id)}.status_riwayat_aktivitas_dokumen_pegawai_pelaksana_tab sradppt
+            JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = sradppt.pegawai_pelaksana
+            WHERE sradppt.status_riwayat_aktivitas_dokumen = "${status_riwayat_aktivitas_dokumen}"
+            AND sradppt.enabled = 1 
+            AND sradppt.pegawai_pelaksana 
+            LIKE '%${search}%' LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )

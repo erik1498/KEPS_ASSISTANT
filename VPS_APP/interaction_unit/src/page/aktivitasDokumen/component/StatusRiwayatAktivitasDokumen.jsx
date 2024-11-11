@@ -11,6 +11,7 @@ import LoadingMiniPage from "../../../component/layout/LoadingMiniPage"
 
 const StatusRiwayatAktivitasDokumen = ({
     idStatusAktivitasDokumen,
+    pegawaiList,
     viewMode
 }) => {
     const [isLoading, setIsLoading] = useState(false)
@@ -137,6 +138,7 @@ const StatusRiwayatAktivitasDokumen = ({
                                 <PegawaiPelaksana
                                     idStatusRiwayatAktivitasDokumen={itemj.uuid}
                                     viewMode={viewMode}
+                                    pegawaiList={pegawaiList}
                                 />
                                 <KeteranganStatusRiwayatAktivitasDokumen
                                     idStatusRiwayatAktivitasDokumen={itemj.uuid}

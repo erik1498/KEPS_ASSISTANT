@@ -1,12 +1,12 @@
 import { FaSave, FaTimes } from "react-icons/fa";
 import { getHariTanggalFull } from "../../../helper/date.helper";
-import { formValidation } from "../../../helper/form.helper";
+import { formValidation, showError } from "../../../helper/form.helper";
 import FormInputWithLabel from "../../../component/form/FormInputWithLabel";
 import FormSelectWithLabel from "../../../component/form/FormSelectWithLabel";
 import { useEffect, useState } from "react";
 import { inputOnlyNumber, inputOnlyRupiah } from "../../../helper/actionEvent.helper";
-import { apiAktivitasDokumen } from "../../../service/endPointList.api";
-import { pegawaiList, statusAktivitasDokumenList, tipeDokumenList } from "../../../config/objectList.config";
+import { apiAktivitasDokumen, apiPegawaiCRUD } from "../../../service/endPointList.api";
+import { statusAktivitasDokumenList, tipeDokumenList } from "../../../config/objectList.config";
 import RiwayatPembayaranAktivitasDokumen from "./RiwayatPembayaranAktivitasDokumen";
 import RiwayatAktivitasDokumen from "./RiwayatAktivitasDokumen";
 import DokumenKlien from "./DokumenKlien";
@@ -19,6 +19,7 @@ const AktivitasDokumen = ({
     setIdAktivitasDokumen = () => { },
 }) => {
 
+    const [pegawaiList, setPegawaiList] = useState([])
     const [jenisDokumenEditable, setJenisDokumenEditable] = useState(false)
     const [kategoriDokumenList, setKategoriDokumenList] = useState([])
     const [jenisDokumenList, setJenisDokumenList] = useState([])
@@ -114,6 +115,14 @@ const AktivitasDokumen = ({
             })
     }
 
+    const _getDataPegawai = () => {
+        apiPegawaiCRUD
+            .custom("", "GET")
+            .then(resData => {
+                setPegawaiList(x => x = resData.data.entry)
+            }).catch(err => showError(err))
+    }
+
     useEffect(() => {
         setKategoriDokumenList(x => x = tipeDokumenList.filter(x => x.title == tipeDokumen?.value)[0]?.data)
         if (!idAktivitasDokumen) {
@@ -148,6 +157,10 @@ const AktivitasDokumen = ({
             getAktivitasDokumenById()
         }
     }, [idAktivitasDokumen])
+
+    useEffect(() => {
+        _getDataPegawai()
+    }, [])
 
     return <>
         <div className="bg-white rounded-md shadow-2xl h-[70vh] overflow-scroll no-scrollbar">
@@ -291,8 +304,8 @@ const AktivitasDokumen = ({
                             }}
                             optionsDataList={pegawaiList}
                             selectValue={penanggungJawab}
-                            optionsLabel={"nama"}
-                            optionsValue={"nama"}
+                            optionsLabel={"name"}
+                            optionsValue={"uuid"}
                             selectName={"kodeAkunType"}
                         />
                         <FormInputWithLabel
@@ -353,9 +366,11 @@ const AktivitasDokumen = ({
                         />
                         <RiwayatPembayaranAktivitasDokumen
                             idAktivitasDokumen={idAktivitasDokumen}
+                            pegawaiList={pegawaiList}
                         />
                         <RiwayatAktivitasDokumen
                             idAktivitasDokumen={idAktivitasDokumen}
+                            pegawaiList={pegawaiList}
                         />
                     </> : <></>
                 }

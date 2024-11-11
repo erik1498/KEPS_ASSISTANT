@@ -8,10 +8,10 @@ import { apiRiwayatPembayaranAktivitasDokumen } from "../../../service/endPointL
 import { parseToRupiahText } from "../../../helper/number.helper"
 import { formValidation } from "../../../helper/form.helper"
 import LoadingMiniPage from "../../../component/layout/LoadingMiniPage"
-import { pegawaiList } from "../../../config/objectList.config"
 
 const RiwayatPembayaranAktivitasDokumen = ({
     idAktivitasDokumen,
+    pegawaiList,
     viewMode
 }) => {
 
@@ -108,8 +108,8 @@ const RiwayatPembayaranAktivitasDokumen = ({
                                     setPegawaiPenerima(e)
                                 }}
                                 optionsDataList={pegawaiList}
-                                optionsLabel={"nama"}
-                                optionsValue={"nama"}
+                                optionsLabel={"name"}
+                                optionsValue={"uuid"}
                                 selectValue={pegawaiPenerima}
                                 selectName={"kodeAkunType"}
                             />
@@ -154,7 +154,7 @@ const RiwayatPembayaranAktivitasDokumen = ({
                             return <tr>
                                 <td>{formatDate(item.tanggal)}</td>
                                 <td>Rp. {parseToRupiahText(item.nilai_pembayaran)}</td>
-                                <td>{item.pegawai_penerima}</td>
+                                <td>{item.pegawai_penerima_name}</td>
                                 <td>{item.nomor_kwitansi_tanda_terima}</td>
                                 {
                                     viewMode ? <></> :

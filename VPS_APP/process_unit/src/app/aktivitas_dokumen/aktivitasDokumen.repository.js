@@ -11,8 +11,10 @@ export const getAllAktivitasDokumenRepo = async (tahun, pageNumber, size, search
                 COUNT(0) AS count
             FROM (
                 SELECT 
-                    adt.*
+                    adt.*,
+                    pt.name AS penanggung_jawab_name
                 FROM ${generateDatabaseName(req_id)}.aktivitas_dokumen_tab adt
+                JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = adt.penanggung_jawab
                 WHERE adt.tahun = ${tahun}
                 AND adt.enabled = 1
                 ORDER BY adt.tanggal DESC
@@ -96,8 +98,10 @@ export const getAllAktivitasDokumenRepo = async (tahun, pageNumber, size, search
                         ORDER BY radt.tanggal DESC 
                         LIMIT 1
                     ) AS judul_riwayat_aktivitas_uuid,
-                    adt.*
+                    adt.*,
+                    pt.name AS penanggung_jawab_name
                 FROM ${generateDatabaseName(req_id)}.aktivitas_dokumen_tab adt
+                JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = adt.penanggung_jawab
                 WHERE adt.tahun = ${tahun}
                 AND adt.enabled = 1
                 ORDER BY adt.tanggal DESC

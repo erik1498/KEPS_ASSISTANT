@@ -125,7 +125,7 @@ const AktivitasDokumenPage = () => {
                                                 aktivitasDokumenList.map((item, i) => {
                                                     return <div className="mt-4 border-b-2 pb-4 border-gray-500">
                                                         <div className="flex justify-between">
-                                                            <p className="text-sm">Tanggal {formatDate(item.tanggal)} | {item.penanggung_jawab}</p>
+                                                            <p className="text-sm">Tanggal {formatDate(item.tanggal)} | {item.penanggung_jawab_name}</p>
                                                             <div className="flex items-center">
                                                                 <button
                                                                     className="btn btn-xs bg-transparent shadow-none border-0 text-green-400"

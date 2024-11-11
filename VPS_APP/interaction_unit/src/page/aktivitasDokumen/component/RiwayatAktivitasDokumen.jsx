@@ -1,8 +1,7 @@
-import { FaDotCircle, FaPlus, FaTrash } from "react-icons/fa"
+import { FaPlus, FaTrash } from "react-icons/fa"
 import FormInputWithLabel from "../../../component/form/FormInputWithLabel"
-import FormSelectWithLabel from "../../../component/form/FormSelectWithLabel"
 import { useEffect, useState } from "react"
-import { formatDate, getHariTanggal, getHariTanggalFull } from "../../../helper/date.helper"
+import { formatDate, getHariTanggalFull } from "../../../helper/date.helper"
 import { apiRiwayatAktivitasDokumen } from "../../../service/endPointList.api"
 import { formValidation } from "../../../helper/form.helper"
 import StatusRiwayatAktivitasDokumen from "./StatusRiwayatAktivitasDokumen"
@@ -10,6 +9,7 @@ import LoadingMiniPage from "../../../component/layout/LoadingMiniPage"
 
 const RiwayatAktivitasDokumen = ({
     idAktivitasDokumen,
+    pegawaiList,
     viewMode
 }) => {
 
@@ -131,6 +131,7 @@ const RiwayatAktivitasDokumen = ({
                             </div>
                             <div className="col-span-5">
                                 <StatusRiwayatAktivitasDokumen
+                                    pegawaiList={pegawaiList}
                                     idStatusAktivitasDokumen={riwayat.uuid}
                                     setIsLoading={setIsLoading}
                                     viewMode={viewMode}

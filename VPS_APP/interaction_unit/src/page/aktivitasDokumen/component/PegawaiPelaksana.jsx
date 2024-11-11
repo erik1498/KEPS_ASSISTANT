@@ -4,10 +4,10 @@ import { apiStatusRiwayatAktivitasDokumenPegawaiPelaksana } from "../../../servi
 import { formValidation } from "../../../helper/form.helper"
 import { FaPlus, FaTimes } from "react-icons/fa"
 import LoadingMiniPage from "../../../component/layout/LoadingMiniPage"
-import { pegawaiList } from "../../../config/objectList.config"
 
 const PegawaiPelaksana = ({
     idStatusRiwayatAktivitasDokumen,
+    pegawaiList=[],
     viewMode
 }) => {
 
@@ -71,8 +71,8 @@ const PegawaiPelaksana = ({
                                         setPegawaiPelaksana(e)
                                     }}
                                     optionsDataList={pegawaiList}
-                                    optionsLabel={"nama"}
-                                    optionsValue={"nama"}
+                                    optionsLabel={"name"}
+                                    optionsValue={"uuid"}
                                     selectValue={pegawaiPelaksana}
                                     selectName={"kodeAkunType"}
                                 />
@@ -90,11 +90,11 @@ const PegawaiPelaksana = ({
                 {
                     pegawaiPelaksanaList.map((itemk, k) => {
                         return viewMode ? <>
-                            <p className="text-xs font-bold mt-3 bg-gray-400 px-2 rounded-full text-white">{itemk.pegawai_pelaksana}</p>
+                            <p className="text-xs font-bold mt-3 bg-gray-400 px-2 rounded-full text-white">{itemk.pegawai_pelaksana_name}</p>
                         </> : <>
                             <div className="flex gap-x-3 items-center px-2 rounded-lg bg-gray-500">
                                 <p className="px-4 py-1 text-sm font-bold text-white">
-                                    {itemk.pegawai_pelaksana}
+                                    {itemk.pegawai_pelaksana_name}
                                 </p>
                                 <FaTimes
                                     onClick={() => hapusPegawaiPelaksana(itemk.uuid)}

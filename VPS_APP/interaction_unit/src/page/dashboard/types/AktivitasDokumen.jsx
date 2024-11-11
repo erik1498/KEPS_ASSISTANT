@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { pegawaiList } from "../../../config/objectList.config";
+// import { pegawaiList } from "../../../config/objectList.config";
 import { parseToRupiahText } from "../../../helper/number.helper";
-import { apiAktivitasDokumen, apiRiwayatPembayaranAktivitasDokumen, apiStatusRiwayatAktivitasDokumenPegawaiPelaksana } from "../../../service/endPointList.api";
+import { apiAktivitasDokumen, apiPegawaiCRUD, apiRiwayatPembayaranAktivitasDokumen, apiStatusRiwayatAktivitasDokumenPegawaiPelaksana } from "../../../service/endPointList.api";
 import { useDataContext } from "../../../context/dataContext.context";
 import StackedBarApex from "../../../component/chart/apex/StackedBarApex";
 import { FaDotCircle } from "react-icons/fa";
 import { formatDate } from "../../../helper/date.helper";
+import { showError } from "../../../helper/form.helper";
 
 const AktivitasDokumen = () => {
 
     const { data } = useDataContext()
+    const [pegawaiList, setPegawaiList] = useState([])
 
     const [dataAktivitasDokumen, setDataAktivitasDokumen] = useState()
 
@@ -31,17 +33,17 @@ const AktivitasDokumen = () => {
             const pegawaiListData = pegawaiList
 
             for (let index = 0; index < pegawaiListData.length; index++) {
-                pegawaiListData[index].total_dokumen = responseData.filter(x => x.penanggung_jawab == pegawaiListData[index].nama).length
-                pegawaiListData[index].mulai = responseData.filter(x => x.penanggung_jawab == pegawaiListData[index].nama && x.status == "Mulai").length
-                pegawaiListData[index].dalam_proses = responseData.filter(x => x.penanggung_jawab == pegawaiListData[index].nama && x.status == "Dalam Proses").length
-                pegawaiListData[index].selesai = responseData.filter(x => x.penanggung_jawab == pegawaiListData[index].nama && x.status == "Selesai").length
+                pegawaiListData[index].total_dokumen = responseData.filter(x => x.penanggung_jawab == pegawaiListData[index].uuid).length
+                pegawaiListData[index].mulai = responseData.filter(x => x.penanggung_jawab == pegawaiListData[index].uuid && x.status == "Mulai").length
+                pegawaiListData[index].dalam_proses = responseData.filter(x => x.penanggung_jawab == pegawaiListData[index].uuid && x.status == "Dalam Proses").length
+                pegawaiListData[index].selesai = responseData.filter(x => x.penanggung_jawab == pegawaiListData[index].uuid && x.status == "Selesai").length
                 pegawaiListData[index].riwayat_pembayaran = riwayatPembayaranData.map(x => {
-                    if (x.list_pembayaran.filter(y => y.pegawai_penerima == pegawaiListData[index].nama).length > 0)
+                    if (x.list_pembayaran.filter(y => y.pegawai_penerima == pegawaiListData[index].uuid).length > 0)
                         return 1
                     return 0
                 }).reduce((sum, current) => { return sum + current }, 0)
                 pegawaiListData[index].riwayat_pembayaran_total = riwayatPembayaranData.map(x => x.list_pembayaran.length).reduce((sum, current) => { return sum + current }, 0)
-                pegawaiListData[index].pegawai_pelaksana = riwayatStatusAktivitasPegawaiPelaksanaData.filter(x => x.pegawai_pelaksana?.split(",").indexOf(pegawaiListData[index].nama) > -1).length
+                pegawaiListData[index].pegawai_pelaksana = riwayatStatusAktivitasPegawaiPelaksanaData.filter(x => x.pegawai_pelaksana?.split(",").indexOf(pegawaiListData[index].uuid) > -1).length
                 pegawaiListData[index].pegawai_pelaksana_total = riwayatStatusAktivitasPegawaiPelaksanaData.length
             }
 
@@ -60,8 +62,20 @@ const AktivitasDokumen = () => {
         }
     }
 
+    const _getDataPegawai = () => {
+        apiPegawaiCRUD
+            .custom("", "GET")
+            .then(resData => {
+                setPegawaiList(x => x = resData.data.entry)
+            }).catch(err => showError(err))
+    }
+
     useEffect(() => {
         normalizeDataAktivitasDokumen()
+    }, [pegawaiList])
+
+    useEffect(() => {
+        _getDataPegawai()
     }, [])
 
     return <div className="flex flex-col gap-y-3">
@@ -113,7 +127,7 @@ const AktivitasDokumen = () => {
                     dataAktivitasDokumen?.pegawai_data?.map((item, i) => {
                         return <>
                             <div className="bg-white px-6 py-6 rounded-xl shadow-lg mb-2">
-                                <p className="text-4xl font-bold ">{item.nama}</p>
+                                <p className="text-4xl font-bold ">{item.name}</p>
                                 <div className="flex mt-5">
                                     <div className="w-full">
                                         <p className="font-bold bg-gray-400 w-max rounded-md px-4 text-white">{item.total_dokumen} Dokumen</p>
@@ -177,7 +191,7 @@ const AktivitasDokumen = () => {
                                                         <p className="text-sm">{formatDate(ktem.tanggal)}</p>
                                                     </div>
                                                     <div className="col-span-4">
-                                                        <p className="text-sm">{ktem.pegawai_penerima}</p>
+                                                        <p className="text-sm">{ktem.pegawai_penerima_name}</p>
                                                         <p className="text-sm font-bold">{ktem.nomor_kwitansi_tanda_terima}</p>
                                                     </div>
                                                     <p className="col-span-4 text-sm text-right">Rp. {parseToRupiahText(ktem.nilai_pembayaran)}</p>
