@@ -32,12 +32,17 @@ const JurnalStokOpnameRowData = ({
                                                     <div className="flex justify-between">
                                                         <div>
                                                             <h1>{item3.sumber}</h1>
-                                                            <h1>No. Pesanan {item3.pesanan_penjualan_barang}</h1>
+                                                            {
+                                                                item3.pesanan_penjualan_barang && <h1>No. Pesanan {item3.pesanan_penjualan_barang}</h1>
+                                                            }
                                                         </div>
-                                                        <div>
-                                                            <h1 className="text-right">{item3.customer_name}</h1>
-                                                            <h1 className="text-right">Kode Customer {item3.customer_code}</h1>
-                                                        </div>
+                                                        {
+                                                            item3.customer_name &&
+                                                            <div>
+                                                                <h1 className="text-right">{item3.customer_name}</h1>
+                                                                <h1 className="text-right">Kode Customer {item3.customer_code}</h1>
+                                                            </div>
+                                                        }
                                                     </div>
                                                     <div className="mt-3 flex font-normal gap-x-2">
                                                         {
@@ -69,7 +74,22 @@ const JurnalStokOpnameRowData = ({
                                                         {
                                                             !item3.diskon_persentase ? <></> : <p className="mb-2 text-xs">Diskon {item3.diskon_persentase} %</p>
                                                         }
+                                                        {
+                                                            item3.detail_data?.harga_beli && <p className="mb-2 text-xs">Harga Beli Rp. {parseToRupiahText(item3.detail_data?.harga_beli)}</p>
+                                                        }
+                                                        {
+                                                            item3.detail_data?.stok_sistem && <p className="mb-2 text-xs">Stok Sistem {parseToRupiahText(item3.detail_data?.stok_sistem)}</p>
+                                                        }
+                                                        {
+                                                            item3.detail_data?.tipe_penyesuaian && item3.detail_data?.tipe_penyesuaian != "SESUAI" ? <p className="mb-2 text-xs">Tipe Penyesuaian {item3.detail_data?.tipe_penyesuaian}</p> : <></>
+                                                        }
+                                                        {
+                                                            item3.detail_data?.jumlah_penyesuaian && item3.detail_data?.jumlah_penyesuaian != 0 ? <p className="mb-2 text-xs">{item3.detail_data?.jumlah_penyesuaian} {item3.detail_data?.satuan_barang_name}</p> : <></>
+                                                        }
                                                     </div>
+                                                    {
+                                                        item3.detail_data?.keterangan_penyesuaian_persediaan && <p className="mb-2 text-xs">{item3.detail_data?.keterangan_penyesuaian_persediaan}</p>
+                                                    }
                                                 </div>
                                             </div>
                                         </> : <></>

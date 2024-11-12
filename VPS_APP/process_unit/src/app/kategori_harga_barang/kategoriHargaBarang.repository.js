@@ -65,7 +65,7 @@ export const getKategoriHargaBarangByUuidRepo = async (uuid, req_id) => {
 
 export const createKategoriHargaBarangRepo = async (kategoriHargaBarangData, req_id) => {
     kategoriHargaBarangData = removeDotInRupiahInput(kategoriHargaBarangData, [
-        "harga_1", "harga_2", "harga_3", "harga_4", "harga_5",
+        "harga_beli", "harga_1", "harga_2", "harga_3", "harga_4", "harga_5",
     ])
     return insertQueryUtil(
         req_id,
@@ -75,6 +75,7 @@ export const createKategoriHargaBarangRepo = async (kategoriHargaBarangData, req
             daftar_barang: kategoriHargaBarangData.daftar_barang,
             kode_barang: kategoriHargaBarangData.kode_barang,
             satuan_barang: kategoriHargaBarangData.satuan_barang,
+            harga_beli: kategoriHargaBarangData.harga_beli,
             harga_1: kategoriHargaBarangData.harga_1,
             harga_2: kategoriHargaBarangData.harga_2,
             harga_3: kategoriHargaBarangData.harga_3,
@@ -101,7 +102,7 @@ export const deleteKategoriHargaBarangByUuidRepo = async (uuid, req_id) => {
 
 export const updateKategoriHargaBarangByUuidRepo = async (uuid, kategoriHargaBarangData, req_id) => {
     kategoriHargaBarangData = removeDotInRupiahInput(kategoriHargaBarangData, [
-        "harga_1", "harga_2", "harga_3", "harga_4", "harga_5",
+        "harga_beli", "harga_1", "harga_2", "harga_3", "harga_4", "harga_5",
     ])
     return updateQueryUtil(
         req_id,
@@ -111,6 +112,7 @@ export const updateKategoriHargaBarangByUuidRepo = async (uuid, kategoriHargaBar
             daftar_barang: kategoriHargaBarangData.daftar_barang,
             kode_barang: kategoriHargaBarangData.kode_barang,
             satuan_barang: kategoriHargaBarangData.satuan_barang,
+            harga_beli: kategoriHargaBarangData.harga_beli,
             harga_1: kategoriHargaBarangData.harga_1,
             harga_2: kategoriHargaBarangData.harga_2,
             harga_3: kategoriHargaBarangData.harga_3,

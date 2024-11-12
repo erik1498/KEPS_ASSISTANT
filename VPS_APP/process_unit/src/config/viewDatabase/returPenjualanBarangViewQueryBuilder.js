@@ -7,9 +7,7 @@ export const returPenjualanBarangViewQueryBuilder = (req_id) => {
             "NOT_AVAILABLE" AS uuid,
             rpbt.bukti_transaksi AS bukti_transaksi,
             rpbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(rpbt.tanggal) < 10 THEN CONCAT("0", MONTH(rpbt.tanggal)) ELSE MONTH(rpbt.tanggal) END
-            ) AS bulan,
+            LPAD(MONTH(rpbt.tanggal), 2, '0') AS bulan,
             YEAR(rpbt.tanggal) AS tahun,
             0 AS transaksi,
             (
@@ -63,9 +61,7 @@ export const returPenjualanBarangViewQueryBuilder = (req_id) => {
             "NOT_AVAILABLE" AS uuid,
             rpbt.bukti_transaksi AS bukti_transaksi,
             rpbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(rpbt.tanggal) < 10 THEN CONCAT("0", MONTH(rpbt.tanggal)) ELSE MONTH(rpbt.tanggal) END
-            ) AS bulan,
+            LPAD(MONTH(rpbt.tanggal), 2, '0') AS bulan,
             YEAR(rpbt.tanggal) AS tahun,
             1 AS transaksi,
             0 AS debet,
@@ -119,9 +115,7 @@ export const returPenjualanBarangViewQueryBuilder = (req_id) => {
             "NOT_AVAILABLE" AS uuid,
             rpbt.bukti_transaksi AS bukti_transaksi,
             rpbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(rpbt.tanggal) < 10 THEN CONCAT("0", MONTH(rpbt.tanggal)) ELSE MONTH(rpbt.tanggal) END
-            ) AS bulan,
+            LPAD(MONTH(rpbt.tanggal), 2, '0') AS bulan,
             YEAR(rpbt.tanggal) AS tahun,
             2 AS transaksi,
             (
@@ -175,9 +169,7 @@ export const returPenjualanBarangViewQueryBuilder = (req_id) => {
             "NOT_AVAILABLE" AS uuid,
             rpbt.bukti_transaksi AS bukti_transaksi,
             rpbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(rpbt.tanggal) < 10 THEN CONCAT("0", MONTH(rpbt.tanggal)) ELSE MONTH(rpbt.tanggal) END
-            ) AS bulan,
+            LPAD(MONTH(rpbt.tanggal), 2, '0') AS bulan,
             YEAR(rpbt.tanggal) AS tahun,
             3 AS transaksi,
             0 AS debet,

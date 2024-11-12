@@ -25,6 +25,16 @@ export const getNormalizedByDate = (data) => {
 
 export const normalizeDataJurnalPerintahStokOpname = (data) => {
     let listDaftarData = []
+
+    let transaksiPerintahStokOpname = []
+
+    for (let i = 0; i < data.length; i++) {
+        const x = data[i];
+        if (x.sumber == "PERINTAH STOK OPNAME" && !transaksiPerintahStokOpname.includes(x.transaksi)) {
+            transaksiPerintahStokOpname.push(x.transaksi)
+        }
+    }
+
     data.map((x, i) => {
 
         const detail_data = JSON.parse(x.detail_data)
@@ -47,20 +57,41 @@ export const normalizeDataJurnalPerintahStokOpname = (data) => {
             detail_data: detail_data
         }
 
-        if (x.transaksi == 0) {
-            dataInput["satuan_barang_name"] = detail_data.satuan_barang_name
-            dataInput["faktur_penjualan_barang"] = detail_data.faktur_penjualan_barang
-            dataInput["kategori_harga_barang_kode_barang"] = detail_data.kategori_harga_barang_kode_barang
-            dataInput["pesanan_penjualan_barang"] = detail_data.pesanan_penjualan_barang
-            dataInput["customer_name"] = detail_data.customer_name
-            dataInput["customer_code"] = detail_data.customer_code
-            dataInput["daftar_gudang_name"] = detail_data.daftar_gudang_name
-            dataInput["daftar_barang_name"] = detail_data.daftar_barang_name
-            dataInput["jumlah"] = detail_data.jumlah
-            dataInput["harga"] = detail_data.harga
-            dataInput["ppn"] = detail_data.ppn
-            dataInput["diskon_persentase"] = detail_data.diskon_persentase
-            dataInput["waktu_show"] = true
+        if (x.sumber == "PERINTAH STOK OPNAME") {
+            if (transaksiPerintahStokOpname.includes(x.transaksi)) {
+
+                transaksiPerintahStokOpname[transaksiPerintahStokOpname.indexOf(x.transaksi)] = -1
+
+                dataInput["satuan_barang_name"] = detail_data.satuan_barang_name
+                dataInput["faktur_penjualan_barang"] = detail_data.faktur_penjualan_barang
+                dataInput["kategori_harga_barang_kode_barang"] = detail_data.kategori_harga_barang_kode_barang
+                dataInput["pesanan_penjualan_barang"] = detail_data.pesanan_penjualan_barang
+                dataInput["customer_name"] = detail_data.customer_name
+                dataInput["customer_code"] = detail_data.customer_code
+                dataInput["daftar_gudang_name"] = detail_data.daftar_gudang_name
+                dataInput["daftar_barang_name"] = detail_data.daftar_barang_name
+                dataInput["jumlah"] = detail_data.jumlah
+                dataInput["harga"] = detail_data.harga
+                dataInput["ppn"] = detail_data.ppn
+                dataInput["diskon_persentase"] = detail_data.diskon_persentase
+                dataInput["waktu_show"] = true
+            }
+        } else {
+            if (x.transaksi == 0) {
+                dataInput["satuan_barang_name"] = detail_data.satuan_barang_name
+                dataInput["faktur_penjualan_barang"] = detail_data.faktur_penjualan_barang
+                dataInput["kategori_harga_barang_kode_barang"] = detail_data.kategori_harga_barang_kode_barang
+                dataInput["pesanan_penjualan_barang"] = detail_data.pesanan_penjualan_barang
+                dataInput["customer_name"] = detail_data.customer_name
+                dataInput["customer_code"] = detail_data.customer_code
+                dataInput["daftar_gudang_name"] = detail_data.daftar_gudang_name
+                dataInput["daftar_barang_name"] = detail_data.daftar_barang_name
+                dataInput["jumlah"] = detail_data.jumlah
+                dataInput["harga"] = detail_data.harga
+                dataInput["ppn"] = detail_data.ppn
+                dataInput["diskon_persentase"] = detail_data.diskon_persentase
+                dataInput["waktu_show"] = true
+            }
         }
 
         listDaftarData.push(dataInput)

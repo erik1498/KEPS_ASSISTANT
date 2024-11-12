@@ -34,6 +34,13 @@ const KategoriHargaBarangModel = db.define("kategori_harga_barang_tab",
                 notEmpty:true,
             }
         },
+        harga_beli: {
+            type: DataTypes.DOUBLE,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
         harga_1: {
             type: DataTypes.DOUBLE,
             allowNull: false,

@@ -9,6 +9,7 @@ import { getDataFromPelunasanPenjualanDendaBarangViewQuery } from "../../config/
 import { getDataFromReturPenjualanBarangViewQuery } from "../../config/viewDatabase/returPenjualanBarangViewQueryBuilder.js";
 import { getDataFrompengembalianDendaPenjualanBarangViewQuery } from "../../config/viewDatabase/pengembalianDendaPenjualanBarangViewQueryBuilder.js";
 import { fakturPenjualanBarangQueryBuilder } from "../../config/viewDatabase/fakturPenjualanBarangViewQueryBuilder.js";
+import { perintahStokOpnameQueryBuilder } from "../../config/viewDatabase/perintahStokOpnameViewQueryBuilder.js";
 
 export const getAllPerintahStokOpnameRepo = async (pageNumber, size, search, tahun, req_id) => {
     const perintahStokOpnamesCount = await db.query(
@@ -254,13 +255,16 @@ export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, saveToPerint
 
     const fakturPenjualanBarangDendaBulanIniQuery = fakturPenjualanBarangQueryBuilder(bulan, tahun, req_id)
 
+    const perintahStokOpnameBulanIniQuery = perintahStokOpnameQueryBuilder(bulan, tahun, req_id)
+
     const queryList = [
         pesananPenjualanBarangQuery,
         pelunasanPenjualanBarangQuery,
         pelunasanDendaPenjualanBarangQuery,
         returPenjualanBarangQuery,
         pengembalianDendaPenjualanBarangQuery,
-        fakturPenjualanBarangDendaBulanIniQuery
+        fakturPenjualanBarangDendaBulanIniQuery,
+        perintahStokOpnameBulanIniQuery
     ]
 
     const penjualanBarang = await db.query(

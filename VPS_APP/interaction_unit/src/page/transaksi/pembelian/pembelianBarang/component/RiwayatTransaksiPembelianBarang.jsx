@@ -21,7 +21,8 @@ const RiwayatTransaksiPembelianBarang = ({
         label: "Pelunasan",
         value: "Pelunasan"
     })
-    const tipeTransaksiPembelianBarang = ["Pelunasan", "Retur", "Pengembalian_Denda"]
+    // const tipeTransaksiPembelianBarang = ["Pelunasan", "Retur", "Pengembalian_Denda"]
+    const tipeTransaksiPembelianBarang = ["Pelunasan"]
     const [kodeAkun, setKodeAkun] = useState()
     const [kodeAkunList, setKodeAkunList] = useState([])
 

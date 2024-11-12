@@ -84,7 +84,7 @@ const KategoriHargaForm = ({
         }
 
         kodeHargaList.map((x, i) => {
-            data[`harga_${x.value}`] = `${item[`harga_${i + 1}`]}`
+            data[`harga_${x.value}`] = `${item[`harga_${x.value}`]}`
         })
 
         apiKategoriHargaBarangCRUD.custom(`/${item.uuid}`, `PUT`, null, {
@@ -223,16 +223,16 @@ const KategoriHargaForm = ({
                                     />
                                 </td>
                                 {
-                                    kodeHargaList.map((_, j) => <td width={150}>
+                                    kodeHargaList.map((item) => <td width={150}>
                                         <FormInput
-                                            name={"harga_" + i}
+                                            name={"harga_" + item.value}
                                             type={"text"}
                                             other={{
-                                                defaultValue: parseToRupiahText(x[`harga_${j + 1}`])
+                                                defaultValue: parseToRupiahText(x[`harga_${item.value}`])
                                             }}
                                             onchange={(e) => {
                                                 inputOnlyRupiah(e)
-                                                _updateHarga(e.target.value, j + 1, x.uuid)
+                                                _updateHarga(e.target.value, item.value, x.uuid)
                                             }}
                                         />
                                     </td>)

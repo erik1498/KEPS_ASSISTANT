@@ -115,7 +115,7 @@ const PesananPembelianBarangForm = ({
         if (kategoriHargaBarangSelected) {
             _updateTotalAkhir()
         }
-    }, [jumlah, harga, ppn])
+    }, [jumlah])
 
     useEffect(() => {
         if (kategoriHargaBarang) {
@@ -123,6 +123,7 @@ const PesananPembelianBarangForm = ({
             const kategoriHargaBarangGet = kategoriHargaBarangList.filter(x => x.uuid == kategoriHargaBarang.value)
             if (kategoriHargaBarangGet.length > 0) {
                 setJumlah(x => x = 0)
+                setHarga(x => x = kategoriHargaBarangGet[0].harga_beli)
                 setUseDiskon(x => x = 0)
                 setDiskonAngka(x => x = 0)
                 setDiskonPersentase(x => x = 0)
@@ -190,13 +191,11 @@ const PesananPembelianBarangForm = ({
                                 <FormInputWithLabel
                                     label={"Harga"}
                                     type={"text"}
-                                    onchange={(e) => {
-                                        inputOnlyRupiah(e)
-                                        setHarga(e.target.value)
-                                    }}
+                                    addClassInput={`border-none px-1`}
+                                    disabled={true}
                                     others={
                                         {
-                                            value: harga,
+                                            value: `Rp. ${parseToRupiahText(harga)}`,
                                             name: "harga",
                                         }
                                     }

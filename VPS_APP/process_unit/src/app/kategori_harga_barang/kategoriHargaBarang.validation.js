@@ -17,6 +17,11 @@ export const kategoriHargaBarangValidation = (payload) => {
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
+        harga_beli: Joi.string().required().messages({
+            'string.base': "Harus Berupa Text",
+            "string.empty": "Harus Diisi",
+            "any.required": "Harus Diisi",
+        }),
         harga_1: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",

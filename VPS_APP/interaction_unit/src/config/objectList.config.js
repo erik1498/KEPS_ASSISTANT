@@ -4,12 +4,13 @@ export const AKUN_TIDAK_BOLEH_DIUPDATE = ["101", "102", "301", "302", "303", "39
 
 
 export const PERINTAHSTOKOPNAMESUMBERLIST = [
+    "PERINTAH STOK OPNAME",
     "FAKTUR PENJUALAN BARANG",
     "PELUNASAN PENJUALAN BARANG",
     "PELUNASAN DENDA PENJUALAN BARANG",
     "RETUR PENJUALAN BARANG",
     "PENGEMBALIAN DENDA PENJUALAN BARANG",
-    "DENDA PENJUALAN BARANG"
+    "DENDA PENJUALAN BARANG",
 ]
 
 export const tipeDokumenList = [
@@ -304,6 +305,10 @@ export const yearList = () => {
 }
 
 export const kodeHargaList = [
+    {
+        label: "Harga Beli",
+        value: "beli"
+    },
     {
         label: "Harga 1",
         value: "1"

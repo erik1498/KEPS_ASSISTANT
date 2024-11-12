@@ -7,9 +7,7 @@ export const pelunasanPenjualanBarangViewQueryBuilder = (req_id) => {
             "NOT_AVAILABLE" AS uuid,
             ppbt.bukti_transaksi AS bukti_transaksi,
             ppbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(ppbt.tanggal) < 10 THEN CONCAT("0", MONTH(ppbt.tanggal)) ELSE MONTH(ppbt.tanggal) END
-            ) AS bulan,
+            LPAD(MONTH(ppbt.tanggal), 2, '0') AS bulan,
             YEAR(ppbt.tanggal) AS tahun,
             0 AS transaksi,
             rppbt.nilai_pelunasan AS debet,
@@ -56,9 +54,7 @@ export const pelunasanPenjualanBarangViewQueryBuilder = (req_id) => {
             "NOT_AVAILABLE" AS uuid,
             ppbt.bukti_transaksi AS bukti_transaksi,
             ppbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(ppbt.tanggal) < 10 THEN CONCAT("0", MONTH(ppbt.tanggal)) ELSE MONTH(ppbt.tanggal) END
-            ) AS bulan,
+            LPAD(MONTH(ppbt.tanggal), 2, '0') AS bulan,
             YEAR(ppbt.tanggal) AS tahun,
             1 AS transaksi,
             0 AS debet,

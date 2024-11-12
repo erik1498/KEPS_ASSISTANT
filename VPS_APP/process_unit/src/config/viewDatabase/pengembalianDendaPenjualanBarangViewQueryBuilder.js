@@ -7,9 +7,7 @@ export const pengembalianDendaPenjualanBarangViewQueryBuilder = (req_id) => {
             "NOT_AVAILABLE" AS uuid,
             pdpbt.bukti_transaksi AS bukti_transaksi,
             pdpbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(pdpbt.tanggal) < 10 THEN CONCAT("0", MONTH(pdpbt.tanggal)) ELSE MONTH(pdpbt.tanggal) END
-            ) AS bulan,
+            LPAD(MONTH(pdpbt.tanggal), 2, '0') AS bulan,
             YEAR(pdpbt.tanggal) AS tahun,
             0 AS transaksi,
             rpdpbt.denda_yang_dikembalikan AS debet,
@@ -52,9 +50,7 @@ export const pengembalianDendaPenjualanBarangViewQueryBuilder = (req_id) => {
             "NOT_AVAILABLE" AS uuid,
             pdpbt.bukti_transaksi AS bukti_transaksi,
             pdpbt.tanggal AS tanggal,
-            (
-                CASE WHEN MONTH(pdpbt.tanggal) < 10 THEN CONCAT("0", MONTH(pdpbt.tanggal)) ELSE MONTH(pdpbt.tanggal) END
-            ) AS bulan,
+            LPAD(MONTH(pdpbt.tanggal), 2, '0') AS bulan,
             YEAR(pdpbt.tanggal) AS tahun,
             1 AS transaksi,
             0 AS debet,
