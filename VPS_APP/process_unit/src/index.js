@@ -29,7 +29,11 @@ app.use(cors({
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
-            callback(new Error(`${origin} Not allowed by CORS`))
+            if (origin != undefined) {
+                callback(`${origin} Not allowed by CORS`)
+            }else{
+                callback("Not Allowed by CORS")
+            }
         }
     }
 }))
