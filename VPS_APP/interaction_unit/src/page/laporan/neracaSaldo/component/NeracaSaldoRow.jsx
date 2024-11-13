@@ -3,7 +3,7 @@ import { parseToRupiahText } from "../../../../helper/number.helper";
 const NeracaSaldoRow = ({
     item
 }) => {
-    return <>
+    return item.kredit != 0 || item.debet != 0 ? <>
         <hr />
         <div className="grid grid-cols-12 items-start py-1">
             <div className="col-span-4 text-gray-900 px-2">
@@ -20,7 +20,7 @@ const NeracaSaldoRow = ({
                 }
             </div>
         </div>
-    </>
+    </> : <></>
 };
 
 export default NeracaSaldoRow;

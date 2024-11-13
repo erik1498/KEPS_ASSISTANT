@@ -1,5 +1,6 @@
 import { convertTo12HoursFormat, formatDate, getBulanByIndex } from "../../../../../helper/date.helper"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
+import PendapatanRowUraian from "./PendapatanRowUraian"
 
 const PendapatanRowData = ({
     item1,
@@ -41,16 +42,9 @@ const PendapatanRowData = ({
                                             <p>{item3.kode_akun} - {item3.nama_akun}</p>
                                         </div>
                                         <div className={`${forPrint ? "col-span-5" : "col-span-4"} text-gray-900 flex flex-col px-2`}>
-                                            <p>{item3.uraian}</p>
-                                            {
-                                                item3.waktu_mulai && item3.waktu_selesai && item3.transaksi == 0 ? <>
-                                                    <b>{item3.deskripsi_kerja}</b>
-                                                    <p className="mb-2">{item3.keterangan_kerja}</p>
-                                                    <p>{`${formatDate(item3.waktu_mulai.split("T")[0], false)} ${convertTo12HoursFormat(item3.waktu_mulai.split("T")[1])}`} Hingga {`${formatDate(item3.waktu_selesai.split("T")[0], false)} ${convertTo12HoursFormat(item3.waktu_selesai.split("T")[1])}`}</p>
-                                                    <p className="font-semibold">Detail</p>
-                                                    <p>{parseToRupiahText(item3.total_jam)} Jam, {parseToRupiahText(item3.total_menit)} Menit. Dengan Nilai Lembur Per Menit {parseToRupiahText(item3.nilai_lembur_per_menit)}</p>
-                                                </> : <></>
-                                            }
+                                            <PendapatanRowUraian
+                                                data={item3}
+                                            />
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">
                                             {

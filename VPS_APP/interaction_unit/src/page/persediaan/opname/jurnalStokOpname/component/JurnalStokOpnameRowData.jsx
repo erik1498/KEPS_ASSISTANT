@@ -1,5 +1,6 @@
 import { convertTo12HoursFormat, formatDate, getBulanByIndex } from "../../../../../helper/date.helper"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
+import JurnalStokOpnameUraian from "./JurnalStokOpnameUraian"
 
 const JurnalStokOpnameRowData = ({
     item1,
@@ -27,71 +28,10 @@ const JurnalStokOpnameRowData = ({
                                 j <= item2.length ? <>
                                     {
                                         item3.waktu_show ? <>
-                                            <div className="px-1">
-                                                <div className="px-2 bg-gray-600 py-3 text-white font-bold text-md flex flex-col justify-between">
-                                                    <div className="flex justify-between">
-                                                        <div>
-                                                            <h1>{item3.sumber}</h1>
-                                                            {
-                                                                item3.pesanan_penjualan_barang && <h1>No. Pesanan {item3.pesanan_penjualan_barang}</h1>
-                                                            }
-                                                        </div>
-                                                        {
-                                                            item3.customer_name &&
-                                                            <div>
-                                                                <h1 className="text-right">{item3.customer_name}</h1>
-                                                                <h1 className="text-right">Kode Customer {item3.customer_code}</h1>
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                    <div className="mt-3 flex font-normal gap-x-2">
-                                                        {
-                                                            item3.detail_data?.tanggal_faktur && <p className="mb-2 text-xs">Tanggal Faktur {formatDate(item3.detail_data?.tanggal_faktur)}</p>
-                                                        }
-                                                        {
-                                                            item3.detail_data?.jatuh_tempo && <p className="mb-2 text-xs">Jatuh Tempo {formatDate(item3.detail_data?.jatuh_tempo)}</p>
-                                                        }
-                                                        {
-                                                            item3.detail_data?.hari_terlewat && <p className="mb-2 text-xs">{item3.detail_data?.hari_terlewat} Hari Terlewat</p>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="px-1">
-                                                <div className="bg-gray-200 px-2 py-1">
-                                                    <b>{item3.kategori_harga_barang_kode_barang} ( {item3.daftar_gudang_name} )</b>
-                                                    <p className="mb-1">{item3.daftar_barang_name}</p>
-                                                    <div className="w-full flex items-center gap-x-4">
-                                                        {
-                                                            item3.jumlah && <p className="mb-2 text-xs">x{item3.jumlah} {item3.satuan_barang_name}</p>
-                                                        }
-                                                        {
-                                                            item3.harga && <p className="mb-2 text-xs">Harga Rp.{parseToRupiahText(item3.harga)}</p>
-                                                        }
-                                                        {
-                                                            item3.ppn && <p className="mb-2 text-xs">PPN Rp.{parseToRupiahText(item3.ppn)}</p>
-                                                        }
-                                                        {
-                                                            !item3.diskon_persentase ? <></> : <p className="mb-2 text-xs">Diskon {item3.diskon_persentase} %</p>
-                                                        }
-                                                        {
-                                                            item3.detail_data?.harga_beli && <p className="mb-2 text-xs">Harga Beli Rp. {parseToRupiahText(item3.detail_data?.harga_beli)}</p>
-                                                        }
-                                                        {
-                                                            item3.detail_data?.stok_sistem && <p className="mb-2 text-xs">Stok Sistem {parseToRupiahText(item3.detail_data?.stok_sistem)}</p>
-                                                        }
-                                                        {
-                                                            item3.detail_data?.tipe_penyesuaian && item3.detail_data?.tipe_penyesuaian != "SESUAI" ? <p className="mb-2 text-xs">Tipe Penyesuaian {item3.detail_data?.tipe_penyesuaian}</p> : <></>
-                                                        }
-                                                        {
-                                                            item3.detail_data?.jumlah_penyesuaian && item3.detail_data?.jumlah_penyesuaian != 0 ? <p className="mb-2 text-xs">{item3.detail_data?.jumlah_penyesuaian} {item3.detail_data?.satuan_barang_name}</p> : <></>
-                                                        }
-                                                    </div>
-                                                    {
-                                                        item3.detail_data?.keterangan_penyesuaian_persediaan && <p className="mb-2 text-xs">{item3.detail_data?.keterangan_penyesuaian_persediaan}</p>
-                                                    }
-                                                </div>
-                                            </div>
+                                            <JurnalStokOpnameUraian
+                                                data={item3}
+                                                bg_color={true}
+                                            />
                                         </> : <></>
                                     }
                                     <div className="grid grid-cols-12 items-start py-1">
