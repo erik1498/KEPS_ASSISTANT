@@ -10,16 +10,20 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             YEAR(gt.tanggal) AS tahun,
             TIME(gt.tanggal) AS waktu,
             0 AS transaksi,
-            0 AS debet,
-            gt.nilai AS kredit,
+            gt.nilai AS debet,
+            0 AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Gaji Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', gt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Gaji Pegawai'
+            ) AS uraian,
             "GAJI PEGAWAI" AS sumber,
             gt.enabled 
         FROM ${generateDatabaseName(req_id)}.gaji_tab gt 
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = gt.kode_akun_perkiraan 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "0c0a1c04-ad98-4818-9a63-9be554b2ae55" 
         JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = gt.pegawai 
         WHERE gt.enabled = 1
         AND kapt.enabled = 1
@@ -32,17 +36,21 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(gt.tanggal), 2, '0') AS bulan,
             YEAR(gt.tanggal) AS tahun,
             TIME(gt.tanggal) AS waktu,
-            0 AS transaksi,
-            gt.nilai AS debet,
-            0 AS kredit,
+            1 AS transaksi,
+            0 AS debet,
+            gt.nilai AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Gaji Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', gt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Gaji Pegawai'
+            ) AS uraian,
             "GAJI PEGAWAI" AS sumber,
             gt.enabled 
         FROM ${generateDatabaseName(req_id)}.gaji_tab gt 
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "0c0a1c04-ad98-4818-9a63-9be554b2ae55" 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = gt.kode_akun_perkiraan 
         JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = gt.pegawai 
         WHERE gt.enabled = 1
         AND kapt.enabled = 1
@@ -56,12 +64,16 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
             0 AS transaksi,
-            tut.bonus + tut.insentif + tut.thr AS debet,
+            tut.bonus AS debet,
             0 AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Tunjangan Uang" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Bonus Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -77,13 +89,17 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            1 AS transaksi,
             0 AS debet,
             tut.bonus AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Bonus Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Bonus Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -99,13 +115,43 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            2 AS transaksi,
+            tut.insentif AS debet,
+            0 AS kredit,
+            kapt.code AS kode_akun,
+            kapt.name AS nama_akun,
+            kapt.type AS type_akun,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Insentif Pegawai'
+            ) AS uraian,
+            "TUNJANGAN UANG PEGAWAI" AS sumber,
+            tut.enabled 
+        FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "dc632a24-dba2-4c65-9b42-968de322fe1c"
+        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+        WHERE tut.enabled = 1
+        AND kapt.enabled = 1
+        UNION ALL
+        SELECT 
+            tut.uuid,
+            tut.bukti_transaksi,
+            LPAD(DAY(tut.tanggal), 2, '0') AS tanggal,
+            LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
+            YEAR(tut.tanggal) AS tahun,
+            TIME(tut.tanggal) AS waktu,
+            3 AS transaksi,
             0 AS debet,
             tut.insentif AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Insentif Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Insentif Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -121,13 +167,43 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            4 AS transaksi,
+            tut.thr AS debet,
+            0 AS kredit,
+            kapt.code AS kode_akun,
+            kapt.name AS nama_akun,
+            kapt.type AS type_akun,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'THR Pegawai'
+            ) AS uraian,
+            "TUNJANGAN UANG PEGAWAI" AS sumber,
+            tut.enabled 
+        FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "dc632a24-dba2-4c65-9b42-968de322fe1c"
+        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+        WHERE tut.enabled = 1
+        AND kapt.enabled = 1
+        UNION ALL
+        SELECT 
+            tut.uuid,
+            tut.bukti_transaksi,
+            LPAD(DAY(tut.tanggal), 2, '0') AS tanggal,
+            LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
+            YEAR(tut.tanggal) AS tahun,
+            TIME(tut.tanggal) AS waktu,
+            5 AS transaksi,
             0 AS debet,
             tut.thr AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "THR Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'THR Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -143,13 +219,17 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            5 AS transaksi,
             tut.jp AS debet,
             0 AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Jaminan Pensiun Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Jaminan Pensiun Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -165,13 +245,43 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            6 AS transaksi,
+            0 AS debet,
+            tut.jp AS kredit,
+            kapt.code AS kode_akun,
+            kapt.name AS nama_akun,
+            kapt.type AS type_akun,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Jaminan Pensiun Pegawai'
+            ) AS uraian,
+            "TUNJANGAN UANG PEGAWAI" AS sumber,
+            tut.enabled 
+        FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
+        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+        WHERE tut.enabled = 1
+        AND kapt.enabled = 1
+        UNION ALL
+        SELECT 
+            tut.uuid,
+            tut.bukti_transaksi,
+            LPAD(DAY(tut.tanggal), 2, '0') AS tanggal,
+            LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
+            YEAR(tut.tanggal) AS tahun,
+            TIME(tut.tanggal) AS waktu,
+            7 AS transaksi,
             tut.jht AS debet,
             0 AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Jaminan Hari Tua Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Jaminan Hari Tua Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -187,13 +297,43 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            8 AS transaksi,
+            0 AS debet,
+            tut.jht AS kredit,
+            kapt.code AS kode_akun,
+            kapt.name AS nama_akun,
+            kapt.type AS type_akun,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Jaminan Hari Tua Pegawai'
+            ) AS uraian,
+            "TUNJANGAN UANG PEGAWAI" AS sumber,
+            tut.enabled 
+        FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
+        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
+        WHERE tut.enabled = 1
+        AND kapt.enabled = 1
+        UNION ALL
+        SELECT 
+            tut.uuid,
+            tut.bukti_transaksi,
+            LPAD(DAY(tut.tanggal), 2, '0') AS tanggal,
+            LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
+            YEAR(tut.tanggal) AS tahun,
+            TIME(tut.tanggal) AS waktu,
+            9 AS transaksi,
             tut.jkm AS debet,
             0 AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Jaminan Kematian Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Jaminan Kematian Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -209,35 +349,17 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
-            tut.jkk AS debet,
-            0 AS kredit,
-            kapt.code AS kode_akun,
-            kapt.name AS nama_akun,
-            kapt.type AS type_akun,
-            "Jaminan Keselamatan Kerja Pegawai" AS uraian,
-            "TUNJANGAN UANG PEGAWAI" AS sumber,
-            tut.enabled 
-        FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
-        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
-        WHERE tut.enabled = 1
-        AND kapt.enabled = 1
-        UNION ALL
-        SELECT 
-            tut.uuid,
-            tut.bukti_transaksi,
-            LPAD(DAY(tut.tanggal), 2, '0') AS tanggal,
-            LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
-            YEAR(tut.tanggal) AS tahun,
-            TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            10 AS transaksi,
             0 AS debet,
-            tut.jp AS debet,
+            tut.jkm AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Jaminan Pensiun Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Jaminan Kematian Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -253,17 +375,21 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
-            0 AS debet,
-            tut.jht AS kredit,
+            11 AS transaksi,
+            tut.jkk AS debet,
+            0 AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Jaminan Hari Tua Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Jaminan Keselamatan Kerja Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "24af525c-4519-4f26-a339-df8ef261b42d" 
         JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
         WHERE tut.enabled = 1
         AND kapt.enabled = 1
@@ -275,39 +401,21 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
-            0 AS debet,
-            tut.jkm AS kredit,
-            kapt.code AS kode_akun,
-            kapt.name AS nama_akun,
-            kapt.type AS type_akun,
-            "Jaminan Kematian Pegawai" AS uraian,
-            "TUNJANGAN UANG PEGAWAI" AS sumber,
-            tut.enabled 
-        FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
-        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
-        WHERE tut.enabled = 1
-        AND kapt.enabled = 1
-        UNION ALL
-        SELECT 
-            tut.uuid,
-            tut.bukti_transaksi,
-            LPAD(DAY(tut.tanggal), 2, '0') AS tanggal,
-            LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
-            YEAR(tut.tanggal) AS tahun,
-            TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            12 AS transaksi,
             0 AS debet,
             tut.jkk AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Jaminan Keselamatan Kerja Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Jaminan Keselamatan Kerja Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = tut.kode_akun_perkiraan 
         JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = tut.pegawai 
         WHERE tut.enabled = 1
         AND kapt.enabled = 1
@@ -319,13 +427,17 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            13 AS transaksi,
             tut.bpjs_kesehatan AS debet,
             0 AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "BPJS Kesehatan Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'BPJS Kesehatan Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -341,13 +453,17 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            14 AS transaksi,
             0 AS debet,
             tut.bpjs_karyawan AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "BPJS Karyawan" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'BPJS Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -363,13 +479,17 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            15 AS transaksi,
             0 AS debet,
             tut.jp_karyawan AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Jaminan Pensiun Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Jaminan Pensiun Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -385,13 +505,17 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(tut.tanggal), 2, '0') AS bulan,
             YEAR(tut.tanggal) AS tahun,
             TIME(tut.tanggal) AS waktu,
-            0 AS transaksi,
+            16 AS transaksi,
             0 AS debet,
             tut.jht_karyawan AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "Jaminan Hari Tua Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', tut.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Jaminan Hari Tua Pegawai'
+            ) AS uraian,
             "TUNJANGAN UANG PEGAWAI" AS sumber,
             tut.enabled 
         FROM ${generateDatabaseName(req_id)}.tunjangan_uang_tab tut
@@ -400,36 +524,6 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
         WHERE tut.enabled = 1
         AND kapt.enabled = 1
         UNION ALL -- LEMBUR START
-        SELECT 
-            lt.uuid,
-            lt.bukti_transaksi,
-            LPAD(DAY(lt.tanggal), 2, '0') AS tanggal,
-            LPAD(MONTH(lt.tanggal), 2, '0') AS bulan,
-            YEAR(lt.tanggal) AS tahun,
-            TIME(lt.tanggal) AS waktu,
-            0 AS transaksi,
-            0 AS debet,
-            lt.total_bayaran AS kredit,
-            kapt.code AS kode_akun,
-            kapt.name AS nama_akun,
-            kapt.type AS type_akun,
-            JSON_OBJECT(
-                'deskripsi_kerja', lt.deskripsi_kerja,
-                'keterangan_kerja', lt.keterangan_kerja,
-                'waktu_mulai', lt.waktu_mulai,
-                'waktu_selesai', lt.waktu_selesai,
-                'total_jam', lt.total_jam,
-                'total_menit', lt.total_menit,
-                'nilai_lembur_per_menit', lt.nilai_lembur_per_menit
-            ) AS uraian,
-            "LEMBUR PEGAWAI" AS sumber,
-            lt.enabled 
-        FROM ${generateDatabaseName(req_id)}.lembur_tab lt 
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = lt.kode_akun_perkiraan 
-        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = lt.pegawai 
-        WHERE lt.enabled = 1
-        AND kapt.enabled = 1
-        UNION ALL
         SELECT 
             lt.uuid,
             lt.bukti_transaksi,
@@ -450,7 +544,10 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
                 'waktu_selesai', lt.waktu_selesai,
                 'total_jam', lt.total_jam,
                 'total_menit', lt.total_menit,
-                'nilai_lembur_per_menit', lt.nilai_lembur_per_menit
+                'nilai_lembur_per_menit', lt.nilai_lembur_per_menit,
+                'periode', lt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Lembur Pegawai'
             ) AS uraian,
             "LEMBUR PEGAWAI" AS sumber,
             lt.enabled 
@@ -459,29 +556,40 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
         JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = lt.pegawai 
         WHERE lt.enabled = 1
         AND kapt.enabled = 1
-        UNION ALL -- HADIAH START
+        UNION ALL
         SELECT 
-            ht.uuid,
-            ht.bukti_transaksi,
-            LPAD(DAY(ht.tanggal), 2, '0') AS tanggal,
-            LPAD(MONTH(ht.tanggal), 2, '0') AS bulan,
-            YEAR(ht.tanggal) AS tahun,
-            TIME(ht.tanggal) AS waktu,
-            0 AS transaksi,
+            lt.uuid,
+            lt.bukti_transaksi,
+            LPAD(DAY(lt.tanggal), 2, '0') AS tanggal,
+            LPAD(MONTH(lt.tanggal), 2, '0') AS bulan,
+            YEAR(lt.tanggal) AS tahun,
+            TIME(lt.tanggal) AS waktu,
+            1 AS transaksi,
             0 AS debet,
-            ht.nilai AS kredit,
+            lt.total_bayaran AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            ht.hadiah AS uraian,
-            "HADIAH PEGAWAI" AS sumber,
-            ht.enabled 
-        FROM ${generateDatabaseName(req_id)}.hadiah_tab ht 
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ht.kode_akun_perkiraan 
-        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ht.pegawai 
-        WHERE ht.enabled = 1
+            JSON_OBJECT(
+                'deskripsi_kerja', lt.deskripsi_kerja,
+                'keterangan_kerja', lt.keterangan_kerja,
+                'waktu_mulai', lt.waktu_mulai,
+                'waktu_selesai', lt.waktu_selesai,
+                'total_jam', lt.total_jam,
+                'total_menit', lt.total_menit,
+                'nilai_lembur_per_menit', lt.nilai_lembur_per_menit,
+                'periode', lt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Lembur Pegawai'
+            ) AS uraian,
+            "LEMBUR PEGAWAI" AS sumber,
+            lt.enabled 
+        FROM ${generateDatabaseName(req_id)}.lembur_tab lt 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = lt.kode_akun_perkiraan 
+        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = lt.pegawai 
+        WHERE lt.enabled = 1
         AND kapt.enabled = 1
-        UNION ALL 
+        UNION ALL -- HADIAH START
         SELECT 
             ht.uuid,
             ht.bukti_transaksi,
@@ -495,11 +603,41 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            ht.hadiah AS uraian,
+            JSON_OBJECT(
+                'periode', ht.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Hadiah Pegawai'
+            ) AS uraian,
             "HADIAH PEGAWAI" AS sumber,
             ht.enabled 
         FROM ${generateDatabaseName(req_id)}.hadiah_tab ht 
         JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a09a5e0c-9544-4a83-b214-c47cf5c07bdd"
+        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ht.pegawai 
+        WHERE ht.enabled = 1
+        AND kapt.enabled = 1
+        UNION ALL
+        SELECT 
+            ht.uuid,
+            ht.bukti_transaksi,
+            LPAD(DAY(ht.tanggal), 2, '0') AS tanggal,
+            LPAD(MONTH(ht.tanggal), 2, '0') AS bulan,
+            YEAR(ht.tanggal) AS tahun,
+            TIME(ht.tanggal) AS waktu,
+            1 AS transaksi,
+            0 AS debet,
+            ht.nilai AS kredit,
+            kapt.code AS kode_akun,
+            kapt.name AS nama_akun,
+            kapt.type AS type_akun,
+            JSON_OBJECT(
+                'periode', ht.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Hadiah Pegawai'
+            ) AS uraian,
+            "HADIAH PEGAWAI" AS sumber,
+            ht.enabled 
+        FROM ${generateDatabaseName(req_id)}.hadiah_tab ht 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ht.kode_akun_perkiraan 
         JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = ht.pegawai 
         WHERE ht.enabled = 1
         AND kapt.enabled = 1
@@ -517,7 +655,11 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "PPH 21/26 Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', ppt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'PPH 21/26 Pegawai'
+            ) AS uraian,
             "PPH 21/26" AS sumber,
             ppt.enabled 
         FROM ${generateDatabaseName(req_id)}.pph2126_tab ppt 
@@ -533,13 +675,17 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
             YEAR(ppt.tanggal) AS tahun,
             TIME(ppt.tanggal) AS waktu,
-            0 AS transaksi,
+            2 AS transaksi,
             ppt.nilai AS debet,
             0 AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            "PPH 21/26 Pegawai" AS uraian,
+            JSON_OBJECT(
+                'periode', ppt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Lain-Lain Pegawai'
+            ) AS uraian,
             "PPH 21/26" AS sumber,
             ppt.enabled 
         FROM ${generateDatabaseName(req_id)}.pph2126_tab ppt 
@@ -556,16 +702,21 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             YEAR(llt.tanggal) AS tahun,
             TIME(llt.tanggal) AS waktu,
             0 AS transaksi,
-            0 AS debet,
-            llt.nilai AS kredit,
+            llt.nilai AS debet,
+            0 AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            llt.keterangan AS uraian,
+            JSON_OBJECT(
+                'periode', llt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Lain-Lain Pegawai',
+                'keterangan', llt.keterangan
+            ) AS uraian,
             "LAIN - LAIN" AS sumber,
             llt.enabled 
         FROM ${generateDatabaseName(req_id)}.lain_lain_tab llt 
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = llt.kode_akun_perkiraan 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "b7687ceb-6046-4062-979d-bfed5550bd87"
         JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = llt.pegawai 
         WHERE llt.enabled = 1
         AND kapt.enabled = 1
@@ -577,43 +728,26 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(llt.tanggal), 2, '0') AS bulan,
             YEAR(llt.tanggal) AS tahun,
             TIME(llt.tanggal) AS waktu,
-            0 AS transaksi,
-            llt.nilai AS debet,
-            0 AS kredit,
+            1 AS transaksi,
+            0 AS debet,
+            llt.nilai AS kredit,
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            llt.keterangan AS uraian,
+            JSON_OBJECT(
+                'periode', llt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Lain-Lain Pegawai',
+                'keterangan', llt.keterangan
+            ) AS uraian,
             "LAIN - LAIN" AS sumber,
             llt.enabled 
         FROM ${generateDatabaseName(req_id)}.lain_lain_tab llt 
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "b7687ceb-6046-4062-979d-bfed5550bd87"
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = llt.kode_akun_perkiraan 
         JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = llt.pegawai 
         WHERE llt.enabled = 1
         AND kapt.enabled = 1
         UNION ALL -- KERUGIAN START
-        SELECT 
-            kt.uuid,
-            kt.bukti_transaksi,
-            LPAD(DAY(kt.tanggal), 2, '0') AS tanggal,
-            LPAD(MONTH(kt.tanggal), 2, '0') AS bulan,
-            YEAR(kt.tanggal) AS tahun,
-            TIME(kt.tanggal) AS waktu,
-            0 AS transaksi,
-            0 AS debet,
-            kt.nilai AS kredit,
-            kapt.code AS kode_akun,
-            kapt.name AS nama_akun,
-            kapt.type AS type_akun,
-            kt.keterangan AS uraian,
-            "KERUGIAN" AS sumber,
-            kt.enabled 
-        FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kt.kode_akun_perkiraan 
-        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = kt.pegawai 
-        WHERE kt.enabled = 1
-        AND kapt.enabled = 1
-        UNION ALL
         SELECT 
             kt.uuid,
             kt.bukti_transaksi,
@@ -627,11 +761,43 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            kt.keterangan AS uraian,
+            JSON_OBJECT(
+                'periode', kt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Kerugian Pegawai',
+                'keterangan', kt.keterangan
+            ) AS uraian,
             "KERUGIAN" AS sumber,
             kt.enabled 
         FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
         JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f3eafc29-6a1c-4e57-b789-532b490dac33"
+        JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = kt.pegawai 
+        WHERE kt.enabled = 1
+        AND kapt.enabled = 1
+        UNION ALL
+        SELECT 
+            kt.uuid,
+            kt.bukti_transaksi,
+            LPAD(DAY(kt.tanggal), 2, '0') AS tanggal,
+            LPAD(MONTH(kt.tanggal), 2, '0') AS bulan,
+            YEAR(kt.tanggal) AS tahun,
+            TIME(kt.tanggal) AS waktu,
+            1 AS transaksi,
+            0 AS debet,
+            kt.nilai AS kredit,
+            kapt.code AS kode_akun,
+            kapt.name AS nama_akun,
+            kapt.type AS type_akun,
+            JSON_OBJECT(
+                'periode', kt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Kerugian Pegawai',
+                'keterangan', kt.keterangan
+            ) AS uraian,
+            "KERUGIAN" AS sumber,
+            kt.enabled 
+        FROM ${generateDatabaseName(req_id)}.kerugian_tab kt 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kt.kode_akun_perkiraan 
         JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = kt.pegawai 
         WHERE kt.enabled = 1
         AND kapt.enabled = 1
@@ -657,7 +823,12 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            pkt.keterangan AS uraian,
+            JSON_OBJECT(
+                'periode', pkt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Piutang Pegawai',
+                'keterangan', pkt.keterangan
+            ) AS uraian,
             "PIUTANG KARYAWAN" AS sumber,
             pkt.enabled 
         FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt 
@@ -673,7 +844,7 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             LPAD(MONTH(pkt.tanggal), 2, '0') AS bulan,
             YEAR(pkt.tanggal) AS tahun,
             TIME(pkt.tanggal) AS waktu,
-            0 AS transaksi,
+            1 AS transaksi,
             CASE 
                 WHEN pkt.type = 1
                 THEN pkt.nilai
@@ -687,7 +858,12 @@ export const payrollPegawaiViewQueryBuilder = (req_id) => {
             kapt.code AS kode_akun,
             kapt.name AS nama_akun,
             kapt.type AS type_akun,
-            pkt.keterangan AS uraian,
+            JSON_OBJECT(
+                'periode', pkt.periode,
+                'pegawai_name', pt.name,
+                'sumber', 'Piutang Pegawai',
+                'keterangan', pkt.keterangan
+            ) AS uraian,
             "PIUTANG KARYAWAN" AS sumber,
             pkt.enabled 
         FROM ${generateDatabaseName(req_id)}.piutang_karyawan_tab pkt 

@@ -44,6 +44,7 @@ const PendapatanRowData = ({
                                         <div className={`${forPrint ? "col-span-5" : "col-span-4"} text-gray-900 flex flex-col px-2`}>
                                             <PendapatanRowUraian
                                                 data={item3}
+                                                showDetail={false}
                                             />
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">

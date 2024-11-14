@@ -1,10 +1,20 @@
-import { convertTo12HoursFormat, formatDate } from "../../../../../helper/date.helper"
+import { convertTo12HoursFormat, formatDate, getBulanByIndex } from "../../../../../helper/date.helper"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 
 const PendapatanRowUraian = ({
-    data
+    data,
+    showDetail
 }) => {
     return <>
+        {
+            showDetail ?
+                <>
+                    <div className={`flex w-max items-center gap-x-2`}>
+                        <h1>{data?.sumber?.toUpperCase()} PERIODE {getBulanByIndex(data?.periode - 1)?.toUpperCase()}</h1>
+                    </div>
+                    <p className="pb-2 font-bold">{data?.pegawai_name}</p>
+                </> : <></>
+        }
         <p>{data?.uraian}</p>
         {
             data?.waktu_mulai && data?.waktu_selesai && data?.transaksi == 0 ? <>

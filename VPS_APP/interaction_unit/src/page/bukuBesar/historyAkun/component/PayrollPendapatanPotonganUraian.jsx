@@ -23,6 +23,7 @@ const PayrollPendapatanPotonganUraian = ({ item }) => {
     return <>
         <PendapatanRowUraian
             data={data}
+            showDetail={true}
         />
     </>
 }

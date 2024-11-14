@@ -26,14 +26,20 @@ const RowCard = ({
                         }
                         {
                             i <= dataList.data.length ?
-                                <div className="grid grid-cols-12 items-start py-1">
-                                    <div className="col-span-6 text-gray-900 px-2">
-                                        <p>{item1.kode_akun_perkiraan_code} - {item1.kode_akun_perkiraan_name}</p>
-                                    </div>
-                                    <div className="col-span-6 text-gray-900 text-right px-2">
-                                        <p>{item1.value}</p>
-                                    </div>
-                                </div> : <></>
+                                <>
+                                    {
+                                        item1.value != 0 ? <>
+                                            <div className="grid grid-cols-12 items-start py-1">
+                                                <div className="col-span-6 text-gray-900 px-2">
+                                                    <p>{item1.kode_akun_perkiraan_code} - {item1.kode_akun_perkiraan_name}</p>
+                                                </div>
+                                                <div className="col-span-6 text-gray-900 text-right px-2">
+                                                    <p>{item1.value}</p>
+                                                </div>
+                                            </div>
+                                        </> : <></>
+                                    }
+                                </> : <></>
                         }
                         {
                             i == dataList.data.length - 1 ?
