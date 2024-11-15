@@ -318,7 +318,7 @@ export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, saveToPerint
             FROM (
                 ${queryList.join("UNION ALL")}
             ) AS res
-            ORDER BY res.tanggal ASC, res.transaksi ASC
+            ORDER BY res.tanggal ASC, res.transaksi ASC, res.debet DESC
         `,
         {
             type: saveToPerintahStokOpnameJurnal ? Sequelize.QueryTypes.INSERT : Sequelize.QueryTypes.SELECT

@@ -33,7 +33,7 @@ const JurnalStokOpnameUraian = ({
                 </div>
                 <b>{data?.detail_data?.kategori_harga_barang_kode_barang} ( {data?.detail_data?.daftar_gudang_name} )</b>
                 <p className="mb-1">{data?.daftar_barang_name}</p>
-                <div className="w-full flex items-center gap-x-4">
+                <div className="w-full flex items-start gap-x-4">
                     {
                         data?.jumlah && <p className="mb-2 text-xs">x{data?.jumlah} {data?.satuan_barang_name}</p>
                     }
@@ -53,14 +53,14 @@ const JurnalStokOpnameUraian = ({
                         data?.detail_data?.stok_sistem && <p className="mb-2 text-xs">Stok Sistem {parseToRupiahText(data?.detail_data?.stok_sistem)}</p>
                     }
                     {
-                        data?.detail_data?.tipe_penyesuaian && data?.detail_data?.tipe_penyesuaian != "SESUAI" ? <p className="mb-2 text-xs">Tipe Penyesuaian {data?.detail_data?.tipe_penyesuaian}</p> : <></>
+                        data?.detail_data?.tipe_penyesuaian && data?.detail_data?.tipe_penyesuaian != "SESUAI" ? <p className="mb-2 text-xs">Tipe Penyesuaian <br />{data?.detail_data?.tipe_penyesuaian}</p> : <></>
                     }
                     {
-                        data?.detail_data?.jumlah_penyesuaian && data?.detail_data?.jumlah_penyesuaian != 0 ? <p className="mb-2 text-xs">{data?.detail_data?.jumlah_penyesuaian} {data?.detail_data?.satuan_barang_name}</p> : <></>
+                        data?.detail_data?.jumlah_penyesuaian && data?.detail_data?.jumlah_penyesuaian != 0 ? <p className="mb-2 text-xs">{data?.detail_data?.jumlah_penyesuaian} <br /> {data?.detail_data?.satuan_barang_name}</p> : <></>
                     }
                 </div>
                 {
-                    data?.detail_data?.keterangan_penyesuaian_persediaan && <p className="mb-2 text-xs">{data?.detail_data?.keterangan_penyesuaian_persediaan}</p>
+                    data?.detail_data?.keterangan_penyesuaian_persediaan && <p className="mb-2 text-xs">Keterangan <br /> {data?.detail_data?.keterangan_penyesuaian_persediaan}</p>
                 }
             </div>
         </div>
