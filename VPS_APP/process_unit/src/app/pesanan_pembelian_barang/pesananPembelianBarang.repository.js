@@ -84,3 +84,49 @@ export const updatePesananPembelianBarangByUuidRepo = async (uuid, pesananPembel
         }
     )
 }
+
+export const getTanggalTransaksiTerakhirByPesananPembelianRepo = async (pesanan_pembelian_barang, req_id) => {
+    const pesananPembelianBarang = await db.query(
+        `
+            SELECT 
+                GREATEST(
+                    ppbt.tanggal_pesanan_pembelian_barang,
+                    IFNULL((
+                        SELECT
+                            GREATEST(
+                                fpbt.tanggal,
+                                IFNULL((
+                                    SELECT 
+                                        MAX(ppbt2.tanggal)
+                                    FROM ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt2 
+                                    WHERE ppbt2.faktur_pembelian_barang = fpbt.uuid 
+                                    AND ppbt2.enabled = 1
+                                ), fpbt.tanggal),
+                                IFNULL((
+                                    SELECT 
+                                        MAX(rpbt.tanggal) 
+                                    FROM ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt 
+                                    WHERE rpbt.faktur_pembelian_barang = fpbt.uuid 
+                                    AND rpbt.enabled = 1
+                                ), fpbt.tanggal),
+                                IFNULL((
+                                    SELECT 
+                                        MAX(pdpbt.tanggal) 
+                                    FROM ${generateDatabaseName(req_id)}.pengembalian_denda_pembelian_barang_tab pdpbt 
+                                    WHERE pdpbt.faktur_pembelian_barang = fpbt.uuid
+                                    AND pdpbt.enabled = 1
+                                ), fpbt.tanggal) 
+                            )
+                        FROM ${generateDatabaseName(req_id)}.faktur_pembelian_barang_tab fpbt 
+                        WHERE fpbt.pesanan_pembelian_barang = ppbt.uuid 
+                        AND fpbt.enabled = 1
+                    ), ppbt.tanggal_pesanan_pembelian_barang)
+                ) AS tanggal_terakhir_transaksi
+            FROM ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt 
+            WHERE ppbt.uuid = "${pesanan_pembelian_barang}"
+            AND ppbt.enabled = 1
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return pesananPembelianBarang
+} 

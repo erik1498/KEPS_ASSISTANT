@@ -124,6 +124,7 @@ const PesananPembelianBarangForm = ({
             if (kategoriHargaBarangGet.length > 0) {
                 setJumlah(x => x = 0)
                 setHarga(x => x = kategoriHargaBarangGet[0].harga_beli)
+                setPPN(x => x = kategoriHargaBarangGet[0].harga_beli * PPN / 100)
                 setUseDiskon(x => x = 0)
                 setDiskonAngka(x => x = 0)
                 setDiskonPersentase(x => x = 0)
@@ -203,13 +204,11 @@ const PesananPembelianBarangForm = ({
                                 <FormInputWithLabel
                                     label={"PPN"}
                                     type={"text"}
-                                    onchange={(e) => {
-                                        inputOnlyRupiah(e)
-                                        setPPN(e.target.value)
-                                    }}
+                                    disabled={true}
+                                    addClassInput={`border-none px-1`}
                                     others={
                                         {
-                                            value: ppn,
+                                            value: `Rp. ${parseToRupiahText(ppn)}`,
                                             name: "ppn",
                                         }
                                     }

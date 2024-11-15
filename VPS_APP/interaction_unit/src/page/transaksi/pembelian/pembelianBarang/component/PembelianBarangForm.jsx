@@ -9,13 +9,17 @@ import Pagination from "../../../../../component/general/Pagination"
 import FormInput from "../../../../../component/form/FormInput"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FakturPembelianBarangForm from "./FakturPembelianBarangForm"
+import { useDataContext } from "../../../../../context/dataContext.context"
 
 const PembelianBarangForm = ({
     setAddPembelianBarang = () => { }
 }) => {
+    const dataContext = useDataContext()
+    const { data } = dataContext
+
     const [tanggalTransaksiAkhir, setTanggalTransaksiAkhir] = useState(getHariTanggalFull())
     const [fakturStatus, setFakturStatus] = useState(false)
-    const [ppnStatus, setPPNStatus] = useState(true)
+    const [ppnStatus, setPPNStatus] = useState(false)
     const [pilihPesananPembelianBarang, setPilihPesananPembelianBarang] = useState(false)
     const [editNomorPesananPembelian, setEditNomorPesananPembelian] = useState(false)
     const [pesananPembelianBarangListData, setPesananPembelianBarangListData] = useState([])
@@ -97,31 +101,42 @@ const PembelianBarangForm = ({
                     }
                     setEditNomorPesananPembelian(x => x = true)
                 })
+                .catch(err => {
+                    showError(err)
+                    if (pesananPembelianBarangSelected) {
+                        _setSupplier()
+                        setEditNomorPesananPembelian(x => x = true)
+                        setPesananPembelianBarang(pesananPembelianBarangListData.filter(x => x.uuid == pesananPembelianBarangSelected.value)[0])
+                    }
+                })
+        }
+    }
+
+    const _setSupplier = () => {
+        setSupplier(x => x = null)
+        setTanggalPesananPembelianBarang(x => x = getHariTanggalFull())
+        setNomorPesananPembelianBarang(x => x = null)
+        const pesananPembelianBarangSelectedGet = pesananPembelianBarangListData.filter(x => x.uuid == pesananPembelianBarangSelected.value)
+        if (pesananPembelianBarangSelectedGet.length > 0) {
+            const supplierGet = supplierList.filter(x => x.uuid == pesananPembelianBarangSelectedGet[0].supplier)
+            if (supplierGet.length > 0) {
+                setSupplier(x => x = supplierGet[0])
+                setTanggalPesananPembelianBarang(pesananPembelianBarangSelectedGet[0].tanggal_pesanan_pembelian_barang)
+                setNomorPesananPembelianBarang(pesananPembelianBarangSelectedGet[0].nomor_pesanan_pembelian_barang)
+            }
         }
     }
 
     useEffect(() => {
         if (pesananPembelianBarangSelected) {
-            setSupplier(x => x = null)
-            setTanggalPesananPembelianBarang(x => x = getHariTanggalFull())
-            setNomorPesananPembelianBarang(x => x = null)
-            const pesananPembelianBarangSelectedGet = pesananPembelianBarangListData.filter(x => x.uuid == pesananPembelianBarangSelected.value)
-            if (pesananPembelianBarangSelectedGet.length > 0) {
-                const SupplierGet = supplierList.filter(x => x.uuid == pesananPembelianBarangSelectedGet[0].supplier)
-                if (SupplierGet.length > 0) {
-                    setSupplier(x => x = SupplierGet[0])
-                    setTanggalPesananPembelianBarang(pesananPembelianBarangSelectedGet[0].tanggal_pesanan_pembelian_barang)
-                    setNomorPesananPembelianBarang(pesananPembelianBarangSelectedGet[0].nomor_pesanan_pembelian_barang)
-                }
-            }
+            _setSupplier()
         }
     }, [pesananPembelianBarangSelected])
 
     const _getAllPesananPembelianBarang = () => {
         apiPesananPembelianBarangCRUD
-            .custom("", "GET")
+            .custom(``, "GET")
             .then(resData => {
-                setPesananPembelianBarangSelected(x => x = null)
                 setPesananPembelianBarangListData(x => x = resData.data.entry)
                 if (resData.data.entry.length > 0) {
                     setPesananPembelianBarangSelected(x => x = {
@@ -269,6 +284,10 @@ const PembelianBarangForm = ({
                                         <p className="text-xs font-bold mb-1">Nomor Handphone</p>
                                         <p className="text-sm">{supplier.no_hp}</p>
                                     </div>
+                                    <div>
+                                        <p className="text-xs font-bold mb-1">Kode Harga</p>
+                                        <p className="text-sm">Harga {supplier.kode_harga}</p>
+                                    </div>
                                 </div>
                                 {
                                     pesananPembelianBarang ? <></> : <>
@@ -317,7 +336,7 @@ const PembelianBarangForm = ({
                                     value={search}
                                     onchange={e => setSearch(e.target.value)}
                                     other={{
-                                        placeholder: "Cari supplier"
+                                        placeholder: "Cari Supplier"
                                     }}
                                 />
                                 {
@@ -381,6 +400,7 @@ const PembelianBarangForm = ({
                     pesananPembelianBarang={pesananPembelianBarang}
                     supplier={supplier}
                     fakturStatus={fakturStatus}
+                    setPPNStatus={setPPNStatus}
                     tanggalTransaksiAkhir={tanggalTransaksiAkhir}
                     rincianPesananPembelianBarang={rincianPesananPembelianBarang}
                     setRincianPesananPembelianBarang={setRincianPesananPembelianBarang}

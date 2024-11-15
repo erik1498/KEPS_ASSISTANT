@@ -21,17 +21,24 @@ const RiwayatTransaksiPembelianBarang = ({
         label: "Pelunasan",
         value: "Pelunasan"
     })
-    // const tipeTransaksiPembelianBarang = ["Pelunasan", "Retur", "Pengembalian_Denda"]
-    const tipeTransaksiPembelianBarang = ["Pelunasan"]
+    const tipeTransaksiPembelianBarang = ["Pelunasan", "Retur", "Pengembalian_Denda"]
     const [kodeAkun, setKodeAkun] = useState()
     const [kodeAkunList, setKodeAkunList] = useState([])
 
     const [riwayatTransaksi, setRiwayatTransaksi] = useState([])
     const [reloadRiwayat, setReloadRiwayat] = useState(true)
 
+    const [tipeTransaksiList, setTipeTransaksiList] = useState([])
+
     const _getDaftarRiwayatTransaksi = () => {
         setReloadRiwayat(x => x = false)
         setFakturCancel(x => x = true)
+        setTipeTransaksiList(x => x = tipeTransaksiPembelianBarang.filter(x => x != "Pengembalian_Denda").map(x => {
+            return {
+                label: x.replace("_", " "),
+                value: x
+            }
+        }))
         if (fakturPembelianBarang) {
             apiFakturPembelianBarangCRUD
                 .custom("/riwayat_transaksi/" + fakturPembelianBarang.uuid)
@@ -39,6 +46,14 @@ const RiwayatTransaksiPembelianBarang = ({
                     if (resData.data.length > 0) {
                         setFakturCancel(x => x = false)
                         setTanggalTransaksiAkhir(x => x = resData.data[0].tanggal)
+                        if (resData.data.filter(x => x.type == "retur_pembelian_barang").length > 0) {
+                            setTipeTransaksiList(x => x = tipeTransaksiPembelianBarang.map(x => {
+                                return {
+                                    label: x.replace("_", " "),
+                                    value: x
+                                }
+                            }))
+                        }
                     }
                     setRiwayatTransaksi(x => x = getNormalizedByDate(resData.data))
                 })
@@ -47,38 +62,34 @@ const RiwayatTransaksiPembelianBarang = ({
 
     const _saveRiwayatTransaksi = async (e) => {
         e.preventDefault()
-        if (riwayatTransaksi?.at(0)?.data?.at(0)?.bukti_transaksi != "EMPTY" && riwayatTransaksi?.at(0)?.data?.at(0)?.nomor_transaksi != "EMPTY") {
-            if (await formValidation(e.target)) {
-                let apiCall = apiPelunasanPembelianBarangCRUD
+        if (await formValidation(e.target)) {
+            let apiCall = apiPelunasanPembelianBarangCRUD
 
-                if (tipeTransaksi.value == "Retur") {
-                    apiCall = apiReturPembelianBarangCRUD
-                }
-
-                if (tipeTransaksi.value == "Pengembalian_Denda") {
-                    apiCall = apiPengembalianDendaPembelianBarangCRUD
-                }
-
-                const data = {
-                    faktur_pembelian_barang: fakturPembelianBarang.uuid,
-                    tanggal: tanggal,
-                    bukti_transaksi: "EMPTY",
-                    kode_akun_perkiraan: kodeAkun.value,
-                    keterangan: "EMPTY"
-                }
-
-                data[`nomor_${tipeTransaksi.value.toLowerCase()}_pembelian_barang`] = "EMPTY"
-
-                apiCall.custom("", "POST", null, {
-                    data
-                }).then(() => {
-                    _getDaftarRiwayatTransaksi()
-                    setTanggal(getHariTanggalFull())
-                }).catch(err => showError(err))
+            if (tipeTransaksi.value == "Retur") {
+                apiCall = apiReturPembelianBarangCRUD
             }
-        }
-        else{
-            showAlert("Peringatan", "Riwayat Transaksi Terakhir Beberapa Data Masih Kosong")
+
+            if (tipeTransaksi.value == "Pengembalian_Denda") {
+                apiCall = apiPengembalianDendaPembelianBarangCRUD
+            }
+
+            const data = {
+                faktur_pembelian_barang: fakturPembelianBarang.uuid,
+                tanggal: tanggal,
+                bukti_transaksi: "EMPTY",
+                kode_akun_perkiraan: kodeAkun.value,
+                keterangan: "EMPTY"
+            }
+
+            data[`nomor_${tipeTransaksi.value.toLowerCase()}_pembelian_barang`] = "EMPTY"
+
+            apiCall.custom("", "POST", null, {
+                data
+            }).then(() => {
+                showAlert("Berhasil", "Data Berhasil Disimpan")
+                _getDaftarRiwayatTransaksi()
+                setTanggal(getHariTanggalFull())
+            }).catch(err => showError(err))
         }
     }
 
@@ -96,9 +107,9 @@ const RiwayatTransaksiPembelianBarang = ({
             })
     }
 
-    const _getKodeAkunPiutangUsaha = () => {
+    const _getKodeAkunHutangUsaha = () => {
         apiKodeAkunCRUD
-            .custom("/piutang_usaha", "GET")
+            .custom("/hutang_usaha", "GET")
             .then(resData => {
                 const data = [resData.data]
                 setKodeAkunList(x => x = data)
@@ -116,10 +127,34 @@ const RiwayatTransaksiPembelianBarang = ({
     }, [riwayatTransaksi])
 
     useEffect(() => {
-        if (tipeTransaksi.value == "Retur" && riwayatTransaksi.length == 0) {
-            setKodeAkunList(x => x = [])
-            setKodeAkun(x => x = null)
-            _getKodeAkunPiutangUsaha()
+        setKodeAkunList(x => x = [])
+        setKodeAkun(x => x = null)
+        _getKodeAkunKasBank()
+        if (tipeTransaksi.value == "Retur") {
+            _getKodeAkunHutangUsaha()
+
+            if (riwayatTransaksi.length > 0) {
+
+                const pelunasanPembelianBarangGet = riwayatTransaksi.filter(x => {
+                    return x.data.filter(y => y.type == "pelunasan_pembelian_barang").length > 0
+                })
+
+
+                if (pelunasanPembelianBarangGet.length > 0) {
+                    const pelunasanPembelianBarangGetData = pelunasanPembelianBarangGet[0].data.filter(x => x.type == "pelunasan_pembelian_barang")
+
+                    if (pelunasanPembelianBarangGetData.length > 0) {
+
+                        apiPelunasanPembelianBarangCRUD
+                            .custom(`/cek_denda_pelunasan_pembelian/${pelunasanPembelianBarangGetData[0].uuid}`, "GET")
+                            .then(resData => {
+                                if (resData.data == 0) {
+                                    _getKodeAkunKasBank()
+                                }
+                            }).catch(err => showError(err))
+                    }
+                }
+            }
         }
     }, [tipeTransaksi])
 
@@ -149,12 +184,7 @@ const RiwayatTransaksiPembelianBarang = ({
                     <FormSelectWithLabel
                         label={"Tipe Transaksi"}
                         addClass={"z-50"}
-                        optionsDataList={tipeTransaksiPembelianBarang.map(x => {
-                            return {
-                                label: x.replace("_", " "),
-                                value: x
-                            }
-                        })}
+                        optionsDataList={tipeTransaksiList}
                         onchange={(e) => {
                             setTipeTransaksi(e)
                         }}
@@ -197,7 +227,7 @@ const RiwayatTransaksiPembelianBarang = ({
                                                         y.type == "pelunasan_pembelian_barang" ? <>
                                                             <RiwayatTransaksiPelunasanPembelianBarang
                                                                 riwayatPelunasanPembelianBarang={y}
-                                                                edited={i == 0 && j == 0}
+                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>
@@ -206,7 +236,7 @@ const RiwayatTransaksiPembelianBarang = ({
                                                         y.type == "retur_pembelian_barang" ? <>
                                                             <RiwayatTransaksiReturPembelianBarang
                                                                 riwayatReturPembelianBarang={y}
-                                                                edited={i == 0 && j == 0}
+                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>
@@ -215,7 +245,7 @@ const RiwayatTransaksiPembelianBarang = ({
                                                         y.type == "pengembalian_denda_pembelian_barang" ? <>
                                                             <RiwayatTransaksiPengembalianDendaPembelianBarang
                                                                 riwayatPengembalianDendaPembelianBarang={y}
-                                                                edited={i == 0 && j == 0}
+                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>

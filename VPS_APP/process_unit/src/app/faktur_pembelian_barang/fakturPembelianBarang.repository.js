@@ -44,20 +44,40 @@ export const getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo =
                     ppbt.keterangan AS keterangan,
                     ppbt.kode_akun_perkiraan AS kode_akun_perkiraan,
                     kapt.name AS kode_akun_perkiraan_name,
+                    kapt.code AS kode_akun_perkiraan_code,
+                    (
+                        SELECT 
+                            JSON_OBJECT(
+                                'nomor_perintah_stok_opname', psot.nomor_surat_perintah,
+                                'hasil_stok_opname_count', IFNULL((
+                                    SELECT 
+                                        COUNT(0) 
+                                    FROM ${generateDatabaseName(req_id)}.hasil_stok_opname_tab hsot 
+                                    WHERE hsot.perintah_stok_opname = psot.uuid 
+                                    AND hsot.enabled = 1
+                                ), 0)
+                            )
+                        FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
+                        WHERE psot.enabled = 1
+                        AND psot.bulan_transaksi = MONTH(ppbt.tanggal)
+                        AND psot.tahun = YEAR(ppbt.tanggal)
+                        LIMIT 1
+                    ) AS perintah_stok_opname_nomor_surat_perintah,
                     IFNULL((
                         SELECT 
                             SUM(rppbt.nilai_pelunasan)
                         FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_barang_tab rppbt
                         WHERE rppbt.pelunasan_pembelian_barang = ppbt.uuid
                         AND rppbt.enabled = 1
-                    ), 0) AS total,
+                    ), 0) 
+                    + 
                     IFNULL((
                         SELECT 
-                            SUM(rppbt.nilai_pelunasan_denda)
-                        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_barang_tab rppbt
-                        WHERE rppbt.pelunasan_pembelian_barang = ppbt.uuid
-                        AND rppbt.enabled = 1
-                    ), 0) AS total_denda,
+                            SUM(rppdbt.nilai_pelunasan)
+                        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_denda_barang_tab rppdbt
+                        WHERE rppdbt.pelunasan_pembelian_barang = ppbt.uuid
+                        AND rppdbt.enabled = 1
+                    ), 0) AS total,
                     "pelunasan_pembelian_barang" AS type
                 FROM ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt 
                 JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppbt.kode_akun_perkiraan 
@@ -73,6 +93,25 @@ export const getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo =
                     rpbt.keterangan AS keterangan,
                     rpbt.kode_akun_perkiraan AS kode_akun_perkiraan,
                     kapt.name AS kode_akun_perkiraan_name,
+                    kapt.code AS kode_akun_perkiraan_code,
+                    (
+                        SELECT 
+                            JSON_OBJECT(
+                                'nomor_perintah_stok_opname', psot.nomor_surat_perintah,
+                                'hasil_stok_opname_count', IFNULL((
+                                    SELECT 
+                                        COUNT(0) 
+                                    FROM ${generateDatabaseName(req_id)}.hasil_stok_opname_tab hsot 
+                                    WHERE hsot.perintah_stok_opname = psot.uuid 
+                                    AND hsot.enabled = 1
+                                ), 0)
+                            )
+                        FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
+                        WHERE psot.enabled = 1
+                        AND psot.bulan_transaksi = MONTH(rpbt.tanggal)
+                        AND psot.tahun = YEAR(rpbt.tanggal)
+                        LIMIT 1
+                    ) AS perintah_stok_opname_nomor_surat_perintah,
                     IFNULL((
                         SELECT 
                             SUM(rrpbt.nilai_retur)
@@ -80,7 +119,6 @@ export const getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo =
                         WHERE rrpbt.retur_pembelian_barang = rpbt.uuid
                         AND rrpbt.enabled = 1
                     ), 0)AS total,
-                    0 AS total_denda,
                     "retur_pembelian_barang" AS type
                 FROM ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt 
                 JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = rpbt.kode_akun_perkiraan 
@@ -96,8 +134,26 @@ export const getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo =
                     pdpbt.keterangan AS keterangan,
                     pdpbt.kode_akun_perkiraan AS kode_akun_perkiraan,
                     kapt.name AS kode_akun_perkiraan_name,
+                    kapt.code AS kode_akun_perkiraan_code,
+                    (
+                        SELECT 
+                            JSON_OBJECT(
+                                'nomor_perintah_stok_opname', psot.nomor_surat_perintah,
+                                'hasil_stok_opname_count', IFNULL((
+                                    SELECT 
+                                        COUNT(0) 
+                                    FROM ${generateDatabaseName(req_id)}.hasil_stok_opname_tab hsot 
+                                    WHERE hsot.perintah_stok_opname = psot.uuid 
+                                    AND hsot.enabled = 1
+                                ), 0)
+                            )
+                        FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot 
+                        WHERE psot.enabled = 1
+                        AND psot.bulan_transaksi = MONTH(pdpbt.tanggal)
+                        AND psot.tahun = YEAR(pdpbt.tanggal)
+                        LIMIT 1
+                    ) AS perintah_stok_opname_nomor_surat_perintah,
                     0 AS total,
-                    0 AS total_denda,
                     "pengembalian_denda_pembelian_barang" AS type
                 FROM ${generateDatabaseName(req_id)}.pengembalian_denda_pembelian_barang_tab pdpbt 
                 JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = pdpbt.kode_akun_perkiraan 

@@ -146,7 +146,7 @@ const RiwayatTransaksiPengembalianDendaPembelianBarang = ({
                                 <tr>
                                     <td className={`${edited ? "pb-5" : ""}`}>Kode Akun</td>
                                     <td className={`px-5 ${edited ? "pb-5" : ""}`}>:</td>
-                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatPengembalianDendaPembelianBarang.kode_akun_perkiraan_name}</td>
+                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatPengembalianDendaPembelianBarang.kode_akun_perkiraan_code} - {riwayatPengembalianDendaPembelianBarang.kode_akun_perkiraan_name}</td>
                                 </tr>
                                 <tr>
                                     <td className={`${edited ? "pb-3" : ""}`}>Total PengembalianDenda</td>

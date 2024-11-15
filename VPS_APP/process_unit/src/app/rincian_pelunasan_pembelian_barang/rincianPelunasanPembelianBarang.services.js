@@ -1,5 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getPelunasanPembelianBarangByUuidService } from "../pelunasan_pembelian_barang/pelunasanPembelianBarang.services.js"
+import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createRincianPelunasanPembelianBarangRepo, deleteRincianPelunasanPembelianBarangByUuidRepo, getAllRincianPelunasanPembelianBarangRepo, getAllRincianPesananPembelianBarangByPelunasanPembelianRepo, getRincianPelunasanPembelianBarangByUuidRepo, updateRincianPelunasanPembelianBarangByUuidRepo } from "./rincianPelunasanPembelianBarang.repository.js"
 
 export const getAllRincianPelunasanPembelianBarangService = async (query, req_identity) => {
@@ -52,20 +54,43 @@ export const createRincianPelunasanPembelianBarangService = async (rincianPeluna
     LOGGER(logType.INFO, `Start createRincianPelunasanPembelianBarangService`, rincianPelunasanPembelianBarangData, req_identity)
     rincianPelunasanPembelianBarangData.enabled = 1
 
+    const pelunasanPembelianBarang = await getPelunasanPembelianBarangByUuidService(rincianPelunasanPembelianBarangData.pelunasan_pembelian_barang, req_identity)
+
+    if (pelunasanPembelianBarang.nomor_pelunasan_pembelian_barang == "EMPTY" || pelunasanPembelianBarang.bukti_transaksi == "EMPTY") {
+        throw Error(JSON.stringify({
+            message: "Nomor Pelunasan Pembelian Barang Atau Bukti Transaksi Tidak Boleh Kosong",
+            prop: "error"
+        }))
+    }
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPembelianBarang.tanggal, null, null, req_identity)
+
     const rincianPelunasanPembelianBarang = await createRincianPelunasanPembelianBarangRepo(rincianPelunasanPembelianBarangData, req_identity)
     return rincianPelunasanPembelianBarang
 }
 
 export const deleteRincianPelunasanPembelianBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteRincianPelunasanPembelianBarangByUuidService [${uuid}]`, null, req_identity)
-    await getRincianPelunasanPembelianBarangByUuidService(uuid, req_identity)
+    
+    const beforeData = await getRincianPelunasanPembelianBarangByUuidService(uuid, req_identity)
+
+    const pelunasanPembelianBarang = await getPelunasanPembelianBarangByUuidService(beforeData.pelunasan_pembelian_barang, req_identity)
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPembelianBarang.tanggal, null, null, req_identity)
+
     await deleteRincianPelunasanPembelianBarangByUuidRepo(uuid, req_identity)
     return true
 }
 
 export const updateRincianPelunasanPembelianBarangByUuidService = async (uuid, rincianPelunasanPembelianBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateRincianPelunasanPembelianBarangByUuidService [${uuid}]`, rincianPelunasanPembelianBarangData, req_identity)
+
     const beforeData = await getRincianPelunasanPembelianBarangByUuidService(uuid, req_identity)
+
+    const pelunasanPembelianBarang = await getPelunasanPembelianBarangByUuidService(beforeData.pelunasan_pembelian_barang, req_identity)
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPembelianBarang.tanggal, null, null, req_identity)
+
     const rincianPelunasanPembelianBarang = await updateRincianPelunasanPembelianBarangByUuidRepo(uuid, rincianPelunasanPembelianBarangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

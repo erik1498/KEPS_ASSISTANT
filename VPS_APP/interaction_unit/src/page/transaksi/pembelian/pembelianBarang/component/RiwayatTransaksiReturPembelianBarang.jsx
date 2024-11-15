@@ -167,7 +167,7 @@ const RiwayatTransaksiReturPembelianBarang = ({
                                 <tr>
                                     <td className={`${edited ? "pb-5" : ""}`}>Kode Akun</td>
                                     <td className={`px-5 ${edited ? "pb-5" : ""}`}>:</td>
-                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatReturPembelianBarang.kode_akun_perkiraan_name}</td>
+                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatReturPembelianBarang.kode_akun_perkiraan_code} - {riwayatReturPembelianBarang.kode_akun_perkiraan_name}</td>
                                 </tr>
                                 <tr>
                                     <td className={`${edited ? "pb-3" : ""}`}>Total Retur</td>

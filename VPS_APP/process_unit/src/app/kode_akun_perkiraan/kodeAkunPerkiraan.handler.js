@@ -54,6 +54,23 @@ export const getPiutangUsahaKodeAkun = async (req, res) => {
     }
 }
 
+export const getHutangUsahaKodeAkun = async (req, res) => {
+    LOGGER(logType.INFO, "Start getHutangUsahaKodeAkun", null, req.identity)
+    try {
+        const kodeAkunPerkiraans = await getKodeAkunPerkiraanByUuidService("6453a29e-d506-46e5-8f05-1ff8817b8813", req.identity)
+        res.json({
+            data: kodeAkunPerkiraans,
+            message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
 export const getAllKodeAkunPerkiraansKas = async (req, res) => {
     LOGGER(logType.INFO, "Start getAllKodeAkunPerkiraansKas", null, req.identity)
     try {
