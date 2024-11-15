@@ -1,7 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getJumlahRincianTransaksiDendaOnTableByTanggalService, getJumlahRincianTransaksiOnTableByTanggalService, getTanggalTransaksiTerakhirByFakturPembelianService } from "../faktur_pembelian_barang/fakturPembelianBarang.services.js"
-import { createPelunasanPembelianBarangRepo, deletePelunasanPembelianBarangByUuidRepo, getAllPelunasanPembelianBarangRepo, getPelunasanPembelianBarangByUuidRepo, updatePelunasanPembelianBarangByUuidRepo } from "./pelunasanPembelianBarang.repository.js"
+import { createPelunasanPembelianBarangRepo, deletePelunasanPembelianBarangByUuidRepo, getAllPelunasanPembelianBarangRepo, getCekDendaByPelunasanPembelianUUIDRepo, getPelunasanPembelianBarangByUuidRepo, updatePelunasanPembelianBarangByUuidRepo } from "./pelunasanPembelianBarang.repository.js"
 
 export const getAllPelunasanPembelianBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPelunasanPembelianBarangService", null, req_identity)
@@ -22,6 +22,12 @@ export const getAllPelunasanPembelianBarangService = async (query, req_identity)
 
     const pelunasanPembelianBarangs = await getAllPelunasanPembelianBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(pelunasanPembelianBarangs.entry, pelunasanPembelianBarangs.count, pelunasanPembelianBarangs.pageNumber, pelunasanPembelianBarangs.size)
+}
+
+export const getCekDendaByPelunasanPembelianUUIDService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getCekDendaByPelunasanPembelianUUIDService [${uuid}]`, null, req_identity)
+    const rincianPelunasanPembelianBarangDenda = await getCekDendaByPelunasanPembelianUUIDRepo(uuid, req_identity)
+    return rincianPelunasanPembelianBarangDenda[0].denda_status > 0 ? 1 : 0
 }
 
 export const getPelunasanPembelianBarangByUuidService = async (uuid, req_identity) => {

@@ -29,6 +29,27 @@ export const getAllPelunasanPembelianBarangRepo = async (pageNumber, size, searc
     }
 }
 
+export const getCekDendaByPelunasanPembelianUUIDRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                COUNT(0) AS denda_status
+            FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_barang_tab rppbt
+            JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pelunasan_pembelian_barang 
+            WHERE rppbt.nilai_pelunasan_denda > 0 
+            AND rppbt.enabled = 1
+            AND ppbt.enabled = 1
+            AND ppbt.tanggal <= (
+                SELECT rpbt.tanggal FROM ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt 
+                WHERE rpbt.uuid = "${uuid}"
+            )
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
 export const getPelunasanPembelianBarangByUuidRepo = async (uuid, req_id) => {
     return selectOneQueryUtil(
         generateDatabaseName(req_id),

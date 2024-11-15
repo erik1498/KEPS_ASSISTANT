@@ -10,6 +10,11 @@ import { getDataFromReturPenjualanBarangViewQuery } from "../../config/viewDatab
 import { getDataFrompengembalianDendaPenjualanBarangViewQuery } from "../../config/viewDatabase/pengembalianDendaPenjualanBarangViewQueryBuilder.js";
 import { fakturPenjualanBarangQueryBuilder } from "../../config/viewDatabase/fakturPenjualanBarangViewQueryBuilder.js";
 import { perintahStokOpnameQueryBuilder } from "../../config/viewDatabase/perintahStokOpnameViewQueryBuilder.js";
+import { getDataFromPesananPembelianBarangViewQuery } from "../../config/viewDatabase/pesananPembelianBarangViewQueryBuilder.js";
+import { getDataFromPelunasanPembelianBarangViewQuery } from "../../config/viewDatabase/pelunasanPembelianBarangViewQueryBuilder.js";
+import { getDataFromPelunasanPembelianDendaBarangViewQuery } from "../../config/viewDatabase/pelunasanPembelianDendaBarangViewQueryBuilder.js";
+import { getDataFromReturPembelianBarangViewQuery } from "../../config/viewDatabase/returPembelianBarangViewQueryBuilder.js";
+import { getDataFrompengembalianDendaPembelianBarangViewQuery } from "../../config/viewDatabase/pengembalianDendaPembelianBarangViewQueryBuilder.js";
 
 export const getAllPerintahStokOpnameRepo = async (pageNumber, size, search, tahun, req_id) => {
     const perintahStokOpnamesCount = await db.query(
@@ -245,13 +250,23 @@ export const perintahStokOpnameStatusRepo = async (perintah_stok_opname, req_id)
 export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, saveToPerintahStokOpnameJurnal, req_id) => {
     const pesananPenjualanBarangQuery = getDataFromPesananPenjualanBarangViewQuery(bulan, tahun, null, req_id)
 
+    const pesananPembelianBarangQuery = getDataFromPesananPembelianBarangViewQuery(bulan, tahun, null, req_id)
+
     const pelunasanPenjualanBarangQuery = getDataFromPelunasanPenjualanBarangViewQuery(bulan, tahun, null, req_id)
+
+    const pelunasanPembelianBarangQuery = getDataFromPelunasanPembelianBarangViewQuery(bulan, tahun, null, req_id)
 
     const pelunasanDendaPenjualanBarangQuery = getDataFromPelunasanPenjualanDendaBarangViewQuery(bulan, tahun, null, req_id)
 
+    const pelunasanDendaPembelianBarangQuery = getDataFromPelunasanPembelianDendaBarangViewQuery(bulan, tahun, null, req_id)
+
     const returPenjualanBarangQuery = getDataFromReturPenjualanBarangViewQuery(bulan, tahun, null, req_id)
 
+    const returPembelianBarangQuery = getDataFromReturPembelianBarangViewQuery(bulan, tahun, null, req_id)
+
     const pengembalianDendaPenjualanBarangQuery = getDataFrompengembalianDendaPenjualanBarangViewQuery(bulan, tahun, null, req_id)
+
+    const pengembalianDendaPembelianBarangQuery = getDataFrompengembalianDendaPembelianBarangViewQuery(bulan, tahun, null, req_id)
 
     const fakturPenjualanBarangDendaBulanIniQuery = fakturPenjualanBarangQueryBuilder(bulan, tahun, req_id)
 
@@ -259,10 +274,15 @@ export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, saveToPerint
 
     const queryList = [
         pesananPenjualanBarangQuery,
+        pesananPembelianBarangQuery,
         pelunasanPenjualanBarangQuery,
+        pelunasanPembelianBarangQuery,
         pelunasanDendaPenjualanBarangQuery,
+        pelunasanDendaPembelianBarangQuery,
         returPenjualanBarangQuery,
+        returPembelianBarangQuery,
         pengembalianDendaPenjualanBarangQuery,
+        pengembalianDendaPembelianBarangQuery,
         fakturPenjualanBarangDendaBulanIniQuery,
         perintahStokOpnameBulanIniQuery
     ]
@@ -313,7 +333,23 @@ export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, saveToPerint
                         "" AS updatedBy,
                         NOW() AS createdAt,
                         NOW() AS updatedBy
-                    ` : `res.*`
+                    ` : `
+                        res.uuid,
+                        res.bukti_transaksi,
+                        res.tanggal,
+                        res.bulan,
+                        res.tahun,
+                        res.transaksi,
+                        res.debet AS debet,
+                        res.kredit AS kredit,
+                        res.nama_akun,
+                        res.kode_akun,
+                        res.type_akun,
+                        res.uuid_akun,
+                        res.uraian,
+                        res.detail_data,
+                        res.sumber
+                    `
         }
             FROM (
                 ${queryList.join("UNION ALL")}

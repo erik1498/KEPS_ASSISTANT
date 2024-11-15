@@ -43,6 +43,7 @@ const RiwayatTransaksiPembelianBarang = ({
             apiFakturPembelianBarangCRUD
                 .custom("/riwayat_transaksi/" + fakturPembelianBarang.uuid)
                 .then(resData => {
+                    console.log(resData.data)
                     if (resData.data.length > 0) {
                         setFakturCancel(x => x = false)
                         setTanggalTransaksiAkhir(x => x = resData.data[0].tanggal)

@@ -10,7 +10,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 res.kode_akun_perkiraan AS kode_akun_uuid,
                 res.bulan,
                 res.tahun,
-                ROUND(SUM(res.debet) - SUM(res.kredit), 2) AS sum_result,
+                SUM(res.debet) - SUM(res.kredit) AS sum_result,
                 kapt.name AS kode_akun_perkiraan_name,
                 kapt.code AS kode_akun_perkiraan_code,
                 kapt.type AS kode_akun_perkiraan_type

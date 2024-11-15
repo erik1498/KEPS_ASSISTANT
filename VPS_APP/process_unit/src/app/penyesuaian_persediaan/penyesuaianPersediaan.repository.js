@@ -193,6 +193,7 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                                 psot2.uuid
                             FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot2 
                             WHERE psot2.enabled = 1
+                            AND psot2.validasi = 1
                             AND psot2.kategori_barang = psot.kategori_barang 
                             AND psot2.gudang_asal = psot.gudang_asal
                             AND psot2.bulan_transaksi = psot.bulan_transaksi - 1 

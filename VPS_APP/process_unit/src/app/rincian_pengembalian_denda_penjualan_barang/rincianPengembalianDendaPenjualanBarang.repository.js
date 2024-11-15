@@ -41,7 +41,7 @@ export const getRincianPengembalianDendaPenjualanBarangByFakturPenjualanBarangUU
                 dgt.name AS daftar_gudang_name,
                 IFNULL((
                     SELECT 
-                        ROUND(SUM((rrpbt.denda_sudah_dibayar / rrpbt.jumlah) * rrpbt.retur), 0) 
+                        SUM((rrpbt.denda_sudah_dibayar / rrpbt.jumlah) * rrpbt.retur)
                         - IFNULL((
                             SELECT 
                                 SUM(rpdpbt.denda_yang_dikembalikan) 

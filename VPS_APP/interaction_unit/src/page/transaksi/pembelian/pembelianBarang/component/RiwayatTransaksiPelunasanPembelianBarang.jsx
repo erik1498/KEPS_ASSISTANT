@@ -74,7 +74,7 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
                         nilai_pelunasan: `${listPelunasanPembelianBarang[index].nilai_pelunasan}`,
                         nilai_pelunasan_denda: `${listPelunasanPembelianBarang[index].nilai_pelunasan_denda}`
                     }
-                })
+                }).catch(err => showError(err))
         }
         _getRincianPesananPembelianBarang()
     }

@@ -82,7 +82,7 @@ const LemburPegawaiForm = ({
         const finishTime = new Date(waktuSelesai)
         const menitTotal = ((finishTime - startTime) / (1000 * 60))
         const jam = Math.floor(menitTotal / 60)
-        const menit = Math.round(((menitTotal / 60) - jam) * 60)
+        const menit = Math.FORMAT(((menitTotal / 60) - jam) * 60)
 
         setTotalJam(x => x = parseToRupiahText(jam))
         setTotalMenit(x => x = parseToRupiahText(menit))

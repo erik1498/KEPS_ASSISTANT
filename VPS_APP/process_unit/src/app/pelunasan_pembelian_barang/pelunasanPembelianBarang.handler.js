@@ -1,5 +1,5 @@
 import { pelunasanPembelianBarangValidation } from "./pelunasanPembelianBarang.validation.js"
-import { createPelunasanPembelianBarangService, deletePelunasanPembelianBarangByUuidService, getAllPelunasanPembelianBarangService, getPelunasanPembelianBarangByUuidService, updatePelunasanPembelianBarangByUuidService } from "./pelunasanPembelianBarang.services.js"
+import { createPelunasanPembelianBarangService, deletePelunasanPembelianBarangByUuidService, getAllPelunasanPembelianBarangService, getCekDendaByPelunasanPembelianUUIDService, getPelunasanPembelianBarangByUuidService, updatePelunasanPembelianBarangByUuidService } from "./pelunasanPembelianBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -9,6 +9,23 @@ export const getAllPelunasanPembelianBarangs = async (req, res) => {
         const pelunasanPembelianBarangs = await getAllPelunasanPembelianBarangService(req.query, req.identity)
         res.json({
             data: pelunasanPembelianBarangs,
+            message: "Get Data Success"
+        })
+    } catch (error) {    
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getCekDendaByPelunasanPembelianUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getCekDendaByPelunasanPembelianUUID", null, req.identity)
+    try {
+        const cekDenda = await getCekDendaByPelunasanPembelianUUIDService(req.params.uuid, req.identity)
+        res.json({
+            data: cekDenda,
             message: "Get Data Success"
         })
     } catch (error) {    

@@ -1,7 +1,12 @@
+import { getPelunasanPembelianBarangViewQuery, pelunasanPembelianBarangViewQueryBuilder } from "../../config/viewDatabase/pelunasanPembelianBarangViewQueryBuilder.js"
+import { getPelunasanPembelianDendaBarangViewQuery, pelunasanPembelianDendaBarangViewQueryBuilder } from "../../config/viewDatabase/pelunasanPembelianDendaBarangViewQueryBuilder.js"
 import { getPelunasanPenjualanBarangViewQuery, pelunasanPenjualanBarangViewQueryBuilder } from "../../config/viewDatabase/pelunasanPenjualanBarangViewQueryBuilder.js"
 import { getPelunasanPenjualanDendaBarangViewQuery, pelunasanPenjualanDendaBarangViewQueryBuilder } from "../../config/viewDatabase/pelunasanPenjualanDendaBarangViewQueryBuilder.js"
+import { getPengembalianDendaPembelianBarangViewQuery, pengembalianDendaPembelianBarangViewQueryBuilder } from "../../config/viewDatabase/pengembalianDendaPembelianBarangViewQueryBuilder.js"
 import { getPengembalianDendaPenjualanBarangViewQuery, pengembalianDendaPenjualanBarangViewQueryBuilder } from "../../config/viewDatabase/pengembalianDendaPenjualanBarangViewQueryBuilder.js"
+import { getPesananPembelianBarangViewQuery, pesananPembelianBarangViewQueryBuilder } from "../../config/viewDatabase/pesananPembelianBarangViewQueryBuilder.js"
 import { getPesananPenjualanBarangViewQuery, pesananPenjualanBarangViewQueryBuilder } from "../../config/viewDatabase/pesananPenjualanBarangViewQueryBuilder.js"
+import { getReturPembelianBarangViewQuery, returPembelianBarangViewQueryBuilder } from "../../config/viewDatabase/returPembelianBarangViewQueryBuilder.js"
 import { getReturPenjualanBarangViewQuery, returPenjualanBarangViewQueryBuilder } from "../../config/viewDatabase/returPenjualanBarangViewQueryBuilder.js"
 import { getTanggalTerakhirPadaBulan } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
@@ -56,11 +61,23 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
         if (pesananPenjualanBarangViewCount[0].count == 0) {
             await createViewRepo(pesananPenjualanBarangViewQueryBuilder(req_identity))
         }
+
+        const pesananPembelianBarangViewCount = await getCountOfViewRepo(getPesananPembelianBarangViewQuery(req_identity))
+
+        if (pesananPembelianBarangViewCount[0].count == 0) {
+            await createViewRepo(pesananPembelianBarangViewQueryBuilder(req_identity))
+        }
         
         const pelunasanPenjualanBarangViewCount = await getCountOfViewRepo(getPelunasanPenjualanBarangViewQuery(req_identity))
 
         if (pelunasanPenjualanBarangViewCount[0].count == 0) {
             await createViewRepo(pelunasanPenjualanBarangViewQueryBuilder(req_identity))
+        }
+        
+        const pelunasanPembelianBarangViewCount = await getCountOfViewRepo(getPelunasanPembelianBarangViewQuery(req_identity))
+
+        if (pelunasanPembelianBarangViewCount[0].count == 0) {
+            await createViewRepo(pelunasanPembelianBarangViewQueryBuilder(req_identity))
         }
 
         const pelunasanPenjualanDendaBarangViewCount = await getCountOfViewRepo(getPelunasanPenjualanDendaBarangViewQuery(req_identity))
@@ -69,16 +86,34 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
             await createViewRepo(pelunasanPenjualanDendaBarangViewQueryBuilder(req_identity))
         }
 
+        const pelunasanPembelianDendaBarangViewCount = await getCountOfViewRepo(getPelunasanPembelianDendaBarangViewQuery(req_identity))
+
+        if (pelunasanPembelianDendaBarangViewCount[0].count == 0) {
+            await createViewRepo(pelunasanPembelianDendaBarangViewQueryBuilder(req_identity))
+        }
+
         const returPenjualanBarangViewCount = await getCountOfViewRepo(getReturPenjualanBarangViewQuery(req_identity))
 
         if (returPenjualanBarangViewCount[0].count == 0) {
             await createViewRepo(returPenjualanBarangViewQueryBuilder(req_identity))
         }
 
+        const returPembelianBarangViewCount = await getCountOfViewRepo(getReturPembelianBarangViewQuery(req_identity))
+
+        if (returPembelianBarangViewCount[0].count == 0) {
+            await createViewRepo(returPembelianBarangViewQueryBuilder(req_identity))
+        }
+
         const pengembalianDendaPenjualanBarangViewCount = await getCountOfViewRepo(getPengembalianDendaPenjualanBarangViewQuery(req_identity))
 
         if (pengembalianDendaPenjualanBarangViewCount[0].count == 0) {
             await createViewRepo(pengembalianDendaPenjualanBarangViewQueryBuilder(req_identity))
+        }
+
+        const pengembalianDendaPembelianBarangViewCount = await getCountOfViewRepo(getPengembalianDendaPembelianBarangViewQuery(req_identity))
+
+        if (pengembalianDendaPembelianBarangViewCount[0].count == 0) {
+            await createViewRepo(pengembalianDendaPembelianBarangViewQueryBuilder(req_identity))
         }
 
         const jurnalPerintahStokOpname = await getJurnalPerintahStokOpnameRepo(perintahStokOpname[0].bulan_transaksi, perintahStokOpname[0].tahun, false, req_identity)
