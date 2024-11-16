@@ -188,8 +188,8 @@ const JurnalUmumForm = ({
       })
     })
     setTotalDebetKredit({
-      totalDebet,
-      totalKredit,
+      totalDebet: totalDebet.toFixed(2),
+      totalKredit: totalKredit.toFixed(2),
     })
   }, [transaksiList])
 

@@ -90,6 +90,13 @@ const DaftarAsetModel = db.define("daftar_aset_tab",
                 notEmpty:true,
             }
         },
+        kategori_aset: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
     }), {
     freezeTableName: true
 }

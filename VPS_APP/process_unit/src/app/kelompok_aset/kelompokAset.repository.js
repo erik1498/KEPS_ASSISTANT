@@ -41,6 +41,21 @@ export const getKelompokAsetByUuidRepo = async (uuid, req_id) => {
     )
 }
 
+export const checkKelompokAsetSudahDigunakanRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT
+                COUNT(0) AS count
+            FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat
+            WHERE dat.kelompok_aset = "${uuid}"
+            AND dat.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
 export const createKelompokAsetRepo = async (kelompokAsetData, req_id) => {
     return insertQueryUtil(
         req_id,

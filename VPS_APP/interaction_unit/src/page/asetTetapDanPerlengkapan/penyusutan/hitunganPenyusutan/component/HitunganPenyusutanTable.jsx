@@ -1,23 +1,10 @@
-import { useEffect, useState } from "react"
-import { apiDaftarAsetCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 
 const HitunganPenyusutanTable = ({
-    idAset,
-    metodePenyusutanName
+    hitunganList = [],
+    metodePenyusutanName = "Garis Lurus"
 }) => {
 
-    const [hitunganList, setHitunganList] = useState([])
-    const _getHitunganPenyusutan = () => {
-        apiDaftarAsetCRUD.custom(`/hitungan_penyusutan/${idAset}`, "GET")
-            .then(resData => {
-                setHitunganList(resData.data)
-            })
-    }
-
-    useEffect(() => {
-        _getHitunganPenyusutan()
-    }, [])
     return <>
         <div className="bg-white px-6 py-3 rounded-md shadow-2xl my-6">
             <div className="mb-3 flex justify-between items-center">
@@ -61,13 +48,13 @@ const HitunganPenyusutanTable = ({
                                         return (
                                             <tr key={i}>
                                                 <td>{i + 1}</td>
-                                                <td>{item.tahunPerolehan}</td>
-                                                <td>{item.masa ? item.masa[0] : null}</td>
-                                                <td>{item.masa ? item.masa[1] : null}</td>
-                                                <td>{parseToRupiahText(item.hargaBeli)}</td>
-                                                <td>{parseToRupiahText(item.persentase)}</td>
-                                                <td>{parseToRupiahText(item.nilaiPenyusutan)}</td>
-                                                <td>{parseToRupiahText(item.nilaiBuku)}</td>
+                                                <td>{item.tahun_perolehan}</td>
+                                                <td>{item.masa_awal != -1 ? item.masa_awal : null}</td>
+                                                <td>{item.masa_akhir != -1 ? item.masa_akhir : null}</td>
+                                                <td>{parseToRupiahText(item.harga_beli != -1 ? item.harga_beli : null)}</td>
+                                                <td>{parseToRupiahText(item.persentase != -1 ? item.persentase : null)}</td>
+                                                <td>{parseToRupiahText(item.nilai_penyusutan != -1 ? item.nilai_penyusutan : null)}</td>
+                                                <td>{parseToRupiahText(item.nilai_buku != -1 ? item.nilai_buku : null)}</td>
                                             </tr>
                                         )
                                     })
@@ -80,13 +67,13 @@ const HitunganPenyusutanTable = ({
                                         return (
                                             <tr key={i}>
                                                 <td>{i + 1}</td>
-                                                <td>{item.tahunPerolehan}</td>
-                                                <td>{parseToRupiahText(item.hargaBeli)}</td>
-                                                <td>{parseToRupiahText(item.akumulasiPenyusutanAwalTahun)}</td>
-                                                <td>{parseToRupiahText(item.nilaiBukuAwalTahun)}</td>
-                                                <td>{parseToRupiahText(item.persentasePenyusutan)}</td>
-                                                <td>{parseToRupiahText(item.nilaiPenyusutan)}</td>
-                                                <td>{parseToRupiahText(item.nilaiBukuAkhirTahun)}</td>
+                                                <td>{item.tahun_perolehan}</td>
+                                                <td>{parseToRupiahText(item.harga_beli != -1 ? item.harga_beli : null)}</td>
+                                                <td>{parseToRupiahText(item.akumulasi_penyusutan_awal_tahun != -1 ? item.akumulasi_penyusutan_awal_tahun : null)}</td>
+                                                <td>{parseToRupiahText(item.nilai_buku_awal_tahun != -1 ? item.nilai_buku_awal_tahun : null)}</td>
+                                                <td>{parseToRupiahText(item.persentase_penyusutan != -1 ? item.persentase_penyusutan : null)}</td>
+                                                <td>{parseToRupiahText(item.nilai_penyusutan != -1 ? item.nilai_penyusutan : null)}</td>
+                                                <td>{parseToRupiahText(item.nilai_buku_akhir_tahun != -1 ? item.nilai_buku_akhir_tahun : null)}</td>
                                             </tr>
                                         )
                                     })

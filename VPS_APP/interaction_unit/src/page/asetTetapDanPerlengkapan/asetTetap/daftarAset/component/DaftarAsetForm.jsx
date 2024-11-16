@@ -2,7 +2,7 @@ import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
 import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
-import { apiDaftarAsetCRUD, apiKelompokAsetCRUD, apiMetodePenyusutanCRUD, apiSatuanBarangCRUD, apiSupplierCRUD } from "../../../../../service/endPointList.api"
+import { apiDaftarAsetCRUD, apiKategoriAsetCRUD, apiKelompokAsetCRUD, apiMetodePenyusutanCRUD, apiSatuanBarangCRUD, apiSupplierCRUD } from "../../../../../service/endPointList.api"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { initialDataFromEditObject } from "../../../../../helper/select.helper"
@@ -18,6 +18,7 @@ const DaftarAsetForm = ({
     const [satuanBarangList, setSatuanBarangList] = useState([])
     const [metodePenyusutanList, setMetodePenyusutanList] = useState([])
     const [kelompokAsetList, setKelompokAsetList] = useState([])
+    const [kategoriAsetList, setKategoriAsetList] = useState([])
 
     const [namaDaftarAset, setNamaDaftarAset] = useState(daftarAsetEdit?.name ? daftarAsetEdit.name : ``)
     const [tanggalBeliDaftarAset, setTanggalBeliDaftarAset] = useState(daftarAsetEdit?.tanggal_beli ? daftarAsetEdit.tanggal_beli : getHariTanggalFull())
@@ -30,6 +31,7 @@ const DaftarAsetForm = ({
     const [PPNDaftarAset, setPPNDaftarAset] = useState(daftarAsetEdit?.ppn ? parseToRupiahText(daftarAsetEdit.ppn) : ``)
     const [metodePenyusutanDaftarAset, setMetodePenyusutanDaftarAset] = useState(daftarAsetEdit?.metode_penyusutan ? daftarAsetEdit.metode_penyusutan : ``)
     const [kelompokAsetDaftarAset, setKelompokAsetDaftarAset] = useState(daftarAsetEdit?.kelompok_aset ? daftarAsetEdit.kelompok_aset : ``)
+    const [kategoriAsetDaftarAset, setKategoriAsetDaftarAset] = useState(daftarAsetEdit?.kategori_aset ? daftarAsetEdit.kategori_aset : ``)
 
     const _getDataSupplier = () => {
         apiSupplierCRUD
@@ -135,6 +137,32 @@ const DaftarAsetForm = ({
             })
     }
 
+    const _getDataKategoriAset = () => {
+        apiKategoriAsetCRUD
+            .custom(``, "GET")
+            .then(resData => {
+                setKategoriAsetList(resData.data.entry)
+                if (resData.data.entry.length > 0) {
+                    if (daftarAsetEdit) {
+                        initialDataFromEditObject({
+                            editObject: daftarAsetEdit.kategori_aset,
+                            dataList: resData.data.entry,
+                            setState: setKategoriAsetDaftarAset,
+                            labelKey: "name",
+                            valueKey: "uuid",
+                        })
+                        return
+                    }
+                    setKategoriAsetDaftarAset({
+                        label: resData.data.entry[0].name,
+                        value: resData.data.entry[0].uuid,
+                    })
+                }
+            }).catch(err => {
+                showError(err)
+            })
+    }
+
     const _saveDaftarAset = async () => {
         if (await formValidation()) {
             apiDaftarAsetCRUD
@@ -150,7 +178,8 @@ const DaftarAsetForm = ({
                         dpp: DPPDaftarAset,
                         ppn: PPNDaftarAset,
                         metode_penyusutan: metodePenyusutanDaftarAset.value,
-                        kelompok_aset: kelompokAsetDaftarAset.value
+                        kelompok_aset: kelompokAsetDaftarAset.value,
+                        kategori_aset: kategoriAsetDaftarAset.value
                     }
                 }).then(() => {
                     if (daftarAsetEdit) {
@@ -171,6 +200,7 @@ const DaftarAsetForm = ({
         _getDataSatuanBarang()
         _getDataMetodePenyusutan()
         _getDataKelompokAset()
+        _getDataKategoriAset()
     }, [])
 
     return <>
@@ -326,6 +356,17 @@ const DaftarAsetForm = ({
                         setKelompokAsetDaftarAset(e)
                     }}
                     selectName={`kelompokAsetDaftarAset`}
+                />
+                <FormSelectWithLabel
+                    label={"Kategori Aset"}
+                    optionsDataList={kategoriAsetList}
+                    optionsLabel={"name"}
+                    optionsValue={"uuid"}
+                    selectValue={kategoriAsetDaftarAset}
+                    onchange={(e) => {
+                        setKategoriAsetDaftarAset(e)
+                    }}
+                    selectName={`kategoriAsetDaftarAset`}
                 />
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"

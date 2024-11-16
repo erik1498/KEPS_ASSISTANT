@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createMetodePenyusutanRepo, deleteMetodePenyusutanByUuidRepo, getAllMetodePenyusutanRepo, getMetodePenyusutanByUuidRepo, updateMetodePenyusutanByUuidRepo } from "./metodePenyusutan.repository.js"
+import { checkMetodePenyusutanSudahDigunakanRepo, createMetodePenyusutanRepo, deleteMetodePenyusutanByUuidRepo, getAllMetodePenyusutanRepo, getMetodePenyusutanByUuidRepo, updateMetodePenyusutanByUuidRepo } from "./metodePenyusutan.repository.js"
 
 export const getAllMetodePenyusutanService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllMetodePenyusutanService", null, req_identity)
@@ -47,8 +47,24 @@ export const createMetodePenyusutanService = async (metodePenyusutanData, req_id
 export const deleteMetodePenyusutanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteMetodePenyusutanByUuidService [${uuid}]`, null, req_identity)
     await getMetodePenyusutanByUuidService(uuid, req_identity)
+
+    await checkMetodePenyusutanSudahDigunakanService(uuid, req_identity)
+    
     await deleteMetodePenyusutanByUuidRepo(uuid, req_identity)
     return true
+}
+
+export const checkMetodePenyusutanSudahDigunakanService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkMetodePenyusutanSudahDigunakanService`, {
+        uuid
+    }, req_identity)
+    const metodePenyusutanGet = await checkMetodePenyusutanSudahDigunakanRepo(uuid, req_identity)
+    if (metodePenyusutanGet.length > 0 && metodePenyusutanGet[0].count > 0) {
+        throw Error(JSON.stringify({
+            message: "Tidak Dapat Dieksekusi, Metode Penyusutan Sudah Digunakan",
+            prop: "error"
+        }))
+    }
 }
 
 export const updateMetodePenyusutanByUuidService = async (uuid, metodePenyusutanData, req_identity, req_original_url, req_method) => {

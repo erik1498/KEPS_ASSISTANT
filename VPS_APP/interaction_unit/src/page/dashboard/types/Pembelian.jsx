@@ -154,7 +154,7 @@ const Pembelian = () => {
                                                 </div>
                                                 <div className="col-span-3 flex justify-center">
                                                     {
-                                                        j.debet != "0" ?
+                                                        parseFloat(j.debet).toFixed(2) != "0.00" ?
                                                             <div className={`text-green-900 text-sm font-bold flex items-center gap-x-2`}>
                                                                 <FaArrowDown size={11} />
                                                                 <p className="text-xs">{parseToRupiahText(j.debet)}</p>

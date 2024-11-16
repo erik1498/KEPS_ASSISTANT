@@ -86,12 +86,12 @@ const HistoryAkunRow = ({
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">
                                             {
-                                                item1.debet != "0" ? <h1 className=" text-green-900 font-bold">{parseToRupiahText(parseFloat(item1.debet).toFixed(2))}</h1> : <></>
+                                                item1.debet != "0.00" ? <h1 className=" text-green-900 font-bold">{parseToRupiahText(parseFloat(item1.debet).toFixed(2))}</h1> : <></>
                                             }
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">
                                             {
-                                                item1.kredit != "0" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(parseFloat(item1.kredit).toFixed(2))}</h1> : <></>
+                                                item1.kredit != "0.00" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(parseFloat(item1.kredit).toFixed(2))}</h1> : <></>
                                             }
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">

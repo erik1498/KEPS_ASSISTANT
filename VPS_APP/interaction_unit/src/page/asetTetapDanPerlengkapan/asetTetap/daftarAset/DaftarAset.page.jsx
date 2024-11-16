@@ -155,6 +155,7 @@ const DaftarAsetPage = () => {
                                         <th>Tanggal Beli</th>
                                         <th>Metode Penyusutan</th>
                                         <th>Kelompok Aset</th>
+                                        <th>Kategori Aset</th>
                                         <th>Total Beli</th>
                                         <th>DPP</th>
                                         <th>PPN</th>
@@ -172,6 +173,7 @@ const DaftarAsetPage = () => {
                                                     <td>{`${item.tanggal_beli.split("T")[0]} ${convertTo12HoursFormat(item.tanggal_beli.split("T")[1])}`}</td>
                                                     <td>{item.metode_penyusutan_name}</td>
                                                     <td>{item.kelompok_aset_name}</td>
+                                                    <td>{item.kategori_aset_name}</td>
                                                     <td>{parseToRupiahText(item.harga_satuan * item.kuantitas)}</td>
                                                     <td>{parseToRupiahText(item.dpp)}</td>
                                                     <td>{parseToRupiahText(item.ppn)}</td>

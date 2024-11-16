@@ -49,12 +49,12 @@ const PendapatanRowData = ({
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">
                                             {
-                                                item3.debet != "0" ? <h1 className=" text-green-900 font-bold">{parseToRupiahText(item3.debet)}</h1> : <></>
+                                                parseFloat(item3.debet).toFixed(2) != "0.00" ? <h1 className=" text-green-900 font-bold">{parseToRupiahText(item3.debet)}</h1> : <></>
                                             }
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">
                                             {
-                                                item3.kredit != "0" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(item3.kredit)}</h1> : <></>
+                                                parseFloat(item3.kredit).toFixed(2) != "0.00" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(item3.kredit)}</h1> : <></>
                                             }
                                         </div>
                                     </div> : <></>

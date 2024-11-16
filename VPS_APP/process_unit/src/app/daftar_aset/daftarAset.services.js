@@ -1,4 +1,3 @@
-import { GARIS_LURUS, hitungPenyusutanGarisLurus, hitungPenyusutanSaldoMenurun } from "../../utils/hitunganPenyusutanUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { createDaftarAsetRepo, deleteDaftarAsetByUuidRepo, getAllDaftarAsetRepo, getDaftarAsetByUuidRepo, getDaftarAsetByUuidWithKelompokAsetAndPersentasePenyusutanRepo, updateDaftarAsetByUuidRepo } from "./daftarAset.repository.js"
@@ -22,13 +21,6 @@ export const getAllDaftarAsetService = async (query, req_identity) => {
 
     const daftarAsets = await getAllDaftarAsetRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(daftarAsets.entry, daftarAsets.count, daftarAsets.pageNumber, daftarAsets.size)
-}
-
-export const getPerhitunganPenyusutanService = async (uuid, req_identity) => {
-    LOGGER(logType.INFO, "Start getPerhitunganPenyusutanService", { uuid }, req_identity)
-    const asetData = await getDaftarAsetByUuidWithKelompokAsetAndPersentasePenyusutanService(uuid, req_identity)
-    const result = asetData.metode_penyusutan_name == GARIS_LURUS ? hitungPenyusutanGarisLurus(asetData) : hitungPenyusutanSaldoMenurun(asetData)
-    return result
 }
 
 export const getDaftarAsetByUuidWithKelompokAsetAndPersentasePenyusutanService = async (uuid, req_identity) => {

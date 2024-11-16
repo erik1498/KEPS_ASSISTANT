@@ -41,6 +41,21 @@ export const getKategoriAsetByUuidRepo = async (uuid, req_id) => {
     )
 }
 
+export const checkKategoriAsetSudahDigunakanRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT
+                COUNT(0) AS count
+            FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat
+            WHERE dat.kategori_aset = "${uuid}"
+            AND dat.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
 export const createKategoriAsetRepo = async (kategoriAsetData, req_id) => {
     return insertQueryUtil(
         req_id,

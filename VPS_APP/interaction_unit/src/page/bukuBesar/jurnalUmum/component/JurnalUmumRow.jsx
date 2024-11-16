@@ -37,10 +37,10 @@ const JurnalUmumRow = ({
                             <h1 className="font-bold">Total</h1>
                             <div className="flex gap-x-4">
                                 <div className="text-right text-gray-900">
-                                    <h1 className=" text-green-900 font-bold flex flex-row">{parseToRupiahText(item.total.debet)}</h1>
+                                    <h1 className=" text-green-900 font-bold flex flex-row">{parseToRupiahText(item.total.debet.toFixed(2))}</h1>
                                 </div>
                                 <div className="text-right text-gray-900">
-                                    <h1 className=" text-red-900 font-bold">{parseToRupiahText(item.total.kredit)}</h1>
+                                    <h1 className=" text-red-900 font-bold">{parseToRupiahText(item.total.kredit.toFixed(2))}</h1>
                                 </div>
                             </div>
                         </div>
@@ -88,12 +88,12 @@ const JurnalUmumRow = ({
                                                             </div>
                                                             <div className="text-right px-2 col-span-2 text-gray-900">
                                                                 {
-                                                                    item3.debet != "0" ? <h1 className=" text-green-900 font-bold">{parseToRupiahText(item3.debet)}</h1> : <></>
+                                                                    parseFloat(item3.debet).toFixed(2) != "0.00" ? <h1 className=" text-green-900 font-bold">{parseToRupiahText(item3.debet)}</h1> : <></>
                                                                 }
                                                             </div>
                                                             <div className="text-right px-2 col-span-2 text-gray-900">
                                                                 {
-                                                                    item3.kredit != "0" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(item3.kredit)}</h1> : <></>
+                                                                    parseFloat(item3.kredit).toFixed(2) != "0.00" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(item3.kredit)}</h1> : <></>
                                                                 }
                                                             </div>
                                                             {

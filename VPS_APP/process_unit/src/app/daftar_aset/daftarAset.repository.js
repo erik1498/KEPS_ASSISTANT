@@ -12,6 +12,7 @@ export const getAllDaftarAsetRepo = async (pageNumber, size, search, req_id) => 
             FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
             JOIN ${generateDatabaseName(req_id)}.metode_penyusutan_tab mpt ON mpt.uuid = dat.metode_penyusutan
             JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
+            JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset
             WHERE dat.enabled = 1
             AND mpt.enabled = 1
             AND kat.enabled = 1
@@ -28,10 +29,12 @@ export const getAllDaftarAsetRepo = async (pageNumber, size, search, req_id) => 
             SELECT
                 dat.*,
                 mpt.name AS metode_penyusutan_name,
-                kat.name AS kelompok_aset_name
+                kat.name AS kelompok_aset_name,
+                kat2.name AS kategori_aset_name
             FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
             JOIN ${generateDatabaseName(req_id)}.metode_penyusutan_tab mpt ON mpt.uuid = dat.metode_penyusutan
             JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
+            JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset
             WHERE dat.enabled = 1
             AND mpt.enabled = 1
             AND kat.enabled = 1
@@ -81,6 +84,7 @@ export const createDaftarAsetRepo = async (daftarAsetData, req_id) => {
             ppn: daftarAsetData.ppn,
             metode_penyusutan: daftarAsetData.metode_penyusutan,
             kelompok_aset: daftarAsetData.kelompok_aset,
+            kategori_aset: daftarAsetData.kategori_aset,
             enabled: daftarAsetData.enabled
         }
     )
@@ -120,6 +124,7 @@ export const updateDaftarAsetByUuidRepo = async (uuid, daftarAsetData, req_id) =
             ppn: daftarAsetData.ppn,
             metode_penyusutan: daftarAsetData.metode_penyusutan,
             kelompok_aset: daftarAsetData.kelompok_aset,
+            kategori_aset: daftarAsetData.kategori_aset,
         },
         {
             uuid
