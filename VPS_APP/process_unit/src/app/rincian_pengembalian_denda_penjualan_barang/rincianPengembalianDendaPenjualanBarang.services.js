@@ -1,5 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getPengembalianDendaPenjualanBarangByUuidService } from "../pengembalian_denda_penjualan_barang/pengembalianDendaPenjualanBarang.services.js"
+import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createRincianPengembalianDendaPenjualanBarangRepo, deleteRincianPengembalianDendaPenjualanBarangByUuidRepo, getAllRincianPengembalianDendaPenjualanBarangRepo, getRincianPengembalianDendaPenjualanBarangByFakturPenjualanBarangUUIDRepo, getRincianPengembalianDendaPenjualanBarangByUuidRepo, updateRincianPengembalianDendaPenjualanBarangByUuidRepo } from "./rincianPengembalianDendaPenjualanBarang.repository.js"
 
 export const getAllRincianPengembalianDendaPenjualanBarangService = async (query, req_identity) => {
@@ -52,6 +54,17 @@ export const getRincianPengembalianDendaPenjualanBarangByUuidService = async (uu
 export const createRincianPengembalianDendaPenjualanBarangService = async (rincianPengembalianDendaPenjualanBarangData, req_identity) => {
     LOGGER(logType.INFO, `Start createRincianPengembalianDendaPenjualanBarangService`, rincianPengembalianDendaPenjualanBarangData, req_identity)
     rincianPengembalianDendaPenjualanBarangData.enabled = 1
+
+    const pengembalianDendaPenjualanBarang = await getPengembalianDendaPenjualanBarangByUuidService(rincianPengembalianDendaPenjualanBarangData.pengembalian_penjualan_barang, req_identity)
+
+    if (pengembalianDendaPenjualanBarang.nomor_pengembalian_denda_penjualan_barang == "EMPTY" || pengembalianDendaPenjualanBarang.bukti_transaksi == "EMPTY") {
+        throw Error(JSON.stringify({
+            message: "Nomor Pengembalian Denda Penjualan Barang Atau Bukti Transaksi Tidak Boleh Kosong",
+            prop: "error"
+        }))
+    }
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pengembalianDendaPenjualanBarang.tanggal, null, null, req_identity)
 
     const rincianPengembalianDendaPenjualanBarang = await createRincianPengembalianDendaPenjualanBarangRepo(rincianPengembalianDendaPenjualanBarangData, req_identity)
     return rincianPengembalianDendaPenjualanBarang
