@@ -1,5 +1,22 @@
-import { deleteHitunganPenyusutanByUuidService, getHitunganPenyusutanByUuidService } from "./hitunganPenyusutan.services.js"
+import { deleteHitunganPenyusutanByUuidService, getHitunganPenyusutanByUuidService, getJurnalHitunganPenyusutanService } from "./hitunganPenyusutan.services.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
+
+export const getJurnalHitunganPenyusutan = async (req, res) => {
+    LOGGER(logType.INFO, "Start getJurnalHitunganPenyusutan", null, req.identity)
+    try {
+        const { bulan, tahun } = req.params
+        res.json({
+            data: await getJurnalHitunganPenyusutanService(bulan, tahun, req.identity),
+            message: "Get Data By UUID Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
 
 export const getHitunganPenyusutanByUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start getHitunganPenyusutanByUuidController", null, req.identity)

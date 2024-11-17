@@ -47,6 +47,11 @@ export const daftarAsetValidation = (payload) => {
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
+        kode_akun_perkiraan: Joi.string().required().messages({
+            'string.base': "Harus Berupa Text",
+            "string.empty": "Harus Diisi",
+            "any.required": "Harus Diisi",
+        }),
         metode_penyusutan: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",

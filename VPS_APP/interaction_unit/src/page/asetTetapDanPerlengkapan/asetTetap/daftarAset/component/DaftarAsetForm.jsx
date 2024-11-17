@@ -2,7 +2,7 @@ import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
 import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
-import { apiDaftarAsetCRUD, apiKategoriAsetCRUD, apiKelompokAsetCRUD, apiMetodePenyusutanCRUD, apiSatuanBarangCRUD, apiSupplierCRUD } from "../../../../../service/endPointList.api"
+import { apiDaftarAsetCRUD, apiKategoriAsetCRUD, apiKelompokAsetCRUD, apiKodeAkunCRUD, apiMetodePenyusutanCRUD, apiSatuanBarangCRUD, apiSupplierCRUD } from "../../../../../service/endPointList.api"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { initialDataFromEditObject } from "../../../../../helper/select.helper"
@@ -17,6 +17,7 @@ const DaftarAsetForm = ({
     const [supplierList, setSupplierList] = useState([])
     const [satuanBarangList, setSatuanBarangList] = useState([])
     const [metodePenyusutanList, setMetodePenyusutanList] = useState([])
+    const [kodeAkunPerkiraanList, setKodeAkunPerkiraanList] = useState([])
     const [kelompokAsetList, setKelompokAsetList] = useState([])
     const [kategoriAsetList, setKategoriAsetList] = useState([])
 
@@ -30,6 +31,7 @@ const DaftarAsetForm = ({
     const [DPPDaftarAset, setDPPDaftarAset] = useState(daftarAsetEdit?.dpp ? parseToRupiahText(daftarAsetEdit.dpp) : ``)
     const [PPNDaftarAset, setPPNDaftarAset] = useState(daftarAsetEdit?.ppn ? parseToRupiahText(daftarAsetEdit.ppn) : ``)
     const [metodePenyusutanDaftarAset, setMetodePenyusutanDaftarAset] = useState(daftarAsetEdit?.metode_penyusutan ? daftarAsetEdit.metode_penyusutan : ``)
+    const [kodeAkunPerkiraanDaftarAset, setKodeAkunPerkiraanDaftarAset] = useState(daftarAsetEdit?.kode_akun_perkiraan ? daftarAsetEdit.kode_akun_perkiraan : ``)
     const [kelompokAsetDaftarAset, setKelompokAsetDaftarAset] = useState(daftarAsetEdit?.kelompok_aset ? daftarAsetEdit.kelompok_aset : ``)
     const [kategoriAsetDaftarAset, setKategoriAsetDaftarAset] = useState(daftarAsetEdit?.kategori_aset ? daftarAsetEdit.kategori_aset : ``)
 
@@ -111,6 +113,32 @@ const DaftarAsetForm = ({
             })
     }
 
+    const _getDataKodeAkunPerkiraan = () => {
+        apiKodeAkunCRUD
+            .custom(`/kas_bank`, "GET")
+            .then(resData => {
+                setKodeAkunPerkiraanList(resData.data)
+                if (resData.data.length > 0) {
+                    if (daftarAsetEdit) {
+                        initialDataFromEditObject({
+                            editObject: daftarAsetEdit.kode_akun_perkiraan,
+                            dataList: resData.data,
+                            setState: setKodeAkunPerkiraanDaftarAset,
+                            labelKey: "name",
+                            valueKey: "uuid",
+                        })
+                        return
+                    }
+                    setKodeAkunPerkiraanDaftarAset({
+                        label: resData.data[0].name,
+                        value: resData.data[0].uuid,
+                    })
+                }
+            }).catch(err => {
+                showError(err)
+            })
+    }
+
     const _getDataKelompokAset = () => {
         apiKelompokAsetCRUD
             .custom(``, "GET")
@@ -178,6 +206,7 @@ const DaftarAsetForm = ({
                         dpp: DPPDaftarAset,
                         ppn: PPNDaftarAset,
                         metode_penyusutan: metodePenyusutanDaftarAset.value,
+                        kode_akun_perkiraan: kodeAkunPerkiraanDaftarAset.value,
                         kelompok_aset: kelompokAsetDaftarAset.value,
                         kategori_aset: kategoriAsetDaftarAset.value
                     }
@@ -199,6 +228,7 @@ const DaftarAsetForm = ({
         _getDataSupplier()
         _getDataSatuanBarang()
         _getDataMetodePenyusutan()
+        _getDataKodeAkunPerkiraan()
         _getDataKelompokAset()
         _getDataKategoriAset()
     }, [])
@@ -334,6 +364,17 @@ const DaftarAsetForm = ({
                             name: "PPNDaftarAset"
                         }
                     }
+                />
+                <FormSelectWithLabel
+                    label={"Kode Akun"}
+                    optionsDataList={kodeAkunPerkiraanList}
+                    optionsLabel={"name"}
+                    optionsValue={"uuid"}
+                    selectValue={kodeAkunPerkiraanDaftarAset}
+                    onchange={(e) => {
+                        setKodeAkunPerkiraanDaftarAset(e)
+                    }}
+                    selectName={`kodeAkunPerkiraanDaftarAset`}
                 />
                 <FormSelectWithLabel
                     label={"Metode Penyusutan"}

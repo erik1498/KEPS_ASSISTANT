@@ -83,6 +83,13 @@ const DaftarAsetModel = db.define("daftar_aset_tab",
                 notEmpty:true,
             }
         },
+        kode_akun_perkiraan: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
         kelompok_aset: {
             type: DataTypes.STRING,
             allowNull: false,

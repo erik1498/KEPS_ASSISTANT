@@ -6,7 +6,8 @@ import KasRowData from "../../../transaksi/kasDanBank/kas/component/KasRowData";
 import PendapatanRowData from "../../../transaksi/payroll/pendapatanPegawai/component/PendapatanRowData";
 import PotonganRowData from "../../../transaksi/payroll/potonganPegawai/component/PotonganRowData";
 import JurnalStokOpnameRowData from "../../../persediaan/opname/jurnalStokOpname/component/JurnalStokOpnameRowData";
-import { PERINTAHSTOKOPNAMESUMBERLIST } from "../../../../config/objectList.config";
+import { ASETTETAPDANPERLENGKAPANSUMBERLIST, PERINTAHSTOKOPNAMESUMBERLIST } from "../../../../config/objectList.config";
+import JurnalPenyusutanRowData from "../../../asetTetapDanPerlengkapan/penyusutan/jurnalPenyusutan/component/JurnalPenyusutanRowData";
 
 const JurnalUmumRow = ({
     item,
@@ -200,12 +201,20 @@ const JurnalUmumRow = ({
                                         </> : <></>
                                 }
                                 {
-                                    PERINTAHSTOKOPNAMESUMBERLIST.indexOf(item1.sumber) > -1 ? 
-                                    <JurnalStokOpnameRowData
-                                        forPrint={forPrint}
-                                        item1={item1}
-                                        balanceStatus={false}
-                                    /> : <></>
+                                    PERINTAHSTOKOPNAMESUMBERLIST.indexOf(item1.sumber) > -1 ?
+                                        <JurnalStokOpnameRowData
+                                            forPrint={forPrint}
+                                            item1={item1}
+                                            balanceStatus={false}
+                                        /> : <></>
+                                }
+                                {
+                                    ASETTETAPDANPERLENGKAPANSUMBERLIST.indexOf(item1.sumber) > -1 ?
+                                        <JurnalPenyusutanRowData
+                                            forPrint={forPrint}
+                                            item1={item1}
+                                            balanceStatus={false}
+                                        /> : <></>
                                 }
                             </>
                     }

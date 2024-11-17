@@ -41,6 +41,13 @@ const HitunganPenyusutanModel = db.define("hitungan_penyusutan_tab",
                 notEmpty: true,
             }
         },
+        tanggal: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
         bulan: {
             type: DataTypes.INTEGER,
             allowNull: false,

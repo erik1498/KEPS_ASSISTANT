@@ -2,7 +2,6 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import PerintahStokOpnameModel from "./perintahStokOpname.model.js";
 import { generateDatabaseName, getUserIdFromRequestIdentity, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
-import { getTanggalTerakhirPadaBulan } from "../../utils/jurnalUmumUtil.js";
 import { getDataFromPesananPenjualanBarangViewQuery } from "../../config/viewDatabase/pesananPenjualanBarangViewQueryBuilder.js";
 import { getDataFromPelunasanPenjualanBarangViewQuery } from "../../config/viewDatabase/pelunasanPenjualanBarangViewQueryBuilder.js";
 import { getDataFromPelunasanPenjualanDendaBarangViewQuery } from "../../config/viewDatabase/pelunasanPenjualanDendaBarangViewQueryBuilder.js";

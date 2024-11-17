@@ -1,7 +1,15 @@
 import { GARIS_LURUS, hitungPenyusutanGarisLurus, hitungPenyusutanSaldoMenurun, SALDO_MENURUN } from "../../utils/hitunganPenyusutanUtil.js"
+import { getTanggalTerakhirPadaBulan } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
 import { getDaftarAsetByUuidWithKelompokAsetAndPersentasePenyusutanService } from "../daftar_aset/daftarAset.services.js"
-import { createHitunganPenyusutanRepo, deleteHitunganPenyusutanByUuidRepo, getHitunganPenyusutanByUuidRepo } from "./hitunganPenyusutan.repository.js"
+import { createHitunganPenyusutanRepo, deleteHitunganPenyusutanByUuidRepo, getHitunganPenyusutanByUuidRepo, getJurnalHitunganPenyusutanRepo } from "./hitunganPenyusutan.repository.js"
+
+
+export const getJurnalHitunganPenyusutanService = async (bulan, tahun, req_identity) => {
+    LOGGER(logType.INFO, `Start getJurnalHitunganPenyusutanService`, null, req_identity)
+    const jurnalHitunganPenyusutan = await getJurnalHitunganPenyusutanRepo(bulan, tahun, req_identity)
+    return jurnalHitunganPenyusutan
+}
 
 export const getHitunganPenyusutanByUuidService = async (uuid, validasi_hitungan_penyusutan, req_identity) => {
     LOGGER(logType.INFO, "Start getHitunganPenyusutanByUuidService", { uuid }, req_identity)
@@ -22,6 +30,7 @@ export const getHitunganPenyusutanByUuidService = async (uuid, validasi_hitungan
                     daftar_aset: uuid,
                     transaksi: i,
                     tahun_perolehan: x.tahun_perolehan,
+                    tanggal: getTanggalTerakhirPadaBulan(x.tahun, x.bulan),
                     bulan: parseInt(x.bulan),
                     tahun: parseInt(x.tahun),
                     masa_awal: x.masa_awal != null ? x.masa_awal : -1,
@@ -43,6 +52,7 @@ export const getHitunganPenyusutanByUuidService = async (uuid, validasi_hitungan
                     daftar_aset: uuid,
                     transaksi: i,
                     tahun_perolehan: x.tahun_perolehan,
+                    tanggal: getTanggalTerakhirPadaBulan(x.tahun, x.bulan),
                     bulan: parseInt(x.bulan),
                     tahun: parseInt(x.tahun),
                     masa_awal: -1,

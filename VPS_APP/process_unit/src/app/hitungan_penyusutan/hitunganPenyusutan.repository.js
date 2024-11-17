@@ -3,6 +3,192 @@ import db from "../../config/Database.js";
 import HitunganPenyusutanModel from "./hitunganPenyusutan.model.js";
 import { generateDatabaseName, insertQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 
+export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                res.*
+            FROM (
+                SELECT 
+                    "NOT_AVAILABLE" AS uuid,
+                    dat.nomor_invoice AS bukti_transaksi,
+                    LPAD(DAY(dat.tanggal_beli), 2) AS tanggal,
+                    LPAD(MONTH(dat.tanggal_beli), 2) AS bulan,
+                    YEAR(dat.tanggal_beli) AS tahun,
+                    TIME(dat.tanggal_beli) AS waktu,
+                    0 AS transaksi,
+                    dat.harga_satuan * dat.kuantitas AS debet,
+                    0 AS kredit,
+                    kapt.name AS nama_akun,
+                    kapt.code AS kode_akun,
+                    kapt.type AS type_akun,
+                    kapt.uuid AS uuid_akun,
+                    NULL AS uraian,
+                    JSON_OBJECT (
+                        'satuan_barang_name', sbt.name,
+                        'kuantitas', dat.kuantitas,
+                        'harga_satuan', dat.harga_satuan,
+                        'dpp', dat.dpp,
+                        'ppn', dat.ppn,
+                        'metode_penyusutan', mpt.name,
+                        'kelompok_aset', kat.name,
+                        'kategori_aset', kat2.name,
+                        'supplier_name', st.name,
+                        'supplier_code', st.code,
+                        'daftar_aset_name', dat.name
+                    ) AS detail_data,
+                    "PEMBELIAN ASET" AS sumber
+                FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dat.satuan_barang
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dat.supplier 
+                JOIN ${generateDatabaseName(req_id)}.metode_penyusutan_tab mpt ON mpt.uuid = dat.metode_penyusutan 
+                JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
+                JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a88b16d3-4071-4503-9c5b-17cdac4a411f"
+                WHERE MONTH(dat.tanggal_beli) = ${bulan}
+                AND YEAR(dat.tanggal_beli) = ${tahun}
+                AND dat.enabled = 1
+                UNION ALL
+                SELECT 
+                    "NOT_AVAILABLE" AS uuid,
+                    dat.nomor_invoice AS bukti_transaksi,
+                    LPAD(DAY(dat.tanggal_beli), 2) AS tanggal,
+                    LPAD(MONTH(dat.tanggal_beli), 2) AS bulan,
+                    YEAR(dat.tanggal_beli) AS tahun,
+                    TIME(dat.tanggal_beli) AS waktu,
+                    1 AS transaksi,
+                    0 AS debet,
+                    dat.harga_satuan * dat.kuantitas AS kredit,
+                    kapt.name AS nama_akun,
+                    kapt.code AS kode_akun,
+                    kapt.type AS type_akun,
+                    kapt.uuid AS uuid_akun,
+                    NULL AS uraian,
+                    JSON_OBJECT (
+                        'satuan_barang_name', sbt.name,
+                        'kuantitas', dat.kuantitas,
+                        'harga_satuan', dat.harga_satuan,
+                        'dpp', dat.dpp,
+                        'ppn', dat.ppn,
+                        'metode_penyusutan', mpt.name,
+                        'kelompok_aset', kat.name,
+                        'kategori_aset', kat2.name,
+                        'supplier_name', st.name,
+                        'supplier_code', st.code,
+                        'daftar_aset_name', dat.name
+                    ) AS detail_data,
+                    "PEMBELIAN ASET" AS sumber
+                FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dat.satuan_barang
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dat.supplier 
+                JOIN ${generateDatabaseName(req_id)}.metode_penyusutan_tab mpt ON mpt.uuid = dat.metode_penyusutan 
+                JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
+                JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = dat.kode_akun_perkiraan
+                WHERE MONTH(dat.tanggal_beli) = ${bulan}
+                AND YEAR(dat.tanggal_beli) = ${tahun}
+                AND dat.enabled = 1
+                UNION ALL
+                SELECT 
+                    "NOT_AVAILABLE" AS uuid,
+                    dat.nomor_invoice AS bukti_transaksi,
+                    hpt.tanggal AS tanggal,
+                    hpt.bulan AS bulan,
+                    hpt.tahun AS tahun,
+                    TIME(dat.tanggal_beli) AS waktu,
+                    0 AS transaksi,
+                    CASE
+                        WHEN hpt.nilai_penyusutan > 0
+                        THEN hpt.nilai_penyusutan * dat.kuantitas 
+                        ELSE 0
+                    END AS debet,
+                    0 AS kredit,
+                    kapt.name AS nama_akun,
+                    kapt.code AS kode_akun,
+                    kapt.type AS type_akun,
+                    kapt.uuid AS uuid_akun,
+                    NULL AS uraian,
+                    JSON_OBJECT (
+                        'satuan_barang_name', sbt.name,
+                        'kuantitas', dat.kuantitas,
+                        'harga_satuan', dat.harga_satuan,
+                        'dpp', dat.dpp,
+                        'ppn', dat.ppn,
+                        'metode_penyusutan', mpt.name,
+                        'kelompok_aset', kat.name,
+                        'kategori_aset', kat2.name,
+                        'supplier_name', st.name,
+                        'supplier_code', st.code,
+                        'daftar_aset_name', dat.name
+                    ) AS detail_data,
+                    "HITUNGAN PENYUSUTAN ASET" AS sumber
+                FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
+                JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset 
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dat.satuan_barang
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dat.supplier 
+                JOIN ${generateDatabaseName(req_id)}.metode_penyusutan_tab mpt ON mpt.uuid = dat.metode_penyusutan 
+                JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
+                JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "915ac6e8-c528-4f10-9215-74fda0b1c99e"
+                WHERE hpt.tahun = ${tahun}
+                AND hpt.bulan = ${bulan} 
+                AND hpt.enabled = 1
+                AND dat.enabled = 1
+                UNION ALL
+                SELECT 
+                    "NOT_AVAILABLE" AS uuid,
+                    dat.nomor_invoice AS bukti_transaksi,
+                    hpt.tanggal AS tanggal,
+                    hpt.bulan AS bulan,
+                    hpt.tahun AS tahun,
+                    TIME(dat.tanggal_beli) AS waktu,
+                    1 AS transaksi,
+                    0 AS debet,
+                    CASE
+                        WHEN hpt.nilai_penyusutan > 0
+                        THEN hpt.nilai_penyusutan * dat.kuantitas 
+                        ELSE 0
+                    END AS kredit,
+                    kapt.name AS nama_akun,
+                    kapt.code AS kode_akun,
+                    kapt.type AS type_akun,
+                    kapt.uuid AS uuid_akun,
+                    NULL AS uraian,
+                    JSON_OBJECT (
+                        'satuan_barang_name', sbt.name,
+                        'kuantitas', dat.kuantitas,
+                        'harga_satuan', dat.harga_satuan,
+                        'dpp', dat.dpp,
+                        'ppn', dat.ppn,
+                        'metode_penyusutan', mpt.name,
+                        'kelompok_aset', kat.name,
+                        'kategori_aset', kat2.name,
+                        'supplier_name', st.name,
+                        'supplier_code', st.code,
+                        'daftar_aset_name', dat.name
+                    ) AS detail_data,
+                    "HITUNGAN PENYUSUTAN ASET" AS sumber
+                FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
+                JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset 
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dat.satuan_barang
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dat.supplier 
+                JOIN ${generateDatabaseName(req_id)}.metode_penyusutan_tab mpt ON mpt.uuid = dat.metode_penyusutan 
+                JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
+                JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a88b16d3-4071-4503-9c5b-17cdac4a411f"
+                WHERE hpt.tahun = ${tahun}
+                AND hpt.bulan = ${bulan} 
+                AND hpt.enabled = 1
+                AND dat.enabled = 1
+            ) AS res
+            ORDER BY res.tanggal ASC, res.transaksi ASC, res.debet DESC
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
 export const getHitunganPenyusutanByUuidRepo = async (uuid, req_id) => {
     return await db.query(
         `
@@ -28,6 +214,7 @@ export const createHitunganPenyusutanRepo = async (hitunganPenyusutanData, req_i
             daftar_aset: hitunganPenyusutanData.daftar_aset,
             transaksi: hitunganPenyusutanData.transaksi,
             tahun_perolehan: hitunganPenyusutanData.tahun_perolehan,
+            tanggal: hitunganPenyusutanData.tanggal,
             bulan: hitunganPenyusutanData.bulan,
             tahun: hitunganPenyusutanData.tahun,
             harga_beli: hitunganPenyusutanData.harga_beli,

@@ -362,7 +362,6 @@ const Navigasi = ({
                                                     }
                                                     {
                                                         getRolesInCookie("AsetTetapDanPerlengkapan_Penyusutan_HitunganPenyusutan") ? <>
-
                                                             <li>
                                                                 <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/hitunganPenyusutan" addClass={"my-1"} label={"Hitungan Penyusutan"} />
                                                             </li>
@@ -371,7 +370,7 @@ const Navigasi = ({
                                                     {
                                                         getRolesInCookie("AsetTetapDanPerlengkapan_Penyusutan_JurnalPenyusutan") ? <>
                                                             <li>
-                                                                <NavigationLink to="/perusahaan/kustomer" addClass={"my-1"} label={"Jurnal Penyusutan"} />
+                                                                <NavigationLink to="/asetTetapDanPerlengkapan/penyusutan/jurnalPenyusutan" addClass={"my-1"} label={"Jurnal Penyusutan"} />
                                                             </li>
                                                         </> : <></>
                                                     }

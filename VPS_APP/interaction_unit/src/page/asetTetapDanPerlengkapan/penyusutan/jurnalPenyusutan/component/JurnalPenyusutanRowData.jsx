@@ -1,10 +1,10 @@
-import { convertTo12HoursFormat, formatDate, getBulanByIndex } from "../../../../../helper/date.helper"
+import { convertTo12HoursFormat, getBulanByIndex } from "../../../../../helper/date.helper"
 import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/number.helper"
-import JurnalStokOpnameUraian from "./JurnalStokOpnameUraian"
+import JurnalPenyusutanRowUraian from "./JurnalPenyusutanRowUraian"
 
-const JurnalStokOpnameRowData = ({
+const JurnalPenyusutanRowData = ({
     item1,
-    balanceStatus = true,
+    balanceStatus,
     forPrint
 }) => {
     return <>
@@ -27,7 +27,7 @@ const JurnalStokOpnameRowData = ({
                             j <= item2.length ? <>
                                 {
                                     item3.waktu_show ? <>
-                                        <JurnalStokOpnameUraian
+                                        <JurnalPenyusutanRowUraian
                                             data={item3}
                                             bg_color={true}
                                         />
@@ -79,4 +79,4 @@ const JurnalStokOpnameRowData = ({
         }
     </>
 }
-export default JurnalStokOpnameRowData
+export default JurnalPenyusutanRowData

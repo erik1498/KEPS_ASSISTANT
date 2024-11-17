@@ -15,7 +15,7 @@ import { showAlert, showDialog, showError } from "../../../helper/form.helper";
 import { JurnalUmumPrint } from "./component/JurnalUmumPrint";
 import { useReactToPrint } from "react-to-print"
 import { useRef } from "react";
-import { PERINTAHSTOKOPNAMESUMBERLIST } from "../../../config/objectList.config";
+import { ASETTETAPDANPERLENGKAPANSUMBERLIST, PERINTAHSTOKOPNAMESUMBERLIST } from "../../../config/objectList.config";
 
 const JurnalUmumPage = () => {
 
@@ -61,7 +61,7 @@ const JurnalUmumPage = () => {
         setData(dataCopy)
 
         const normalData = resData.data.filter(x => {
-          return PERINTAHSTOKOPNAMESUMBERLIST.indexOf(x.sumber) == -1
+          return PERINTAHSTOKOPNAMESUMBERLIST.concat(...ASETTETAPDANPERLENGKAPANSUMBERLIST).indexOf(x.sumber) == -1
         })
 
         const penjualanBarangJurnal = resData.data.filter(x => {
@@ -74,10 +74,22 @@ const JurnalUmumPage = () => {
           return x
         })
 
+
+        const asetTetapDanPerlengkapanJurnal = resData.data.filter(x => {
+          return ASETTETAPDANPERLENGKAPANSUMBERLIST.indexOf(x.sumber) > -1
+        })
+
+
+        const asetTetapDanPerlengkapan = asetTetapDanPerlengkapanJurnal.map(x => {
+          x.detail_data = JSON.stringify(JSON.parse(x.uraian).detail)
+          return x
+        })
+
         const normalizedDataPerintahStokOpname = normalizeDataJurnalPerintahStokOpname(perintahStokOpname)
 
+        const normalizedDataasetTetapDanPerlengkapan = normalizeDataJurnalPerintahStokOpname(asetTetapDanPerlengkapan)
 
-        let normalizedData = await normalizeDataJurnalUmum(normalData.concat(...normalizedDataPerintahStokOpname))
+        let normalizedData = await normalizeDataJurnalUmum(normalData.concat(...normalizedDataPerintahStokOpname).concat(...normalizedDataasetTetapDanPerlengkapan))
 
 
         setBalanceStatus(searchParam.length < 1)

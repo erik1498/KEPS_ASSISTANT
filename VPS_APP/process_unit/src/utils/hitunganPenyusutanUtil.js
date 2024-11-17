@@ -101,7 +101,7 @@ export const hitungPenyusutanSaldoMenurun = (asetData) => {
             {
                 tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
                 bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
-                tahun: getDataFromTanggal(asetData.tanggal_beli, "-", 0),
+                tahun: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
                 harga_beli: parseFloat(asetData.harga_satuan),
                 akumulasi_penyusutan_awal_tahun: parseFloat(penyusutanResult[i - 1].harga_beli) - penyusutanResult[i - 1].nilai_buku_akhir_tahun,
                 nilai_buku_awal_tahun: parseFloat(penyusutanResult[i - 1].nilai_buku_akhir_tahun),
