@@ -85,10 +85,16 @@ export const checkSatuanBarangAllowToEditRepo = async (uuid, req_id) => {
     return await db.query(
         `
             SELECT
-                khbt.*
-            FROM ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt 
+                khbt.kode_barang,
+                dat.nomor_invoice AS nomor_invoice_aset,
+                dpt.nomor_invoice AS nomor_invoice_perlengkapan
+            FROM ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt, ${generateDatabaseName(req_id)}.daftar_aset_tab dat, ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
             WHERE khbt.satuan_barang = "${uuid}"
             AND khbt.enabled = 1
+            AND dat.satuan_barang = "${uuid}"
+            AND dat.enabled = 1
+            AND dpt.satuan_barang = "${uuid}"
+            AND dpt.enabled = 1
         `,
         {
             type: Sequelize.QueryTypes.SELECT
