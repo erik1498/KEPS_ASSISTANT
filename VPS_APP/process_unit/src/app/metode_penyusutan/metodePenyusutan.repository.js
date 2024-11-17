@@ -46,9 +46,11 @@ export const checkMetodePenyusutanSudahDigunakanRepo = async (uuid, req_id) => {
         `
             SELECT
                 COUNT(0) AS count
-            FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat
-            WHERE dat.metode_penyosotan = "${uuid}"
+            FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat, ${generateDatabaseName(req_id)}.persentase_penyusutan_tab ppt 
+            WHERE dat.metode_penyusutan = "${uuid}"
+            AND ppt.metode_penyusutan = "${uuid}"
             AND dat.enabled = 1
+            AND ppt.enabled = 1
         `,
         {
             type: Sequelize.QueryTypes.SELECT

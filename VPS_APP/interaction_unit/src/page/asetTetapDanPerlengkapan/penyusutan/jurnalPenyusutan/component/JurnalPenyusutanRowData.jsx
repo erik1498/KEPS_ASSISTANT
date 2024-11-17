@@ -29,7 +29,7 @@ const JurnalPenyusutanRowData = ({
                                     item3.waktu_show ? <>
                                         <JurnalPenyusutanRowUraian
                                             data={item3}
-                                            bg_color={true}
+                                            bg_color={forPrint}
                                         />
                                     </> : <></>
                                 }

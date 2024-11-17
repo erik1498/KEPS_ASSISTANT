@@ -105,3 +105,25 @@ export const updatePersentasePenyusutanByUuidRepo = async (uuid, persentasePenyu
         }
     )
 }
+
+export const checkPersentasePenyusutanSudahDigunakanAsetDanDiValidasiRepo = async (metode_penyusutan, kelompok_aset, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                SUM(IFNULL((
+                    SELECT 
+                        COUNT(0)
+                    FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
+                    WHERE hpt.daftar_aset = dat.uuid 
+                    AND hpt.enabled = 1
+                ), 0)) AS count
+            FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat
+            WHERE dat.metode_penyusutan = "${metode_penyusutan}"
+            AND dat.kelompok_aset = "${kelompok_aset}"
+            AND dat.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}

@@ -151,6 +151,7 @@ const DaftarPerlengkapanPage = () => {
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
                                         <th>Nama Daftar Perlengkapan</th>
+                                        <th>Nomor Invoice</th>
                                         <th>Tanggal Beli</th>
                                         <th>Kategori Perlengkapan</th>
                                         <th>Total Beli</th>
@@ -166,6 +167,7 @@ const DaftarPerlengkapanPage = () => {
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
                                                     <td>{item.name}</td>
+                                                    <td>{item.nomor_invoice}</td>
                                                     <td>{`${item.tanggal_beli.split("T")[0]} ${convertTo12HoursFormat(item.tanggal_beli.split("T")[1])}`}</td>
                                                     <td>{item.kategori_perlengkapan_name}</td>
                                                     <td>{parseToRupiahText(item.harga_satuan * item.kuantitas)}</td>

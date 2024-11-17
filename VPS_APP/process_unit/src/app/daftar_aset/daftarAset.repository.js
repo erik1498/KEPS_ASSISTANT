@@ -161,3 +161,17 @@ export const getDaftarAsetByUuidWithKelompokAsetAndPersentasePenyusutanRepo = as
     )
     return daftarAsets
 }
+
+export const checkAsetSudahValidasiByUuidRepo = async (uuid, req_id) => {
+    const validasiStatus = await db.query(
+        `
+            SELECT
+                COUNT(0) AS count
+            FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt
+            WHERE hpt.daftar_aset = "${uuid}"
+            AND hpt.enabled = 1
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return validasiStatus
+}

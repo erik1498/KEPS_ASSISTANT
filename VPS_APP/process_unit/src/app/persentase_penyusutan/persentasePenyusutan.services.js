@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createPersentasePenyusutanRepo, deletePersentasePenyusutanByUuidRepo, getAllPersentasePenyusutanRepo, getPersentasePenyusutanByUuidRepo, updatePersentasePenyusutanByUuidRepo } from "./persentasePenyusutan.repository.js"
+import { checkPersentasePenyusutanSudahDigunakanAsetDanDiValidasiRepo, createPersentasePenyusutanRepo, deletePersentasePenyusutanByUuidRepo, getAllPersentasePenyusutanRepo, getPersentasePenyusutanByUuidRepo, updatePersentasePenyusutanByUuidRepo } from "./persentasePenyusutan.repository.js"
 
 export const getAllPersentasePenyusutanService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPersentasePenyusutanService", null, req_identity)
@@ -46,7 +46,10 @@ export const createPersentasePenyusutanService = async (persentasePenyusutanData
 
 export const deletePersentasePenyusutanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deletePersentasePenyusutanByUuidService [${uuid}]`, null, req_identity)
-    await getPersentasePenyusutanByUuidService(uuid, req_identity)
+    const beforeData = await getPersentasePenyusutanByUuidService(uuid, req_identity)
+
+    await checkPersentasePenyusutanSudahDigunakanAsetDanDiValidasiService(beforeData.metode_penyusutan, beforeData.kelompok_aset, req_identity)
+
     await deletePersentasePenyusutanByUuidRepo(uuid, req_identity)
     return true
 }
@@ -54,6 +57,9 @@ export const deletePersentasePenyusutanByUuidService = async (uuid, req_identity
 export const updatePersentasePenyusutanByUuidService = async (uuid, persentasePenyusutanData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updatePersentasePenyusutanByUuidService [${uuid}]`, persentasePenyusutanData, req_identity)
     const beforeData = await getPersentasePenyusutanByUuidService(uuid, req_identity)
+
+    await checkPersentasePenyusutanSudahDigunakanAsetDanDiValidasiService(beforeData.metode_penyusutan, beforeData.kelompok_aset, req_identity)
+
     const persentasePenyusutan = await updatePersentasePenyusutanByUuidRepo(uuid, persentasePenyusutanData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
@@ -62,4 +68,22 @@ export const updatePersentasePenyusutanByUuidService = async (uuid, persentasePe
     }, req_identity)
 
     return persentasePenyusutan
+}
+
+export const checkPersentasePenyusutanSudahDigunakanAsetDanDiValidasiService = async (metode_penyusutan, kelompok_aset, req_identity) => {
+    LOGGER(logType.INFO, `Start checkPersentasePenyusutanSudahDigunakanAsetDanDiValidasiService`, {
+        metode_penyusutan,
+        kelompok_aset
+    }, req_identity)
+
+    const validasiStatus = await checkPersentasePenyusutanSudahDigunakanAsetDanDiValidasiRepo(metode_penyusutan, kelompok_aset, req_identity)
+
+    console.log("VALIDASI STATUS", validasiStatus)
+
+    if (validasiStatus.length > 0 && validasiStatus[0].count > 0) {
+        throw Error(JSON.stringify({
+            message: "Tidak Dapat Dieksekusi, Persentase Penyusutan Sudah Digunakan Untuk Hitungan Penyusutan",
+            prop: "error"
+        }))
+    }
 }

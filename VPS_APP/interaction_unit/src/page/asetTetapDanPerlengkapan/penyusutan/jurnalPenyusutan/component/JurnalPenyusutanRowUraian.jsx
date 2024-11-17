@@ -1,4 +1,3 @@
-import { formatDate } from "../../../../../helper/date.helper"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 
 const JurnalPenyusutanUraian = ({
@@ -6,8 +5,8 @@ const JurnalPenyusutanUraian = ({
     bg_color = false
 }) => {
     return <>
-        <div className={`${bg_color ? "px-1" : ""}`}>
-            <div className={`${bg_color ? "bg-gray-200 px-2 py-1" : ""}`}>
+        <div className={`px-1`}>
+            <div className={`${!bg_color ? "bg-gray-200 px-2 py-1" : ""}`}>
                 <div className="flex justify-between">
                     <div>
                         <h1>{data?.sumber}</h1>
@@ -41,7 +40,7 @@ const JurnalPenyusutanUraian = ({
                         data?.detail_data?.kelompok_aset ? <p className="mb-2 text-xs">Kelompok Aset <br />{data?.detail_data?.kelompok_aset}</p> : <></>
                     }
                     {
-                        data?.detail_data?.kuantitas && data?.detail_data?.kuantitas != 0 ? <p className="mb-2 text-xs">{data?.detail_data?.kuantitas} <br /> {data?.detail_data?.satuan_barang_name}</p> : <></>
+                        data?.detail_data?.kuantitas && data?.detail_data?.kuantitas != 0 ? <p className="mb-2 text-xs">Kuantitas <br /> {data?.detail_data?.kuantitas} {data?.detail_data?.satuan_barang_name}</p> : <></>
                     }
                 </div>
                 {

@@ -13,6 +13,13 @@ const DaftarPerlengkapanModel = db.define("daftar_perlengkapan_tab",
                 notEmpty:true
             }
         },
+        nomor_invoice: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
         name: {
             type: DataTypes.STRING,
             allowNull: false,

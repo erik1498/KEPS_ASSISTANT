@@ -1,7 +1,7 @@
 import { GARIS_LURUS, hitungPenyusutanGarisLurus, hitungPenyusutanSaldoMenurun, SALDO_MENURUN } from "../../utils/hitunganPenyusutanUtil.js"
-import { getTanggalTerakhirPadaBulan } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
-import { getDaftarAsetByUuidWithKelompokAsetAndPersentasePenyusutanService } from "../daftar_aset/daftarAset.services.js"
+import { getDaftarAsetByUuidService, getDaftarAsetByUuidWithKelompokAsetAndPersentasePenyusutanService } from "../daftar_aset/daftarAset.services.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { createHitunganPenyusutanRepo, deleteHitunganPenyusutanByUuidRepo, getHitunganPenyusutanByUuidRepo, getJurnalHitunganPenyusutanRepo } from "./hitunganPenyusutan.repository.js"
 
 
@@ -24,13 +24,16 @@ export const getHitunganPenyusutanByUuidService = async (uuid, validasi_hitungan
     const result = asetData.metode_penyusutan_name == GARIS_LURUS ? hitungPenyusutanGarisLurus(asetData) : hitungPenyusutanSaldoMenurun(asetData)
 
     if (validasi_hitungan_penyusutan) {
+
+        await getNeracaValidasiByTanggalService(null, asetData.tanggal_beli, req_identity)
+
         result.map(async (x, i) => {
             if (asetData.metode_penyusutan_name == GARIS_LURUS) {
                 await createHitunganPenyusutanRepo({
                     daftar_aset: uuid,
                     transaksi: i,
                     tahun_perolehan: x.tahun_perolehan,
-                    tanggal: getTanggalTerakhirPadaBulan(x.tahun, x.bulan),
+                    tanggal: x.tanggal,
                     bulan: parseInt(x.bulan),
                     tahun: parseInt(x.tahun),
                     masa_awal: x.masa_awal != null ? x.masa_awal : -1,
@@ -52,7 +55,7 @@ export const getHitunganPenyusutanByUuidService = async (uuid, validasi_hitungan
                     daftar_aset: uuid,
                     transaksi: i,
                     tahun_perolehan: x.tahun_perolehan,
-                    tanggal: getTanggalTerakhirPadaBulan(x.tahun, x.bulan),
+                    tanggal: x.tanggal,
                     bulan: parseInt(x.bulan),
                     tahun: parseInt(x.tahun),
                     masa_awal: -1,
@@ -77,6 +80,11 @@ export const getHitunganPenyusutanByUuidService = async (uuid, validasi_hitungan
 
 export const deleteHitunganPenyusutanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteHitunganPenyusutanByUuidService [${uuid}]`, null, req_identity)
+    
+    const daftarAset = await getDaftarAsetByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(null, daftarAset.tanggal_beli, req_identity)
+
     await deleteHitunganPenyusutanByUuidRepo(uuid, req_identity)
     return true
 }

@@ -97,7 +97,7 @@ export const normalizeDataJurnalPerintahStokOpname = (data) => {
         listDaftarData.push(dataInput)
     })
 
-    return listDaftarData.filter(x => x.debet != "0.00" || x.kredit != "0.00").map(x => {
+    return listDaftarData.filter(x => String(parseFloat(x.debet).toFixed(2)) != "0.00" || String(parseFloat(x.kredit).toFixed(2)) != "0.00").map(x => {
         x.tanggal = `${x.tanggal.length}` > 2 ? new Date(`${x.tanggal}`).getDate() : x.tanggal
         x.waktu = x.waktu == x.tanggal ? x.waktu.split("T")[1].replace(".000", "") : x.waktu
         return x

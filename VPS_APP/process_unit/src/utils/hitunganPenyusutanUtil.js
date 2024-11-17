@@ -5,6 +5,7 @@ export const SALDO_MENURUN = "Saldo Menurun"
 
 
 export const getDataFromTanggal = (tanggal, delimiter, index) => {
+    tanggal = String(tanggal).length > 10 ? String(tanggal).split("T")[0] : tanggal
     return String(tanggal).split(delimiter)[index]
 }
 
@@ -24,6 +25,7 @@ export const hitungPenyusutanGarisLurus = (asetData) => {
     let penyusutanResult = [
         {
             tahun_perolehan: getBulanText(getDataFromTanggal(asetData.tanggal_beli, "-", 1) - 1) + " " + getDataFromTanggal(asetData.tanggal_beli, "-", 0),
+            tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
             bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
             tahun: getDataFromTanggal(asetData.tanggal_beli, "-", 0),
             masa_awal: null,
@@ -39,6 +41,7 @@ export const hitungPenyusutanGarisLurus = (asetData) => {
             penyusutanResult.push(
                 {
                     tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
+                    tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
                     bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
                     tahun: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
                     masa_awal: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1)) + 1,
@@ -53,6 +56,7 @@ export const hitungPenyusutanGarisLurus = (asetData) => {
             penyusutanResult.push(
                 {
                     tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
+                    tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
                     bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
                     tahun: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
                     masa_awal: 12 - (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1)) + 1),
@@ -67,6 +71,7 @@ export const hitungPenyusutanGarisLurus = (asetData) => {
             penyusutanResult.push(
                 {
                     tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
+                    tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
                     bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
                     tahun: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
                     masa_awal: null,
@@ -86,6 +91,7 @@ export const hitungPenyusutanSaldoMenurun = (asetData) => {
     let penyusutanResult = [
         {
             tahun_perolehan: getDataFromTanggal(asetData.tanggal_beli, "-", 0),
+            tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
             bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
             tahun: getDataFromTanggal(asetData.tanggal_beli, "-", 0),
             harga_beli: parseFloat(asetData.harga_satuan),
@@ -100,6 +106,7 @@ export const hitungPenyusutanSaldoMenurun = (asetData) => {
         penyusutanResult.push(
             {
                 tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
+                tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
                 bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
                 tahun: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
                 harga_beli: parseFloat(asetData.harga_satuan),

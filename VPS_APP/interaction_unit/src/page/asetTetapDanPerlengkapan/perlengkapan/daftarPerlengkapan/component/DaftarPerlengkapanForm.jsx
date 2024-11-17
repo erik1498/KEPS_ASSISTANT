@@ -19,6 +19,7 @@ const DaftarPerlengkapanForm = ({
     const [kategoriPerlengkapanList, setKategoriPerlengkapanList] = useState([])
 
     const [namaDaftarPerlengkapan, setNamaDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.name ? daftarPerlengkapanEdit.name : ``)
+    const [nomorInvoiceDaftarPerlengkapan, setNomorInvoiceDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.nomor_invoice ? daftarPerlengkapanEdit.nomor_invoice : ``)
     const [tanggalBeliDaftarPerlengkapan, setTanggalBeliDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.tanggal_beli ? daftarPerlengkapanEdit.tanggal_beli : getHariTanggalFull())
     const [supplierDaftarPerlengkapan, setSupplierDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.supplier ? daftarPerlengkapanEdit.supplier : ``)
     const [kuantitasDaftarPerlengkapan, setKuantitasDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.kuantitas ? parseToRupiahText(daftarPerlengkapanEdit.kuantitas) : ``)
@@ -112,6 +113,7 @@ const DaftarPerlengkapanForm = ({
                 .custom(`${daftarPerlengkapanEdit?.uuid ? `/${daftarPerlengkapanEdit.uuid}` : ``}`, daftarPerlengkapanEdit ? "PUT" : "POST", null, {
                     data: {
                         name: namaDaftarPerlengkapan,
+                        nomor_invoice: nomorInvoiceDaftarPerlengkapan,
                         tanggal_beli: tanggalBeliDaftarPerlengkapan,
                         kategori_perlengkapan: kategoriPerlengkapanDaftarPerlengkapan.value,
                         supplier: supplierDaftarPerlengkapan.value,
@@ -162,6 +164,19 @@ const DaftarPerlengkapanForm = ({
                         {
                             value: namaDaftarPerlengkapan,
                             name: "namaDaftarPerlengkapan"
+                        }
+                    }
+                />
+                <FormInputWithLabel
+                    label={"Nomor Invoice"}
+                    type={"text"}
+                    onchange={(e) => {
+                        setNomorInvoiceDaftarPerlengkapan(e.target.value)
+                    }}
+                    others={
+                        {
+                            value: nomorInvoiceDaftarPerlengkapan,
+                            name: "nomorInvoiceDaftarPerlengkapan"
                         }
                     }
                 />

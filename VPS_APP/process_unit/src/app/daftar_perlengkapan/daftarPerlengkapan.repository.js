@@ -64,16 +64,17 @@ export const createDaftarPerlengkapanRepo = async (daftarPerlengkapanData, req_i
         req_id,
         generateDatabaseName(req_id),
         DaftarPerlengkapanModel,
-        {   
-        name: daftarPerlengkapanData.name,
-        kategori_perlengkapan: daftarPerlengkapanData.kategori_perlengkapan,
-        tanggal_beli: daftarPerlengkapanData.tanggal_beli,
-        supplier: daftarPerlengkapanData.supplier,
-        kuantitas: daftarPerlengkapanData.kuantitas,
-        satuan_barang: daftarPerlengkapanData.satuan_barang,
-        harga_satuan: daftarPerlengkapanData.harga_satuan,
-        dpp: daftarPerlengkapanData.dpp,
-        ppn: daftarPerlengkapanData.ppn,
+        {
+            name: daftarPerlengkapanData.name,
+            nomor_invoice: daftarPerlengkapanData.nomor_invoice,
+            kategori_perlengkapan: daftarPerlengkapanData.kategori_perlengkapan,
+            tanggal_beli: daftarPerlengkapanData.tanggal_beli,
+            supplier: daftarPerlengkapanData.supplier,
+            kuantitas: daftarPerlengkapanData.kuantitas,
+            satuan_barang: daftarPerlengkapanData.satuan_barang,
+            harga_satuan: daftarPerlengkapanData.harga_satuan,
+            dpp: daftarPerlengkapanData.dpp,
+            ppn: daftarPerlengkapanData.ppn,
             enabled: daftarPerlengkapanData.enabled
         }
     )
@@ -102,15 +103,16 @@ export const updateDaftarPerlengkapanByUuidRepo = async (uuid, daftarPerlengkapa
         generateDatabaseName(req_id),
         DaftarPerlengkapanModel,
         {
-        name: daftarPerlengkapanData.name,
-        kategori_perlengkapan: daftarPerlengkapanData.kategori_perlengkapan,
-        tanggal_beli: daftarPerlengkapanData.tanggal_beli,
-        supplier: daftarPerlengkapanData.supplier,
-        kuantitas: daftarPerlengkapanData.kuantitas,
-        satuan_barang: daftarPerlengkapanData.satuan_barang,
-        harga_satuan: daftarPerlengkapanData.harga_satuan,
-        dpp: daftarPerlengkapanData.dpp,
-        ppn: daftarPerlengkapanData.ppn,
+            name: daftarPerlengkapanData.name,
+            nomor_invoice: daftarPerlengkapanData.nomor_invoice,
+            kategori_perlengkapan: daftarPerlengkapanData.kategori_perlengkapan,
+            tanggal_beli: daftarPerlengkapanData.tanggal_beli,
+            supplier: daftarPerlengkapanData.supplier,
+            kuantitas: daftarPerlengkapanData.kuantitas,
+            satuan_barang: daftarPerlengkapanData.satuan_barang,
+            harga_satuan: daftarPerlengkapanData.harga_satuan,
+            dpp: daftarPerlengkapanData.dpp,
+            ppn: daftarPerlengkapanData.ppn,
         },
         {
             uuid

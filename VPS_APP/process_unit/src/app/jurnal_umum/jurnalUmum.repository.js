@@ -1260,10 +1260,96 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     UNION ALL -- JURNAL PENYUSUTAN ASET
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,
+                        dpt.nomor_invoice AS bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(dpt.tanggal_beli), 2, '0') AS tanggal,
+                        LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
+                        YEAR(dpt.tanggal_beli) AS tahun,
+                        TIME(dpt.tanggal_beli) AS waktu,
+                        dpt.kuantitas * dpt.harga_satuan AS debet,
+                        0 AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        JSON_OBJECT(
+                            'detail', JSON_OBJECT (
+                                'satuan_barang_name', sbt.name,
+                                'kuantitas', dpt.kuantitas,
+                                'harga_satuan', dpt.harga_satuan,
+                                'dpp', dpt.dpp,
+                                'ppn', dpt.ppn,
+                                'kategori_perlengkaan', kpt.name,
+                                'supplier_name', st.name,
+                                'supplier_code', st.code
+                            )
+                        ) AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "PEMBELIAN PERLENGKAPAN" AS sumber,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        NULL AS pegawai_name,
+                        NULL AS periode,
+                        dpt.enabled
+                    FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
+                    JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dpt.supplier 
+                    JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dpt.satuan_barang 
+                    JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "c85ac20d-1b1e-45c5-80e1-8db80c5dd283"
+                    AND dpt.enabled = 1
+                    UNION ALL
+                    SELECT 
+                        "NOT_AVAILABLE" AS uuid,
+                        dpt.nomor_invoice AS bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(dpt.tanggal_beli), 2, '0') AS tanggal,
+                        LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
+                        YEAR(dpt.tanggal_beli) AS tahun,
+                        TIME(dpt.tanggal_beli) AS waktu,
+                        0 AS debet,
+                        dpt.kuantitas * dpt.harga_satuan AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        JSON_OBJECT(
+                            'detail', JSON_OBJECT (
+                                'satuan_barang_name', sbt.name,
+                                'kuantitas', dpt.kuantitas,
+                                'harga_satuan', dpt.harga_satuan,
+                                'dpp', dpt.dpp,
+                                'ppn', dpt.ppn,
+                                'kategori_perlengkaan', kpt.name,
+                                'supplier_name', st.name,
+                                'supplier_code', st.code
+                            )
+                        ) AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "PEMBELIAN PERLENGKAPAN" AS sumber,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        NULL AS pegawai_name,
+                        NULL AS periode,
+                        dpt.enabled
+                    FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
+                    JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dpt.supplier 
+                    JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dpt.satuan_barang 
+                    JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "6e376191-0454-4172-a78b-2bc5f9c8fd6e"
+                    AND dpt.enabled = 1
+                    UNION ALL
+                    SELECT 
+                        "NOT_AVAILABLE" AS uuid,
                         dat.nomor_invoice AS bukti_transaksi,
                         0 AS transaksi,
-                        LPAD(DAY(dat.tanggal_beli), 2) AS tanggal,
-                        LPAD(MONTH(dat.tanggal_beli), 2) AS bulan,
+                        LPAD(DAY(dat.tanggal_beli), 2, '0') AS tanggal,
+                        LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,
                         YEAR(dat.tanggal_beli) AS tahun,
                         TIME(dat.tanggal_beli) AS waktu,
                         dat.harga_satuan * dat.kuantitas AS debet,
@@ -1304,16 +1390,14 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
                     JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a88b16d3-4071-4503-9c5b-17cdac4a411f"
-                    WHERE MONTH(dat.tanggal_beli) = ${bulan}
-                    AND YEAR(dat.tanggal_beli) = ${tahun}
                     AND dat.enabled = 1
                     UNION ALL
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,
                         dat.nomor_invoice AS bukti_transaksi,
                         1 AS transaksi,
-                        LPAD(DAY(dat.tanggal_beli), 2) AS tanggal,
-                        LPAD(MONTH(dat.tanggal_beli), 2) AS bulan,
+                        LPAD(DAY(dat.tanggal_beli), 2, '0') AS tanggal,
+                        LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,
                         YEAR(dat.tanggal_beli) AS tahun,
                         TIME(dat.tanggal_beli) AS waktu,
                         0 AS debet,
@@ -1354,16 +1438,14 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
                     JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = dat.kode_akun_perkiraan
-                    WHERE MONTH(dat.tanggal_beli) = ${bulan}
-                    AND YEAR(dat.tanggal_beli) = ${tahun}
                     AND dat.enabled = 1
                     UNION ALL
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,
-                        dat.nomor_invoice AS bukti_transaksi,
+                        CONCAT("HP", dat.nomor_invoice) AS bukti_transaksi,
                         0 AS transaksi,
-                        hpt.tanggal AS tanggal,
-                        hpt.bulan AS bulan,
+                        LPAD(hpt.tanggal, 2, '0') AS tanggal,
+                        LPAD(hpt.bulan, 2, '0') AS bulan,
                         hpt.tahun AS tahun,
                         TIME(dat.tanggal_beli) AS waktu,
                         CASE
@@ -1409,17 +1491,15 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
                     JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "915ac6e8-c528-4f10-9215-74fda0b1c99e"
-                    WHERE hpt.tahun = ${tahun}
-                    AND hpt.bulan = ${bulan} 
                     AND hpt.enabled = 1
                     AND dat.enabled = 1
                     UNION ALL
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,
-                        dat.nomor_invoice AS bukti_transaksi,
+                        CONCAT("HP", dat.nomor_invoice) AS bukti_transaksi,
                         1 AS transaksi,
-                        hpt.tanggal AS tanggal,
-                        hpt.bulan AS bulan,
+                        LPAD(hpt.tanggal, 2, '0') AS tanggal,
+                        LPAD(hpt.bulan, 2, '0') AS bulan,
                         hpt.tahun AS tahun,
                         TIME(dat.tanggal_beli) AS waktu,
                         0 AS debet,
@@ -1465,8 +1545,6 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
                     JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a88b16d3-4071-4503-9c5b-17cdac4a411f"
-                    WHERE hpt.tahun = ${tahun}
-                    AND hpt.bulan = ${bulan} 
                     AND hpt.enabled = 1
                     AND dat.enabled = 1
                 ) AS res

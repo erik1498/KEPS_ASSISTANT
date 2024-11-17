@@ -11,9 +11,79 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
             FROM (
                 SELECT 
                     "NOT_AVAILABLE" AS uuid,
+                    dpt.nomor_invoice AS bukti_transaksi,
+                    LPAD(DAY(dpt.tanggal_beli), 2, '0') AS tanggal,
+                    LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
+                    YEAR(dpt.tanggal_beli) AS tahun,
+                    TIME(dpt.tanggal_beli) AS waktu,
+                    0 AS transaksi,
+                    dpt.kuantitas * dpt.harga_satuan AS debet,
+                    0 AS kredit,
+                    kapt.name AS nama_akun,
+                    kapt.code AS kode_akun,
+                    kapt.type AS type_akun,
+                    kapt.uuid AS uuid_akun,
+                    NULL AS uraian,
+                    JSON_OBJECT (
+                        'satuan_barang_name', sbt.name,
+                        'kuantitas', dpt.kuantitas,
+                        'harga_satuan', dpt.harga_satuan,
+                        'dpp', dpt.dpp,
+                        'ppn', dpt.ppn,
+                        'kategori_perlengkaan', kpt.name,
+                        'supplier_name', st.name,
+                        'supplier_code', st.code
+                    ) AS detail_data,
+                    "PEMBELIAN PERLENGKAPAN" AS sumber
+                FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dpt.supplier 
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dpt.satuan_barang 
+                JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "c85ac20d-1b1e-45c5-80e1-8db80c5dd283"
+                WHERE MONTH(dpt.tanggal_beli) = ${bulan}
+                AND YEAR(dpt.tanggal_beli) = ${tahun}
+                AND dpt.enabled = 1
+                UNION ALL
+                SELECT 
+                    "NOT_AVAILABLE" AS uuid,
+                    dpt.nomor_invoice AS bukti_transaksi,
+                    LPAD(DAY(dpt.tanggal_beli), 2, '0') AS tanggal,
+                    LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
+                    YEAR(dpt.tanggal_beli) AS tahun,
+                    TIME(dpt.tanggal_beli) AS waktu,
+                    1 AS transaksi,
+                    0 AS debet,
+                    dpt.kuantitas * dpt.harga_satuan AS kredit,
+                    kapt.name AS nama_akun,
+                    kapt.code AS kode_akun,
+                    kapt.type AS type_akun,
+                    kapt.uuid AS uuid_akun,
+                    NULL AS uraian,
+                    JSON_OBJECT (
+                        'satuan_barang_name', sbt.name,
+                        'kuantitas', dpt.kuantitas,
+                        'harga_satuan', dpt.harga_satuan,
+                        'dpp', dpt.dpp,
+                        'ppn', dpt.ppn,
+                        'kategori_perlengkaan', kpt.name,
+                        'supplier_name', st.name,
+                        'supplier_code', st.code
+                    ) AS detail_data,
+                    "PEMBELIAN PERLENGKAPAN" AS sumber
+                FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dpt.supplier 
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dpt.satuan_barang 
+                JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "6e376191-0454-4172-a78b-2bc5f9c8fd6e"
+                WHERE MONTH(dpt.tanggal_beli) = ${bulan}
+                AND YEAR(dpt.tanggal_beli) = ${tahun}
+                AND dpt.enabled = 1
+                UNION ALL
+                SELECT 
+                    "NOT_AVAILABLE" AS uuid,
                     dat.nomor_invoice AS bukti_transaksi,
-                    LPAD(DAY(dat.tanggal_beli), 2) AS tanggal,
-                    LPAD(MONTH(dat.tanggal_beli), 2) AS bulan,
+                    LPAD(DAY(dat.tanggal_beli), 2, '0') AS tanggal,
+                    LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dat.tanggal_beli) AS tahun,
                     TIME(dat.tanggal_beli) AS waktu,
                     0 AS transaksi,
@@ -52,8 +122,8 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                 SELECT 
                     "NOT_AVAILABLE" AS uuid,
                     dat.nomor_invoice AS bukti_transaksi,
-                    LPAD(DAY(dat.tanggal_beli), 2) AS tanggal,
-                    LPAD(MONTH(dat.tanggal_beli), 2) AS bulan,
+                    LPAD(DAY(dat.tanggal_beli), 2, '0') AS tanggal,
+                    LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dat.tanggal_beli) AS tahun,
                     TIME(dat.tanggal_beli) AS waktu,
                     1 AS transaksi,
@@ -91,7 +161,7 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                 UNION ALL
                 SELECT 
                     "NOT_AVAILABLE" AS uuid,
-                    dat.nomor_invoice AS bukti_transaksi,
+                    CONCAT("HP", dat.nomor_invoice) AS bukti_transaksi,
                     hpt.tanggal AS tanggal,
                     hpt.bulan AS bulan,
                     hpt.tahun AS tahun,
@@ -137,7 +207,7 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                 UNION ALL
                 SELECT 
                     "NOT_AVAILABLE" AS uuid,
-                    dat.nomor_invoice AS bukti_transaksi,
+                    CONCAT("HP", dat.nomor_invoice) AS bukti_transaksi,
                     hpt.tanggal AS tanggal,
                     hpt.bulan AS bulan,
                     hpt.tahun AS tahun,
