@@ -93,8 +93,6 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 FROM ${generateDatabaseName(req_id)}.rincian_transaksi_bank_tab rtbt 
                 JOIN ${generateDatabaseName(req_id)}.transaksi_bank_tab tbt ON tbt.uuid = rtbt.transaksi_bank 
                 WHERE tbt.enabled = 1 AND rtbt.enabled = 1
-                UNION ALL 
-                ${payrollPegawaiNeracaSaldo(req_id)}
                 UNION ALL
                 SELECT 
                     psojt.kode_akun_perkiraan,
@@ -169,6 +167,8 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset
                 WHERE hpt.enabled = 1
                 AND dat.enabled = 1
+                UNION ALL 
+                ${payrollPegawaiNeracaSaldo(req_id)}
             ) AS res
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = res.kode_akun_perkiraan
             AND res.bulan = "${bulan}" 
