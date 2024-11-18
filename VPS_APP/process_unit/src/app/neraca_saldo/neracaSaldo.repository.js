@@ -110,10 +110,8 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                     YEAR(dpt.tanggal_beli) AS tahun,
                     dpt.kuantitas * dpt.harga_satuan AS debet,
                     0 AS kredit
-                FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
-                WHERE MONTH(dpt.tanggal_beli) = ${bulan}
-                AND YEAR(dpt.tanggal_beli) = ${tahun}
-                AND dpt.enabled = 1
+                FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt
+                WHERE dpt.enabled = 1
                 UNION ALL
                 SELECT 
                     "6e376191-0454-4172-a78b-2bc5f9c8fd6e" AS kode_akun_perkiraan,
@@ -122,9 +120,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                     0 AS debet,
                     dpt.kuantitas * dpt.harga_satuan AS kredit
                 FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
-                WHERE MONTH(dpt.tanggal_beli) = ${bulan}
-                AND YEAR(dpt.tanggal_beli) = ${tahun}
-                AND dpt.enabled = 1
+                WHERE dpt.enabled = 1
                 UNION ALL
                 SELECT 
                     "a88b16d3-4071-4503-9c5b-17cdac4a411f" AS kode_akun_perkiraan,
@@ -133,9 +129,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                     dat.harga_satuan * dat.kuantitas AS debet,
                     0 AS kredit
                 FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
-                WHERE MONTH(dat.tanggal_beli) = ${bulan}
-                AND YEAR(dat.tanggal_beli) = ${tahun}
-                AND dat.enabled = 1
+                WHERE dat.enabled = 1
                 UNION ALL
                 SELECT 
                     dat.kode_akun_perkiraan,
@@ -144,9 +138,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                     0 AS debet,
                     dat.harga_satuan * dat.kuantitas AS kredit
                 FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
-                WHERE MONTH(dat.tanggal_beli) = ${bulan}
-                AND YEAR(dat.tanggal_beli) = ${tahun}
-                AND dat.enabled = 1
+                WHERE dat.enabled = 1
                 UNION ALL
                 SELECT 
                     "915ac6e8-c528-4f10-9215-74fda0b1c99e" AS kode_akun_perkiraan,
@@ -160,9 +152,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                     0 AS kredit
                 FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
                 JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset
-                WHERE hpt.tahun = ${tahun}
-                AND LPAD(hpt.bulan, 2, '0') = ${bulan} 
-                AND hpt.enabled = 1
+                WHERE hpt.enabled = 1
                 AND dat.enabled = 1
                 UNION ALL
                 SELECT 
@@ -177,9 +167,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                     END AS kredit
                 FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
                 JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset
-                WHERE hpt.tahun = ${tahun}
-                AND LPAD(hpt.bulan, 2, '0') = ${bulan} 
-                AND hpt.enabled = 1
+                WHERE hpt.enabled = 1
                 AND dat.enabled = 1
             ) AS res
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = res.kode_akun_perkiraan
