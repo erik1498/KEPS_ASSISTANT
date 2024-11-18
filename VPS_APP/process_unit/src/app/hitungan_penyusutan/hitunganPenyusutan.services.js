@@ -50,7 +50,7 @@ export const getHitunganPenyusutanByUuidService = async (uuid, validasi_hitungan
                     enabled: 1
                 }, req_identity)
             }
-            if (asetData.metode_penyusutan_name == SALDO_MENURUN) {
+            if (String(asetData.metode_penyusutan_name).toLocaleLowerCase() == SALDO_MENURUN.toLocaleLowerCase()) {
                 await createHitunganPenyusutanRepo({
                     daftar_aset: uuid,
                     transaksi: i,
