@@ -167,8 +167,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset
                 WHERE hpt.enabled = 1
                 AND dat.enabled = 1
-                UNION ALL 
-                ${payrollPegawaiNeracaSaldo(req_id)}
+                UNION ALL ${payrollPegawaiNeracaSaldo(req_id)}
             ) AS res
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = res.kode_akun_perkiraan
             AND res.bulan = "${bulan}" 
