@@ -160,8 +160,8 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                     0 AS kredit
                 FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
                 JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset
-                WHERE LAPD(hpt.tahun, 2, '0') = ${tahun}
-                AND hpt.bulan = ${bulan} 
+                WHERE hpt.tahun = ${tahun}
+                AND LPAD(hpt.bulan, 2, '0') = ${bulan} 
                 AND hpt.enabled = 1
                 AND dat.enabled = 1
                 UNION ALL
@@ -177,8 +177,8 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                     END AS kredit
                 FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
                 JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset
-                WHERE LAPD(hpt.tahun, 2, '0') = ${tahun}
-                AND hpt.bulan = ${bulan} 
+                WHERE hpt.tahun = ${tahun}
+                AND LPAD(hpt.bulan, 2, '0') = ${bulan} 
                 AND hpt.enabled = 1
                 AND dat.enabled = 1
             ) AS res
