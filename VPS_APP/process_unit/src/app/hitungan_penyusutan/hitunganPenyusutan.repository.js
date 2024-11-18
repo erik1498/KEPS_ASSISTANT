@@ -32,7 +32,9 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'ppn', dpt.ppn,
                         'kategori_perlengkaan', kpt.name,
                         'supplier_name', st.name,
-                        'supplier_code', st.code
+                        'supplier_code', st.code,
+                        'daftar_perlengkapan_name', dpt.name,
+                        'daftar_perlengkapan_invoice', dpt.nomor_invoice
                     ) AS detail_data,
                     "PEMBELIAN PERLENGKAPAN" AS sumber
                 FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
@@ -67,7 +69,9 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'ppn', dpt.ppn,
                         'kategori_perlengkaan', kpt.name,
                         'supplier_name', st.name,
-                        'supplier_code', st.code
+                        'supplier_code', st.code,
+                        'daftar_perlengkapan_name', dpt.name,
+                        'daftar_perlengkapan_invoice', dpt.nomor_invoice
                     ) AS detail_data,
                     "PEMBELIAN PERLENGKAPAN" AS sumber
                 FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
@@ -105,7 +109,8 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'kategori_aset', kat2.name,
                         'supplier_name', st.name,
                         'supplier_code', st.code,
-                        'daftar_aset_name', dat.name
+                        'daftar_aset_name', dat.name,
+                        'daftar_aset_invoice', dat.nomor_invoice
                     ) AS detail_data,
                     "PEMBELIAN ASET" AS sumber
                 FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
@@ -145,7 +150,8 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'kategori_aset', kat2.name,
                         'supplier_name', st.name,
                         'supplier_code', st.code,
-                        'daftar_aset_name', dat.name
+                        'daftar_aset_name', dat.name,
+                        'daftar_aset_invoice', dat.nomor_invoice
                     ) AS detail_data,
                     "PEMBELIAN ASET" AS sumber
                 FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
@@ -189,7 +195,8 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'kategori_aset', kat2.name,
                         'supplier_name', st.name,
                         'supplier_code', st.code,
-                        'daftar_aset_name', dat.name
+                        'daftar_aset_name', dat.name,
+                        'daftar_aset_invoice', dat.nomor_invoice
                     ) AS detail_data,
                     "HITUNGAN PENYUSUTAN ASET" AS sumber
                 FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
@@ -235,7 +242,8 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'kategori_aset', kat2.name,
                         'supplier_name', st.name,
                         'supplier_code', st.code,
-                        'daftar_aset_name', dat.name
+                        'daftar_aset_name', dat.name,
+                        'daftar_aset_invoice', dat.nomor_invoice
                     ) AS detail_data,
                     "HITUNGAN PENYUSUTAN ASET" AS sumber
                 FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 

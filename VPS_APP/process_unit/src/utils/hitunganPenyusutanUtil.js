@@ -36,44 +36,51 @@ export const hitungPenyusutanGarisLurus = (asetData) => {
             nilai_buku: asetData.harga_satuan
         }
     ]
+
+    const isDecember = parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1)) == 12
+
     for (let i = 1; i < parseFloat(asetData.masa_penyusutan) + 2; i++) {
         if (i == 1) {
+            let masa = parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1)) > 11 ? 1 : parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1))
+            masa += (isDecember ? 0 : 1);
             penyusutanResult.push(
                 {
-                    tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
+                    tahun_perolehan: getBulanText(masa - 1) + " " + (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + (isDecember ? i : i - 1)),
                     tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
-                    bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
-                    tahun: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
-                    masa_awal: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1)) + 1,
+                    bulan: masa,
+                    tahun: (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + (isDecember ? i : i - 1)),
+                    masa_awal: masa,
                     masa_akhir: 12,
                     harga_beli: parseFloat(asetData.harga_satuan),
                     persentase: parseFloat(asetData.nilai),
-                    nilai_penyusutan: normalizedNumber((parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1)) + 1) / 12 * parseFloat(asetData.harga_satuan) * (parseFloat(asetData.nilai) / 100)),
-                    nilai_buku: normalizedNumber(parseFloat(penyusutanResult[i - 1].nilai_buku) - (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1)) + 1) / 12 * parseFloat(asetData.harga_satuan) * (parseFloat(asetData.nilai) / 100))
+                    nilai_penyusutan: normalizedNumber((masa) / 12 * parseFloat(asetData.harga_satuan) * (parseFloat(asetData.nilai) / 100)),
+                    nilai_buku: normalizedNumber(parseFloat(penyusutanResult[i - 1].nilai_buku) - (masa) / 12 * parseFloat(asetData.harga_satuan) * (parseFloat(asetData.nilai) / 100))
                 }
             )
         } else if (i == parseFloat(asetData.masa_penyusutan) + 1) {
+            let masa = parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1)) > 11 ? 1 : parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1))
+            masa += (isDecember ? 0 : 1);
             penyusutanResult.push(
                 {
-                    tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
+                    tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i - (isDecember ? 0 : 1),
                     tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
-                    bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
-                    tahun: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
-                    masa_awal: 12 - (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1)) + 1),
+                    bulan: 12 - masa,
+                    tahun: (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + (isDecember ? i : i - 1)),
+                    masa_awal: 12 - masa,
                     masa_akhir: 12,
                     harga_beli: parseFloat(asetData.harga_satuan),
                     persentase: parseFloat(asetData.nilai),
-                    nilai_penyusutan: normalizedNumber(((12 - (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1)) + 1))) / 12 * parseFloat(asetData.harga_satuan) * (parseFloat(asetData.nilai) / 100)),
-                    nilai_buku: normalizedNumber(parseFloat(penyusutanResult[i - 1].nilai_buku) - ((12 - (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 1)) + 1))) / 12 * parseFloat(asetData.harga_satuan) * (parseFloat(asetData.nilai) / 100))
+                    nilai_penyusutan: normalizedNumber(((12 - (masa))) / 12 * parseFloat(asetData.harga_satuan) * (parseFloat(asetData.nilai) / 100)),
+                    nilai_buku: normalizedNumber(parseFloat(penyusutanResult[i - 1].nilai_buku) - ((12 - (masa))) / 12 * parseFloat(asetData.harga_satuan) * (parseFloat(asetData.nilai) / 100))
                 }
             )
         } else {
             penyusutanResult.push(
                 {
-                    tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
+                    tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i - (isDecember ? 0 : 1),
                     tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
                     bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
-                    tahun: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
+                    tahun: (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + (isDecember ? i : i - 1)),
                     masa_awal: null,
                     masa_akhir: null,
                     harga_beli: parseFloat(asetData.harga_satuan),

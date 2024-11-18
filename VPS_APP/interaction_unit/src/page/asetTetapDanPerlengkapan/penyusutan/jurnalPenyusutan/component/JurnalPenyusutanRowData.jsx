@@ -5,7 +5,7 @@ import JurnalPenyusutanRowUraian from "./JurnalPenyusutanRowUraian"
 const JurnalPenyusutanRowData = ({
     item1,
     balanceStatus,
-    forPrint
+    forPrint = false
 }) => {
     return <>
         <div className="grid grid-cols-12 items-center bg-gray-3">

@@ -1280,7 +1280,9 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                                 'ppn', dpt.ppn,
                                 'kategori_perlengkaan', kpt.name,
                                 'supplier_name', st.name,
-                                'supplier_code', st.code
+                                'supplier_code', st.code,
+                                'daftar_perlengkapan_name', dpt.name,
+                                'daftar_perlengkapan_invoice', dpt.nomor_invoice
                             )
                         ) AS uraian,
                         NULL AS deskripsi_kerja,
@@ -1304,7 +1306,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,
                         dpt.nomor_invoice AS bukti_transaksi,
-                        0 AS transaksi,
+                        1 AS transaksi,
                         LPAD(DAY(dpt.tanggal_beli), 2, '0') AS tanggal,
                         LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
                         YEAR(dpt.tanggal_beli) AS tahun,
@@ -1323,7 +1325,9 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                                 'ppn', dpt.ppn,
                                 'kategori_perlengkaan', kpt.name,
                                 'supplier_name', st.name,
-                                'supplier_code', st.code
+                                'supplier_code', st.code,
+                                'daftar_perlengkapan_name', dpt.name,
+                                'daftar_perlengkapan_invoice', dpt.nomor_invoice
                             )
                         ) AS uraian,
                         NULL AS deskripsi_kerja,
@@ -1369,7 +1373,8 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                                 'kategori_aset', kat2.name,
                                 'supplier_name', st.name,
                                 'supplier_code', st.code,
-                                'daftar_aset_name', dat.name
+                                'daftar_aset_name', dat.name,
+                                'daftar_aset_invoice', dat.nomor_invoice
                             )
                         ) AS uraian,
                         NULL AS deskripsi_kerja,
@@ -1417,7 +1422,8 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                                 'kategori_aset', kat2.name,
                                 'supplier_name', st.name,
                                 'supplier_code', st.code,
-                                'daftar_aset_name', dat.name
+                                'daftar_aset_name', dat.name,
+                                'daftar_aset_invoice', dat.nomor_invoice
                             )
                         ) AS uraian,
                         NULL AS deskripsi_kerja,
@@ -1469,7 +1475,8 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                                 'kategori_aset', kat2.name,
                                 'supplier_name', st.name,
                                 'supplier_code', st.code,
-                                'daftar_aset_name', dat.name
+                                'daftar_aset_name', dat.name,
+                                'daftar_aset_invoice', dat.nomor_invoice
                             )
                         ) AS uraian,
                         NULL AS deskripsi_kerja,
@@ -1523,7 +1530,8 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                                 'kategori_aset', kat2.name,
                                 'supplier_name', st.name,
                                 'supplier_code', st.code,
-                                'daftar_aset_name', dat.name
+                                'daftar_aset_name', dat.name,
+                                'daftar_aset_invoice', dat.nomor_invoice
                             )
                         ) AS uraian,
                         NULL AS deskripsi_kerja,

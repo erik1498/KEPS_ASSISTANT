@@ -32,7 +32,7 @@ const JurnalPenyusutanPage = () => {
             .then(async (resData) => {
 
                 const fixedData = normalizeDataJurnalPerintahStokOpname(resData.data)
-                
+
                 const normalizedData = await normalizeDataJurnalUmum(fixedData)
 
                 setJurnal(normalizedData.returnData)
@@ -52,8 +52,6 @@ const JurnalPenyusutanPage = () => {
         isLoading={isLoading}>
         <div>
             <PageTitle title="Jurnal Penyusutan" />
-            <div className="bg-white rounded-md shadow-2xl h-max px-6 py-5">
-            </div>
             <div className="grid grid-cols-6 mt-5">
                 <div className="col-span-1">
                     <BulanSelectedListCard

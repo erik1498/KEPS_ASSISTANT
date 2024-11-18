@@ -14,6 +14,9 @@ import PageTitle from "../../../component/general/PageTitle"
 import { HistoryAkunPrint } from "./component/HistoryAkunPrint"
 import { useRef } from "react"
 import { useReactToPrint } from "react-to-print"
+import { ASETTETAPDANPERLENGKAPANSUMBERLIST } from "../../../config/objectList.config"
+import { showError } from "../../../helper/form.helper"
+import { normalizeDataJurnalPerintahStokOpname } from "../../../helper/jurnalUmum.helper"
 
 const HistoryAkunPage = () => {
 
@@ -41,7 +44,16 @@ const HistoryAkunPage = () => {
         apiHistoryAkunR
             .custom(`/${kodeAkun.value}/${bulan + 1}/${data.tahun}?search=${searchParam}`, "GET")
             .then(async (resData) => {
-                let normalizedData = await normalizeDataHistoryAkun(resData?.data)
+                let normalData = resData?.data.filter(x => !ASETTETAPDANPERLENGKAPANSUMBERLIST.includes(x.sumber))
+
+                let assetTetaPenyusutan = resData?.data.filter(x => ASETTETAPDANPERLENGKAPANSUMBERLIST.includes(x.sumber)).map(x => {
+                    x.detail_data = JSON.stringify(JSON.parse(x.uraian).detail)
+                    return x
+                })
+
+                assetTetaPenyusutan = normalizeDataJurnalPerintahStokOpname(assetTetaPenyusutan)
+                
+                let normalizedData = await normalizeDataHistoryAkun(normalData.concat(...assetTetaPenyusutan))
 
                 setBalanceStatus(searchParam.length < 1)
                 setHistoryAkun(normalizedData.returnData)
@@ -118,7 +130,7 @@ const HistoryAkunPage = () => {
                             <div className="flex flex-col h-full overflow-y-scroll no-scrollbar w-full rounded-md">
                                 {
                                     historyAkun.map((item, i) => {
-                                        return <HistoryAkunRow item={item} balanceStatus={balanceStatus} key={i} />
+                                        return <HistoryAkunRow item={item} balanceStatus={balanceStatus} forPrint={false} key={i} />
                                     })
                                 }
                             </div>

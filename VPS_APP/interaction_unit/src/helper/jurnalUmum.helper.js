@@ -54,6 +54,8 @@ export const normalizeDataJurnalPerintahStokOpname = (data) => {
             nama_akun: x.nama_akun,
             debet: x.debet,
             kredit: x.kredit,
+            saldoDebet: x.saldoDebet,
+            saldoKredit: x.saldoKredit,
             detail_data: detail_data
         }
 

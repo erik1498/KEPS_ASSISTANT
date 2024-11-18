@@ -96,13 +96,91 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 UNION ALL 
                 ${payrollPegawaiNeracaSaldo(req_id)}
                 UNION ALL
-                    SELECT 
+                SELECT 
                     psojt.kode_akun_perkiraan,
                     LPAD(MONTH(psojt.tanggal), 2, '0') AS bulan,
                     YEAR(psojt.tanggal) AS tahun,
                     psojt.debet,
                     psojt.kredit 
                 FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab psojt
+                UNION ALL
+                SELECT 
+                    "c85ac20d-1b1e-45c5-80e1-8db80c5dd283" AS kode_akun_perkiraan,
+                    LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
+                    YEAR(dpt.tanggal_beli) AS tahun,
+                    dpt.kuantitas * dpt.harga_satuan AS debet,
+                    0 AS kredit
+                FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
+                WHERE MONTH(dpt.tanggal_beli) = ${bulan}
+                AND YEAR(dpt.tanggal_beli) = ${tahun}
+                AND dpt.enabled = 1
+                UNION ALL
+                SELECT 
+                    "6e376191-0454-4172-a78b-2bc5f9c8fd6e" AS kode_akun_perkiraan,
+                    LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
+                    YEAR(dpt.tanggal_beli) AS tahun,
+                    0 AS debet,
+                    dpt.kuantitas * dpt.harga_satuan AS kredit
+                FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
+                WHERE MONTH(dpt.tanggal_beli) = ${bulan}
+                AND YEAR(dpt.tanggal_beli) = ${tahun}
+                AND dpt.enabled = 1
+                UNION ALL
+                SELECT 
+                    "a88b16d3-4071-4503-9c5b-17cdac4a411f" AS kode_akun_perkiraan,
+                    LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,
+                    YEAR(dat.tanggal_beli) AS tahun,
+                    dat.harga_satuan * dat.kuantitas AS debet,
+                    0 AS kredit
+                FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
+                WHERE MONTH(dat.tanggal_beli) = ${bulan}
+                AND YEAR(dat.tanggal_beli) = ${tahun}
+                AND dat.enabled = 1
+                UNION ALL
+                SELECT 
+                    dat.kode_akun_perkiraan,
+                    LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,
+                    YEAR(dat.tanggal_beli) AS tahun,
+                    0 AS debet,
+                    dat.harga_satuan * dat.kuantitas AS kredit
+                FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
+                WHERE MONTH(dat.tanggal_beli) = ${bulan}
+                AND YEAR(dat.tanggal_beli) = ${tahun}
+                AND dat.enabled = 1
+                UNION ALL
+                SELECT 
+                    "915ac6e8-c528-4f10-9215-74fda0b1c99e" AS kode_akun_perkiraan,
+                    hpt.bulan AS bulan,
+                    hpt.tahun AS tahun,
+                    CASE
+                        WHEN hpt.nilai_penyusutan > 0
+                        THEN hpt.nilai_penyusutan * dat.kuantitas 
+                        ELSE 0
+                    END AS debet,
+                    0 AS kredit
+                FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
+                JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset
+                WHERE hpt.tahun = ${tahun}
+                AND hpt.bulan = ${bulan} 
+                AND hpt.enabled = 1
+                AND dat.enabled = 1
+                UNION ALL
+                SELECT 
+                    "a88b16d3-4071-4503-9c5b-17cdac4a411f" AS kode_akun_perkiraan,
+                    hpt.bulan AS bulan,
+                    hpt.tahun AS tahun,
+                    0 AS debet,
+                    CASE
+                        WHEN hpt.nilai_penyusutan > 0
+                        THEN hpt.nilai_penyusutan * dat.kuantitas 
+                        ELSE 0
+                    END AS kredit
+                FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
+                JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset
+                WHERE hpt.tahun = ${tahun}
+                AND hpt.bulan = ${bulan} 
+                AND hpt.enabled = 1
+                AND dat.enabled = 1
             ) AS res
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = res.kode_akun_perkiraan
             AND res.bulan = "${bulan}" 

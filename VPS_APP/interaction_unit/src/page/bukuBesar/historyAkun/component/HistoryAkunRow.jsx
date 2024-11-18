@@ -1,8 +1,9 @@
 import { parseToRupiahText } from "../../../../helper/number.helper";
 import { convertTo12HoursFormat } from "../../../../helper/date.helper";
-import { PAYROLLPENDAPATANPOTONGANSUMBERLIST, PERINTAHSTOKOPNAMESUMBERLIST } from "../../../../config/objectList.config";
+import { ASETTETAPDANPERLENGKAPANSUMBERLIST, PAYROLLPENDAPATANPOTONGANSUMBERLIST, PERINTAHSTOKOPNAMESUMBERLIST } from "../../../../config/objectList.config";
 import PerintahStokOpnameUraian from "./PerintahStokOpnameUraian";
 import PayrollPendapatanPotonganUraian from "./PayrollPendapatanPotonganUraian";
+import JurnalPenyusutanUraian from "../../../asetTetapDanPerlengkapan/penyusutan/jurnalPenyusutan/component/JurnalPenyusutanRowUraian";
 
 const HistoryAkunRow = ({
     item,
@@ -79,26 +80,34 @@ const HistoryAkunRow = ({
                                             {
                                                 !PERINTAHSTOKOPNAMESUMBERLIST.includes(item1.sumber) ? <>
                                                     {
-                                                        !PAYROLLPENDAPATANPOTONGANSUMBERLIST.includes(item1.sumber) ? <p>{item1.uraian}</p> : <PayrollPendapatanPotonganUraian item={item1} />
+                                                        !PAYROLLPENDAPATANPOTONGANSUMBERLIST.includes(item1.sumber) ? <>
+                                                            {
+                                                                !ASETTETAPDANPERLENGKAPANSUMBERLIST.includes(item1.sumber) ? <p>{item1.uraian}</p>
+                                                                    : <JurnalPenyusutanUraian
+                                                                        data={item1}
+                                                                        bg_color={forPrint}
+                                                                    />
+                                                            }
+                                                        </> : <PayrollPendapatanPotonganUraian item={item1} />
                                                     }
                                                 </> : <PerintahStokOpnameUraian item={item1} />
                                             }
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">
                                             {
-                                                item1.debet != "0.00" ? <h1 className=" text-green-900 font-bold">{parseToRupiahText(parseFloat(item1.debet).toFixed(2))}</h1> : <></>
+                                                parseFloat(item1.debet).toFixed(2) != "0.00" ? <h1 className=" text-green-900 font-bold">{parseToRupiahText(parseFloat(item1.debet).toFixed(2))}</h1> : <></>
                                             }
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">
                                             {
-                                                item1.kredit != "0.00" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(parseFloat(item1.kredit).toFixed(2))}</h1> : <></>
+                                                parseFloat(item1.kredit).toFixed(2) != "0.00" ? <h1 className=" text-red-900 font-bold">{parseToRupiahText(parseFloat(item1.kredit).toFixed(2))}</h1> : <></>
                                             }
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">
-                                            <h1 className=" text-green-900 font-bold">{parseToRupiahText(item1.saldoDebet)}</h1>
+                                            <h1 className=" text-green-900 font-bold">{parseToRupiahText(parseFloat(item1.saldoDebet).toFixed(2))}</h1>
                                         </div>
                                         <div className="text-right px-2 col-span-2 text-gray-900">
-                                            <h1 className=" text-red-900 font-bold">{parseToRupiahText(item1.saldoKredit)}</h1>
+                                            <h1 className=" text-red-900 font-bold">{parseToRupiahText(parseFloat(item1.saldoKredit).toFixed(2))}</h1>
                                         </div>
                                     </div> : <></>
                             }
