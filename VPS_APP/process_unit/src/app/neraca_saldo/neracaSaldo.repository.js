@@ -142,7 +142,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 UNION ALL
                 SELECT 
                     "915ac6e8-c528-4f10-9215-74fda0b1c99e" AS kode_akun_perkiraan,
-                    hpt.bulan AS bulan,
+                    LPAD(hpt.bulan, 2, '0') AS bulan,
                     hpt.tahun AS tahun,
                     CASE
                         WHEN hpt.nilai_penyusutan > 0
@@ -157,7 +157,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 UNION ALL
                 SELECT 
                     "a88b16d3-4071-4503-9c5b-17cdac4a411f" AS kode_akun_perkiraan,
-                    hpt.bulan AS bulan,
+                    LPAD(hpt.bulan, 2, '0') AS bulan,
                     hpt.tahun AS tahun,
                     0 AS debet,
                     CASE
