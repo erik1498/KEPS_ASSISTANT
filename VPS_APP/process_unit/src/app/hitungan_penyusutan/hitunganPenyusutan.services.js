@@ -21,14 +21,14 @@ export const getHitunganPenyusutanByUuidService = async (uuid, validasi_hitungan
         return resultDaftarAsetOnDatabase
     }
 
-    const result = asetData.metode_penyusutan_name == GARIS_LURUS ? hitungPenyusutanGarisLurus(asetData) : hitungPenyusutanSaldoMenurun(asetData)
+    const result = String(asetData.metode_penyusutan_name).toLocaleLowerCase() == GARIS_LURUS.toLocaleLowerCase() ? hitungPenyusutanGarisLurus(asetData) : hitungPenyusutanSaldoMenurun(asetData)
 
     if (validasi_hitungan_penyusutan) {
 
         await getNeracaValidasiByTanggalService(null, asetData.tanggal_beli, req_identity)
 
         result.map(async (x, i) => {
-            if (asetData.metode_penyusutan_name == GARIS_LURUS) {
+            if (String(asetData.metode_penyusutan_name).toLocaleLowerCase() == GARIS_LURUS.toLocaleLowerCase()) {
                 await createHitunganPenyusutanRepo({
                     daftar_aset: uuid,
                     transaksi: i,
