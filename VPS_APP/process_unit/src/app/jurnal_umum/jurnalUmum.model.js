@@ -1,91 +1,91 @@
 import { Sequelize } from "sequelize";
 import db, { defaultModelBuilder } from "../../config/Database.js";
 
-const {DataTypes} = Sequelize;
+const { DataTypes } = Sequelize;
 
-const JurnalUmumModel = db.define("jurnal_umum_tab", 
+const JurnalUmumModel = db.define("jurnal_umum_tab",
     defaultModelBuilder({
         uuid: {
             type: DataTypes.STRING,
             defaultValue: DataTypes.UUIDV4,
             allowNull: false,
-            validate:{
-                notEmpty:true
+            validate: {
+                notEmpty: true
             }
         },
         tanggal: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         bulan: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         tahun: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         waktu: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         uraian: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         debet: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         kredit: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         kode_akun_uuid: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
         bukti_transaksi: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         },
-        transaksi:{
+        transaksi: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            validate:{
-                notEmpty:true,
+            validate: {
+                notEmpty: true,
             }
         }
     }), {
-        freezeTableName: true
-    }
+    freezeTableName: true
+}
 )
 
 export default JurnalUmumModel

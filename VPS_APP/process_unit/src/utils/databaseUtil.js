@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
 import { getEnv } from "./envUtils.js";
+import sqliteSequelize from "../config/MemoryDatabase.js";
 
 export const generateDatabaseName = (req_identity, logger) => {
     return logger ? `${getEnv("DB_NAME")}_logging_${JSON.parse(req_identity).client_id}` : `${getEnv("DB_NAME")}_${JSON.parse(req_identity).client_id}`
@@ -21,6 +22,22 @@ export const selectOneQueryUtil = async (db_name, model, attributes, whereCondit
         { type: Sequelize.QueryTypes.SELECT }
     )
     return data.length > 0 ? data[0] : null
+}
+
+export const insertQueryOnMemoryUtil = async (model, data) => {
+    data.createdAt = new Date();
+    data.updatedAt = new Date();
+    
+    const insertQuery = sqliteSequelize.getQueryInterface().queryGenerator.insertQuery(`${model.getTableName()}`, model.build(data).get());
+
+    await sqliteSequelize.query(
+        insertQuery.query.replaceAll("`", ""),
+        {
+            bind: insertQuery.bind,
+            type: Sequelize.QueryTypes.INSERT,
+            returning: true
+        },
+    )
 }
 
 export const selectAllQueryUtil = async (db_name, model, attributes, whereCondition) => {

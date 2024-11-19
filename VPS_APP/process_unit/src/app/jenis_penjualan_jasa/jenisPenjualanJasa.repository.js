@@ -46,9 +46,9 @@ export const createJenisPenjualanJasaRepo = async (jenisPenjualanJasaData, req_i
         req_id,
         generateDatabaseName(req_id),
         JenisPenjualanJasaModel,
-        {   
-        name: jenisPenjualanJasaData.name,
-        code: jenisPenjualanJasaData.code,
+        {
+            name: jenisPenjualanJasaData.name,
+            code: jenisPenjualanJasaData.code,
             enabled: jenisPenjualanJasaData.enabled
         }
     )
@@ -74,8 +74,8 @@ export const updateJenisPenjualanJasaByUuidRepo = async (uuid, jenisPenjualanJas
         generateDatabaseName(req_id),
         JenisPenjualanJasaModel,
         {
-        name: jenisPenjualanJasaData.name,
-        code: jenisPenjualanJasaData.code,
+            name: jenisPenjualanJasaData.name,
+            code: jenisPenjualanJasaData.code,
         },
         {
             uuid

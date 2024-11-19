@@ -2,7 +2,9 @@ import { Sequelize, where } from "sequelize";
 import db from "../../config/Database.js";
 import JurnalUmumModel from "./jurnalUmum.model.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
-import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { generateDatabaseName, insertQueryOnMemoryUtil, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import JurnalUmumModelMemory from "./jurnalUmumMemory.model.js";
+import sqliteSequelize from "../../config/MemoryDatabase.js";
 
 export const getJurnalUmumByUuidRepo = async (uuid, req_id) => {
     return selectOneQueryUtil(
@@ -63,6 +65,26 @@ export const getJurnalUmumLabaRugiByBulanRepo = async (bulan, req_id) => {
         }
     )
     return jurnalUmums
+}
+
+export const getJurnalUmumByBulanMemoryRepo = async (bulan, tahun) => {
+    bulan = bulan < 10 ? "0" + bulan : bulan
+    return sqliteSequelize.query(
+        `
+            SELECT 
+                jut.*
+            FROM jurnal_umum_tab jut 
+            WHERE jut.bulan = "${bulan}" 
+            AND jut.tahun = "${tahun}"
+        `
+    )
+}
+
+export const saveJurnalUmumByBulanMemoryRepo = async (data) => {
+    data.map(async (x) => {
+        await insertQueryOnMemoryUtil(JurnalUmumModelMemory, x)
+    })
+    return true
 }
 
 export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, req_id) => {
@@ -1585,7 +1607,7 @@ export const createJurnalUmumRepo = async (jurnalUmumData, req_id) => {
         "debet", "kredit"
     ])
     return insertQueryUtil(
-        req_id, 
+        req_id,
         generateDatabaseName(req_id),
         JurnalUmumModel,
         {

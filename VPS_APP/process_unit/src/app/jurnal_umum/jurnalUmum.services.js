@@ -1,7 +1,7 @@
 import { convertNeracaToJurnalUmum } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { getNeracaSaldoBulanSebelumnya, getNeracaSaldoByBulanAndTahunServices } from "../neraca/neraca.services.js"
-import { createJurnalUmumRepo, deleteJurnalUmumByBuktiTransaksiRepo, deleteJurnalUmumByUuidRepo, getJurnalUmumByBuktiTransaksiAllDataRepo, getJurnalUmumByBuktiTransaksiRepo, getJurnalUmumByBulanRepo, getJurnalUmumByUuidRepo, getJurnalUmumLabaRugiByBulanRepo, getJurnalUmumNeracaByBulanRepo, updateJurnalUmumByUuidRepo } from "./jurnalUmum.repository.js"
+import { createJurnalUmumRepo, deleteJurnalUmumByBuktiTransaksiRepo, deleteJurnalUmumByUuidRepo, getJurnalUmumByBuktiTransaksiAllDataRepo, getJurnalUmumByBuktiTransaksiRepo, getJurnalUmumByBulanMemoryRepo, getJurnalUmumByBulanRepo, getJurnalUmumByUuidRepo, getJurnalUmumLabaRugiByBulanRepo, getJurnalUmumNeracaByBulanRepo, saveJurnalUmumByBulanMemoryRepo, updateJurnalUmumByUuidRepo } from "./jurnalUmum.repository.js"
 
 export const getJurnalUmumByUuidService = async (uuid, req_id) => {
     LOGGER(logType.INFO, `Start getJurnalUmumByUuidService [${uuid}]`, null, req_id)
@@ -60,8 +60,20 @@ export const getJurnalUmumLabaRugiByBulanService = async (bulan, req_id) => {
 
 export const getJurnalUmumByBulanService = async (bulan, tahun, sorting, search, req_id) => {
     LOGGER(logType.INFO, `Start getJurnalUmumByBulanService [${bulan} ${sorting} ${search}]`, null, req_id)
+
+    const jurnalUmumOnMemory = await getJurnalUmumByBulanMemoryRepo(bulan, tahun, req_id)
+
+    if (jurnalUmumOnMemory[0].length != 0) {
+        return jurnalUmumOnMemory[0]
+    }
+
     const jurnalUmumBulanSebelum = await getJurnalUmumByBulanSebelumService(bulan, tahun, req_id)
     const jurnalUmum = await getJurnalUmumByBulanRepo(bulan, tahun, search, sorting, req_id)
+
+    if (jurnalUmumOnMemory[0].length == 0) {
+        saveJurnalUmumByBulanMemoryRepo(jurnalUmumBulanSebelum.concat(...jurnalUmum))
+    }
+
     return jurnalUmumBulanSebelum.concat(...jurnalUmum)
 }
 
@@ -72,9 +84,9 @@ export const createJurnalUmumService = async (jurnalUmumData, req_id) => {
 
     const getDataValidasi = await getNeracaSaldoByBulanAndTahunServices(jurnalUmumData.bulan, jurnalUmumData.tahun, req_id);
     jurnalUmumData.bulan = parseFloat(jurnalUmumData.bulan) < 10 ? "0" + jurnalUmumData.bulan : jurnalUmumData.bulan
-    
+
     await getJurnalUmumByBuktiTransaski(jurnalUmumData.bukti_transaksi, jurnalUmumData.uuidList, req_id)
-    
+
     if (getDataValidasi.length) {
         throw Error(JSON.stringify({
             message: "Neraca bulan ini sudah di validasi",

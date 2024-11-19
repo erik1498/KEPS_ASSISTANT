@@ -6,6 +6,7 @@ import { v4 } from 'uuid'
 import { connectDatabase } from './config/Database.js'
 import { getEnv } from './utils/envUtils.js'
 import { rateLimit } from 'express-rate-limit'
+import { connectDatabaseMemory } from './config/MemoryDatabase.js'
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -38,19 +39,22 @@ const PORT = getEnv("PORT")
 
 await connectDatabase();
 
+await connectDatabaseMemory();
+
 app.use((req, res, next) => {
     try {
-        if (!req.header("Client_id")) {
-            throw Error(JSON.stringify({
-                message: "Akun Tidak Terdaftar",
-                prop: "password"
-            }))
-        }
+        // if (!req.header("Client_id")) {
+        //     throw Error(JSON.stringify({
+        //         message: "Akun Tidak Terdaftar",
+        //         prop: "password"
+        //     }))
+        // }
         let genUUID = v4()
         req.identity = JSON.stringify({
             "id": genUUID,
             "userId": null,
-            "client_id": req.header("Client_id")
+            // "client_id": req.header("Client_id")
+            "client_id": "alor"
         })
         res.setHeader("request-id", genUUID);
         next();
