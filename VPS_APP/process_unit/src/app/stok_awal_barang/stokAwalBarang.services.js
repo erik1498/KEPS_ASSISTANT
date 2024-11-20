@@ -1,7 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { checkDaftarBarangAllowToEditService } from "../daftar_barang/daftarBarang.services.js"
-import { createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getDaftarGudangBarangByKategoriHargaBarangUUIDRepo, getRiwayatTransaksiByStokAwalBarangUuidRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, getStokAwalBarangByUuidRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
+import { createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getDaftarGudangBarangByKategoriHargaBarangUUIDRepo, getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo, getRiwayatTransaksiPenjualanByStokAwalBarangUuidRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, getStokAwalBarangByUuidRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
 
 export const getAllStokAwalBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllStokAwalBarangService", null, req_identity)
@@ -32,11 +32,19 @@ export const getStokAwalBarangByUuidService = async (uuid, req_identity) => {
     return daftarGudangBarangs
 }
 
-export const getRiwayatTransaksiByStokAwalBarangUuidService = async (uuid, req_identity) => {
-    LOGGER(logType.INFO, `Start getRiwayatTransaksiByStokAwalBarangUuidService`, {
+export const getRiwayatTransaksiPenjualanByStokAwalBarangUuidService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getRiwayatTransaksiPenjualanByStokAwalBarangUuidService`, {
         uuid
     }, req_identity)
-    const riwayatBarang = await getRiwayatTransaksiByStokAwalBarangUuidRepo(uuid, req_identity)
+    const riwayatBarang = await getRiwayatTransaksiPenjualanByStokAwalBarangUuidRepo(uuid, req_identity)
+    return riwayatBarang
+}
+
+export const getRiwayatTransaksiPembelianByStokAwalBarangUuidService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start getRiwayatTransaksiPembelianByStokAwalBarangUuidService`, {
+        uuid
+    }, req_identity)
+    const riwayatBarang = await getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo(uuid, req_identity)
     return riwayatBarang
 }
 

@@ -1,5 +1,5 @@
 import { stokAwalBarangValidation } from "./stokAwalBarang.validation.js"
-import { createStokAwalBarangService, deleteStokAwalBarangByUuidService, getAllStokAwalBarangService, getDaftarGudangBarangByKategoriHargaBarangUUIDService, getRiwayatTransaksiByStokAwalBarangUuidService, getStokAwalBarangByBarangUUIDService, updateStokAwalBarangByUuidService } from "./stokAwalBarang.services.js"
+import { createStokAwalBarangService, deleteStokAwalBarangByUuidService, getAllStokAwalBarangService, getDaftarGudangBarangByKategoriHargaBarangUUIDService, getRiwayatTransaksiPembelianByStokAwalBarangUuidService, getRiwayatTransaksiPenjualanByStokAwalBarangUuidService, getStokAwalBarangByBarangUUIDService, updateStokAwalBarangByUuidService } from "./stokAwalBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -55,13 +55,31 @@ export const getStokAwalBarangByBarangUUID = async (req, res) => {
     }
 }
 
-export const getRiwayatTransaksiByStokAwalBarangUuid = async (req, res) => {
-    LOGGER(logType.INFO, "Start getRiwayatTransaksiByStokAwalBarangUuid", null, req.identity)
+export const getRiwayatTransaksiPenjualanByStokAwalBarangUuid = async (req, res) => {
+    LOGGER(logType.INFO, "Start getRiwayatTransaksiPenjualanByStokAwalBarangUuid", null, req.identity)
     try {
         const { uuid } = req.params
 
         res.json({
-            data: await getRiwayatTransaksiByStokAwalBarangUuidService(uuid, req.identity),
+            data: await getRiwayatTransaksiPenjualanByStokAwalBarangUuidService(uuid, req.identity),
+            message: "Get Data By UUID Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getRiwayatTransaksiPembelianByStokAwalBarangUuid = async (req, res) => {
+    LOGGER(logType.INFO, "Start getRiwayatTransaksiPembelianByStokAwalBarangUuid", null, req.identity)
+    try {
+        const { uuid } = req.params
+
+        res.json({
+            data: await getRiwayatTransaksiPembelianByStokAwalBarangUuidService(uuid, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {

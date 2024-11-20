@@ -149,7 +149,7 @@ export const getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo = async (
     )
 }
 
-export const getRiwayatTransaksiByStokAwalBarangUuidRepo = async (uuid, req_id) => {
+export const getRiwayatTransaksiPenjualanByStokAwalBarangUuidRepo = async (uuid, req_id) => {
     return await db.query(
         `
             SELECT 
@@ -270,6 +270,139 @@ export const getRiwayatTransaksiByStokAwalBarangUuidRepo = async (uuid, req_id) 
                 JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer
                 JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_barang_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_penjualan_barang 
                 WHERE rppbt.stok_awal_barang = "${uuid}"
+                AND rpdpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND pdpbt.enabled = 1
+            ) AS res
+            ORDER BY res.tanggal DESC   
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
+export const getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                res.*
+            FROM (
+                SELECT 
+                    ppbt.nomor_pesanan_pembelian_barang AS bukti_transaksi,
+                    "pesanan_pembelian" AS type,
+                    ppbt.tanggal_pesanan_pembelian_barang AS tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT(
+                        'jumlah', rppbt.jumlah,
+                        'diskon_persentase', rppbt.diskon_persentase,
+                        'satuan_barang', sbt.name,
+                        'total', rppbt.total_harga 
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_pembelian_barang
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier
+                JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
+                WHERE rppbt.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                AND rppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    fpbt.bukti_transaksi,
+                    "faktur_pembelian_barang" AS type,
+                    fpbt.tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT() AS detail
+                FROM ${generateDatabaseName(req_id)}.faktur_pembelian_barang_tab fpbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt ON ppbt.uuid = fpbt.pesanan_pembelian_barang 
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier 
+                WHERE fpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND (
+                    SELECT 
+                        COUNT(0)
+                    FROM ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt 
+                    WHERE rppbt.pesanan_pembelian_barang = ppbt.uuid 
+                    AND rppbt.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                    AND rppbt.enabled = 1
+                ) > 0
+                UNION ALL
+                SELECT 
+                    ppbt.bukti_transaksi,
+                    "pelunasan_pembelian" AS type,
+                    ppbt.tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT(
+                        'nilai_pelunasan', rppbt.nilai_pelunasan
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_barang_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt2 On rppbt2.uuid = rppbt.rincian_pesanan_pembelian_barang
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_pembelian_barang
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt2.supplier
+                JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pelunasan_pembelian_barang 
+                WHERE rppbt2.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                AND rppbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    ppbt.bukti_transaksi,
+                    "pelunasan_denda_pembelian" AS type,
+                    ppbt.tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT(
+                        'nilai_pelunasan', rppbt.nilai_pelunasan_denda
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_barang_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt2 On rppbt2.uuid = rppbt.rincian_pesanan_pembelian_barang
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_pembelian_barang
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt2.supplier
+                JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pelunasan_pembelian_barang 
+                WHERE rppbt2.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                AND rppbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    rpbt.bukti_transaksi,
+                    "retur_pembelian_barang" AS type,
+                    rpbt.tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT(
+                        'retur', rrpbt.retur,
+                        'nilai_retur', rrpbt.nilai_retur 
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_retur_pembelian_barang_tab rrpbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt ON rppbt.uuid = rrpbt.rincian_pesanan_pembelian_barang 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_pembelian_barang
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier
+                JOIN ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_pembelian_barang 
+                WHERE rppbt.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                AND rrpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND rpbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    pdpbt.bukti_transaksi,
+                    "pengembalian_denda_pembelian_barang" AS type,
+                    pdpbt.tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT(
+                        'denda_dikembalikan', rpdpbt.denda_yang_dikembalikan 
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_pembelian_barang_tab rpdpbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt ON rppbt.uuid = rpdpbt.rincian_pesanan_pembelian_barang 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_pembelian_barang
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier
+                JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_pembelian_barang_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_pembelian_barang 
+                WHERE rppbt.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
                 AND rpdpbt.enabled = 1
                 AND ppbt.enabled = 1
                 AND pdpbt.enabled = 1

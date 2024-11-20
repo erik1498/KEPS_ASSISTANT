@@ -9,7 +9,7 @@ import { convertTo12HoursFormat, formatDate, getHariTanggalFormated } from "../.
 import { getNormalizedByDate } from "../../../../helper/jurnalUmum.helper"
 import { parseToRupiahText } from "../../../../helper/number.helper"
 
-const LaporanPenjualanBarangPage = () => {
+const LaporanPembelianBarangPage = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     const [kategoriHargaBarangSelected, setKategoriHargaBarangSelected] = useState()
@@ -47,7 +47,7 @@ const LaporanPenjualanBarangPage = () => {
 
     const _getRiwayatStokAwalBarang = () => {
         apiStokAwalBarangCRUD
-            .custom(`/riwayat_penjualan/${gudangBarang.value}`, "GET")
+            .custom(`/riwayat_pembelian/${gudangBarang.value}`, "GET")
             .then(resData => {
                 const data = getNormalizedByDate(resData.data)
                 setRiwayatLaporan(x => x = data)
@@ -72,7 +72,7 @@ const LaporanPenjualanBarangPage = () => {
         isLoading={isLoading}
     >
         <div>
-            <PageTitle title="Laporan Penjualan Barang" />
+            <PageTitle title="Laporan Pembelian Barang" />
             <div className="grid grid-cols-12">
                 <div className="col-span-3">
                     <div className="bg-white py-6 px-6 rounded-md">
@@ -112,13 +112,13 @@ const LaporanPenjualanBarangPage = () => {
                             className="btn mt-3 btn-sm bg-blue-800 text-white"
                             onClick={() => _getRiwayatStokAwalBarang()}
                         >
-                            <FaPager /> Lihat Laporan Penjualan Barang
+                            <FaPager /> Lihat Laporan Pembelian Barang
                         </button>
                     </div>
                 </div>
                 <div className="col-span-9 px-2 h-[80vh] overflow-y-scroll no-scrollbar">
                     <div className="bg-white rounded-md p-3">
-                        <h1 className="font-bold text-2xl pb-6">Laporan Riwayat Penjualan Barang</h1>
+                        <h1 className="font-bold text-2xl pb-6">Laporan Riwayat Pembelian Barang</h1>
                         {
                             riwayatLaporan.map((x, i) => {
                                 return <>
@@ -143,7 +143,7 @@ const LaporanPenjualanBarangPage = () => {
                                                         </div>
                                                         <div className="col-span-3">
                                                             <p className="text-sm pr-2 px-3 pb-2 font-bold">{y.bukti_transaksi}</p>
-                                                            <p className="text-sm pr-2 px-3 pb-2 font-bold">Oleh {y.customer} ( {y.customer_code} )</p>
+                                                            <p className="text-sm pr-2 px-3 pb-2 font-bold">Supplier {y.supplier} ( {y.supplier_code} )</p>
                                                             {
                                                                 detail?.jumlah ? <p className="text-sm pr-2 font-normal px-3"> Jumlah {parseToRupiahText(detail.jumlah)} {detail.satuan_barang}</p> : ""
                                                             }
@@ -175,4 +175,4 @@ const LaporanPenjualanBarangPage = () => {
     </Wrap>
 
 }
-export default LaporanPenjualanBarangPage
+export default LaporanPembelianBarangPage

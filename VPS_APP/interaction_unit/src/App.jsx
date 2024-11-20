@@ -58,6 +58,7 @@ import hasilStokOpnamePath from './path/persediaan/opname/hasilStokOpname.path';
 import penyesuaianPersediaanPath from './path/persediaan/opname/penyesuaianPersediaan.path';
 import jurnalStokOpnamePath from './path/persediaan/opname/jurnalStokOpname.path';
 import laporanPenjualanBarangPath from './path/transaksi/penjualan/laporanPenjualanBarang';
+import laporanPembelianBarangPath from './path/transaksi/pembelian/laporanPembelianBarang';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -110,6 +111,7 @@ const PenjualanJasaPage = React.lazy(() => import('./page/transaksi/penjualan/pe
 const PenjualanBarangPage = React.lazy(() => import('./page/transaksi/penjualan/penjualanBarang/PenjualanBarangPage'))
 const LaporanPenjualanBarangPage = React.lazy(() => import('./page/transaksi/penjualan/laporanPenjualanBarang/LaporanPenjualanBarang'));
 const PembelianBarangPage = React.lazy(() => import('./page/transaksi/pembelian/pembelianBarang/PembelianBarangPage'))
+const LaporanPembelianBarangPage = React.lazy(() => import('./page/transaksi/pembelian/laporanPembelianBarang/LaporanPembelianBarang'));
 const PerintahStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/perintahStokOpname/PerintahStokOpname.page'))
 const HasilStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/hasilStokOpname/HasilStokOpname.page'));
 const PenyesuaianPersediaanPage = React.lazy(() => import('./page/persediaan/opname/penyesuaianPersediaan/PenyesuaianPersediaan.page'));
@@ -283,6 +285,9 @@ function App() {
         </Routes>
         <Routes basename={potonganPegawaiPath.main}>
           <Route path={potonganPegawaiPath.main} element={<PotonganPegawaiPage />} />
+        </Routes>
+        <Routes basename={laporanPembelianBarangPath.main}>
+          <Route path={laporanPembelianBarangPath.main} element={<LaporanPembelianBarangPage />} />
         </Routes>
         <Routes basename={slipGajiPegawaiPath.main}>
           <Route path={slipGajiPegawaiPath.main} element={<SlipGajiPegawaiPage />} />
