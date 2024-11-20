@@ -57,6 +57,7 @@ import perintahStokOpnamePath from './path/persediaan/opname/perintahStokOpname.
 import hasilStokOpnamePath from './path/persediaan/opname/hasilStokOpname.path';
 import penyesuaianPersediaanPath from './path/persediaan/opname/penyesuaianPersediaan.path';
 import jurnalStokOpnamePath from './path/persediaan/opname/jurnalStokOpname.path';
+import laporanPenjualanBarangPath from './path/transaksi/penjualan/laporanPenjualanBarang';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -107,6 +108,7 @@ const PotonganPegawaiPage = React.lazy(() => import('./page/transaksi/payroll/po
 const SlipGajiPegawaiPage = React.lazy(() => import('./page/transaksi/payroll/slipGajiPegawai/SlipGajiPegawaiPage'))
 const PenjualanJasaPage = React.lazy(() => import('./page/transaksi/penjualan/penjualanJasa/PenjualanJasaPage'))
 const PenjualanBarangPage = React.lazy(() => import('./page/transaksi/penjualan/penjualanBarang/PenjualanBarangPage'))
+const LaporanPenjualanBarangPage = React.lazy(() => import('./page/transaksi/penjualan/laporanPenjualanBarang/LaporanPenjualanBarang'));
 const PembelianBarangPage = React.lazy(() => import('./page/transaksi/pembelian/pembelianBarang/PembelianBarangPage'))
 const PerintahStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/perintahStokOpname/PerintahStokOpname.page'))
 const HasilStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/hasilStokOpname/HasilStokOpname.page'));
@@ -266,6 +268,9 @@ function App() {
         </Routes>
         <Routes basename={penjualanBarangPath.main}>
           <Route path={penjualanBarangPath.main} element={<PenjualanBarangPage />} />
+        </Routes>
+        <Routes basename={laporanPenjualanBarangPath.main}>
+          <Route path={laporanPenjualanBarangPath.main} element={<LaporanPenjualanBarangPage />} />
         </Routes>
         <Routes basename={penjualanJasaPath.main}>
           <Route path={penjualanJasaPath.main} element={<PenjualanJasaPage />} />

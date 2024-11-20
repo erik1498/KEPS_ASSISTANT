@@ -5,8 +5,8 @@ const JurnalPenyusutanUraian = ({
     bg_color = false
 }) => {
     return <>
-        <div className={`px-2 py-2`}>
-            <div className={`${bg_color ? "bg-gray-200 px-2 py-1" : ""}`}>
+        <div className={`px-1`}>
+            <div className={`${!bg_color ? "bg-gray-200 px-2 py-1" : ""}`}>
                 <div className="flex justify-between">
                     <div>
                         <h1 className="font-bold">{data?.sumber}</h1>

@@ -7,26 +7,21 @@ const DebetKreditStatusCard = ({
     forPrint
 }) => {
     return <>
-        <div>
-            <div className={`stats py-4 ${forPrint ? 'stats-horizontal' : 'stats-vertical shadow-2xl'} rounded-md rounded-b-none bg-white text-gray-900 w-full`}>
-
-                <div className="stat py-3">
-                    <div className="stat-title text-gray-900 font-bold">Debet</div>
-                    <div className="stat-value text-sm text-green-900">Rp. {parseToRupiahText(debet)}</div>
+        <div className="flex flex-col bg-white rounded-md">
+            <div className={`flex ${forPrint ? "" : "flex-col"} gap-y-2`}>
+                <div className={`border-b-2 py-5 ${forPrint ? 'pl-0 pr-6' : 'px-6'}`}>
+                    <p className="font-bold">Debet</p>
+                    <p className="font-bold text-sm text-green-900">Rp. {parseToRupiahText(debet)}</p>
                 </div>
-
-                <div className="stat pb-3">
-                    <div className="stat-title text-gray-900 font-bold">Kredit</div>
-                    <div className="stat-value text-sm text-red-900">Rp. {parseToRupiahText(kredit)}</div>
+                <div className={`border-b-2 py-5 ${forPrint ? 'pl-0 pr-6' : 'px-6'}`}>
+                    <p className="font-bold">Kredit</p>
+                    <p className="font-bold text-sm text-red-900">Rp. {parseToRupiahText(kredit)}</p>
                 </div>
-
-                <div className="stat pb-0">
-                    <div className="stat-title text-gray-900 font-bold">Difference</div>
-                    <div className="stat-value text-sm text-blue-900">Rp. {parseToRupiahText(Math.abs(debet - kredit))}</div>
+                <div className={`border-b-2 py-5 ${forPrint ? 'pl-0 pr-6' : 'px-6'}`}>
+                    <p className="font-bold">Difference</p>
+                    <p className="font-bold text-sm">Rp. {parseToRupiahText(Math.abs(debet - kredit))}</p>
                 </div>
-
             </div>
-
             {
                 !forPrint && <div className="mt-3">
                     {

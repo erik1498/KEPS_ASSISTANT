@@ -223,6 +223,13 @@ const Navigasi = ({
                                                             </li>
                                                         </> : <></>
                                                     }
+                                                    {
+                                                        getRolesInCookie("Transaksi_Laporan_Penjualan_Barang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/transaksi/penjualan/laporan_penjualan_barang" addClass={"my-1"} label={"Laporan Barang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
                                                 </ul>
                                             </li>
                                         </> : <></>
