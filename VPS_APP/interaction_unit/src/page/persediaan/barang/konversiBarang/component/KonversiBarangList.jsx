@@ -156,7 +156,7 @@ const KonversiBarangList = ({
                                         <td>
                                             {
                                                 preview ? <>{
-                                                    _getKategoriHargaBarangKodeBarang(item.stok_awal_barang_tujuan).label
+                                                    _getKategoriHargaBarangKodeBarang(item.stok_awal_barang_tujuan)?.label
                                                 }</> : <>
                                                     <FormSelect
                                                         optionsDataList={barangListGetKonversi.filter(x => x.daftar_barang_uuid == item.daftar_barang_uuid)}
