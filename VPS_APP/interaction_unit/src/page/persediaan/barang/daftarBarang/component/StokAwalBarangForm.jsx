@@ -132,7 +132,7 @@ const StokAwalBarangForm = ({
                     }}
                     selectName={`kategoriHargaBarang`}
                 />
-                <FormInputWithLabel
+                {/* <FormInputWithLabel
                     label={"Jumlah"}
                     type={"text"}
                     onchange={(e) => {
@@ -145,7 +145,7 @@ const StokAwalBarangForm = ({
                             name: "jumlah"
                         }
                     }
-                />
+                /> */}
                 <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
             </div>
         </form>
@@ -155,7 +155,7 @@ const StokAwalBarangForm = ({
                 <th>Daftar Gudang Name</th>
                 <th>Kode Barang</th>
                 <th>Satuan</th>
-                <th>Jumlah</th>
+                {/* <th>Jumlah</th> */}
                 <th>Aksi</th>
             </thead>
             <tbody>
@@ -167,7 +167,7 @@ const StokAwalBarangForm = ({
                                 <td>{item.daftar_gudang_name}</td>
                                 <td>{item.kategori_harga_barang_kode_barang}</td>
                                 <td>{item.satuan_barang_name}</td>
-                                <td width={150}>
+                                {/* <td width={150}>
                                     <FormInput
                                         name={"jumlah_item_" + i}
                                         type={"text"}
@@ -179,14 +179,14 @@ const StokAwalBarangForm = ({
                                             _updateJumlahStokAwalBarang(e.target.value, item.uuid)
                                         }}
                                     />
-                                </td>
+                                </td> */}
                                 <td width={100}>
                                     <div className="flex gap-x-2">
-                                        <FaSave
+                                        {/* <FaSave
                                             onClick={() => _updateStokAwalBarang(item)}
                                             className="text-green-800 cursor-pointer"
                                             size={12}
-                                        />
+                                        /> */}
                                         <FaTrash
                                             onClick={() => _deleteStokAwalBarang(item)}
                                             className="text-red-500 cursor-pointer"

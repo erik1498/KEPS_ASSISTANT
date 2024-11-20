@@ -48,6 +48,7 @@ export const createPesananPembelianBarangRepo = async (pesananPembelianBarangDat
         PesananPembelianBarangModel,
         {
             nomor_pesanan_pembelian_barang: pesananPembelianBarangData.nomor_pesanan_pembelian_barang,
+            kode_akun_perkiraan: pesananPembelianBarangData.kode_akun_perkiraan,
             tanggal_pesanan_pembelian_barang: pesananPembelianBarangData.tanggal_pesanan_pembelian_barang,
             supplier: pesananPembelianBarangData.supplier,
             enabled: pesananPembelianBarangData.enabled
@@ -76,6 +77,7 @@ export const updatePesananPembelianBarangByUuidRepo = async (uuid, pesananPembel
         PesananPembelianBarangModel,
         {
             nomor_pesanan_pembelian_barang: pesananPembelianBarangData.nomor_pesanan_pembelian_barang,
+            kode_akun_perkiraan: pesananPembelianBarangData.kode_akun_perkiraan,
             tanggal_pesanan_pembelian_barang: pesananPembelianBarangData.tanggal_pesanan_pembelian_barang,
             supplier: pesananPembelianBarangData.supplier,
         },

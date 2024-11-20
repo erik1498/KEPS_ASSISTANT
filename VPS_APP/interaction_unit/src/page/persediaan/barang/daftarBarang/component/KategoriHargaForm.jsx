@@ -27,15 +27,12 @@ const KategoriHargaForm = ({
         apiSatuanBarangCRUD
             .custom(``, "GET")
             .then(resData => {
-                const satuanFixed = resData.data.entry.filter(item => kategoriHargaBarangList.findIndex(x => x.satuan_barang == item.uuid) < 0)
-                if (satuanFixed.length > 0) {
-                    setSatuanBarangList(satuanFixed)
-                    setOpenForm(x => x = true)
-                    setSatuanBarang({
-                        label: satuanFixed[0].name,
-                        value: satuanFixed[0].uuid,
-                    })
-                }
+                setSatuanBarangList(resData.data.entry)
+                setOpenForm(x => x = true)
+                setSatuanBarang({
+                    label: resData.data.entry[0].name,
+                    value: resData.data.entry[0].uuid,
+                })
             })
             .catch(err => {
                 showError(err)
@@ -257,12 +254,10 @@ const KategoriHargaForm = ({
                 }
             </tbody>
         </table>
-        {
-            satuanBarangList.length == 0 ? <StokAwalBarangForm
-                idDaftarBarang={idDaftarbarang}
-                kategoriHargaBarangList={kategoriHargaBarangList}
-            /> : <></>
-        }
+        <StokAwalBarangForm
+            idDaftarBarang={idDaftarbarang}
+            kategoriHargaBarangList={kategoriHargaBarangList}
+        />
     </>
 }
 export default KategoriHargaForm

@@ -26,6 +26,7 @@ const FormSelectWithLabel = ({
                     disabled ? <>
                         <FormInput
                             value={selectValue.label}
+                            addClass={addClass}
                         />
                         {/* <p>{label}</p> */}
                     </> : <>

@@ -13,6 +13,13 @@ const PesananPembelianBarangModel = db.define("pesanan_pembelian_barang_tab",
                 notEmpty:true
             }
         },
+        kode_akun_perkiraan: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
         nomor_pesanan_pembelian_barang: {
             type: DataTypes.STRING,
             allowNull: false,
