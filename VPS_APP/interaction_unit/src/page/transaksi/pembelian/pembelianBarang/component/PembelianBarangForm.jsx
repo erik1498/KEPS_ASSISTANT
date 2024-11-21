@@ -273,7 +273,7 @@ const PembelianBarangForm = ({
                         <FormSelectWithLabel
                             label={"Kode Akun Pembelian Barang"}
                             disabled={editNomorPesananPembelian}
-                            addClass={"border-none !px-1"}
+                            addClass={editNomorPesananPembelian ? "border-none !px-1" : ""}
                             optionsDataList={kodeAkunPerkiraanList}
                             optionsLabel={["code", "name"]}
                             optionsValue={"uuid"}
