@@ -15,7 +15,6 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
                 debet: 0,
                 kredit: laba_rugi_data_berjalan.laba_rugi.gain
             }
-            labaTahunBerjalan.uraian = getBulanText(bulan - 1).toUpperCase() + " " + tahun
             data.push(labaTahunBerjalan)
         }
         if (laba_rugi_data_berjalan.laba_rugi.loss != null) {

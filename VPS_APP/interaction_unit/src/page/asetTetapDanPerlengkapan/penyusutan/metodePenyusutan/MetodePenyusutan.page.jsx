@@ -121,20 +121,6 @@ const MetodePenyusutanPage = () => {
                                 }
                             </label>
                             <div className="flex gap-x-2 items-center">
-                                <button className="btn btn-sm bg-blue-900 text-white border-none"
-                                    onClick={() => {
-                                        setMetodePenyusutanEdit(null)
-                                        setAddMetodePenyusutan(!addMetodePenyusutan)
-                                    }}
-                                ><FaPlus /> Tambah Metode Penyusutan</button>
-                                <div className="hidden">
-                                    <MetodePenyusutanPrint
-                                        data={metodePenyusutan}
-                                        ref={MetodePenyusutanPrintRef}
-                                        bulan={getBulanByIndex(new Date().getMonth())}
-                                        tahun={data.tahun}
-                                    />
-                                </div>
                                 <button
                                     onClick={handlePrint}
                                     className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
@@ -150,7 +136,6 @@ const MetodePenyusutanPage = () => {
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
                                         <th>Nama Metode Penyusutan</th>
-                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -160,17 +145,6 @@ const MetodePenyusutanPage = () => {
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
                                                     <td>{item.name}</td>
-                                                    <td className="flex gap-x-2">
-                                                        <FaPen size={12} className="text-yellow-500 cursor-pointer"
-                                                            onClick={() => {
-                                                                _editMetodePenyusutan(i)
-                                                            }} />
-                                                        <FaTrash size={12} className="text-red-500 cursor-pointer"
-                                                            onClick={() => {
-                                                                _deleteMetodePenyusutan(i)
-                                                            }}
-                                                        />
-                                                    </td>
                                                 </tr>
                                             </>
                                         })
