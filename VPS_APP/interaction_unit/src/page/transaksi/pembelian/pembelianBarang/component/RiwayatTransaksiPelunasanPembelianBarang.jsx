@@ -3,7 +3,7 @@ import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/num
 import { FaCheck, FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa"
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 import { apiPelunasanPembelianBarangCRUD, apiRincianPelunasanPembelianBarangCRUD, apiRincianPelunasanPembelianDendaBarangCRUD } from "../../../../../service/endPointList.api"
-import { deleteAllFormMessage, formValidation, showError } from "../../../../../helper/form.helper"
+import { deleteAllFormMessage, formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import FormInput from "../../../../../component/form/FormInput"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 
@@ -74,7 +74,10 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
                         nilai_pelunasan: `${listPelunasanPembelianBarang[index].nilai_pelunasan}`,
                         nilai_pelunasan_denda: `${listPelunasanPembelianBarang[index].nilai_pelunasan_denda}`
                     }
-                }).catch(err => showError(err))
+                }).then(() => {
+                    showAlert("Berhasil", "Data Berhasil Disimpan")
+                })
+                .catch(err => showError(err))
         }
         _getRincianPesananPembelianBarang()
     }
@@ -101,6 +104,8 @@ const RiwayatTransaksiPelunasanPembelianBarang = ({
                         tanggal: riwayatPelunasanPembelianBarang.tanggal,
                         kode_akun_perkiraan: riwayatPelunasanPembelianBarang.kode_akun_perkiraan,
                     }
+                }).then(() => {
+                    showAlert("Berhasil", "Data Berhasil Disimpan")
                 }).catch(err => showError(err))
         }
     }

@@ -104,9 +104,9 @@ const RiwayatTransaksiPengembalianDendaPenjualanBarang = ({
             detailOpen ? <>
                 <div className="ml-4 py-4 px-4">
                     {
-                        JSON.parse(riwayatPengembalianDendaPenjualanBarang.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count == 0 ? <></>
+                        JSON.parse(riwayatPengembalianDendaPenjualanBarang.perintah_stok_opname_nomor_surat_perintah)?.hasil_stok_opname_count == 0 ? <></>
                             :
-                            <p className="text-xs font-medium text-green-600 my-3">Telah Terdaftar Pada Surat Perintah Stok Opname {JSON.parse(riwayatPelunasanPenjualanBarang.perintah_stok_opname_nomor_surat_perintah).nomor_perintah_stok_opname}</p>
+                            <p className="text-xs font-medium text-green-600 my-3">Telah Terdaftar Pada Surat Perintah Stok Opname {JSON.parse(riwayatPelunasanPenjualanBarang.perintah_stok_opname_nomor_surat_perintah)?.nomor_perintah_stok_opname}</p>
                     }
                     {
                         detailOpen ? <>

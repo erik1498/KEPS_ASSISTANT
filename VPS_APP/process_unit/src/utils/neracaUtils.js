@@ -1,4 +1,4 @@
-import { HARTA_TYPE, MODAL_TYPE, UTANG_TYPE } from "../constant/labaRugiConstant.js"
+import { HARGA_POKOK_PENJUALAN_TYPE, HARTA_TYPE, MODAL_TYPE, UTANG_TYPE } from "../constant/labaRugiConstant.js"
 import { getBulanText, getSumMinusOfStringValue, getSumOfStringValue } from "./mathUtil.js"
 import { generateReportValue, generateReportValueByMinusValue, convertByPlusMinusValue, minusTypeCode } from "./validateKreditDebetTypeUtil.js"
 
@@ -29,6 +29,33 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
             data.push(labaTahunBerjalan)
         }
 
+        let indexPersediaanBarangDagang = 0
+
+        if (validate) {
+            const getPersediaanBarangDagang = data.filter(x => x.kode_akun_perkiraan_code == "108")
+
+
+            if (getPersediaanBarangDagang.length > 0) {
+                indexPersediaanBarangDagang = data.indexOf(getPersediaanBarangDagang[0])
+
+                data.push({
+                    kode_akun_perkiraan_name: 'Persediaan Barang Dagang',
+                    kode_akun_perkiraan_code: '108',
+                    kode_akun_perkiraan_type: 'Harta',
+                    debet: 0,
+                    kredit: getPersediaanBarangDagang[0].debet
+                })
+                data.push({
+                    kode_akun_perkiraan_name: 'Persediaan Barang Dagang Awal',
+                    kode_akun_perkiraan_code: '701',
+                    kode_akun_perkiraan_type: 'Harga Pokok Penjualan',
+                    debet: getPersediaanBarangDagang[0].debet,
+                    kredit: 0
+                })
+            }
+        }
+
+
         let resultAset = []
         let resultAsetCount = 0.0
 
@@ -37,6 +64,9 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
 
         let resultModal = []
         let resultModalCount = 0.0
+
+        let resultHargaPokokPenjualan = []
+        let resultHargaPokokPenjualanCount = 0.0
 
         for (let i = 0; i < data.length; i++) {
             data[i] = minusTypeCode(data[i])
@@ -61,11 +91,19 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
                     value: generateReportValue(data[i])
                 })
             }
+            if (data[i].kode_akun_perkiraan_type == HARGA_POKOK_PENJUALAN_TYPE && data[i].kode_akun_perkiraan_code == "701") {
+                data[i] = convertByPlusMinusValue(data[i])
+                resultHargaPokokPenjualan.push({
+                    ...data[i],
+                    value: generateReportValue(data[i])
+                })
+            }
         }
 
         resultAsetCount = getSumMinusOfStringValue([getSumOfStringValue(resultAset.map(i => i.debet)), getSumOfStringValue(resultAset.map(i => i.kredit))])
         resultUtangCount = getSumMinusOfStringValue([getSumOfStringValue(resultUtang.map(i => i.debet)), getSumOfStringValue(resultUtang.map(i => i.kredit))])
         resultModalCount = getSumMinusOfStringValue([getSumOfStringValue(resultModal.map(i => i.debet)), getSumOfStringValue(resultModal.map(i => i.kredit))])
+        resultHargaPokokPenjualanCount = getSumMinusOfStringValue([getSumOfStringValue(resultHargaPokokPenjualan.map(i => i.debet)), getSumOfStringValue(resultHargaPokokPenjualan.map(i => i.kredit))])
 
 
 
@@ -81,6 +119,10 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
             modal: {
                 data: resultModal,
                 count: generateReportValueByMinusValue(resultModalCount)
+            },
+            harga_pokok_penjualan: {
+                data: resultHargaPokokPenjualan,
+                count: generateReportValueByMinusValue(resultHargaPokokPenjualanCount)
             },
             neraca: {
                 aktiva: resultAsetCount,

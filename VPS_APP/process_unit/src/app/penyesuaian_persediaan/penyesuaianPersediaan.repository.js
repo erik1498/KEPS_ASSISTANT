@@ -154,7 +154,7 @@ export const getPenyesuaianPersediaanByPerintahStokOpnameRepo = async (perintah_
                         ), 0) AS pembelian,
                         IFNULL((
                             SELECT 
-                                SUM(rrpbt.jumlah) 
+                                SUM(rrpbt.retur) 
                             FROM ${generateDatabaseName(req_id)}.rincian_retur_pembelian_barang_tab rrpbt 
                             JOIN ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_pembelian_barang
                             JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt ON rppbt.uuid = rrpbt.rincian_pesanan_pembelian_barang

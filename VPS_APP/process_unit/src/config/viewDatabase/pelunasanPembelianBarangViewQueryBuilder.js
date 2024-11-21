@@ -43,7 +43,7 @@ export const pelunasanPembelianBarangViewQueryBuilder = (req_id) => {
             JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt ON ppbt.uuid= rppbt.pelunasan_pembelian_barang
             JOIN ${generateDatabaseName(req_id)}.faktur_pembelian_barang_tab fpbt ON fpbt.pesanan_pembelian_barang = ppbt2.uuid 
             JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt2.supplier 
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppbt.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "6453a29e-d506-46e5-8f05-1ff8817b8813" 
             WHERE rppbt.enabled = 1
             AND ppbt.enabled = 1
             AND rppbt2.enabled = 1
@@ -90,7 +90,7 @@ export const pelunasanPembelianBarangViewQueryBuilder = (req_id) => {
             JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt ON ppbt.uuid= rppbt.pelunasan_pembelian_barang
             JOIN ${generateDatabaseName(req_id)}.faktur_pembelian_barang_tab fpbt ON fpbt.pesanan_pembelian_barang = ppbt2.uuid 
             JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt2.supplier 
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "6453a29e-d506-46e5-8f05-1ff8817b8813"
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = ppbt.kode_akun_perkiraan
             WHERE rppbt.enabled = 1
             AND ppbt.enabled = 1
             AND rppbt2.enabled = 1

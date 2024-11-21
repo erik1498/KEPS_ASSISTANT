@@ -55,7 +55,7 @@ export const createRincianPengembalianDendaPenjualanBarangService = async (rinci
     LOGGER(logType.INFO, `Start createRincianPengembalianDendaPenjualanBarangService`, rincianPengembalianDendaPenjualanBarangData, req_identity)
     rincianPengembalianDendaPenjualanBarangData.enabled = 1
 
-    const pengembalianDendaPenjualanBarang = await getPengembalianDendaPenjualanBarangByUuidService(rincianPengembalianDendaPenjualanBarangData.pengembalian_penjualan_barang, req_identity)
+    const pengembalianDendaPenjualanBarang = await getPengembalianDendaPenjualanBarangByUuidService(rincianPengembalianDendaPenjualanBarangData.pengembalian_denda_penjualan_barang, req_identity)
 
     if (pengembalianDendaPenjualanBarang.nomor_pengembalian_denda_penjualan_barang == "EMPTY" || pengembalianDendaPenjualanBarang.bukti_transaksi == "EMPTY") {
         throw Error(JSON.stringify({
@@ -65,6 +65,8 @@ export const createRincianPengembalianDendaPenjualanBarangService = async (rinci
     }
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pengembalianDendaPenjualanBarang.tanggal, null, null, req_identity)
+
+    console.log("RINCIAN PENGEMBALIAN DENDA", rincianPengembalianDendaPenjualanBarangData)
 
     const rincianPengembalianDendaPenjualanBarang = await createRincianPengembalianDendaPenjualanBarangRepo(rincianPengembalianDendaPenjualanBarangData, req_identity)
     return rincianPengembalianDendaPenjualanBarang

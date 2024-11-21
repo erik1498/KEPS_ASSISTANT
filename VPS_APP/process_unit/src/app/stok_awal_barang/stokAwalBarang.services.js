@@ -1,7 +1,8 @@
+import { formatDate } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { checkDaftarBarangAllowToEditService } from "../daftar_barang/daftarBarang.services.js"
-import { createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getDaftarGudangBarangByKategoriHargaBarangUUIDRepo, getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo, getRiwayatTransaksiPenjualanByStokAwalBarangUuidRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, getStokAwalBarangByUuidRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
+import { checkStokAwalBarangAllowToEditRepo, createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getDaftarGudangBarangByKategoriHargaBarangUUIDRepo, getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo, getRiwayatTransaksiPenjualanByStokAwalBarangUuidRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, getStokAwalBarangByUuidRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
 
 export const getAllStokAwalBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllStokAwalBarangService", null, req_identity)
@@ -90,7 +91,7 @@ export const deleteStokAwalBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteStokAwalBarangByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getStokAwalBarangByUuidService(uuid, req_identity)
 
-    await checkDaftarBarangAllowToEditService(false, beforeData.daftar_barang, req_identity)
+    await checkStokAwalBarangAllowToEditService(beforeData.uuid, req_identity)
 
     await deleteStokAwalBarangByUuidRepo(uuid, req_identity)
     return true
@@ -100,7 +101,7 @@ export const updateStokAwalBarangByUuidService = async (uuid, stokAwalBarangData
     LOGGER(logType.INFO, `Start updateStokAwalBarangByUuidService [${uuid}]`, stokAwalBarangData, req_identity)
     const beforeData = await getStokAwalBarangByUuidService(uuid, req_identity)
 
-    await checkDaftarBarangAllowToEditService(false, beforeData.daftar_barang, req_identity)
+    await checkStokAwalBarangAllowToEditService(beforeData.uuid, req_identity)
 
     const stokAwalBarang = await updateStokAwalBarangByUuidRepo(uuid, stokAwalBarangData, req_identity)
 
@@ -110,6 +111,43 @@ export const updateStokAwalBarangByUuidService = async (uuid, stokAwalBarangData
     }, req_identity)
 
     return stokAwalBarang
+}
+
+export const checkStokAwalBarangAllowToEditService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkStokAwalBarangAllowToEditService`, { uuid }, req_identity)
+
+    const daftarBarang = await checkStokAwalBarangAllowToEditRepo(uuid, req_identity)
+
+    if (daftarBarang.length > 0) {
+        if (daftarBarang[0].pesanan_penjualan_barang) {
+            const data = JSON.parse(daftarBarang[0].pesanan_penjualan_barang)
+            throw Error(JSON.stringify({
+                message: `Tidak Dapat Dieksekusi, Barang Sudah Digunakan Pada Pesanan Penjualan Barang ${data.nomor_pesanan_penjualan_barang} Pada Tanggal ${formatDate(data.tanggal)}`,
+                prop: "error"
+            }))
+        }
+        if (daftarBarang[0].pesanan_pembelian_barang) {
+            const data = JSON.parse(daftarBarang[0].pesanan_pembelian_barang)
+            throw Error(JSON.stringify({
+                message: `Tidak Dapat Dieksekusi, Barang Sudah Digunakan Pada Pesanan Pembelian Barang ${data.nomor_pesanan_pembelian_barang} Pada Tanggal ${formatDate(data.tanggal)}`,
+                prop: "error"
+            }))
+        }
+        if (daftarBarang[0].transfer_barang) {
+            const data = JSON.parse(daftarBarang[0].transfer_barang)
+            throw Error(JSON.stringify({
+                message: `Tidak Dapat Dieksekusi, Barang Sudah Digunakan Pada Transfer Barang ${data.kode_transfer_barang} Pada Tanggal ${formatDate(data.tanggal)}`,
+                prop: "error"
+            }))
+        }
+        if (daftarBarang[0].konversi_barang) {
+            const data = JSON.parse(daftarBarang[0].konversi_barang)
+            throw Error(JSON.stringify({
+                message: `Tidak Dapat Dieksekusi, Barang Sudah Digunakan Pada Konversi Barang ${data.kode_konversi_barang} Pada Tanggal ${formatDate(data.tanggal)}`,
+                prop: "error"
+            }))
+        }
+    }
 }
 
 export const getStokAwalBarangByDaftarGudangDanKategoriHargaBarangService = async (daftar_gudang, kategori_harga_barang, req_identity) => {

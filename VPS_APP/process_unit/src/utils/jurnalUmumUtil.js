@@ -107,6 +107,9 @@ export const convertNeracaToJurnalUmum = (data, bulan, tahun) => {
             if (dataPush.type_akun == "Utang") {
                 jurnalUmum.push(dataPush)
             }
+            if (dataPush.type_akun == "Harga Pokok Penjualan") {
+                jurnalUmum.push(dataPush)
+            }
         }
         res(jurnalUmum)
     })

@@ -3,7 +3,7 @@ import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/num
 import { FaCheck, FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa"
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 import { apiReturPembelianBarangCRUD, apiRincianReturPembelianBarangCRUD } from "../../../../../service/endPointList.api"
-import { deleteAllFormMessage, formValidation, showError } from "../../../../../helper/form.helper"
+import { deleteAllFormMessage, formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import FormInput from "../../../../../component/form/FormInput"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 
@@ -75,6 +75,8 @@ const RiwayatTransaksiReturPembelianBarang = ({
                         retur_sebelum: `${listReturPembelianBarang[index].retur_sebelum}`,
                         nilai_retur_sebelum: `${listReturPembelianBarang[index].nilai_retur_sebelum}`
                     }
+                }).then(() => {
+                    showAlert("Berhasil", "Data Berhasil Disimpan")
                 })
         }
         _getRincianPesananPembelianBarang()
@@ -102,6 +104,8 @@ const RiwayatTransaksiReturPembelianBarang = ({
                         tanggal: riwayatReturPembelianBarang.tanggal,
                         kode_akun_perkiraan: riwayatReturPembelianBarang.kode_akun_perkiraan,
                     }
+                }).then(() => {
+                    showAlert("Berhasil", "Data Berhasil Disimpan")
                 }).catch(err => showError(err))
         }
     }

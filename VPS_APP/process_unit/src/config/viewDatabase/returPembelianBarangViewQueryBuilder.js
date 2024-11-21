@@ -10,7 +10,7 @@ export const returPembelianBarangViewQueryBuilder = (req_id) => {
             LPAD(MONTH(rpbt.tanggal), 2, '0') AS bulan,
             YEAR(rpbt.tanggal) AS tahun,
             0 AS transaksi,
-            10000 AS debet,
+            rrpbt.nilai_retur AS debet,
             0 AS kredit,
             kapt.name AS nama_akun,
             kapt.code AS kode_akun,
@@ -58,7 +58,7 @@ export const returPembelianBarangViewQueryBuilder = (req_id) => {
             YEAR(rpbt.tanggal) AS tahun,
             1 AS transaksi,
             0 AS debet,
-            10000 AS kredit,
+            rrpbt.nilai_retur AS kredit,
             kapt.name AS nama_akun,
             kapt.code AS kode_akun,
             kapt.type AS type_akun,
@@ -90,7 +90,7 @@ export const returPembelianBarangViewQueryBuilder = (req_id) => {
         JOIN ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt ON rpbt.uuid= rrpbt.retur_pembelian_barang
         JOIN ${generateDatabaseName(req_id)}.faktur_pembelian_barang_tab fpbt ON fpbt.pesanan_pembelian_barang = ppbt2.uuid 
         JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt2.supplier 
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "6453a29e-d506-46e5-8f05-1ff8817b8813"	
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "dea2ce84-fb39-4c6d-bac2-99e37b4fd492"	
         WHERE rrpbt.enabled = 1
         AND rpbt.enabled = 1
         AND rppbt2.enabled = 1

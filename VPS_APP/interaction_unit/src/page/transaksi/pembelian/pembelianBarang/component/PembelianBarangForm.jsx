@@ -18,9 +18,6 @@ const PembelianBarangForm = ({
     const dataContext = useDataContext()
     const { data } = dataContext
 
-    const [kodeAkunPerkiraanList, setKodeAkunPerkiraanList] = useState([])
-    const [kodeAkunPerkiraan, setKodeAkunPerkiraan] = useState()
-
     const [tanggalTransaksiAkhir, setTanggalTransaksiAkhir] = useState(getHariTanggalFull())
     const [fakturStatus, setFakturStatus] = useState(false)
     const [ppnStatus, setPPNStatus] = useState(false)
@@ -93,7 +90,6 @@ const PembelianBarangForm = ({
                 .custom(pesananPembelianBarangSelected ? `/${pesananPembelianBarangSelected.value}` : "", pesananPembelianBarangSelected ? "PUT" : `POST`, null, {
                     data: {
                         nomor_pesanan_pembelian_barang: nomorPesananPembelianBarang,
-                        kode_akun_perkiraan: kodeAkunPerkiraan.value,
                         tanggal_pesanan_pembelian_barang: tanggalPesananPembelianBarang,
                         supplier: supplier.uuid
                     }
@@ -130,14 +126,6 @@ const PembelianBarangForm = ({
                 setTanggalPesananPembelianBarang(pesananPembelianBarangSelectedGet[0].tanggal_pesanan_pembelian_barang)
                 setNomorPesananPembelianBarang(pesananPembelianBarangSelectedGet[0].nomor_pesanan_pembelian_barang)
             }
-            
-            const kodeAkunPerkiraanGet = kodeAkunPerkiraanList.filter(x => x.uuid == pesananPembelianBarangSelectedGet[0].kode_akun_perkiraan)
-            if (kodeAkunPerkiraanGet.length > 0) {
-                setKodeAkunPerkiraan(x => x = {
-                    label: `${kodeAkunPerkiraanGet[0].code} - ${kodeAkunPerkiraanGet[0].name}`,
-                    value: kodeAkunPerkiraanGet[0].uuid
-                })
-            }
         }
     }
 
@@ -161,20 +149,6 @@ const PembelianBarangForm = ({
             }).catch(err => showError(err))
     }
 
-    const _getDataKodeAkunPerkiraan = () => {
-        apiKodeAkunCRUD
-            .custom(`/kas_bank`, "GET")
-            .then(resData => {
-                setKodeAkunPerkiraanList(x => x = resData.data)
-                if (resData.data.length > 0) {
-                    setKodeAkunPerkiraan(x => x = {
-                        label: `${resData.data[0].code} - ${resData.data[0].name}`,
-                        value: resData.data[0].uuid
-                    })
-                }
-            }).catch(err => showError(err))
-    }
-
     useEffect(() => {
         if (pilihPesananPembelianBarang) {
             _getAllPesananPembelianBarang()
@@ -188,7 +162,6 @@ const PembelianBarangForm = ({
 
     useEffect(() => {
         _getDataSupplier()
-        _getDataKodeAkunPerkiraan()
     }, [])
 
     return <>
@@ -270,21 +243,6 @@ const PembelianBarangForm = ({
                                 </>
                             }
                         </div>
-                        <FormSelectWithLabel
-                            label={"Kode Akun Pembelian Barang"}
-                            disabled={editNomorPesananPembelian}
-                            addClass={editNomorPesananPembelian ? "border-none !px-1" : ""}
-                            optionsDataList={kodeAkunPerkiraanList}
-                            optionsLabel={["code", "name"]}
-                            optionsValue={"uuid"}
-                            optionsLabelIsArray={true}
-                            optionsDelimiter={"-"}
-                            selectValue={kodeAkunPerkiraan}
-                            onchange={(e) => {
-                                setKodeAkunPerkiraan(e)
-                            }}
-                            selectName={`setKodeAkunPerkiraan`}
-                        />
                         <FormInputWithLabel
                             label={"Tanggal Pesanan Pembelian Barang"}
                             type={"datetime-local"}

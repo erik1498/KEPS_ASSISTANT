@@ -82,7 +82,7 @@ export const pengembalianDendaPembelianBarangViewQueryBuilder = (req_id) => {
         JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_pembelian_barang_tab pdpbt ON pdpbt.uuid= rpdpbt.pengembalian_denda_pembelian_barang 
         JOIN ${generateDatabaseName(req_id)}.faktur_pembelian_barang_tab fpbt ON fpbt.pesanan_pembelian_barang = ppbt.uuid 
         JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier 
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "c28c00b1-b274-4c33-9f47-2e0e7a01b21e"
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "c48a5704-ffa6-471b-a468-12a74aedd100"
         WHERE rppbt.enabled = 1
         AND ppbt.enabled = 1
         AND rppbt.enabled = 1

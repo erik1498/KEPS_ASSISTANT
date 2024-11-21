@@ -75,22 +75,6 @@ export const createPelunasanPenjualanBarangService = async (pelunasanPenjualanBa
 
     const pelunasanPenjualanBarang = await createPelunasanPenjualanBarangRepo(pelunasanPenjualanBarangData, req_identity)
 
-    const checkDenda = await getCekDendaByPelunasanPenjualanUUIDService(pelunasanPenjualanBarang.uuid, req_identity)
-
-    if (checkDenda == 1) {
-
-        const kodeAkunPerkiraan = await getKodeAkunPerkiraanByUuidService("eb5b6dcd-1146-4550-a9f0-1fe8439b085f", req_identity)
-
-        await updatePelunasanPenjualanBarangByUuidRepo(pelunasanPenjualanBarang.uuid, {
-            faktur_penjualan_barang: pelunasanPenjualanBarang.faktur_penjualan_barang,
-            tanggal: pelunasanPenjualanBarang.tanggal,
-            bukti_transaksi: pelunasanPenjualanBarang.bukti_transaksi,
-            nomor_pelunasan_penjualan_barang: pelunasanPenjualanBarang.nomor_pelunasan_penjualan_barang,
-            kode_akun_perkiraan: kodeAkunPerkiraan.uuid,
-            keterangan: pelunasanPenjualanBarang.keterangan,
-        }, req_identity)
-    }
-
     return pelunasanPenjualanBarang
 }
 

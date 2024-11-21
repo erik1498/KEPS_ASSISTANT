@@ -18,6 +18,10 @@ const JurnalStokOpnameUraian = ({
                             data?.detail_data?.customer_name &&
                             <h1>{data?.detail_data?.customer_name} ( {data?.detail_data?.customer_code} )</h1>
                         }
+                        {
+                            data?.detail_data?.supplier_name &&
+                            <h1>{data?.detail_data?.supplier_name} ( {data?.detail_data?.supplier_code} )</h1>
+                        }
                     </div>
                 </div>
                 <div className="mt-3 flex font-normal gap-x-2">

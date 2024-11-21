@@ -27,7 +27,9 @@ export const getJurnalUmumByBulanSebelumService = async (bulan, tahun, req_id) =
             laporanNeracaSebelummnya?.harta?.data
                 .concat(laporanNeracaSebelummnya?.utang?.data)
                 .concat(laporanNeracaSebelummnya?.modal?.data)
+                .concat(laporanNeracaSebelummnya?.harga_pokok_penjualan?.data)
             , bulan, tahun)
+
         return jurnalUmumBulanSebelum
     }
 }

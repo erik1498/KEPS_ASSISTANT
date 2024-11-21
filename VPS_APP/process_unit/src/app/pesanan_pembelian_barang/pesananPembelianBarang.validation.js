@@ -2,11 +2,6 @@ import Joi from "joi"
 
 export const pesananPembelianBarangValidation = (payload) => {
     const schema = Joi.object({
-        kode_akun_perkiraan: Joi.string().required().messages({
-            'string.base': "Harus Berupa Text",
-            "string.empty": "Harus Diisi",
-            "any.required": "Harus Diisi",
-        }),
         nomor_pesanan_pembelian_barang: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
