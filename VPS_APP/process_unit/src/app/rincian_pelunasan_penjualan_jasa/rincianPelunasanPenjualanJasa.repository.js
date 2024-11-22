@@ -104,7 +104,7 @@ export const getAllRincianPesananPenjualanJasaByPelunasanPenjualanRepo = async (
                     rppbt.uuid, 
                     khbt.kode_jasa AS kategori_harga_jasa_kode_jasa,
                     dbt.name AS daftar_jasa_name,
-                    dgt.name AS daftar_gudang_name,
+                    ct.name AS cabang_name,
                     sbt.name AS satuan_jasa_name,
                     rppbt.harga,
                     rppbt.ppn,
@@ -117,7 +117,7 @@ export const getAllRincianPesananPenjualanJasaByPelunasanPenjualanRepo = async (
                 FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_jasa_tab rppbt 
                 JOIN ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khbt ON khbt.uuid = rppbt.kategori_harga_jasa 
                 JOIN ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt ON sabt.uuid = rppbt.stok_awal_jasa 
-                JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
+                JOIN ${generateDatabaseName(req_id)}.cabang_tab ct ON ct.uuid = sabt.cabang
                 JOIN ${generateDatabaseName(req_id)}.daftar_jasa_tab dbt ON dbt.uuid = khbt.daftar_jasa
                 JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sbt ON sbt.uuid = khbt.satuan_jasa
                 JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_jasa_tab fpbt ON fpbt.pesanan_penjualan_jasa = rppbt.pesanan_penjualan_jasa 

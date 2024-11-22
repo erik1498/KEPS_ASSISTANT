@@ -1,5 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
+import { getReturPenjualanJasaByUuidService } from "../retur_penjualan_jasa/returPenjualanJasa.services.js"
 import { createRincianReturPenjualanJasaRepo, deleteRincianReturPenjualanJasaByUuidRepo, getAllRincianPesananPenjualanJasaByReturPenjualanRepo, getAllRincianReturPenjualanJasaRepo, getRincianReturPenjualanJasaByUuidRepo, updateRincianReturPenjualanJasaByUuidRepo } from "./rincianReturPenjualanJasa.repository.js"
 
 export const getAllRincianReturPenjualanJasaService = async (query, req_identity) => {
@@ -46,20 +48,43 @@ export const createRincianReturPenjualanJasaService = async (rincianReturPenjual
     LOGGER(logType.INFO, `Start createRincianReturPenjualanJasaService`, rincianReturPenjualanJasaData, req_identity)
     rincianReturPenjualanJasaData.enabled = 1
 
+    const returPenjualanJasa = await getReturPenjualanJasaByUuidService(rincianReturPenjualanJasaData.retur_penjualan_jasa, req_identity)
+
+    if (returPenjualanJasa.nomor_retur_penjualan_jasa == "EMPTY" || returPenjualanJasa.bukti_transaksi == "EMPTY") {
+        throw Error(JSON.stringify({
+            message: "Nomor Retur Penjualan Jasa Atau Bukti Transaksi Tidak Boleh Kosong",
+            prop: "error"
+        }))
+    }
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanJasa.tanggal, null, null, req_identity)
+
     const rincianReturPenjualanJasa = await createRincianReturPenjualanJasaRepo(rincianReturPenjualanJasaData, req_identity)
     return rincianReturPenjualanJasa
 }
 
 export const deleteRincianReturPenjualanJasaByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteRincianReturPenjualanJasaByUuidService [${uuid}]`, null, req_identity)
+
+    const returPenjualanJasa = await getReturPenjualanJasaByUuidService(rincianReturPenjualanJasaData.retur_penjualan_jasa, req_identity)
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanJasa.tanggal, null, null, req_identity)
+
     await getRincianReturPenjualanJasaByUuidService(uuid, req_identity)
+
     await deleteRincianReturPenjualanJasaByUuidRepo(uuid, req_identity)
     return true
 }
 
 export const updateRincianReturPenjualanJasaByUuidService = async (uuid, rincianReturPenjualanJasaData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateRincianReturPenjualanJasaByUuidService [${uuid}]`, rincianReturPenjualanJasaData, req_identity)
+
+    const returPenjualanJasa = await getReturPenjualanJasaByUuidService(rincianReturPenjualanJasaData.retur_penjualan_jasa, req_identity)
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanJasa.tanggal, null, null, req_identity)
+
     const beforeData = await getRincianReturPenjualanJasaByUuidService(uuid, req_identity)
+
     const rincianReturPenjualanJasa = await updateRincianReturPenjualanJasaByUuidRepo(uuid, rincianReturPenjualanJasaData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

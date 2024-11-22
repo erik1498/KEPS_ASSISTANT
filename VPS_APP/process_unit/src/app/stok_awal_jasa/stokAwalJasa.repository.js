@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import StokAwalJasaModel from "./stokAwalJasa.model.js";
-import { generateDatabaseName, insertQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
+import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
 export const getAllStokAwalJasaRepo = async (pageNumber, size, search, req_id) => {
@@ -30,102 +30,50 @@ export const getAllStokAwalJasaRepo = async (pageNumber, size, search, req_id) =
     }
 }
 
-export const getStokAwalJasaByJasaUUIDRepo = async (uuid, req_id) => {
-    const stokAwalJasas = await db.query(
-        // `
-        //     SELECT 
-        //         sajt.*,
-        //         dgt.name AS daftar_gudang_name,
-        //         sjt.name AS satuan_jasa_name,
-        //         IFNULL((
-        //             SELECT 
-        //                 SUM(rppt.jumlah) - IFNULL((
-        //                     SELECT 
-        //                         SUM(rrpt.retur)
-        //                     FROM rincian_retur_penjualan_tab rrpt 
-        //                     JOIN retur_penjualan_tab rpt ON rpt.uuid = rrpt.retur_penjualan
-        //                     WHERE rrpt.rincian_pesanan_penjualan = rppt.uuid
-        //                 ), 0)
-        //             FROM rincian_pesanan_penjualan_tab rppt 
-        //             JOIN pesanan_penjualan_tab ppt ON ppt.uuid = rppt.pesanan_penjualan 
-        //             JOIN faktur_penjualan_tab fpt ON fpt.pesanan_penjualan = ppt.uuid 
-        //             WHERE rppt.kategori_harga = sajt.kategori_harga 
-        //         ), 0) AS jumlah_penjualan,
-        //         IFNULL((
-        //             SELECT 
-        //                 SUM(rppt.jumlah) - IFNULL((
-        //                     SELECT 
-        //                         SUM(rrpt.retur)
-        //                     FROM rincian_retur_pembelian_tab rrpt 
-        //                     JOIN retur_pembelian_tab rpt ON rpt.uuid = rrpt.retur_pembelian
-        //                     WHERE rrpt.rincian_pesanan_pembelian = rppt.uuid
-        //                 ), 0)
-        //             FROM rincian_pesanan_pembelian_tab rppt 
-        //             JOIN pesanan_pembelian_tab ppt ON ppt.uuid = rppt.pesanan_pembelian 
-        //             JOIN faktur_pembelian_tab fpt ON fpt.pesanan_pembelian = ppt.uuid 
-        //             WHERE rppt.kategori_harga = sajt.kategori_harga 
-        //         ), 0) AS jumlah_pembelian,
-        //         IFNULL((
-        //             SELECT 
-        //                 SUM(rtjt.jumlah)
-        //             FROM rincian_transfer_jasa_tab rtjt 
-        //             JOIN transfer_jasa_tab tjt ON tjt.uuid = rtjt.transfer_jasa 
-        //             WHERE sajt.gudang = tjt.gudang_asal
-        //             AND rtjt.stok_awal_jasa = sajt.uuid 
-        //         ), 0) AS transfer_jasa_keluar, 
-        //         IFNULL((
-        //             SELECT 
-        //                 SUM(rtjt.jumlah)
-        //             FROM rincian_transfer_jasa_tab rtjt 
-        //             JOIN transfer_jasa_tab tjt ON tjt.uuid = rtjt.transfer_jasa 
-        //             WHERE sajt.gudang != tjt.gudang_asal
-        //             AND rtjt.stok_awal_jasa = sajt.uuid 
-        //         ), 0) AS transfer_jasa_masuk, 
-        //         IFNULL((
-        //             SELECT 
-        //                 SUM(kjt.jumlah_stok_awal_jasa_asal)
-        //             FROM konversi_jasa_tab kjt 
-        //             WHERE kjt.stok_awal_jasa_asal = sajt.uuid
-        //         ), 0) AS konversi_jasa_keluar,
-        //         IFNULL((
-        //             SELECT 
-        //                 SUM(kjt.jumlah_stok_awal_jasa_akhir)
-        //             FROM konversi_jasa_tab kjt 
-        //             WHERE kjt.stok_awal_jasa_akhir = sajt.uuid
-        //         ), 0) AS konversi_jasa_masuk,
-        //         IFNULL((
-        //             SELECT
-        //                 SUM(rtjt2.jumlah)
-        //             FROM rincian_tunjangan_jasa_tab rtjt2 
-        //             JOIN tunjangan_jasa_tab tjt2 ON tjt2.uuid = rtjt2.tunjangan_jasa
-        //             WHERE rtjt2.stok_awal_jasa = sajt.uuid
-        //         ), 0) AS tunjangan_jasa,
-        //         IFNULL((
-        //             SELECT 
-        //                 ppt.kuantitas 
-        //             FROM penyesuaian_persediaan_tab ppt 
-        //             JOIN hasil_stok_opname_tab hsot ON hsot.uuid = ppt.hasil_stok_opname 
-        //             JOIN perintah_stok_opname_tab psot ON psot.uuid = hsot.perintah_stok_opname 
-        //             WHERE hsot.stok_awal_jasa = sajt.uuid 
-        //             ORDER BY psot.tanggal DESC LIMIT 1
-        //         ), 0) AS penyesuaian_persediaan
-        //     FROM stok_awal_jasa_tab sajt 
-        //     JOIN daftar_gudang_tab dgt ON sajt.gudang = dgt.uuid 
-        //     JOIN kategori_harga_tab kht ON kht.uuid = sajt.kategori_harga 
-        //     JOIN satuan_jasa_tab sjt ON sjt.uuid = kht.satuan_jasa 
-        //     WHERE sajt.daftar_jasa = "${uuid}"
-        // `,
+export const getStokAwalJasaByUuidRepo = async (uuid, req_id) => {
+    return selectOneQueryUtil(
+        generateDatabaseName(req_id),
+        StokAwalJasaModel,
+        null,
+        {
+            uuid,
+            enabled: 1
+        }
+    )
+}
+
+export const getDaftarCabangByKategoriHargaJasaUUIDRepo = async (kategori_harga_jasa_uuid, req_id) => {
+    const daftarCabangs = await db.query(
         `
             SELECT 
-                sajt.*,
-                dgt.name AS daftar_gudang_name,
-                khjt.kode_jasa AS kategori_harga_jasa_kode_jasa,
-                sjt.name AS satuan_jasa_name
-            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sajt
-            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sajt.daftar_gudang 
-            JOIN ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khjt ON khjt.uuid = sajt.kategori_harga_jasa 
-            JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sjt ON sjt.uuid = khjt.satuan_jasa 
-            WHERE sajt.daftar_jasa = "${uuid}"
+                sabt.uuid,
+                ct.name AS cabang_name
+            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt 
+            JOIN ${generateDatabaseName(req_id)}.cabang_tab ct ON ct.uuid = sabt.cabang
+            WHERE sabt.kategori_harga_jasa = "${kategori_harga_jasa_uuid}"
+            AND sabt.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+    return daftarCabangs
+}
+
+export const getStokAwalJasaByJasaUUIDRepo = async (uuid, req_id) => {
+    const stokAwalJasas = await db.query(
+        `
+            SELECT 
+                sabt.*,
+                ct.name AS cabang_name,
+                khbt.kode_jasa AS kategori_harga_jasa_kode_jasa,
+                sbt.name AS satuan_jasa_name
+            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt
+            JOIN ${generateDatabaseName(req_id)}.cabang_tab ct ON ct.uuid = sabt.cabang 
+            JOIN ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khbt ON khbt.uuid = sabt.kategori_harga_jasa 
+            JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sbt ON sbt.uuid = khbt.satuan_jasa 
+            WHERE sabt.daftar_jasa = "${uuid}"
+            AND sabt.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -142,7 +90,7 @@ export const createStokAwalJasaRepo = async (stokAwalJasaData, req_id) => {
         StokAwalJasaModel,
         {
             daftar_jasa: stokAwalJasaData.daftar_jasa,
-            daftar_gudang: stokAwalJasaData.daftar_gudang,
+            cabang: stokAwalJasaData.cabang,
             kategori_harga_jasa: stokAwalJasaData.kategori_harga_jasa,
             jumlah: stokAwalJasaData.jumlah,
             enabled: stokAwalJasaData.enabled
@@ -174,7 +122,7 @@ export const updateStokAwalJasaByUuidRepo = async (uuid, stokAwalJasaData, req_i
         StokAwalJasaModel,
         {
             daftar_jasa: stokAwalJasaData.daftar_jasa,
-            daftar_gudang: stokAwalJasaData.daftar_gudang,
+            cabang: stokAwalJasaData.cabang,
             kategori_harga_jasa: stokAwalJasaData.kategori_harga_jasa,
             jumlah: stokAwalJasaData.jumlah,
         },
@@ -184,16 +132,308 @@ export const updateStokAwalJasaByUuidRepo = async (uuid, stokAwalJasaData, req_i
     )
 }
 
-export const getStokAwalJasaByDaftarGudangDanKategoriHargaJasaRepo = async(daftar_gudang, kategori_harga_jasa, req_id) => {
+export const getStokAwalJasaByDaftarCabangDanKategoriHargaJasaRepo = async (cabang, kategori_harga_jasa, req_id) => {
     return await db.query(
         `
             SELECT
                 COUNT(0) AS count 
-            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sajt 
-            WHERE sajt.daftar_gudang = "${daftar_gudang}"
-            AND sajt.kategori_harga_jasa = "${kategori_harga_jasa}"
-            AND sajt.enabled = 1
+            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt 
+            WHERE sabt.cabang = "${cabang}"
+            AND sabt.kategori_harga_jasa = "${kategori_harga_jasa}"
+            AND sabt.enabled = 1
             LIMIT 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
+export const getRiwayatTransaksiPenjualanByStokAwalJasaUuidRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                res.*
+            FROM (
+                SELECT 
+                    ppbt.nomor_pesanan_penjualan_jasa AS bukti_transaksi,
+                    "pesanan_penjualan" AS type,
+                    ppbt.tanggal_pesanan_penjualan_jasa AS tanggal,
+                    ct.name AS customer,
+                    ct.code AS customer_code,
+                    JSON_OBJECT(
+                        'jumlah', rppbt.jumlah,
+                        'diskon_persentase', rppbt.diskon_persentase,
+                        'satuan_jasa', sbt.name,
+                        'total', rppbt.total_harga 
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_jasa_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_jasa_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_jasa
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer
+                JOIN ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khbt ON khbt.uuid = rppbt.kategori_harga_jasa 
+                JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sbt ON sbt.uuid = khbt.satuan_jasa 
+                WHERE rppbt.stok_awal_jasa = "${uuid}"
+                AND rppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    fpbt.bukti_transaksi,
+                    "faktur_penjualan_jasa" AS type,
+                    fpbt.tanggal,
+                    ct.name AS customer,
+                    ct.code AS customer_code,
+                    JSON_OBJECT() AS detail
+                FROM ${generateDatabaseName(req_id)}.faktur_penjualan_jasa_tab fpbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_jasa_tab ppbt ON ppbt.uuid = fpbt.pesanan_penjualan_jasa 
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer 
+                WHERE fpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND (
+                    SELECT 
+                        COUNT(0)
+                    FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_jasa_tab rppbt 
+                    WHERE rppbt.pesanan_penjualan_jasa = ppbt.uuid 
+                    AND rppbt.stok_awal_jasa = "${uuid}"
+                    AND rppbt.enabled = 1
+                ) > 0
+                UNION ALL
+                SELECT 
+                    ppbt.bukti_transaksi,
+                    "pelunasan_penjualan" AS type,
+                    ppbt.tanggal,
+                    ct.name AS customer,
+                    ct.code AS customer_code,
+                    JSON_OBJECT(
+                        'nilai_pelunasan', rppbt.nilai_pelunasan
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_jasa_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_jasa_tab rppbt2 On rppbt2.uuid = rppbt.rincian_pesanan_penjualan_jasa
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_jasa_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_penjualan_jasa
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer
+                JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_jasa_tab ppbt ON ppbt.uuid = rppbt.pelunasan_penjualan_jasa 
+                WHERE rppbt2.stok_awal_jasa = "${uuid}"
+                AND rppbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    ppbt.bukti_transaksi,
+                    "pelunasan_denda_penjualan" AS type,
+                    ppbt.tanggal,
+                    ct.name AS customer,
+                    ct.code AS customer_code,
+                    JSON_OBJECT(
+                        'nilai_pelunasan', rppdbt.nilai_pelunasan
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_penjualan_denda_jasa_tab rppdbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_jasa_tab rppbt2 On rppbt2.uuid = rppdbt.rincian_pesanan_penjualan_jasa
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_jasa_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_penjualan_jasa
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer
+                JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_jasa_tab ppbt ON ppbt.uuid = rppdbt.pelunasan_penjualan_jasa 
+                WHERE rppbt2.stok_awal_jasa = "${uuid}"
+                AND rppdbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    rpbt.bukti_transaksi,
+                    "retur_penjualan_jasa" AS type,
+                    rpbt.tanggal,
+                    ct.name AS customer,
+                    ct.code AS customer_code,
+                    JSON_OBJECT(
+                        'retur', rrpbt.retur,
+                        'nilai_retur', rrpbt.nilai_retur 
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_retur_penjualan_jasa_tab rrpbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_jasa_tab rppbt ON rppbt.uuid = rrpbt.rincian_pesanan_penjualan_jasa 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_jasa_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_jasa
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer
+                JOIN ${generateDatabaseName(req_id)}.retur_penjualan_jasa_tab rpbt ON rpbt.uuid = rrpbt.retur_penjualan_jasa 
+                WHERE rppbt.stok_awal_jasa = "${uuid}"
+                AND rrpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND rpbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    pdpbt.bukti_transaksi,
+                    "pengembalian_denda_penjualan_jasa" AS type,
+                    pdpbt.tanggal,
+                    ct.name AS customer,
+                    ct.code AS customer_code,
+                    JSON_OBJECT(
+                        'denda_dikembalikan', rpdpbt.denda_yang_dikembalikan 
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_penjualan_jasa_tab rpdpbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_jasa_tab rppbt ON rppbt.uuid = rpdpbt.rincian_pesanan_penjualan_jasa 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_jasa_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_jasa
+                JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer
+                JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_jasa_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_penjualan_jasa 
+                WHERE rppbt.stok_awal_jasa = "${uuid}"
+                AND rpdpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND pdpbt.enabled = 1
+            ) AS res
+            ORDER BY res.tanggal DESC   
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
+export const getRiwayatTransaksiPembelianByStokAwalJasaUuidRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                res.*
+            FROM (
+                SELECT 
+                    ppbt.nomor_pesanan_pembelian_jasa AS bukti_transaksi,
+                    "pesanan_pembelian" AS type,
+                    ppbt.tanggal_pesanan_pembelian_jasa AS tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT(
+                        'jumlah', rppbt.jumlah,
+                        'diskon_persentase', rppbt.diskon_persentase,
+                        'satuan_jasa', sbt.name,
+                        'total', rppbt.total_harga 
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_jasa_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_jasa_tab ppbt ON ppbt.uuid = rppbt.pesanan_pembelian_jasa
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier
+                JOIN ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khbt ON khbt.uuid = rppbt.kategori_harga_jasa 
+                JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sbt ON sbt.uuid = khbt.satuan_jasa 
+                WHERE rppbt.stok_awal_jasa = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                AND rppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    fpbt.bukti_transaksi,
+                    "faktur_pembelian_jasa" AS type,
+                    fpbt.tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT() AS detail
+                FROM ${generateDatabaseName(req_id)}.faktur_pembelian_jasa_tab fpbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_jasa_tab ppbt ON ppbt.uuid = fpbt.pesanan_pembelian_jasa 
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier 
+                WHERE fpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND (
+                    SELECT 
+                        COUNT(0)
+                    FROM ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_jasa_tab rppbt 
+                    WHERE rppbt.pesanan_pembelian_jasa = ppbt.uuid 
+                    AND rppbt.stok_awal_jasa = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                    AND rppbt.enabled = 1
+                ) > 0
+                UNION ALL
+                SELECT 
+                    ppbt.bukti_transaksi,
+                    "pelunasan_pembelian" AS type,
+                    ppbt.tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT(
+                        'nilai_pelunasan', rppbt.nilai_pelunasan
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_jasa_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_jasa_tab rppbt2 On rppbt2.uuid = rppbt.rincian_pesanan_pembelian_jasa
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_jasa_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_pembelian_jasa
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt2.supplier
+                JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_jasa_tab ppbt ON ppbt.uuid = rppbt.pelunasan_pembelian_jasa 
+                WHERE rppbt2.stok_awal_jasa = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                AND rppbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    ppbt.bukti_transaksi,
+                    "pelunasan_denda_pembelian" AS type,
+                    ppbt.tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT(
+                        'nilai_pelunasan', rppbt.nilai_pelunasan_denda
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_jasa_tab rppbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_jasa_tab rppbt2 On rppbt2.uuid = rppbt.rincian_pesanan_pembelian_jasa
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_jasa_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_pembelian_jasa
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt2.supplier
+                JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_jasa_tab ppbt ON ppbt.uuid = rppbt.pelunasan_pembelian_jasa 
+                WHERE rppbt2.stok_awal_jasa = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                AND rppbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND ppbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    rpbt.bukti_transaksi,
+                    "retur_pembelian_jasa" AS type,
+                    rpbt.tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT(
+                        'retur', rrpbt.retur,
+                        'nilai_retur', rrpbt.nilai_retur 
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_retur_pembelian_jasa_tab rrpbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_jasa_tab rppbt ON rppbt.uuid = rrpbt.rincian_pesanan_pembelian_jasa 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_jasa_tab ppbt ON ppbt.uuid = rppbt.pesanan_pembelian_jasa
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier
+                JOIN ${generateDatabaseName(req_id)}.retur_pembelian_jasa_tab rpbt ON rpbt.uuid = rrpbt.retur_pembelian_jasa 
+                WHERE rppbt.stok_awal_jasa = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                AND rrpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND rpbt.enabled = 1
+                UNION ALL
+                SELECT 
+                    pdpbt.bukti_transaksi,
+                    "pengembalian_denda_pembelian_jasa" AS type,
+                    pdpbt.tanggal,
+                    st.name AS supplier,
+                    st.code AS supplier_code,
+                    JSON_OBJECT(
+                        'denda_dikembalikan', rpdpbt.denda_yang_dikembalikan 
+                    ) AS detail
+                FROM ${generateDatabaseName(req_id)}.rincian_pengembalian_denda_pembelian_jasa_tab rpdpbt 
+                JOIN ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_jasa_tab rppbt ON rppbt.uuid = rpdpbt.rincian_pesanan_pembelian_jasa 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_jasa_tab ppbt ON ppbt.uuid = rppbt.pesanan_pembelian_jasa
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier
+                JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_pembelian_jasa_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_pembelian_jasa 
+                WHERE rppbt.stok_awal_jasa = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                AND rpdpbt.enabled = 1
+                AND ppbt.enabled = 1
+                AND pdpbt.enabled = 1
+            ) AS res
+            ORDER BY res.tanggal DESC   
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
+export const checkStokAwalJasaAllowToEditRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                (
+                    SELECT 
+                        JSON_OBJECT(
+                            'nomor_pesanan_penjualan_jasa', ppbt.nomor_pesanan_penjualan_jasa,
+                            'tanggal', ppbt.tanggal_pesanan_penjualan_jasa
+                        ) 
+                    FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_jasa_tab rppbt 
+                    JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_jasa_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_jasa 
+                    WHERE rppbt.stok_awal_jasa = sabt.uuid
+                    AND rppbt.enabled = 1
+                    LIMIT 1
+                ) AS pesanan_penjualan_jasa,
+                sabt.*
+            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt 
+            WHERE sabt.uuid = "${uuid}"
         `,
         {
             type: Sequelize.QueryTypes.SELECT

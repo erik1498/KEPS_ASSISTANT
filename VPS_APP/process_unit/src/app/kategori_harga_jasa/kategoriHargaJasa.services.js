@@ -1,8 +1,9 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { checkDaftarJasaAllowToEditService } from "../daftar_jasa/daftarJasa.services.js"
 import { createKategoriHargaJasaRepo, deleteKategoriHargaJasaByUuidRepo, getAllKategoriHargaJasaRepo, getKategoriHargaJasaByKodeJasaRepo, getKategoriHargaJasaByUuidRepo, updateKategoriHargaJasaByUuidRepo } from "./kategoriHargaJasa.repository.js"
 
-export const getAllKategoriHargaJasaService = async (query, req_identity) => {
+export const getAllKategoriHargaJasaService = async (daftar_jasa, query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllKategoriHargaJasaService", null, req_identity)
 
     let { page, size, search } = query
@@ -18,8 +19,8 @@ export const getAllKategoriHargaJasaService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
-    const kategoriHargaJasas = await getAllKategoriHargaJasaRepo(pageNumber, size, search, req_identity)
+
+    const kategoriHargaJasas = await getAllKategoriHargaJasaRepo(daftar_jasa, pageNumber, size, search, req_identity)
     return generatePaginationResponse(kategoriHargaJasas.entry, kategoriHargaJasas.count, kategoriHargaJasas.pageNumber, kategoriHargaJasas.size)
 }
 
@@ -38,7 +39,7 @@ export const getKategoriHargaJasaByUuidService = async (uuid, req_identity) => {
 
 export const createKategoriHargaJasaService = async (kategoriHargaJasaData, req_identity) => {
     LOGGER(logType.INFO, `Start createKategoriHargaJasaService`, kategoriHargaJasaData, req_identity)
-    await checkKategoriHargaJasaByKodeJasaService(kategoriHargaJasaData.kode_jasa, req_identity)
+    await checkKategoriHargaJasaByKodeJasaService(null, kategoriHargaJasaData.kode_jasa, req_identity)
     kategoriHargaJasaData.enabled = 1
 
     const kategoriHargaJasa = await createKategoriHargaJasaRepo(kategoriHargaJasaData, req_identity)
@@ -47,13 +48,22 @@ export const createKategoriHargaJasaService = async (kategoriHargaJasaData, req_
 
 export const deleteKategoriHargaJasaByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteKategoriHargaJasaByUuidService [${uuid}]`, null, req_identity)
-    await getKategoriHargaJasaByUuidService(uuid, req_identity)
+
+    await getKategoriHargaJasaByUuidService(uuid, req_identity)    
+
+    await checkDaftarJasaAllowToEditService(true, uuid, req_identity)
+
     await deleteKategoriHargaJasaByUuidRepo(uuid, req_identity)
     return true
 }
 
 export const updateKategoriHargaJasaByUuidService = async (uuid, kategoriHargaJasaData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateKategoriHargaJasaByUuidService [${uuid}]`, kategoriHargaJasaData, req_identity)
+
+    await checkKategoriHargaJasaByKodeJasaService(uuid, kategoriHargaJasaData.kode_jasa, req_identity)
+
+    await checkDaftarJasaAllowToEditService(true, uuid, req_identity)
+
     const beforeData = await getKategoriHargaJasaByUuidService(uuid, req_identity)
     const kategoriHargaJasa = await updateKategoriHargaJasaByUuidRepo(uuid, kategoriHargaJasaData, req_identity)
 
@@ -65,14 +75,15 @@ export const updateKategoriHargaJasaByUuidService = async (uuid, kategoriHargaJa
     return kategoriHargaJasa
 }
 
-export const checkKategoriHargaJasaByKodeJasaService = async (kode_jasa, req_identity) => {
-    LOGGER(logType.INFO, `Start deleteKategoriHargaJasaByUuidService`, {
-        kode_jasa
+export const checkKategoriHargaJasaByKodeJasaService = async (uuid, kode_jasa, req_identity) => {
+    LOGGER(logType.INFO, `Start checkKategoriHargaJasaByKodeJasaService`, {
+        kode_jasa,
+        uuid
     }, req_identity)
-    
-    const kategoriHargaJasa = await getKategoriHargaJasaByKodeJasaRepo(kode_jasa, req_identity)
 
-    if (kategoriHargaJasa) {
+    const kategoriHargaJasa = await getKategoriHargaJasaByKodeJasaRepo(uuid, kode_jasa, req_identity)
+
+    if (kategoriHargaJasa.length > 0) {
         throw Error(JSON.stringify({
             message: "Kode Jasa Sudah Terdaftar",
             prop: "error"

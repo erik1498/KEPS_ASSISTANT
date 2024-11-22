@@ -3,7 +3,7 @@ import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/num
 import { FaCheck, FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa"
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 import { apiReturPenjualanJasaCRUD, apiRincianReturPenjualanJasaCRUD } from "../../../../../service/endPointList.api"
-import { deleteAllFormMessage, formValidation, showError } from "../../../../../helper/form.helper"
+import { deleteAllFormMessage, formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import FormInput from "../../../../../component/form/FormInput"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 
@@ -67,7 +67,8 @@ const RiwayatTransaksiReturPenjualanJasa = ({
                         retur_sebelum: `${listReturPenjualanJasa[index].retur_sebelum}`,
                         nilai_retur_sebelum: `${listReturPenjualanJasa[index].nilai_retur_sebelum}`
                     }
-                })
+                }).then(() => showAlert("Berhasil", "Data Berhasil Disimpan"))
+                .catch(err => showError(err))
         }
         _getRincianPesananPenjualanJasa()
     }
@@ -94,7 +95,8 @@ const RiwayatTransaksiReturPenjualanJasa = ({
                         tanggal: riwayatReturPenjualanJasa.tanggal,
                         kode_akun_perkiraan: riwayatReturPenjualanJasa.kode_akun_perkiraan,
                     }
-                }).catch(err => showError(err))
+                }).then(() => showAlert("Berhasil", "Data Berhasil Disimpan"))
+                .catch(err => showError(err))
         }
     }
 
@@ -125,6 +127,11 @@ const RiwayatTransaksiReturPenjualanJasa = ({
         {
             detailOpen ? <>
                 <div className="ml-4 py-4 px-4">
+                    {
+                        JSON.parse(riwayatReturPenjualanJasa.perintah_stok_opname_nomor_surat_perintah)?.hasil_stok_opname_count == 0 ? <></>
+                            :
+                            <p className="text-xs font-medium text-green-600 my-3">{JSON.parse(riwayatReturPenjualanJasa.perintah_stok_opname_nomor_surat_perintah)?.nomor_perintah_stok_opname ? `Telah Terdaftar Pada Surat Perintah Stok Opname ${JSON.parse(riwayatReturPenjualanJasa.perintah_stok_opname_nomor_surat_perintah)?.nomor_perintah_stok_opname}` : ""}</p>
+                    }
                     {
                         detailOpen ? <>
                             <table className="text-left text-sm">
@@ -159,7 +166,7 @@ const RiwayatTransaksiReturPenjualanJasa = ({
                                 <tr>
                                     <td className={`${edited ? "pb-5" : ""}`}>Kode Akun</td>
                                     <td className={`px-5 ${edited ? "pb-5" : ""}`}>:</td>
-                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatReturPenjualanJasa.kode_akun_perkiraan_name}</td>
+                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatReturPenjualanJasa.kode_akun_perkiraan_code} - {riwayatReturPenjualanJasa.kode_akun_perkiraan_name}</td>
                                 </tr>
                                 <tr>
                                     <td className={`${edited ? "pb-3" : ""}`}>Total Retur</td>

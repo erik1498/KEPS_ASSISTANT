@@ -36,7 +36,7 @@ export const getRincianPesananPenjualanJasaByPesananPenjualanUUIDRepo = async (p
             SELECT 
                 khbt.kode_jasa AS kategori_harga_jasa_kode_jasa,
                 dbt.name AS daftar_jasa_name,
-                dgt.name AS daftar_gudang_name,
+                ct.name AS cabang_name,
                 sbt.name AS satuan_jasa_name,
                 jbt.code AS jenis_jasa_code,
                 rppbt.*
@@ -46,7 +46,7 @@ export const getRincianPesananPenjualanJasaByPesananPenjualanUUIDRepo = async (p
             JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sbt ON sbt.uuid = khbt.satuan_jasa 
             JOIN ${generateDatabaseName(req_id)}.daftar_jasa_tab dbt ON dbt.uuid = khbt.daftar_jasa 
             JOIN ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt ON sabt.uuid = rppbt.stok_awal_jasa
-            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang 
+            JOIN ${generateDatabaseName(req_id)}.cabang_tab ct ON ct.uuid = sabt.cabang 
             JOIN ${generateDatabaseName(req_id)}.jenis_jasa_tab jbt ON jbt.uuid = dbt.jenis_jasa 
             WHERE ppbt.uuid = "${pesanan_penjualan_jasa}"
             AND ppbt.enabled = 1

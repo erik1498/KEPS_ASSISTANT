@@ -3,7 +3,7 @@ import { parseRupiahToFloat, parseToRupiahText } from "../../../../../helper/num
 import { FaCheck, FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa"
 import { convertTo12HoursFormat } from "../../../../../helper/date.helper"
 import { apiPelunasanPenjualanJasaCRUD, apiRincianPelunasanPenjualanJasaCRUD, apiRincianPelunasanPenjualanDendaJasaCRUD } from "../../../../../service/endPointList.api"
-import { deleteAllFormMessage, formValidation, showError } from "../../../../../helper/form.helper"
+import { deleteAllFormMessage, formValidation, showAlert, showError } from "../../../../../helper/form.helper"
 import FormInput from "../../../../../component/form/FormInput"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 
@@ -92,7 +92,10 @@ const RiwayatTransaksiPelunasanPenjualanJasa = ({
                         piutang_denda: listPelunasanPenjualanDendaJasa[index].total_denda - listPelunasanPenjualanDendaJasa[index].denda_sudah_dibayar,
                         nilai_pelunasan: `${listPelunasanPenjualanDendaJasa[index].nilai_pelunasan}`,
                     }
+                }).then(() => {
+                    showAlert("Berhasil", "Data Berhasil Disimpan")
                 })
+                .catch(err => showError(err))
         }
         _getRincianPesananPenjualanDendaJasa()
     }
@@ -108,7 +111,9 @@ const RiwayatTransaksiPelunasanPenjualanJasa = ({
                         piutang: listPelunasanPenjualanJasa[index].piutang,
                         nilai_pelunasan: `${listPelunasanPenjualanJasa[index].nilai_pelunasan}`
                     }
-                })
+                }).then(() => {
+                    showAlert("Berhasil", "Data Berhasil Disimpan")
+                }).catch(err => showError(err))
         }
         _getRincianPesananPenjualanJasa()
     }
@@ -135,6 +140,8 @@ const RiwayatTransaksiPelunasanPenjualanJasa = ({
                         tanggal: riwayatPelunasanPenjualanJasa.tanggal,
                         kode_akun_perkiraan: riwayatPelunasanPenjualanJasa.kode_akun_perkiraan,
                     }
+                }).then(() => {
+                    showAlert("Berhasil", "Data Berhasil Disimpan")
                 }).catch(err => showError(err))
         }
     }
@@ -174,6 +181,11 @@ const RiwayatTransaksiPelunasanPenjualanJasa = ({
             detailOpen ? <>
                 <div className="ml-4 py-4 px-4">
                     {
+                        JSON.parse(riwayatPelunasanPenjualanJasa.perintah_stok_opname_nomor_surat_perintah)?.hasil_stok_opname_count == 0 ? <></>
+                            :
+                            <p className="text-xs font-medium text-green-600 my-3">{JSON.parse(riwayatPelunasanPenjualanJasa.perintah_stok_opname_nomor_surat_perintah)?.nomor_perintah_stok_opname ? `Telah Terdaftar Pada Surat Perintah Stok Opname ${JSON.parse(riwayatPelunasanPenjualanJasa.perintah_stok_opname_nomor_surat_perintah)?.nomor_perintah_stok_opname}` : ""}</p>
+                    }
+                    {
                         detailOpen ? <>
                             <table className="text-left text-sm">
                                 <tr>
@@ -207,7 +219,7 @@ const RiwayatTransaksiPelunasanPenjualanJasa = ({
                                 <tr>
                                     <td className={`${edited ? "pb-5" : ""}`}>Kode Akun</td>
                                     <td className={`px-5 ${edited ? "pb-5" : ""}`}>:</td>
-                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatPelunasanPenjualanJasa.kode_akun_perkiraan_name}</td>
+                                    <td className={`${edited ? "pb-5" : ""}`}>{riwayatPelunasanPenjualanJasa.kode_akun_perkiraan_code} - {riwayatPelunasanPenjualanJasa.kode_akun_perkiraan_name}</td>
                                 </tr>
                                 <tr>
                                     <td className={`${edited ? "pb-3" : ""}`}>Total Pelunasan</td>

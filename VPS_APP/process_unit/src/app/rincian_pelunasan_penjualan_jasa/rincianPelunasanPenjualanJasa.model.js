@@ -3,7 +3,7 @@ import db, { defaultModelBuilder } from "../../config/Database.js";
 
 const { DataTypes } = Sequelize;
 
-const RincianPelunasanPenjualandJasaModel = db.define("rincian_pelunasan_penjualan_jasa_tab", 
+const RincianPelunasanPenjualanJasaModel = db.define("rincian_pelunasan_penjualan_jasa_tab", 
     defaultModelBuilder({
         uuid: {
             type: DataTypes.STRING,
@@ -53,4 +53,4 @@ const RincianPelunasanPenjualandJasaModel = db.define("rincian_pelunasan_penjual
 }
 )
 
-export default RincianPelunasanPenjualandJasaModel
+export default RincianPelunasanPenjualanJasaModel

@@ -1,10 +1,13 @@
 import express from "express"
-import { deleteStokAwalJasaByUUID, getAllStokAwalJasas, getStokAwalJasaByJasaUUID, postCreateStokAwalJasa, updateStokAwalJasaByUUID } from "./stokAwalJasa.handler.js"
+import { deleteStokAwalJasaByUUID, getAllStokAwalJasas, getDaftarCabangByKategoriHargaJasaUUID, getRiwayatTransaksiPembelianByStokAwalJasaUuid, getRiwayatTransaksiPenjualanByStokAwalJasaUuid, getStokAwalJasaByJasaUUID, postCreateStokAwalJasa, updateStokAwalJasaByUUID } from "./stokAwalJasa.handler.js"
 import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllStokAwalJasas)
+router.get("/cabang/:kategori_harga_jasa", getDaftarCabangByKategoriHargaJasaUUID)
+router.get("/riwayat_penjualan/:uuid", authTokenMiddleware(), getRiwayatTransaksiPenjualanByStokAwalJasaUuid)
+router.get("/riwayat_pembelian/:uuid", authTokenMiddleware(), getRiwayatTransaksiPembelianByStokAwalJasaUuid)
 router.get("/:uuid", authTokenMiddleware(), getStokAwalJasaByJasaUUID)
 router.post("/", authTokenMiddleware(), postCreateStokAwalJasa)
 router.put("/:uuid", authTokenMiddleware(), updateStokAwalJasaByUUID)

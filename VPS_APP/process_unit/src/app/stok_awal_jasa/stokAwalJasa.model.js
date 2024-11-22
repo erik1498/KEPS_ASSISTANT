@@ -20,7 +20,7 @@ const StokAwalJasaModel = db.define("stok_awal_jasa_tab",
                 notEmpty:true,
             }
         },
-        daftar_gudang: {
+        cabang: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{

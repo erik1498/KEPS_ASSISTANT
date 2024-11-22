@@ -1,5 +1,5 @@
 import { daftarJasaValidation } from "./daftarJasa.validation.js"
-import { createDaftarJasaService, deleteDaftarJasaByUuidService, getAllDaftarJasaService, getDaftarJasaByUuidService, updateDaftarJasaByUuidService } from "./daftarJasa.services.js"
+import { createDaftarJasaService, deleteDaftarJasaByUuidService, getAllDaftarJasasAktifByDaftarGudangService, getAllDaftarJasaService, getAllDaftarJasaUntukTransaksiService, getDaftarJasaByUuidService, updateDaftarJasaByUuidService } from "./daftarJasa.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -11,8 +11,43 @@ export const getAllDaftarJasas = async (req, res) => {
             data: daftarJasas,
             message: "Get Data Success"
         })
-    } catch (error) {    
+    } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getAllDaftarJasasAktifByDaftarGudang = async (req, res) => {
+    LOGGER(logType.INFO, "Start getAllDaftarJasasAktifByDaftarGudang", null, req.identity)
+    try {
+        const { daftar_gudang } = req.params
+        const daftarJasas = await getAllDaftarJasasAktifByDaftarGudangService(req.identity)
+        res.json({
+            data: daftarJasas,
+            message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getAllDaftarJasaUntukTransaksi = async (req, res) => {
+    LOGGER(logType.INFO, "Start getAllDaftarJasaUntukTransaksi", null, req.identity)
+    try {
+        const daftarJasas = await getAllDaftarJasaUntukTransaksiService(req.identity)
+        res.json({
+            data: daftarJasas,
+            message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack)
         res.status(500).json({
             type: "internalServerError",
             errorData: error.message
@@ -84,7 +119,7 @@ export const deleteDaftarJasaByUUID = async (req, res) => {
 
 export const updateDaftarJasaByUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start updateDaftarJasaByUuidController", null, req.identity)
-    try {    
+    try {
         const daftarJasaData = req.body
         const { error, value } = daftarJasaValidation(daftarJasaData)
         if (error) {

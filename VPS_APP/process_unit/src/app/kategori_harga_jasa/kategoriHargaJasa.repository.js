@@ -4,17 +4,19 @@ import KategoriHargaJasaModel from "./kategoriHargaJasa.model.js";
 import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryUtil } from "../../utils/databaseUtil.js";
 import { removeDotInRupiahInput } from "../../utils/numberParsingUtil.js";
 
-export const getAllKategoriHargaJasaRepo = async (pageNumber, size, search, req_id) => {
+export const getAllKategoriHargaJasaRepo = async (daftar_jasa, pageNumber, size, search, req_id) => {
     const kategoriHargaJasasCount = await db.query(
         `
             SELECT 
                 COUNT(0) AS count
-            FROM ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khjt 
-            JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sjt ON sjt.uuid = khjt.satuan_jasa 
-            WHERE 
-            sjt.name LIKE '%${search}%'
-            AND sjt.enabled = 1 
-            AND khjt.enabled = 1
+            FROM ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khbt 
+            JOIN ${generateDatabaseName(req_id)}.daftar_jasa_tab dbt ON dbt.uuid = khbt.daftar_jasa
+            JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sbt ON sbt.uuid = khbt.satuan_jasa 
+            WHERE sbt.name LIKE '%${search}%'
+            AND sbt.enabled = 1 
+            AND dbt.enabled = 1 
+            AND khbt.enabled = 1
+            AND khbt.daftar_jasa = "${daftar_jasa}"
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -25,14 +27,17 @@ export const getAllKategoriHargaJasaRepo = async (pageNumber, size, search, req_
     const kategoriHargaJasas = await db.query(
         `
             SELECT 
-                khjt.*,
-                sjt.name AS satuan_jasa_name
-            FROM ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khjt 
-            JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sjt ON sjt.uuid = khjt.satuan_jasa 
-            WHERE 
-            sjt.name LIKE '%${search}%'
-            AND sjt.enabled = 1 
-            AND khjt.enabled = 1
+                khbt.*,
+                dbt.name AS daftar_jasa_name,
+                sbt.name AS satuan_jasa_name
+            FROM ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khbt 
+            JOIN ${generateDatabaseName(req_id)}.daftar_jasa_tab dbt ON dbt.uuid = khbt.daftar_jasa
+            JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sbt ON sbt.uuid = khbt.satuan_jasa 
+            WHERE sbt.name LIKE '%${search}%'
+            AND sbt.enabled = 1 
+            AND dbt.enabled = 1 
+            AND khbt.enabled = 1
+            AND khbt.daftar_jasa = "${daftar_jasa}"
             LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
@@ -96,7 +101,7 @@ export const deleteKategoriHargaJasaByUuidRepo = async (uuid, req_id) => {
 
 export const updateKategoriHargaJasaByUuidRepo = async (uuid, kategoriHargaJasaData, req_id) => {
     kategoriHargaJasaData = removeDotInRupiahInput(kategoriHargaJasaData, [
-        "harga_1", "harga_2", "harga_3", "harga_4", "harga_5",
+        "harga_beli", "harga_1", "harga_2", "harga_3", "harga_4", "harga_5",
     ])
     return updateQueryUtil(
         req_id,
@@ -118,14 +123,18 @@ export const updateKategoriHargaJasaByUuidRepo = async (uuid, kategoriHargaJasaD
     )
 }
 
-export const getKategoriHargaJasaByKodeJasaRepo = async (kode_jasa, req_id) => {
-    return selectOneQueryUtil(
-        generateDatabaseName(req_id),
-        KategoriHargaJasaModel,
-        null,
+export const getKategoriHargaJasaByKodeJasaRepo = async (uuid, kode_jasa, req_id) => {
+    return await db.query(
+        `
+            SELECT
+                khbt.*
+            FROM ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khbt
+            ${uuid ? `WHERE khbt.uuid != "${uuid}"` : ``}
+            ${uuid ? `AND khbt.kode_jasa = "${kode_jasa}"` : `WHERE khbt.kode_jasa = "${kode_jasa}"`}
+            AND khbt.enabled = 1
+        `,
         {
-            kode_jasa,
-            enabled: true
+            type: Sequelize.QueryTypes.SELECT
         }
     )
 }

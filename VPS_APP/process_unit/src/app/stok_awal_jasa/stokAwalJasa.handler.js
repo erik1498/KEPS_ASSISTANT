@@ -1,5 +1,5 @@
 import { stokAwalJasaValidation } from "./stokAwalJasa.validation.js"
-import { createStokAwalJasaService, deleteStokAwalJasaByUuidService, getAllStokAwalJasaService, getStokAwalJasaByJasaUUIDService, updateStokAwalJasaByUuidService } from "./stokAwalJasa.services.js"
+import { createStokAwalJasaService, deleteStokAwalJasaByUuidService, getAllStokAwalJasaService, getDaftarCabangByKategoriHargaJasaUUIDService, getRiwayatTransaksiPembelianByStokAwalJasaUuidService, getRiwayatTransaksiPenjualanByStokAwalJasaUuidService, getStokAwalJasaByJasaUUIDService, updateStokAwalJasaByUuidService } from "./stokAwalJasa.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -11,7 +11,24 @@ export const getAllStokAwalJasas = async (req, res) => {
             data: stokAwalJasas,
             message: "Get Data Success"
         })
-    } catch (error) {    
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getDaftarCabangByKategoriHargaJasaUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getDaftarCabangByKategoriHargaJasaUUID", null, req.identity)
+    try {
+        const daftarGudangJasas = await getDaftarCabangByKategoriHargaJasaUUIDService(req.params.kategori_harga_jasa, req.identity)
+        res.json({
+            data: daftarGudangJasas,
+            message: "Get Data Success"
+        })
+    } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
         res.status(500).json({
             type: "internalServerError",
@@ -27,6 +44,42 @@ export const getStokAwalJasaByJasaUUID = async (req, res) => {
 
         res.json({
             data: await getStokAwalJasaByJasaUUIDService(uuid, req.identity),
+            message: "Get Data By UUID Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getRiwayatTransaksiPenjualanByStokAwalJasaUuid = async (req, res) => {
+    LOGGER(logType.INFO, "Start getRiwayatTransaksiPenjualanByStokAwalJasaUuid", null, req.identity)
+    try {
+        const { uuid } = req.params
+
+        res.json({
+            data: await getRiwayatTransaksiPenjualanByStokAwalJasaUuidService(uuid, req.identity),
+            message: "Get Data By UUID Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getRiwayatTransaksiPembelianByStokAwalJasaUuid = async (req, res) => {
+    LOGGER(logType.INFO, "Start getRiwayatTransaksiPembelianByStokAwalJasaUuid", null, req.identity)
+    try {
+        const { uuid } = req.params
+
+        res.json({
+            data: await getRiwayatTransaksiPembelianByStokAwalJasaUuidService(uuid, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {
@@ -84,7 +137,7 @@ export const deleteStokAwalJasaByUUID = async (req, res) => {
 
 export const updateStokAwalJasaByUUID = async (req, res) => {
     LOGGER(logType.INFO, "Start updateStokAwalJasaByUuidController", null, req.identity)
-    try {    
+    try {
         const stokAwalJasaData = req.body
         const { error, value } = stokAwalJasaValidation(stokAwalJasaData)
         if (error) {

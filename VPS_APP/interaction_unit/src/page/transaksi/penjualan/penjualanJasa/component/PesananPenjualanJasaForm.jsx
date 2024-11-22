@@ -16,11 +16,11 @@ const PesananPenjualanJasaForm = ({
     customer
 }) => {
     const [useDiskon, setUseDiskon] = useState(false)
-    const [gudangJasaList, setGudangJasaList] = useState([])
+    const [CabangJasaList, setCabangJasaList] = useState([])
     const [kategoriHargaJasaSelected, setKategoriHargaJasaSelected] = useState()
 
     const [kategoriHargaJasa, setKategoriHargaJasa] = useState()
-    const [gudangJasa, setGudangJasa] = useState()
+    const [CabangJasa, setCabangJasa] = useState()
     const [jumlah, setJumlah] = useState(0)
     const [diskonAngka, setDiskonAngka] = useState(0)
     const [diskonPersentase, setDiskonPersentase] = useState(0)
@@ -29,15 +29,15 @@ const PesananPenjualanJasaForm = ({
     const [ppnJasa, setPPNJasa] = useState(0)
     const [hargaJasa, setHargaJasa] = useState(0)
 
-    const _getDataDaftarGudangByKategoriHarga = () => {
-        setGudangJasa(x => x = null)
+    const _getDataDaftarCabangByKategoriHarga = () => {
+        setCabangJasa(x => x = null)
         apiStokAwalJasaCRUD
-            .custom(`/gudang_jasa/${kategoriHargaJasa.value}`, "GET")
+            .custom(`/cabang/${kategoriHargaJasa.value}`, "GET")
             .then(resData => {
-                setGudangJasaList(resData.data)
+                setCabangJasaList(resData.data)
                 if (resData.data.length > 0) {
-                    setGudangJasa(x => x = {
-                        label: resData.data[0].daftar_gudang_name,
+                    setCabangJasa(x => x = {
+                        label: resData.data[0].cabang_name,
                         value: resData.data[0].uuid
                     })
                 }
@@ -52,7 +52,7 @@ const PesananPenjualanJasaForm = ({
                     data: {
                         pesanan_penjualan_jasa: pesananPenjualanJasa.uuid,
                         kategori_harga_jasa: kategoriHargaJasa.value,
-                        stok_awal_jasa: gudangJasa.value,
+                        stok_awal_jasa: CabangJasa.value,
                         kode_harga_customer: customer.kode_harga,
                         jumlah: `${jumlah}`,
                         harga: `${kategoriHargaJasaSelected[`harga_${customer.kode_harga}`]}`,
@@ -118,7 +118,7 @@ const PesananPenjualanJasaForm = ({
 
     useEffect(() => {
         if (kategoriHargaJasa) {
-            _getDataDaftarGudangByKategoriHarga()
+            _getDataDaftarCabangByKategoriHarga()
             const kategoriHargaJasaGet = kategoriHargaJasaList.filter(x => x.uuid == kategoriHargaJasa.value)
             if (kategoriHargaJasaGet.length > 0) {
                 setJumlah(x => x = 0)
@@ -152,15 +152,15 @@ const PesananPenjualanJasaForm = ({
                     selectName={`kategoriHargaJasa`}
                 />
                 <FormSelectWithLabel
-                    label={"Gudang Asal"}
-                    optionsDataList={gudangJasaList}
-                    optionsLabel={"daftar_gudang_name"}
+                    label={"Cabang Asal"}
+                    optionsDataList={CabangJasaList}
+                    optionsLabel={"cabang_name"}
                     optionsValue={"uuid"}
-                    selectValue={gudangJasa}
+                    selectValue={CabangJasa}
                     onchange={(e) => {
-                        setGudangJasa(e)
+                        setCabangJasa(e)
                     }}
-                    selectName={`gudangJasa`}
+                    selectName={`CabangJasa`}
                 />
             </div>
             {
@@ -182,7 +182,7 @@ const PesananPenjualanJasaForm = ({
                         <p className="font-bold bg-blue-800 px-2 text-white rounded-md w-max mt-2">{kategoriHargaJasaSelected.satuan_jasa_name}</p>
                     </div>
                     {
-                        gudangJasa ? <>
+                        CabangJasa ? <>
                             <div className="flex gap-x-2">
                                 <FormInputWithLabel
                                     addClassInput="w-max"
@@ -271,7 +271,7 @@ const PesananPenjualanJasaForm = ({
                 </> : <></>
             }
             {
-                gudangJasa ? <>
+                CabangJasa ? <>
                     <button
                         className="mt-3 btn w-full bg-green-800 text-white"
                     >

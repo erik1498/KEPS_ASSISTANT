@@ -1,6 +1,8 @@
 import { formatDate } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
+import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createFakturPenjualanJasaRepo, deleteFakturPenjualanJasaByUuidRepo, getAllFakturPenjualanJasaRepo, getFakturPenjualanJasaByPesananPenjualanJasaUUIDRepo, getFakturPenjualanJasaByUuidRepo, getJumlahRincianTransaksiDendaOnTableByTanggalRepo, getJumlahRincianTransaksiOnTableByTanggalRepo, getRiwayatTransaksiPenjualanJasaByFakturPenjualanJasaUUIDRepo, getTanggalTransaksiTerakhirByFakturPenjualanRepo, updateFakturPenjualanJasaByUuidRepo } from "./fakturPenjualanJasa.repository.js"
 
 export const getAllFakturPenjualanJasaService = async (query, req_identity) => {
@@ -124,13 +126,22 @@ export const createFakturPenjualanJasaService = async (fakturPenjualanJasaData, 
     LOGGER(logType.INFO, `Start createFakturPenjualanJasaService`, fakturPenjualanJasaData, req_identity)
     fakturPenjualanJasaData.enabled = 1
 
+    await getNeracaValidasiByTanggalService(null, fakturPenjualanJasaData.tanggal, req_identity)
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, fakturPenjualanJasaData.tanggal, null, null, req_identity)
+
     const fakturPenjualanJasa = await createFakturPenjualanJasaRepo(fakturPenjualanJasaData, req_identity)
     return fakturPenjualanJasa
 }
 
 export const deleteFakturPenjualanJasaByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteFakturPenjualanJasaByUuidService [${uuid}]`, null, req_identity)
-    await getFakturPenjualanJasaByUuidService(uuid, req_identity)
+    const beforeData = await getFakturPenjualanJasaByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)
+
     await deleteFakturPenjualanJasaByUuidRepo(uuid, req_identity)
     return true
 }
@@ -138,6 +149,11 @@ export const deleteFakturPenjualanJasaByUuidService = async (uuid, req_identity)
 export const updateFakturPenjualanJasaByUuidService = async (uuid, fakturPenjualanJasaData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateFakturPenjualanJasaByUuidService [${uuid}]`, fakturPenjualanJasaData, req_identity)
     const beforeData = await getFakturPenjualanJasaByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)
+
     const fakturPenjualanJasa = await updateFakturPenjualanJasaByUuidRepo(uuid, fakturPenjualanJasaData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

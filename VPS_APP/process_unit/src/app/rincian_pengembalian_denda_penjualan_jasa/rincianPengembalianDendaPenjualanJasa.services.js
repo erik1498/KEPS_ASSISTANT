@@ -1,5 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getPengembalianDendaPenjualanJasaByUuidService } from "../pengembalian_denda_penjualan_jasa/pengembalianDendaPenjualanJasa.services.js"
+import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createRincianPengembalianDendaPenjualanJasaRepo, deleteRincianPengembalianDendaPenjualanJasaByUuidRepo, getAllRincianPengembalianDendaPenjualanJasaRepo, getRincianPengembalianDendaPenjualanJasaByFakturPenjualanJasaUUIDRepo, getRincianPengembalianDendaPenjualanJasaByUuidRepo, updateRincianPengembalianDendaPenjualanJasaByUuidRepo } from "./rincianPengembalianDendaPenjualanJasa.repository.js"
 
 export const getAllRincianPengembalianDendaPenjualanJasaService = async (query, req_identity) => {
@@ -52,6 +54,17 @@ export const getRincianPengembalianDendaPenjualanJasaByUuidService = async (uuid
 export const createRincianPengembalianDendaPenjualanJasaService = async (rincianPengembalianDendaPenjualanJasaData, req_identity) => {
     LOGGER(logType.INFO, `Start createRincianPengembalianDendaPenjualanJasaService`, rincianPengembalianDendaPenjualanJasaData, req_identity)
     rincianPengembalianDendaPenjualanJasaData.enabled = 1
+
+    const pengembalianDendaPenjualanJasa = await getPengembalianDendaPenjualanJasaByUuidService(rincianPengembalianDendaPenjualanJasaData.pengembalian_denda_penjualan_jasa, req_identity)
+
+    if (pengembalianDendaPenjualanJasa.nomor_pengembalian_denda_penjualan_jasa == "EMPTY" || pengembalianDendaPenjualanJasa.bukti_transaksi == "EMPTY") {
+        throw Error(JSON.stringify({
+            message: "Nomor Pengembalian Denda Penjualan Jasa Atau Bukti Transaksi Tidak Boleh Kosong",
+            prop: "error"
+        }))
+    }
+
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pengembalianDendaPenjualanJasa.tanggal, null, null, req_identity)
 
     const rincianPengembalianDendaPenjualanJasa = await createRincianPengembalianDendaPenjualanJasaRepo(rincianPengembalianDendaPenjualanJasaData, req_identity)
     return rincianPengembalianDendaPenjualanJasa

@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
-import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
-import { FaSave } from "react-icons/fa"
+import { inputOnlyNumber, inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
+import { FaCheck, FaPen, FaSave, FaTrash } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
-import { apiDaftarGudangCRUD, apiStokAwalJasaCRUD } from "../../../../../service/endPointList.api"
+import { apiCabangCRUD, apiDaftarGudangCRUD, apiStokAwalJasaCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
+import FormInput from "../../../../../component/form/FormInput"
 
 const StokAwalJasaForm = ({
     idDaftarJasa,
     kategoriHargaJasaList
 }) => {
-    const [gudangJasa, setGudangJasa] = useState()
+    const [cabangJasa, setCabangJasa] = useState()
     const [kategoriHargaJasa, setKategoriHargaJasa] = useState(kategoriHargaJasaList.length > 0 ? {
         label: kategoriHargaJasaList[0].kode_jasa,
         value: kategoriHargaJasaList[0].uuid
     } : null)
     const [jumlah, setJumlah] = useState(0)
 
-    const [gudangJasaList, setGudangJasaList] = useState([])
+    const [cabangJasaList, setCabangJasaList] = useState([])
 
     const [stokAwalJasaList, setStokAwalJasaList] = useState([])
 
@@ -29,9 +30,9 @@ const StokAwalJasaForm = ({
                 .custom("", "POST", null, {
                     data: {
                         daftar_jasa: idDaftarJasa,
-                        daftar_gudang: gudangJasa.value,
+                        cabang: cabangJasa.value,
                         kategori_harga_jasa: kategoriHargaJasa.value,
-                        jumlah: jumlah
+                        jumlah: `${jumlah}`
                     }
                 }).then(() => {
                     _getStokAwalJasa()
@@ -41,13 +42,13 @@ const StokAwalJasaForm = ({
         }
     }
 
-    const _getGudangJasa = () => {
-        apiDaftarGudangCRUD
+    const _getCabangJasa = () => {
+        apiCabangCRUD
             .custom("", "GET")
             .then(resData => {
-                setGudangJasaList(resData.data.entry)
+                setCabangJasaList(resData.data.entry)
                 if (resData.data.entry.length > 0) {
-                    setGudangJasa({
+                    setCabangJasa({
                         label: resData.data.entry[0].name,
                         value: resData.data.entry[0].uuid
                     })
@@ -67,11 +68,41 @@ const StokAwalJasaForm = ({
             })
     }
 
-    useEffect(() => {
-        _getGudangJasa()
-    }, [stokAwalJasaList])
+    const _updateJumlahStokAwalJasa = (value, uuid) => {
+        const indexStokAwalJasa = stokAwalJasaList.findIndex(x => x.uuid == uuid)
+        if (indexStokAwalJasa != -1) {
+            let stokAwalJasaListCopy = stokAwalJasaList
+            stokAwalJasaListCopy.at(indexStokAwalJasa).jumlah = parseToRupiahText(value)
+
+            setStokAwalJasaList(x => x = stokAwalJasaListCopy)
+        }
+    }
+
+    const _updateStokAwalJasa = (item) => {
+        apiStokAwalJasaCRUD
+            .custom(`/${item.uuid}`, "PUT", null, {
+                data: {
+                    cabang: item.cabang,
+                    daftar_jasa: item.daftar_jasa,
+                    kategori_harga_jasa: item.kategori_harga_jasa,
+                    jumlah: `${item.jumlah}`
+                }
+            })
+            .catch(err => {
+                showError(err)
+            }).finally(() => _getStokAwalJasa())
+    }
+
+    const _deleteStokAwalJasa = (item) => {
+        apiStokAwalJasaCRUD
+            .custom(`/${item.uuid}`, "DELETE")
+            .catch(err => {
+                showError(err)
+            }).finally(() => _getStokAwalJasa())
+    }
 
     useEffect(() => {
+        _getCabangJasa()
         _getStokAwalJasa()
     }, [])
 
@@ -80,15 +111,15 @@ const StokAwalJasaForm = ({
         <form onSubmit={e => _saveStokAwalJasa(e)} className="pb-6">
             <div className="flex gap-x-2 items-end">
                 <FormSelectWithLabel
-                    label={"Gudang Jasa"}
-                    optionsDataList={gudangJasaList}
+                    label={"Cabang Jasa"}
+                    optionsDataList={cabangJasaList}
                     optionsLabel={"name"}
                     optionsValue={"uuid"}
-                    selectValue={gudangJasa}
+                    selectValue={cabangJasa}
                     onchange={(e) => {
-                        setGudangJasa(e)
+                        setCabangJasa(e)
                     }}
-                    selectName={`gudangJasa`}
+                    selectName={`cabangJasa`}
                 />
                 <FormSelectWithLabel
                     label={"Kode Jasa"}
@@ -101,41 +132,54 @@ const StokAwalJasaForm = ({
                     }}
                     selectName={`kategoriHargaJasa`}
                 />
-                <FormInputWithLabel
-                    label={"Jumlah"}
-                    type={"text"}
-                    onchange={(e) => {
-                        inputOnlyRupiah(e)
-                        setJumlah(e.target.value)
-                    }}
-                    others={
-                        {
-                            value: jumlah,
-                            name: "jumlah"
-                        }
-                    }
-                />
                 <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
             </div>
         </form>
         <table className="table table-sm table-zebra">
             <thead className="py-4 text-black">
                 <th>No</th>
-                <th>Gudang</th>
+                <th>Daftar Cabang Name</th>
                 <th>Kode Jasa</th>
-                <th>Satuan Jasa</th>
-                <th>Jumlah</th>
+                <th>Satuan</th>
+                {/* <th>Jumlah</th> */}
+                <th>Aksi</th>
             </thead>
             <tbody>
                 {
-                    stokAwalJasaList.map((x, i) => {
+                    stokAwalJasaList.map((item, i) => {
                         return <>
                             <tr>
                                 <td>{i + 1}</td>
-                                <td>{x.daftar_gudang_name}</td>
-                                <td>{x.kategori_harga_jasa_kode_jasa}</td>
-                                <td>{x.satuan_jasa_name}</td>
-                                <td>{parseToRupiahText(x.jumlah)}</td>
+                                <td>{item.cabang_name}</td>
+                                <td>{item.kategori_harga_jasa_kode_jasa}</td>
+                                <td>{item.satuan_jasa_name}</td>
+                                {/* <td width={150}>
+                                    <FormInput
+                                        name={"jumlah_item_" + i}
+                                        type={"text"}
+                                        other={{
+                                            defaultValue: parseToRupiahText(item.jumlah)
+                                        }}
+                                        onchange={(e) => {
+                                            inputOnlyRupiah(e)
+                                            _updateJumlahStokAwalJasa(e.target.value, item.uuid)
+                                        }}
+                                    />
+                                </td> */}
+                                <td width={100}>
+                                    <div className="flex gap-x-2">
+                                        {/* <FaSave
+                                            onClick={() => _updateStokAwalJasa(item)}
+                                            className="text-green-800 cursor-pointer"
+                                            size={12}
+                                        /> */}
+                                        <FaTrash
+                                            onClick={() => _deleteStokAwalJasa(item)}
+                                            className="text-red-500 cursor-pointer"
+                                            size={12}
+                                        />
+                                    </div>
+                                </td>
                             </tr>
                         </>
                     })

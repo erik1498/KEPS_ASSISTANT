@@ -7,7 +7,7 @@ export const stokAwalJasaValidation = (payload) => {
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        daftar_gudang: Joi.string().required().messages({
+        cabang: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",

@@ -9,10 +9,14 @@ import Pagination from "../../../../../component/general/Pagination"
 import FormInput from "../../../../../component/form/FormInput"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FakturPenjualanJasaForm from "./FakturPenjualanJasaForm"
+import { useDataContext } from "../../../../../context/dataContext.context"
 
 const PenjualanJasaForm = ({
     setAddPenjualanJasa = () => { }
 }) => {
+    const dataContext = useDataContext()
+    const { data } = dataContext
+
     const [tanggalTransaksiAkhir, setTanggalTransaksiAkhir] = useState(getHariTanggalFull())
     const [fakturStatus, setFakturStatus] = useState(false)
     const [ppnStatus, setPPNStatus] = useState(false)
@@ -97,29 +101,41 @@ const PenjualanJasaForm = ({
                     }
                     setEditNomorPesananPenjualan(x => x = true)
                 })
+                .catch(err => {
+                    showError(err)
+                    if (pesananPenjualanJasaSelected) {
+                        _setCustomer()
+                        setEditNomorPesananPenjualan(x => x = true)
+                        setPesananPenjualanJasa(pesananPenjualanJasaListData.filter(x => x.uuid == pesananPenjualanJasaSelected.value)[0])
+                    }
+                })
+        }
+    }
+
+    const _setCustomer = () => {
+        setCustomer(x => x = null)
+        setTanggalPesananPenjualanJasa(x => x = getHariTanggalFull())
+        setNomorPesananPenjualanJasa(x => x = null)
+        const pesananPenjualanJasaSelectedGet = pesananPenjualanJasaListData.filter(x => x.uuid == pesananPenjualanJasaSelected.value)
+        if (pesananPenjualanJasaSelectedGet.length > 0) {
+            const customerGet = customerList.filter(x => x.uuid == pesananPenjualanJasaSelectedGet[0].customer)
+            if (customerGet.length > 0) {
+                setCustomer(x => x = customerGet[0])
+                setTanggalPesananPenjualanJasa(pesananPenjualanJasaSelectedGet[0].tanggal_pesanan_penjualan_jasa)
+                setNomorPesananPenjualanJasa(pesananPenjualanJasaSelectedGet[0].nomor_pesanan_penjualan_jasa)
+            }
         }
     }
 
     useEffect(() => {
         if (pesananPenjualanJasaSelected) {
-            setCustomer(x => x = null)
-            setTanggalPesananPenjualanJasa(x => x = getHariTanggalFull())
-            setNomorPesananPenjualanJasa(x => x = null)
-            const pesananPenjualanJasaSelectedGet = pesananPenjualanJasaListData.filter(x => x.uuid == pesananPenjualanJasaSelected.value)
-            if (pesananPenjualanJasaSelectedGet.length > 0) {
-                const customerGet = customerList.filter(x => x.uuid == pesananPenjualanJasaSelectedGet[0].customer)
-                if (customerGet.length > 0) {
-                    setCustomer(x => x = customerGet[0])
-                    setTanggalPesananPenjualanJasa(pesananPenjualanJasaSelectedGet[0].tanggal_pesanan_penjualan_jasa)
-                    setNomorPesananPenjualanJasa(pesananPenjualanJasaSelectedGet[0].nomor_pesanan_penjualan_jasa)
-                }
-            }
+            _setCustomer()
         }
     }, [pesananPenjualanJasaSelected])
 
     const _getAllPesananPenjualanJasa = () => {
         apiPesananPenjualanJasaCRUD
-            .custom("", "GET")
+            .custom(``, "GET")
             .then(resData => {
                 setPesananPenjualanJasaListData(x => x = resData.data.entry)
                 if (resData.data.entry.length > 0) {
