@@ -368,7 +368,8 @@ const DaftarAsetForm = ({
                 <FormSelectWithLabel
                     label={"Kode Akun"}
                     optionsDataList={kodeAkunPerkiraanList}
-                    optionsLabel={"name"}
+                    optionsLabel={["code", "name"]}
+                    optionsLabelIsArray={true}
                     optionsValue={"uuid"}
                     selectValue={kodeAkunPerkiraanDaftarAset}
                     onchange={(e) => {

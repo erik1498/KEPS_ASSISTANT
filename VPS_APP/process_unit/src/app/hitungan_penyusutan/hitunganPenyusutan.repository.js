@@ -119,7 +119,7 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                 JOIN ${generateDatabaseName(req_id)}.metode_penyusutan_tab mpt ON mpt.uuid = dat.metode_penyusutan 
                 JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
                 JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
-                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a88b16d3-4071-4503-9c5b-17cdac4a411f"
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kat2.kode_akun_perkiraan
                 WHERE MONTH(dat.tanggal_beli) = ${bulan}
                 AND YEAR(dat.tanggal_beli) = ${tahun}
                 AND dat.enabled = 1

@@ -6,7 +6,12 @@ import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryU
 export const getAllKategoriAsetRepo = async (pageNumber, size, search, req_id) => {
     const kategoriAsetsCount = await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.kategori_aset_tab WHERE name LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                COUNT(0) AS count 
+            FROM ${generateDatabaseName(req_id)}.kategori_aset_tab kat 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kat.kode_akun_perkiraan 
+            WHERE kat.enabled = 1
+            AND kat.name LIKE '%${search}%'
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -16,7 +21,14 @@ export const getAllKategoriAsetRepo = async (pageNumber, size, search, req_id) =
 
     const kategoriAsets = await db.query(
         `
-            SELECT * FROM ${generateDatabaseName(req_id)}.kategori_aset_tab WHERE name LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
+            SELECT 
+                kat.*,
+                kapt.name AS kode_akun_perkiraan_name
+            FROM ${generateDatabaseName(req_id)}.kategori_aset_tab kat 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kat.kode_akun_perkiraan 
+            WHERE kat.enabled = 1
+            AND kat.name LIKE '%${search}%'
+            LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -61,8 +73,10 @@ export const createKategoriAsetRepo = async (kategoriAsetData, req_id) => {
         req_id,
         generateDatabaseName(req_id),
         KategoriAsetModel,
-        {   
-        name: kategoriAsetData.name,
+        {
+            name: kategoriAsetData.name,
+            kode_akun_perkiraan: kategoriAsetData.kode_akun_perkiraan,
+            name: kategoriAsetData.name,
             enabled: kategoriAsetData.enabled
         }
     )
@@ -88,7 +102,8 @@ export const updateKategoriAsetByUuidRepo = async (uuid, kategoriAsetData, req_i
         generateDatabaseName(req_id),
         KategoriAsetModel,
         {
-        name: kategoriAsetData.name,
+            name: kategoriAsetData.name,
+            kode_akun_perkiraan: kategoriAsetData.kode_akun_perkiraan,
         },
         {
             uuid

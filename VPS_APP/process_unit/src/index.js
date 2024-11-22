@@ -6,6 +6,8 @@ import { v4 } from 'uuid'
 import { connectDatabase } from './config/Database.js'
 import { getEnv } from './utils/envUtils.js'
 import { rateLimit } from 'express-rate-limit'
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -14,6 +16,26 @@ const limiter = rateLimit({
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
     // store: ... , // Redis, Memcached, etc. See below.
 })
+
+if (getEnv("USE_INTERACTION") == "true") {
+
+    // Utilitas untuk mendapatkan __dirname
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
+    const interaction = express()
+
+    interaction.listen(5173, () => {
+        LOGGER(logType.INFO, "INTERACTION RUNNING ON 5173")
+    })
+
+    // Sajikan file build React
+    interaction.use(express.static(path.join(__dirname, '../../interaction_unit/dist')));
+
+    interaction.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../../interaction_unit/dist', 'index.html'));
+    });
+}
 
 const app = express()
 app.use(limiter)

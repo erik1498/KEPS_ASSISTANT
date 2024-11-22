@@ -78,8 +78,6 @@ export const checkPersentasePenyusutanSudahDigunakanAsetDanDiValidasiService = a
 
     const validasiStatus = await checkPersentasePenyusutanSudahDigunakanAsetDanDiValidasiRepo(metode_penyusutan, kelompok_aset, req_identity)
 
-    console.log("VALIDASI STATUS", validasiStatus)
-
     if (validasiStatus.length > 0 && validasiStatus[0].count > 0) {
         throw Error(JSON.stringify({
             message: "Tidak Dapat Dieksekusi, Persentase Penyusutan Sudah Digunakan Untuk Hitungan Penyusutan",

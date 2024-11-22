@@ -20,6 +20,13 @@ const KategoriAsetModel = db.define("kategori_aset_tab",
                 notEmpty:true,
             }
         },
+        kode_akun_perkiraan: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        }
     }), {
     freezeTableName: true
 }

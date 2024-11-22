@@ -66,8 +66,6 @@ export const createRincianPengembalianDendaPenjualanBarangService = async (rinci
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pengembalianDendaPenjualanBarang.tanggal, null, null, req_identity)
 
-    console.log("RINCIAN PENGEMBALIAN DENDA", rincianPengembalianDendaPenjualanBarangData)
-
     const rincianPengembalianDendaPenjualanBarang = await createRincianPengembalianDendaPenjualanBarangRepo(rincianPengembalianDendaPenjualanBarangData, req_identity)
     return rincianPengembalianDendaPenjualanBarang
 }
