@@ -41,6 +41,13 @@ const StokAwalJasaModel = db.define("stok_awal_jasa_tab",
                 notEmpty:true,
             }
         },
+        tanggal: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
     }), {
     freezeTableName: true
 }

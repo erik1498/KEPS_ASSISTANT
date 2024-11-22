@@ -111,6 +111,7 @@ export const convertNeracaToJurnalUmum = (data, bulan, tahun) => {
                 jurnalUmum.push(dataPush)
             }
         }
+        jurnalUmum.sort((a, b) => parseInt(a.kode_akun) - parseInt(b.kode_akun))
         res(jurnalUmum)
     })
 }

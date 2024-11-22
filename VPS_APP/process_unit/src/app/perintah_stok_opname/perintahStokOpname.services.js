@@ -2,12 +2,17 @@ import { getPelunasanPembelianBarangViewQuery, pelunasanPembelianBarangViewQuery
 import { getPelunasanPembelianDendaBarangViewQuery, pelunasanPembelianDendaBarangViewQueryBuilder } from "../../config/viewDatabase/pelunasanPembelianDendaBarangViewQueryBuilder.js"
 import { getPelunasanPenjualanBarangViewQuery, pelunasanPenjualanBarangViewQueryBuilder } from "../../config/viewDatabase/pelunasanPenjualanBarangViewQueryBuilder.js"
 import { getPelunasanPenjualanDendaBarangViewQuery, pelunasanPenjualanDendaBarangViewQueryBuilder } from "../../config/viewDatabase/pelunasanPenjualanDendaBarangViewQueryBuilder.js"
+import { getPelunasanPenjualanDendaJasaViewQuery, pelunasanPenjualanDendaJasaViewQueryBuilder } from "../../config/viewDatabase/pelunasanPenjualanDendaJasaViewQueryBuilder.js"
+import { getPelunasanPenjualanJasaViewQuery, pelunasanPenjualanJasaViewQueryBuilder } from "../../config/viewDatabase/pelunasanPenjualanJasaViewQueryBuilder.js"
 import { getPengembalianDendaPembelianBarangViewQuery, pengembalianDendaPembelianBarangViewQueryBuilder } from "../../config/viewDatabase/pengembalianDendaPembelianBarangViewQueryBuilder.js"
 import { getPengembalianDendaPenjualanBarangViewQuery, pengembalianDendaPenjualanBarangViewQueryBuilder } from "../../config/viewDatabase/pengembalianDendaPenjualanBarangViewQueryBuilder.js"
+import { getPengembalianDendaPenjualanJasaViewQuery, pengembalianDendaPenjualanJasaViewQueryBuilder } from "../../config/viewDatabase/pengembalianDendaPenjualanJasaViewQueryBuilder.js"
 import { getPesananPembelianBarangViewQuery, pesananPembelianBarangViewQueryBuilder } from "../../config/viewDatabase/pesananPembelianBarangViewQueryBuilder.js"
 import { getPesananPenjualanBarangViewQuery, pesananPenjualanBarangViewQueryBuilder } from "../../config/viewDatabase/pesananPenjualanBarangViewQueryBuilder.js"
+import { getPesananPenjualanJasaViewQuery, pesananPenjualanJasaViewQueryBuilder } from "../../config/viewDatabase/pesananPenjualanJasaViewQueryBuilder.js"
 import { getReturPembelianBarangViewQuery, returPembelianBarangViewQueryBuilder } from "../../config/viewDatabase/returPembelianBarangViewQueryBuilder.js"
 import { getReturPenjualanBarangViewQuery, returPenjualanBarangViewQueryBuilder } from "../../config/viewDatabase/returPenjualanBarangViewQueryBuilder.js"
+import { getReturPenjualanJasaViewQuery, returPenjualanJasaViewQueryBuilder } from "../../config/viewDatabase/returPenjualanJasaViewQueryBuilder.js"
 import { getTanggalTerakhirPadaBulan } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { getBulanText } from "../../utils/mathUtil.js"
@@ -61,6 +66,12 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
         if (pesananPenjualanBarangViewCount[0].count == 0) {
             await createViewRepo(pesananPenjualanBarangViewQueryBuilder(req_identity))
         }
+        
+        const pesananPenjualanJasaViewCount = await getCountOfViewRepo(getPesananPenjualanJasaViewQuery(req_identity))
+
+        if (pesananPenjualanJasaViewCount[0].count == 0) {
+            await createViewRepo(pesananPenjualanJasaViewQueryBuilder(req_identity))
+        }
 
         const pesananPembelianBarangViewCount = await getCountOfViewRepo(getPesananPembelianBarangViewQuery(req_identity))
 
@@ -72,6 +83,12 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
 
         if (pelunasanPenjualanBarangViewCount[0].count == 0) {
             await createViewRepo(pelunasanPenjualanBarangViewQueryBuilder(req_identity))
+        }
+
+        const pelunasanPenjualanJasaViewCount = await getCountOfViewRepo(getPelunasanPenjualanJasaViewQuery(req_identity))
+
+        if (pelunasanPenjualanJasaViewCount[0].count == 0) {
+            await createViewRepo(pelunasanPenjualanJasaViewQueryBuilder(req_identity))
         }
         
         const pelunasanPembelianBarangViewCount = await getCountOfViewRepo(getPelunasanPembelianBarangViewQuery(req_identity))
@@ -86,6 +103,12 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
             await createViewRepo(pelunasanPenjualanDendaBarangViewQueryBuilder(req_identity))
         }
 
+        const pelunasanPenjualanDendaJasaViewCount = await getCountOfViewRepo(getPelunasanPenjualanDendaJasaViewQuery(req_identity))
+
+        if (pelunasanPenjualanDendaJasaViewCount[0].count == 0) {
+            await createViewRepo(pelunasanPenjualanDendaJasaViewQueryBuilder(req_identity))
+        }
+
         const pelunasanPembelianDendaBarangViewCount = await getCountOfViewRepo(getPelunasanPembelianDendaBarangViewQuery(req_identity))
 
         if (pelunasanPembelianDendaBarangViewCount[0].count == 0) {
@@ -98,6 +121,12 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
             await createViewRepo(returPenjualanBarangViewQueryBuilder(req_identity))
         }
 
+        const returPenjualanJasaViewCount = await getCountOfViewRepo(getReturPenjualanJasaViewQuery(req_identity))
+
+        if (returPenjualanJasaViewCount[0].count == 0) {
+            await createViewRepo(returPenjualanJasaViewQueryBuilder(req_identity))
+        }
+
         const returPembelianBarangViewCount = await getCountOfViewRepo(getReturPembelianBarangViewQuery(req_identity))
 
         if (returPembelianBarangViewCount[0].count == 0) {
@@ -108,6 +137,12 @@ export const getJurnalByPerintahStokOpnameService = async (uuid, req_identity) =
 
         if (pengembalianDendaPenjualanBarangViewCount[0].count == 0) {
             await createViewRepo(pengembalianDendaPenjualanBarangViewQueryBuilder(req_identity))
+        }
+
+        const pengembalianDendaPenjualanJasaViewCount = await getCountOfViewRepo(getPengembalianDendaPenjualanJasaViewQuery(req_identity))
+
+        if (pengembalianDendaPenjualanJasaViewCount[0].count == 0) {
+            await createViewRepo(pengembalianDendaPenjualanJasaViewQueryBuilder(req_identity))
         }
 
         const pengembalianDendaPembelianBarangViewCount = await getCountOfViewRepo(getPengembalianDendaPembelianBarangViewQuery(req_identity))

@@ -2,7 +2,7 @@ import { formatDate } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { checkDaftarBarangAllowToEditService } from "../daftar_barang/daftarBarang.services.js"
-import { checkStokAwalBarangAllowToEditRepo, createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getDaftarGudangBarangByKategoriHargaBarangUUIDRepo, getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo, getRiwayatTransaksiPenjualanByStokAwalBarangUuidRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, getStokAwalBarangByUuidRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
+import { checkStokAwalBarangAllowToEditRepo, createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDRepo, getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo, getRiwayatTransaksiPenjualanByStokAwalBarangUuidRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, getStokAwalBarangByUuidRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
 
 export const getAllStokAwalBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllStokAwalBarangService", null, req_identity)
@@ -49,11 +49,12 @@ export const getRiwayatTransaksiPembelianByStokAwalBarangUuidService = async (uu
     return riwayatBarang
 }
 
-export const getDaftarGudangBarangByKategoriHargaBarangUUIDService = async (kategori_harga_barang_uuid, req_identity) => {
-    LOGGER(logType.INFO, `Start getDaftarGudangBarangByKategoriHargaBarangUUIDService`, {
-        kategori_harga_barang_uuid
+export const getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDService = async (kategori_harga_barang, pesanan_penjualan_barang, req_identity) => {
+    LOGGER(logType.INFO, `Start getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDService`, {
+        kategori_harga_barang,
+        pesanan_penjualan_barang
     }, req_identity)
-    const daftarGudangBarangs = await getDaftarGudangBarangByKategoriHargaBarangUUIDRepo(kategori_harga_barang_uuid, req_identity)
+    const daftarGudangBarangs = await getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDRepo(kategori_harga_barang, pesanan_penjualan_barang, req_identity)
     return daftarGudangBarangs
 }
 

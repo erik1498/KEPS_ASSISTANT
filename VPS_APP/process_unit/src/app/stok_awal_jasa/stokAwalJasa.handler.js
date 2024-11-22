@@ -1,5 +1,5 @@
 import { stokAwalJasaValidation } from "./stokAwalJasa.validation.js"
-import { createStokAwalJasaService, deleteStokAwalJasaByUuidService, getAllStokAwalJasaService, getDaftarCabangByKategoriHargaJasaUUIDService, getRiwayatTransaksiPembelianByStokAwalJasaUuidService, getRiwayatTransaksiPenjualanByStokAwalJasaUuidService, getStokAwalJasaByJasaUUIDService, updateStokAwalJasaByUuidService } from "./stokAwalJasa.services.js"
+import { createStokAwalJasaService, deleteStokAwalJasaByUuidService, getAllStokAwalJasaService, getDaftarCabangByKategoriHargaJasaUUIDAndPesananPenjualanJasaUUIDService, getRiwayatTransaksiPembelianByStokAwalJasaUuidService, getRiwayatTransaksiPenjualanByStokAwalJasaUuidService, getStokAwalJasaByJasaUUIDService, updateStokAwalJasaByUuidService } from "./stokAwalJasa.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -20,10 +20,10 @@ export const getAllStokAwalJasas = async (req, res) => {
     }
 }
 
-export const getDaftarCabangByKategoriHargaJasaUUID = async (req, res) => {
-    LOGGER(logType.INFO, "Start getDaftarCabangByKategoriHargaJasaUUID", null, req.identity)
+export const getDaftarCabangByKategoriHargaJasaUUIDAndPesananPenjualanJasaUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getDaftarCabangByKategoriHargaJasaUUIDAndPesananPenjualanJasaUUID", null, req.identity)
     try {
-        const daftarGudangJasas = await getDaftarCabangByKategoriHargaJasaUUIDService(req.params.kategori_harga_jasa, req.identity)
+        const daftarGudangJasas = await getDaftarCabangByKategoriHargaJasaUUIDAndPesananPenjualanJasaUUIDService(req.params.kategori_harga_jasa, req.params.pesanan_penjualan_jasa, req.identity)
         res.json({
             data: daftarGudangJasas,
             message: "Get Data Success"

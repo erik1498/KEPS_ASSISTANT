@@ -42,7 +42,7 @@ export const getStokAwalBarangByUuidRepo = async (uuid, req_id) => {
     )
 }
 
-export const getDaftarGudangBarangByKategoriHargaBarangUUIDRepo = async (kategori_harga_barang_uuid, req_id) => {
+export const getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDRepo = async (kategori_harga_barang, pesanan_penjualan_barang, req_id) => {
     const daftarGudangBarangs = await db.query(
         `
             SELECT 
@@ -50,8 +50,14 @@ export const getDaftarGudangBarangByKategoriHargaBarangUUIDRepo = async (kategor
                 dgt.name AS daftar_gudang_name
             FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt 
             JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
-            WHERE sabt.kategori_harga_barang = "${kategori_harga_barang_uuid}"
+            WHERE sabt.kategori_harga_barang = "${kategori_harga_barang}"
             AND sabt.enabled = 1
+            AND sabt.tanggal <= (
+                SELECT 
+                    ppbt.tanggal_pesanan_penjualan_barang
+                FROM ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt
+                WHERE ppbt.uuid = "${pesanan_penjualan_barang}"
+            )
         `,
         {
             type: Sequelize.QueryTypes.SELECT
@@ -93,6 +99,7 @@ export const createStokAwalBarangRepo = async (stokAwalBarangData, req_id) => {
             daftar_gudang: stokAwalBarangData.daftar_gudang,
             kategori_harga_barang: stokAwalBarangData.kategori_harga_barang,
             jumlah: stokAwalBarangData.jumlah,
+            tanggal: stokAwalBarangData.tanggal,
             enabled: stokAwalBarangData.enabled
         }
     )
@@ -125,6 +132,7 @@ export const updateStokAwalBarangByUuidRepo = async (uuid, stokAwalBarangData, r
             daftar_gudang: stokAwalBarangData.daftar_gudang,
             kategori_harga_barang: stokAwalBarangData.kategori_harga_barang,
             jumlah: stokAwalBarangData.jumlah,
+            tanggal: stokAwalBarangData.tanggal,
         },
         {
             uuid

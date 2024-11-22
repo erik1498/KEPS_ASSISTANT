@@ -32,7 +32,7 @@ const PesananPenjualanJasaForm = ({
     const _getDataDaftarCabangByKategoriHarga = () => {
         setCabangJasa(x => x = null)
         apiStokAwalJasaCRUD
-            .custom(`/cabang/${kategoriHargaJasa.value}`, "GET")
+            .custom(`/cabang/${kategoriHargaJasa.value}/${pesananPenjualanJasa.uuid}`, "GET")
             .then(resData => {
                 setCabangJasaList(resData.data)
                 if (resData.data.length > 0) {

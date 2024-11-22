@@ -2,7 +2,7 @@ import { formatDate } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { checkDaftarJasaAllowToEditService } from "../daftar_jasa/daftarJasa.services.js"
-import { checkStokAwalJasaAllowToEditRepo, createStokAwalJasaRepo, deleteStokAwalJasaByUuidRepo, getAllStokAwalJasaRepo, getRiwayatTransaksiPembelianByStokAwalJasaUuidRepo, getRiwayatTransaksiPenjualanByStokAwalJasaUuidRepo, getStokAwalJasaByJasaUUIDRepo, getStokAwalJasaByDaftarCabangDanKategoriHargaJasaRepo, getStokAwalJasaByUuidRepo, updateStokAwalJasaByUuidRepo, getDaftarCabangByKategoriHargaJasaUUIDRepo } from "./stokAwalJasa.repository.js"
+import { checkStokAwalJasaAllowToEditRepo, createStokAwalJasaRepo, deleteStokAwalJasaByUuidRepo, getAllStokAwalJasaRepo, getRiwayatTransaksiPembelianByStokAwalJasaUuidRepo, getRiwayatTransaksiPenjualanByStokAwalJasaUuidRepo, getStokAwalJasaByJasaUUIDRepo, getStokAwalJasaByDaftarCabangDanKategoriHargaJasaRepo, getStokAwalJasaByUuidRepo, updateStokAwalJasaByUuidRepo, getDaftarCabangByKategoriHargaJasaUUIDAndPesananPenjualanJasaUUIDRepo } from "./stokAwalJasa.repository.js"
 
 export const getAllStokAwalJasaService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllStokAwalJasaService", null, req_identity)
@@ -49,11 +49,12 @@ export const getRiwayatTransaksiPembelianByStokAwalJasaUuidService = async (uuid
     return riwayatJasa
 }
 
-export const getDaftarCabangByKategoriHargaJasaUUIDService = async (kategori_harga_jasa_uuid, req_identity) => {
-    LOGGER(logType.INFO, `Start getDaftarCabangByKategoriHargaJasaUUIDService`, {
-        kategori_harga_jasa_uuid
+export const getDaftarCabangByKategoriHargaJasaUUIDAndPesananPenjualanJasaUUIDService = async (kategori_harga_jasa, pesanan_penjualan_jasa, req_identity) => {
+    LOGGER(logType.INFO, `Start getDaftarCabangByKategoriHargaJasaUUIDAndPesananPenjualanJasaUUIDService`, {
+        kategori_harga_jasa,
+        pesanan_penjualan_jasa
     }, req_identity)
-    const daftarCabangJasas = await getDaftarCabangByKategoriHargaJasaUUIDRepo(kategori_harga_jasa_uuid, req_identity)
+    const daftarCabangJasas = await getDaftarCabangByKategoriHargaJasaUUIDAndPesananPenjualanJasaUUIDRepo(kategori_harga_jasa, pesanan_penjualan_jasa, req_identity)
     return daftarCabangJasas
 }
 

@@ -14,6 +14,12 @@ import { getDataFromPelunasanPembelianBarangViewQuery } from "../../config/viewD
 import { getDataFromPelunasanPembelianDendaBarangViewQuery } from "../../config/viewDatabase/pelunasanPembelianDendaBarangViewQueryBuilder.js";
 import { getDataFromReturPembelianBarangViewQuery } from "../../config/viewDatabase/returPembelianBarangViewQueryBuilder.js";
 import { getDataFrompengembalianDendaPembelianBarangViewQuery } from "../../config/viewDatabase/pengembalianDendaPembelianBarangViewQueryBuilder.js";
+import { getDataFromPesananPenjualanJasaViewQuery } from "../../config/viewDatabase/pesananPenjualanJasaViewQueryBuilder.js";
+import { getDataFromPelunasanPenjualanJasaViewQuery } from "../../config/viewDatabase/pelunasanPenjualanJasaViewQueryBuilder.js";
+import { getDataFromPelunasanPenjualanDendaJasaViewQuery } from "../../config/viewDatabase/pelunasanPenjualanDendaJasaViewQueryBuilder.js";
+import { getDataFromReturPenjualanJasaViewQuery } from "../../config/viewDatabase/returPenjualanJasaViewQueryBuilder.js";
+import { getDataFrompengembalianDendaPenjualanJasaViewQuery } from "../../config/viewDatabase/pengembalianDendaPenjualanJasaViewQueryBuilder.js";
+import { fakturPenjualanJasaQueryBuilder } from "../../config/viewDatabase/fakturPenjualanJasaViewQueryBuilder.js";
 
 export const getAllPerintahStokOpnameRepo = async (pageNumber, size, search, tahun, req_id) => {
     const perintahStokOpnamesCount = await db.query(
@@ -248,26 +254,38 @@ export const perintahStokOpnameStatusRepo = async (perintah_stok_opname, req_id)
 
 export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, saveToPerintahStokOpnameJurnal, req_id) => {
     const pesananPenjualanBarangQuery = getDataFromPesananPenjualanBarangViewQuery(bulan, tahun, null, req_id)
+    
+    const pesananPenjualanJasaQuery = getDataFromPesananPenjualanJasaViewQuery(bulan, tahun, null, req_id)
 
     const pesananPembelianBarangQuery = getDataFromPesananPembelianBarangViewQuery(bulan, tahun, null, req_id)
 
     const pelunasanPenjualanBarangQuery = getDataFromPelunasanPenjualanBarangViewQuery(bulan, tahun, null, req_id)
 
+    const pelunasanPenjualanJasaQuery = getDataFromPelunasanPenjualanJasaViewQuery(bulan, tahun, null, req_id)
+
     const pelunasanPembelianBarangQuery = getDataFromPelunasanPembelianBarangViewQuery(bulan, tahun, null, req_id)
 
     const pelunasanDendaPenjualanBarangQuery = getDataFromPelunasanPenjualanDendaBarangViewQuery(bulan, tahun, null, req_id)
+    
+    const pelunasanDendaPenjualanJasaQuery = getDataFromPelunasanPenjualanDendaJasaViewQuery(bulan, tahun, null, req_id)
 
     const pelunasanDendaPembelianBarangQuery = getDataFromPelunasanPembelianDendaBarangViewQuery(bulan, tahun, null, req_id)
 
     const returPenjualanBarangQuery = getDataFromReturPenjualanBarangViewQuery(bulan, tahun, null, req_id)
+    
+    const returPenjualanJasaQuery = getDataFromReturPenjualanJasaViewQuery(bulan, tahun, null, req_id)
 
     const returPembelianBarangQuery = getDataFromReturPembelianBarangViewQuery(bulan, tahun, null, req_id)
 
     const pengembalianDendaPenjualanBarangQuery = getDataFrompengembalianDendaPenjualanBarangViewQuery(bulan, tahun, null, req_id)
+    
+    const pengembalianDendaPenjualanJasaQuery = getDataFrompengembalianDendaPenjualanJasaViewQuery(bulan, tahun, null, req_id)
 
     const pengembalianDendaPembelianBarangQuery = getDataFrompengembalianDendaPembelianBarangViewQuery(bulan, tahun, null, req_id)
 
     const fakturPenjualanBarangDendaBulanIniQuery = fakturPenjualanBarangQueryBuilder(bulan, tahun, req_id)
+    
+    const fakturPenjualanJasaDendaBulanIniQuery = fakturPenjualanJasaQueryBuilder(bulan, tahun, req_id)
 
     const perintahStokOpnameBulanIniQuery = perintahStokOpnameQueryBuilder(bulan, tahun, req_id)
 
@@ -283,7 +301,13 @@ export const getJurnalPerintahStokOpnameRepo = async (bulan, tahun, saveToPerint
         pengembalianDendaPenjualanBarangQuery,
         pengembalianDendaPembelianBarangQuery,
         fakturPenjualanBarangDendaBulanIniQuery,
-        perintahStokOpnameBulanIniQuery
+        perintahStokOpnameBulanIniQuery,
+        pesananPenjualanJasaQuery,
+        pelunasanPenjualanJasaQuery,
+        pelunasanDendaPenjualanJasaQuery,
+        returPenjualanJasaQuery,
+        pengembalianDendaPenjualanJasaQuery,
+        fakturPenjualanJasaDendaBulanIniQuery
     ]
 
     const penjualanBarang = await db.query(

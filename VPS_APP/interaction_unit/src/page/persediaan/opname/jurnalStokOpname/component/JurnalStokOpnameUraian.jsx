@@ -35,20 +35,22 @@ const JurnalStokOpnameUraian = ({
                         data?.detail_data?.hari_terlewat && <p className="mb-2 text-xs">{data?.detail_data?.hari_terlewat} Hari Terlewat</p>
                     }
                 </div>
-                <b>{data?.detail_data?.kategori_harga_barang_kode_barang} ( {data?.detail_data?.daftar_gudang_name} )</b>
+                <b>{data?.detail_data?.kategori_harga_barang_kode_barang} {data?.detail_data?.daftar_gudang_name ? `(${data?.detail_data?.daftar_gudang_name})` : ""}</b>
+                <b>{data?.detail_data?.kategori_harga_jasa_kode_jasa} {data?.detail_data?.cabang_name ? `(${data?.detail_data?.cabang_name})` : ""}</b>
                 <p className="mb-1">{data?.daftar_barang_name}</p>
+                <p className="mb-1">{data?.daftar_jasa_name}</p>
                 <div className="w-full flex items-start gap-x-4">
                     {
-                        data?.jumlah && <p className="mb-2 text-xs">x{data?.jumlah} {data?.satuan_barang_name}</p>
+                        data?.detail_data?.jumlah && <p className="mb-2 text-xs">x{data?.detail_data?.jumlah} {data?.detail_data?.satuan_barang_name ? data?.detail_data?.satuan_barang_name : ""} {data?.detail_data?.satuan_jasa_name ? data?.detail_data?.satuan_jasa_name : ""}</p>
                     }
                     {
-                        data?.harga && <p className="mb-2 text-xs">Harga Rp.{parseToRupiahText(data?.harga)}</p>
+                        data?.detail_data?.harga && <p className="mb-2 text-xs">Harga Rp.{parseToRupiahText(data?.detail_data?.harga)}</p>
                     }
                     {
-                        data?.ppn && <p className="mb-2 text-xs">PPN Rp.{parseToRupiahText(data?.ppn)}</p>
+                        data?.detail_data?.ppn && <p className="mb-2 text-xs">PPN Rp.{parseToRupiahText(data?.detail_data?.ppn)}</p>
                     }
                     {
-                        !data?.diskon_persentase ? <></> : <p className="mb-2 text-xs">Diskon {data?.diskon_persentase} %</p>
+                        !data?.detail_data?.diskon_persentase ? <></> : <p className="mb-2 text-xs">Diskon {data?.detail_data?.diskon_persentase} %</p>
                     }
                     {
                         data?.detail_data?.harga_beli && <p className="mb-2 text-xs">Harga Beli Rp. {parseToRupiahText(data?.detail_data?.harga_beli)}</p>

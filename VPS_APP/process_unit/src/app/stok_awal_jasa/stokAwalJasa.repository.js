@@ -42,16 +42,22 @@ export const getStokAwalJasaByUuidRepo = async (uuid, req_id) => {
     )
 }
 
-export const getDaftarCabangByKategoriHargaJasaUUIDRepo = async (kategori_harga_jasa_uuid, req_id) => {
+export const getDaftarCabangByKategoriHargaJasaUUIDAndPesananPenjualanJasaUUIDRepo = async (kategori_harga_jasa, pesanan_penjualan_jasa, req_id) => {
     const daftarCabangs = await db.query(
         `
             SELECT 
-                sabt.uuid,
+                sajt.uuid,
                 ct.name AS cabang_name
-            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt 
-            JOIN ${generateDatabaseName(req_id)}.cabang_tab ct ON ct.uuid = sabt.cabang
-            WHERE sabt.kategori_harga_jasa = "${kategori_harga_jasa_uuid}"
-            AND sabt.enabled = 1
+            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sajt 
+            JOIN ${generateDatabaseName(req_id)}.cabang_tab ct ON ct.uuid = sajt.cabang
+            WHERE sajt.kategori_harga_jasa = "${kategori_harga_jasa}"
+            AND sajt.enabled = 1
+            AND sajt.tanggal <= (
+                SELECT 
+                    ppjt.tanggal_pesanan_penjualan_jasa
+                FROM ${generateDatabaseName(req_id)}.pesanan_penjualan_jasa_tab ppjt
+                WHERE ppjt.uuid = "${pesanan_penjualan_jasa}"
+            )
         `,
         {
             type: Sequelize.QueryTypes.SELECT
@@ -64,16 +70,16 @@ export const getStokAwalJasaByJasaUUIDRepo = async (uuid, req_id) => {
     const stokAwalJasas = await db.query(
         `
             SELECT 
-                sabt.*,
+                sajt.*,
                 ct.name AS cabang_name,
                 khbt.kode_jasa AS kategori_harga_jasa_kode_jasa,
                 sbt.name AS satuan_jasa_name
-            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt
-            JOIN ${generateDatabaseName(req_id)}.cabang_tab ct ON ct.uuid = sabt.cabang 
-            JOIN ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khbt ON khbt.uuid = sabt.kategori_harga_jasa 
+            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sajt
+            JOIN ${generateDatabaseName(req_id)}.cabang_tab ct ON ct.uuid = sajt.cabang 
+            JOIN ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khbt ON khbt.uuid = sajt.kategori_harga_jasa 
             JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sbt ON sbt.uuid = khbt.satuan_jasa 
-            WHERE sabt.daftar_jasa = "${uuid}"
-            AND sabt.enabled = 1
+            WHERE sajt.daftar_jasa = "${uuid}"
+            AND sajt.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -93,6 +99,7 @@ export const createStokAwalJasaRepo = async (stokAwalJasaData, req_id) => {
             cabang: stokAwalJasaData.cabang,
             kategori_harga_jasa: stokAwalJasaData.kategori_harga_jasa,
             jumlah: stokAwalJasaData.jumlah,
+            tanggal: stokAwalJasaData.tanggal,
             enabled: stokAwalJasaData.enabled
         }
     )
@@ -125,6 +132,7 @@ export const updateStokAwalJasaByUuidRepo = async (uuid, stokAwalJasaData, req_i
             cabang: stokAwalJasaData.cabang,
             kategori_harga_jasa: stokAwalJasaData.kategori_harga_jasa,
             jumlah: stokAwalJasaData.jumlah,
+            tanggal: stokAwalJasaData.tanggal,
         },
         {
             uuid
@@ -137,10 +145,10 @@ export const getStokAwalJasaByDaftarCabangDanKategoriHargaJasaRepo = async (caba
         `
             SELECT
                 COUNT(0) AS count 
-            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt 
-            WHERE sabt.cabang = "${cabang}"
-            AND sabt.kategori_harga_jasa = "${kategori_harga_jasa}"
-            AND sabt.enabled = 1
+            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sajt 
+            WHERE sajt.cabang = "${cabang}"
+            AND sajt.kategori_harga_jasa = "${kategori_harga_jasa}"
+            AND sajt.enabled = 1
             LIMIT 1
         `,
         {
@@ -427,13 +435,13 @@ export const checkStokAwalJasaAllowToEditRepo = async (uuid, req_id) => {
                         ) 
                     FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_jasa_tab rppbt 
                     JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_jasa_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_jasa 
-                    WHERE rppbt.stok_awal_jasa = sabt.uuid
+                    WHERE rppbt.stok_awal_jasa = sajt.uuid
                     AND rppbt.enabled = 1
                     LIMIT 1
                 ) AS pesanan_penjualan_jasa,
-                sabt.*
-            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt 
-            WHERE sabt.uuid = "${uuid}"
+                sajt.*
+            FROM ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sajt 
+            WHERE sajt.uuid = "${uuid}"
         `,
         {
             type: Sequelize.QueryTypes.SELECT
