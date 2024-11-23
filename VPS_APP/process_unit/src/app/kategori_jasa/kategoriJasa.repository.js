@@ -80,3 +80,19 @@ export const updateKategoriJasaByUuidRepo = async (uuid, kategoriJasaData, req_i
         }
     )
 }
+
+export const checkKategoriJasaAllowToEditRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                dbt.* 
+            FROM ${generateDatabaseName(req_id)}.daftar_jasa_tab dbt 
+            WHERE dbt.kategori_jasa = "${uuid}" 
+            AND dbt.enabled = 1 
+            LIMIT 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}

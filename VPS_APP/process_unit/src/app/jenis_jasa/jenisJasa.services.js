@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createJenisJasaRepo, deleteJenisJasaByUuidRepo, getAllJenisJasaRepo, getJenisJasaByUuidRepo, updateJenisJasaByUuidRepo } from "./jenisJasa.repository.js"
+import { checkJenisJasaAllowToEditRepo, createJenisJasaRepo, deleteJenisJasaByUuidRepo, getAllJenisJasaRepo, getJenisJasaByUuidRepo, updateJenisJasaByUuidRepo } from "./jenisJasa.repository.js"
 
 export const getAllJenisJasaService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllJenisJasaService", null, req_identity)
@@ -18,7 +18,7 @@ export const getAllJenisJasaService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const jenisJasas = await getAllJenisJasaRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(jenisJasas.entry, jenisJasas.count, jenisJasas.pageNumber, jenisJasas.size)
 }
@@ -46,6 +46,8 @@ export const createJenisJasaService = async (jenisJasaData, req_identity) => {
 
 export const deleteJenisJasaByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteJenisJasaByUuidService [${uuid}]`, null, req_identity)
+
+    await checkJenisJasaAllowToEditService(uuid, req_identity)
     await getJenisJasaByUuidService(uuid, req_identity)
     await deleteJenisJasaByUuidRepo(uuid, req_identity)
     return true
@@ -62,4 +64,19 @@ export const updateJenisJasaByUuidService = async (uuid, jenisJasaData, req_iden
     }, req_identity)
 
     return jenisJasa
+}
+
+export const checkJenisJasaAllowToEditService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkJenisJasaAllowToEditService`, {
+        uuid
+    }, req_identity)
+
+    const daftarJasaUsed = await checkJenisJasaAllowToEditRepo(uuid, req_identity)
+
+    if (daftarJasaUsed.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Jenis Jasa Sudah Terpakai Pada Jasa ${daftarJasaUsed[0].name}`,
+            prop: "error"
+        }))
+    }
 }

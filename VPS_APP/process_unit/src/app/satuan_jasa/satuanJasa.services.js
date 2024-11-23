@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createSatuanJasaRepo, deleteSatuanJasaByUuidRepo, getAllSatuanJasaRepo, getSatuanJasaByUuidRepo, updateSatuanJasaByUuidRepo } from "./satuanJasa.repository.js"
+import { checkSatuanJasaAllowToEditRepo, createSatuanJasaRepo, deleteSatuanJasaByUuidRepo, getAllSatuanJasaRepo, getSatuanJasaByUuidRepo, updateSatuanJasaByUuidRepo } from "./satuanJasa.repository.js"
 
 export const getAllSatuanJasaService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllSatuanJasaService", null, req_identity)
@@ -18,7 +18,7 @@ export const getAllSatuanJasaService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const satuanJasas = await getAllSatuanJasaRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(satuanJasas.entry, satuanJasas.count, satuanJasas.pageNumber, satuanJasas.size)
 }
@@ -47,6 +47,9 @@ export const createSatuanJasaService = async (satuanJasaData, req_identity) => {
 export const deleteSatuanJasaByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteSatuanJasaByUuidService [${uuid}]`, null, req_identity)
     await getSatuanJasaByUuidService(uuid, req_identity)
+
+    await checkSatuanJasaAllowToEditService(uuid, req_identity)
+
     await deleteSatuanJasaByUuidRepo(uuid, req_identity)
     return true
 }
@@ -54,6 +57,9 @@ export const deleteSatuanJasaByUuidService = async (uuid, req_identity) => {
 export const updateSatuanJasaByUuidService = async (uuid, satuanJasaData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateSatuanJasaByUuidService [${uuid}]`, satuanJasaData, req_identity)
     const beforeData = await getSatuanJasaByUuidService(uuid, req_identity)
+
+    await checkSatuanJasaAllowToEditService(uuid, req_identity)
+
     const satuanJasa = await updateSatuanJasaByUuidRepo(uuid, satuanJasaData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
@@ -62,4 +68,19 @@ export const updateSatuanJasaByUuidService = async (uuid, satuanJasaData, req_id
     }, req_identity)
 
     return satuanJasa
+}
+
+export const checkSatuanJasaAllowToEditService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkSatuanJasaAllowToEditService`, {
+        uuid
+    }, req_identity)
+
+    const kategoriHargaJasaUsed = await checkSatuanJasaAllowToEditRepo(uuid, req_identity)
+
+    if (kategoriHargaJasaUsed.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Satuan Jasa Sudah Terpakai Pada Kategori Harga Jasa, Kode Jasa : ${kategoriHargaJasaUsed[0].kode_jasa}`,
+            prop: "error"
+        }))
+    }
 }

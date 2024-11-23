@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createKategoriJasaRepo, deleteKategoriJasaByUuidRepo, getAllKategoriJasaRepo, getKategoriJasaByUuidRepo, updateKategoriJasaByUuidRepo } from "./kategoriJasa.repository.js"
+import { checkKategoriJasaAllowToEditRepo, createKategoriJasaRepo, deleteKategoriJasaByUuidRepo, getAllKategoriJasaRepo, getKategoriJasaByUuidRepo, updateKategoriJasaByUuidRepo } from "./kategoriJasa.repository.js"
 
 export const getAllKategoriJasaService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllKategoriJasaService", null, req_identity)
@@ -18,7 +18,7 @@ export const getAllKategoriJasaService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const kategoriJasas = await getAllKategoriJasaRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(kategoriJasas.entry, kategoriJasas.count, kategoriJasas.pageNumber, kategoriJasas.size)
 }
@@ -46,6 +46,9 @@ export const createKategoriJasaService = async (kategoriJasaData, req_identity) 
 
 export const deleteKategoriJasaByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteKategoriJasaByUuidService [${uuid}]`, null, req_identity)
+
+    await checkKategoriJasaAllowToEditService(uuid, req_identity)
+    
     await getKategoriJasaByUuidService(uuid, req_identity)
     await deleteKategoriJasaByUuidRepo(uuid, req_identity)
     return true
@@ -62,4 +65,19 @@ export const updateKategoriJasaByUuidService = async (uuid, kategoriJasaData, re
     }, req_identity)
 
     return kategoriJasa
+}
+
+export const checkKategoriJasaAllowToEditService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkKategoriJasaAllowToEditService`, {
+        uuid
+    }, req_identity)
+
+    const daftarJasaUsed = await checkKategoriJasaAllowToEditRepo(uuid, req_identity)
+
+    if (daftarJasaUsed.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Kategori Jasa Sudah Terpakai Pada Jasa ${daftarJasaUsed[0].name}`,
+            prop: "error"
+        }))
+    }
 }

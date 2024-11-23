@@ -46,8 +46,8 @@ export const createSatuanJasaRepo = async (satuanJasaData, req_id) => {
         req_id,
         generateDatabaseName(req_id),
         SatuanJasaModel,
-        {   
-        name: satuanJasaData.name,
+        {
+            name: satuanJasaData.name,
             enabled: satuanJasaData.enabled
         }
     )
@@ -73,10 +73,29 @@ export const updateSatuanJasaByUuidRepo = async (uuid, satuanJasaData, req_id) =
         generateDatabaseName(req_id),
         SatuanJasaModel,
         {
-        name: satuanJasaData.name,
+            name: satuanJasaData.name,
         },
         {
             uuid
+        }
+    )
+}
+
+export const checkSatuanJasaAllowToEditRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT
+                khbt.kode_jasa
+            FROM ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khbt 
+            WHERE khbt.satuan_jasa = "${uuid}"
+            AND khbt.enabled = 1
+            AND dat.satuan_jasa = "${uuid}"
+            AND dat.enabled = 1
+            AND dpt.satuan_jasa = "${uuid}"
+            AND dpt.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
         }
     )
 }

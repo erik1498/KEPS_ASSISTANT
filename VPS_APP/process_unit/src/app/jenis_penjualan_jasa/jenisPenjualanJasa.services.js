@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createJenisPenjualanJasaRepo, deleteJenisPenjualanJasaByUuidRepo, getAllJenisPenjualanJasaRepo, getJenisPenjualanJasaByUuidRepo, updateJenisPenjualanJasaByUuidRepo } from "./jenisPenjualanJasa.repository.js"
+import { checkJenisPenjualanJasaAllowToEditRepo, createJenisPenjualanJasaRepo, deleteJenisPenjualanJasaByUuidRepo, getAllJenisPenjualanJasaRepo, getJenisPenjualanJasaByUuidRepo, updateJenisPenjualanJasaByUuidRepo } from "./jenisPenjualanJasa.repository.js"
 
 export const getAllJenisPenjualanJasaService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllJenisPenjualanJasaService", null, req_identity)
@@ -18,7 +18,7 @@ export const getAllJenisPenjualanJasaService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const jenisPenjualanJasas = await getAllJenisPenjualanJasaRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(jenisPenjualanJasas.entry, jenisPenjualanJasas.count, jenisPenjualanJasas.pageNumber, jenisPenjualanJasas.size)
 }
@@ -46,6 +46,9 @@ export const createJenisPenjualanJasaService = async (jenisPenjualanJasaData, re
 
 export const deleteJenisPenjualanJasaByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteJenisPenjualanJasaByUuidService [${uuid}]`, null, req_identity)
+
+    await checkJenisPenjualanJasaAllowToEditService(uuid, req_identity)
+
     await getJenisPenjualanJasaByUuidService(uuid, req_identity)
     await deleteJenisPenjualanJasaByUuidRepo(uuid, req_identity)
     return true
@@ -62,4 +65,19 @@ export const updateJenisPenjualanJasaByUuidService = async (uuid, jenisPenjualan
     }, req_identity)
 
     return jenisPenjualanJasa
+}
+
+export const checkJenisPenjualanJasaAllowToEditService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkJenisPenjualanJasaAllowToEditService`, {
+        uuid
+    }, req_identity)
+
+    const daftarJasaUsed = await checkJenisPenjualanJasaAllowToEditRepo(uuid, req_identity)
+
+    if (daftarJasaUsed.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Jenis Penjualan Jasa Sudah Terpakai Pada Jasa ${daftarJasaUsed[0].name}`,
+            prop: "error"
+        }))
+    }
 }
