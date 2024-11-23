@@ -30,10 +30,10 @@ if (getEnv("USE_INTERACTION") == "true") {
     })
 
     // Sajikan file build React
-    interaction.use(express.static(path.join(__dirname, '../../interaction_unit/build')));
+    interaction.use(express.static(path.join(__dirname, `${getEnv("FE_BUILD")}`)));
 
     interaction.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../../interaction_unit/build', 'index.html'));
+        res.sendFile(path.join(__dirname, `${getEnv("FE_BUILD")}`, 'index.html'));
     });
 }
 

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2-runtime start ./src/index.js -i max -n keps_api",
+    "start": "pm2-runtime start ./src/index.js -i 1 -n keps_api",
     "stop": "pm2-runtime stop keps_api",
     "restart": "pm2-runtime restart keps_api",
     "delete": "pm2-runtime delete keps_api"

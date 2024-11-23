@@ -5,15 +5,15 @@ services:
     build:
       context: ./process_unit
       args:
-        # - DB_HOST=IP_VPS_3
-        - DB_HOST=192.168.155.46
+        - DB_HOST=192.168.15.46
         - DB_PORT=3306
         - DB_NAME=db_keps_assistant
         - DB_MIGRATION=true
         - DEMO_TYPE=true
+        - USE_INTERACTION=true
         - DB_USER=root
         - DB_PASSWORD=
-        - CLIENT_HOST=["http://192.168.155.46:5173"]
+        - CLIENT_HOST=["http://192.168.15.46:5173"]
         - USER_PERMISSION_SECURITY_ENABLED=false
         - USER_PARAMETER_SECURITY_ENABLED=false
     container_name: keps_assistant_process
@@ -21,25 +21,27 @@ services:
       - TZ=Asia/Makassar
     ports:
       - "2001:2001"
+      - "5173:5173"
     volumes:
       - ./log:/usr/process_unit/workdir/log
+      - ./interaction_unit/build:/usr/process_unit/workdir/fe_build
     networks:
       keps_vps_1_network:
         ipv4_address: 170.30.0.3
 
-  interaction:
-    build:
-      context: ./interaction_unit
-    container_name: keps_assistant_interaction
-    ports:
-      # - "3000:3000" // AKTIVKAN JIKA BUKAN UNTUK SERVER KEPS
-      - "5173:5173"
-    environment:
-      - VITE_API_URL=http://192.168.155.46:2001
-      - TZ=Asia/Makassar
-    networks:
-      keps_vps_1_network:
-        ipv4_address: 170.30.0.4
+  # interaction:
+  #   build:
+  #     context: ./interaction_unit
+  #   container_name: keps_assistant_interaction
+  #   ports:
+  #     # - "3000:3000" // AKTIVKAN JIKA BUKAN UNTUK SERVER KEPS
+  #     - "5173:5173"
+  #   environment:
+  #     - VITE_API_URL=http://localhost:2001
+  #     - TZ=Asia/Makassar
+  #   networks:
+  #     keps_vps_1_network:
+  #       ipv4_address: 170.30.0.4
 
 networks:
   keps_vps_1_network:
