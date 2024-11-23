@@ -41,7 +41,7 @@ export const getAllRincianPesananPenjualanJasaByReturPenjualanRepo = async (uuid
                     khbt.kode_jasa AS kategori_harga_jasa_kode_jasa,
                     dbt.name AS daftar_jasa_name,
                     sbt.name AS satuan_jasa_name,
-                    dgt.name AS daftar_gudang_name,
+                    ct.name AS cabang_name,
                     IFNULL((
                         SELECT 
                             SUM(rppdbt2.nilai_pelunasan) 
@@ -125,7 +125,7 @@ export const getAllRincianPesananPenjualanJasaByReturPenjualanRepo = async (uuid
                 JOIN ${generateDatabaseName(req_id)}.daftar_jasa_tab dbt ON dbt.uuid = khbt.daftar_jasa
                 JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sbt ON sbt.uuid = khbt.satuan_jasa 
                 JOIN ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt ON sabt.uuid = rppbt.stok_awal_jasa 
-                JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang 
+                JOIN ${generateDatabaseName(req_id)}.cabang_tab ct ON ct.uuid = sabt.cabang 
                 WHERE rpbt.uuid = "${uuid}"
                 AND rppbt.enabled = 1
             ) AS res

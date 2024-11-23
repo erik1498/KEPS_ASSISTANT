@@ -38,7 +38,7 @@ export const getRincianPengembalianDendaPenjualanJasaByFakturPenjualanJasaUUIDRe
                 khbt.kode_jasa AS kategori_harga_jasa_kode_jasa,
                 dbt.name AS daftar_jasa_name,
                 sbt.name AS satuan_jasa_name,
-                dgt.name AS daftar_gudang_name,
+                ct.name AS cabang_name,
                 IFNULL((
                     SELECT 
                         SUM((rrpbt.denda_sudah_dibayar / rrpbt.jumlah) * rrpbt.retur)
@@ -73,7 +73,7 @@ export const getRincianPengembalianDendaPenjualanJasaByFakturPenjualanJasaUUIDRe
             JOIN ${generateDatabaseName(req_id)}.daftar_jasa_tab dbt ON dbt.uuid = khbt.daftar_jasa
             JOIN ${generateDatabaseName(req_id)}.stok_awal_jasa_tab sabt ON sabt.uuid = rppbt.stok_awal_jasa 
             JOIN ${generateDatabaseName(req_id)}.satuan_jasa_tab sbt ON sbt.uuid = khbt.satuan_jasa 
-            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang 
+            JOIN ${generateDatabaseName(req_id)}.cabang_tab ct ON ct.uuid = sabt.cabang 
             JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_penjualan_jasa_tab pdpbt ON pdpbt.faktur_penjualan_jasa = fpbt.uuid 
             WHERE pdpbt.uuid = "${uuid}" 
             AND rppbt.enabled = 1

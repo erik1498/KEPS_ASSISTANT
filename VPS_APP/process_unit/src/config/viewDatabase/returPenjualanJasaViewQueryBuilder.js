@@ -50,7 +50,7 @@ export const returPenjualanJasaViewQueryBuilder = (req_id) => {
         JOIN ${generateDatabaseName(req_id)}.retur_penjualan_jasa_tab rpbt ON rpbt.uuid= rrpbt.retur_penjualan_jasa
         JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_jasa_tab fpbt ON fpbt.pesanan_penjualan_jasa = ppbt2.uuid 
         JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer 
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "f3827c1b-b8d8-4c1f-94e9-8249e9292a03"	
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "ad6d4852-27dd-4b6e-8d26-eb812084d248"	
         WHERE rrpbt.enabled = 1
         AND rpbt.enabled = 1
         AND rppbt2.enabled = 1

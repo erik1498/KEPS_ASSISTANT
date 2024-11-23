@@ -90,7 +90,7 @@ export const pelunasanPenjualanJasaViewQueryBuilder = (req_id) => {
         JOIN ${generateDatabaseName(req_id)}.pelunasan_penjualan_jasa_tab ppbt ON ppbt.uuid= rppbt.pelunasan_penjualan_jasa
         JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_jasa_tab fpbt ON fpbt.pesanan_penjualan_jasa = ppbt2.uuid 
         JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt2.customer 
-        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "33105460-6ac0-4744-a56c-6822bb4d4ba3"
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "826a9418-4b0e-4ca4-8a83-6c392e7a4cf1"
         WHERE rppbt.enabled = 1
         AND ppbt.enabled = 1
         AND rppbt2.enabled = 1
