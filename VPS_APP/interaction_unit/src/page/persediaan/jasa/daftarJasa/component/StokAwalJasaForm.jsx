@@ -7,6 +7,7 @@ import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiCabangCRUD, apiDaftarGudangCRUD, apiStokAwalJasaCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import FormInput from "../../../../../component/form/FormInput"
+import { getHariTanggalFull } from "../../../../../helper/date.helper"
 
 const StokAwalJasaForm = ({
     idDaftarJasa,
@@ -18,6 +19,7 @@ const StokAwalJasaForm = ({
         value: kategoriHargaJasaList[0].uuid
     } : null)
     const [jumlah, setJumlah] = useState(0)
+    const [tanggal, setTanggal] = useState(getHariTanggalFull())
 
     const [cabangJasaList, setCabangJasaList] = useState([])
 
@@ -32,7 +34,8 @@ const StokAwalJasaForm = ({
                         daftar_jasa: idDaftarJasa,
                         cabang: cabangJasa.value,
                         kategori_harga_jasa: kategoriHargaJasa.value,
-                        jumlah: `${jumlah}`
+                        jumlah: `${jumlah}`,
+                        tanggal: `${tanggal}`
                     }
                 }).then(() => {
                     _getStokAwalJasa()

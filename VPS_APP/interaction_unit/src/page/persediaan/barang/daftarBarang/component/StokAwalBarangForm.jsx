@@ -7,6 +7,7 @@ import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiDaftarGudangCRUD, apiStokAwalBarangCRUD } from "../../../../../service/endPointList.api"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 import FormInput from "../../../../../component/form/FormInput"
+import { getHariTanggalFull } from "../../../../../helper/date.helper"
 
 const StokAwalBarangForm = ({
     idDaftarBarang,
@@ -18,6 +19,7 @@ const StokAwalBarangForm = ({
         value: kategoriHargaBarangList[0].uuid
     } : null)
     const [jumlah, setJumlah] = useState(0)
+    const [tanggal, setTanggal] = useState(getHariTanggalFull())
 
     const [gudangBarangList, setGudangBarangList] = useState([])
 
@@ -32,7 +34,8 @@ const StokAwalBarangForm = ({
                         daftar_barang: idDaftarBarang,
                         daftar_gudang: gudangBarang.value,
                         kategori_harga_barang: kategoriHargaBarang.value,
-                        jumlah: `${jumlah}`
+                        jumlah: `${jumlah}`,
+                        tanggal: `${tanggal}`
                     }
                 }).then(() => {
                     _getStokAwalBarang()
