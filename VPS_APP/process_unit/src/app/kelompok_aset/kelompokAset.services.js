@@ -58,10 +58,10 @@ export const checkKelompokAsetSudahDigunakanService = async (uuid, req_identity)
     LOGGER(logType.INFO, `Start checkKelompokAsetSudahDigunakanService`, {
         uuid
     }, req_identity)
-    const kategoriAsetGet = await checkKelompokAsetSudahDigunakanRepo(uuid, req_identity)
-    if (kategoriAsetGet.length > 0 && kategoriAsetGet[0].count > 0) {
+    const kelompokAsetGet = await checkKelompokAsetSudahDigunakanRepo(uuid, req_identity)
+    if (kelompokAsetGet.length > 0 && kelompokAsetGet[0].count > 0) {
         throw Error(JSON.stringify({
-            message: "Tidak Dapat Dieksekusi, Kategori Aset Sudah Digunakan",
+            message: "Tidak Dapat Dieksekusi, Kelompok Aset Sudah Digunakan",
             prop: "error"
         }))
     }

@@ -12,7 +12,8 @@ const KategoriAsetForm = ({
     getData = () => { }
 }) => {
     const [namaKategoriAset, setNamaKategoriAset] = useState(kategoriAsetEdit?.name ? kategoriAsetEdit.name : ``)
-    const [kodeAkunPerkiraanKategoriAset, setKodeAkunPerkiraanKategoriAset] = useState(kategoriAsetEdit?.kode_akun_perkiraan ? kategoriAsetEdit.kode_akun_perkiraan : ``)
+    const [kodeAkunPerkiraanDebetKategoriAset, setKodeAkunPerkiraanDebetKategoriAset] = useState(kategoriAsetEdit?.kode_akun_perkiraan_debet ? kategoriAsetEdit.kode_akun_perkiraan_debet : ``)
+    const [kodeAkunPerkiraanKreditKategoriAset, setKodeAkunPerkiraanKreditKategoriAset] = useState(kategoriAsetEdit?.kode_akun_perkiraan_kredit ? kategoriAsetEdit.kode_akun_perkiraan_kredit : ``)
     
     const [kodeAkunPerkiraanKategoriAsetList, setKodeAkunPerkiraanKategoriAsetList] = useState([])
 
@@ -24,15 +25,22 @@ const KategoriAsetForm = ({
                 if (resData.data.entry.length > 0) {
                     if (kategoriAsetEdit) {
                         initialDataFromEditObject({
-                            editObject: kategoriAsetEdit.kode_akun_perkiraan,
+                            editObject: kategoriAsetEdit.kode_akun_perkiraan_debet,
                             dataList: resData.data.entry,
-                            setState: setKodeAkunPerkiraanKategoriAset,
+                            setState: setKodeAkunPerkiraanDebetKategoriAset,
+                            labelKey: "name",
+                            valueKey: "uuid",
+                        })
+                        initialDataFromEditObject({
+                            editObject: kategoriAsetEdit.kode_akun_perkiraan_kredit,
+                            dataList: resData.data.entry,
+                            setState: setKodeAkunPerkiraanKreditKategoriAset,
                             labelKey: "name",
                             valueKey: "uuid",
                         })
                         return
                     }
-                    setKodeAkunPerkiraanKategoriAset({
+                    setKodeAkunPerkiraanDebetKategoriAset({
                         label: resData.data.entry[0].name,
                         value: resData.data.entry[0].uuid,
                     })
@@ -48,7 +56,8 @@ const KategoriAsetForm = ({
                 .custom(`${kategoriAsetEdit?.uuid ? `/${kategoriAsetEdit.uuid}` : ``}`, kategoriAsetEdit ? "PUT" : "POST", null, {
                     data: {
                         name: namaKategoriAset,
-                        kode_akun_perkiraan: kodeAkunPerkiraanKategoriAset.value
+                        kode_akun_perkiraan_debet: kodeAkunPerkiraanDebetKategoriAset.value,
+                        kode_akun_perkiraan_kredit: kodeAkunPerkiraanKreditKategoriAset.value
                     }
                 }).then(() => {
                     if (kategoriAsetEdit) {
@@ -93,17 +102,30 @@ const KategoriAsetForm = ({
                     }
                 />
                 <FormSelectWithLabel
-                    label={"Kode Akun"}
+                    label={"Kode Akun Debet"}
                     optionsDataList={kodeAkunPerkiraanKategoriAsetList}
                     optionsLabel={["code", "name"]}
                     optionsDelimiter={"-"}
                     optionsLabelIsArray={true}
                     optionsValue={"uuid"}
-                    selectValue={kodeAkunPerkiraanKategoriAset}
+                    selectValue={kodeAkunPerkiraanDebetKategoriAset}
                     onchange={(e) => {
-                        setKodeAkunPerkiraanKategoriAset(e)
+                        setKodeAkunPerkiraanDebetKategoriAset(e)
                     }}
-                    selectName={`kodeAkunPerkiraanDaftarAset`}
+                    selectName={`kodeAkunPerkiraanDebetDaftarAset`}
+                />
+                <FormSelectWithLabel
+                    label={"Kode Akun Kredit"}
+                    optionsDataList={kodeAkunPerkiraanKategoriAsetList}
+                    optionsLabel={["code", "name"]}
+                    optionsDelimiter={"-"}
+                    optionsLabelIsArray={true}
+                    optionsValue={"uuid"}
+                    selectValue={kodeAkunPerkiraanKreditKategoriAset}
+                    onchange={(e) => {
+                        setKodeAkunPerkiraanKreditKategoriAset(e)
+                    }}
+                    selectName={`kodeAkunPerkiraanKreditDaftarAset`}
                 />
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"

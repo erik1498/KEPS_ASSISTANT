@@ -15,6 +15,7 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
                 debet: 0,
                 kredit: laba_rugi_data_berjalan.laba_rugi.gain
             }
+            labaTahunBerjalan.uraian = getBulanText(bulan - 1).toUpperCase() + " " + tahun
             data.push(labaTahunBerjalan)
         }
         if (laba_rugi_data_berjalan.laba_rugi.loss != null) {
@@ -25,6 +26,7 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
                 debet: Math.abs(laba_rugi_data_berjalan.laba_rugi.loss),
                 kredit: 0
             }
+            labaTahunBerjalan.uraian = getBulanText(bulan - 1).toUpperCase() + " " + tahun
             data.push(labaTahunBerjalan)
         }
 
@@ -35,22 +37,24 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
 
 
             if (getPersediaanBarangDagang.length > 0) {
-                indexPersediaanBarangDagang = data.indexOf(getPersediaanBarangDagang[0])
+                indexPersediaanBarangDagang = data.indexOf(getPersediaanBarangDagang[getPersediaanBarangDagang.length - 1])
 
-                data.push({
-                    kode_akun_perkiraan_name: 'Persediaan Barang Dagang',
-                    kode_akun_perkiraan_code: '108',
-                    kode_akun_perkiraan_type: 'Harta',
-                    debet: 0,
-                    kredit: getPersediaanBarangDagang[0].debet
-                })
-                data.push({
-                    kode_akun_perkiraan_name: 'Persediaan Barang Dagang Awal',
-                    kode_akun_perkiraan_code: '701',
-                    kode_akun_perkiraan_type: 'Harga Pokok Penjualan',
-                    debet: getPersediaanBarangDagang[0].debet,
-                    kredit: 0
-                })
+                if (getPersediaanBarangDagang[getPersediaanBarangDagang.length - 1].debet > 0) {
+                    data.push({
+                        kode_akun_perkiraan_name: 'Persediaan Barang Dagang',
+                        kode_akun_perkiraan_code: '108',
+                        kode_akun_perkiraan_type: 'Harta',
+                        debet: 0,
+                        kredit: getPersediaanBarangDagang[getPersediaanBarangDagang.length - 1].debet
+                    })
+                    data.push({
+                        kode_akun_perkiraan_name: 'Persediaan Barang Dagang Awal',
+                        kode_akun_perkiraan_code: '701',
+                        kode_akun_perkiraan_type: 'Harga Pokok Penjualan',
+                        debet: getPersediaanBarangDagang[getPersediaanBarangDagang.length - 1].debet,
+                        kredit: 0
+                    })
+                }
             }
         }
 
@@ -90,7 +94,7 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
                     value: generateReportValue(data[i])
                 })
             }
-            if (data[i].kode_akun_perkiraan_type == HARGA_POKOK_PENJUALAN_TYPE && data[i].kode_akun_perkiraan_code == "701") {
+            if (data[i].kode_akun_perkiraan_type == HARGA_POKOK_PENJUALAN_TYPE && i == data.length - 1) {
                 data[i] = convertByPlusMinusValue(data[i])
                 resultHargaPokokPenjualan.push({
                     ...data[i],

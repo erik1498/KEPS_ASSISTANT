@@ -1,3 +1,4 @@
+import { getTanggalTerakhirPadaBulan } from "./jurnalUmumUtil.js"
 import { getBulanText } from "./mathUtil.js"
 
 export const GARIS_LURUS = "Garis Lurus"
@@ -26,7 +27,7 @@ export const hitungPenyusutanGarisLurus = (asetData) => {
         {
             tahun_perolehan: getBulanText(getDataFromTanggal(asetData.tanggal_beli, "-", 1) - 1) + " " + getDataFromTanggal(asetData.tanggal_beli, "-", 0),
             tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
-            bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
+            bulan: 12,
             tahun: getDataFromTanggal(asetData.tanggal_beli, "-", 0),
             masa_awal: null,
             masa_akhir: null,
@@ -46,8 +47,8 @@ export const hitungPenyusutanGarisLurus = (asetData) => {
             penyusutanResult.push(
                 {
                     tahun_perolehan: getBulanText(masa - 1) + " " + (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + (isDecember ? i : i - 1)),
-                    tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
-                    bulan: masa,
+                    tanggal: getTanggalTerakhirPadaBulan((parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + (isDecember ? i : i - 1)), 12),
+                    bulan: 12,
                     tahun: (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + (isDecember ? i : i - 1)),
                     masa_awal: masa,
                     masa_akhir: 12,
@@ -63,8 +64,8 @@ export const hitungPenyusutanGarisLurus = (asetData) => {
             penyusutanResult.push(
                 {
                     tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i - (isDecember ? 0 : 1),
-                    tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
-                    bulan: 12 - masa,
+                    tanggal: getTanggalTerakhirPadaBulan((parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + (isDecember ? i : i - 1)), 12),
+                    bulan: 12,
                     tahun: (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + (isDecember ? i : i - 1)),
                     masa_awal: 12 - masa,
                     masa_akhir: 12,
@@ -78,8 +79,8 @@ export const hitungPenyusutanGarisLurus = (asetData) => {
             penyusutanResult.push(
                 {
                     tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i - (isDecember ? 0 : 1),
-                    tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
-                    bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
+                    tanggal: getTanggalTerakhirPadaBulan((parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + (isDecember ? i : i - 1)), 12),
+                    bulan: 12,
                     tahun: (parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + (isDecember ? i : i - 1)),
                     masa_awal: null,
                     masa_akhir: null,
@@ -98,8 +99,8 @@ export const hitungPenyusutanSaldoMenurun = (asetData) => {
     let penyusutanResult = [
         {
             tahun_perolehan: getDataFromTanggal(asetData.tanggal_beli, "-", 0),
-            tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
-            bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
+            tanggal: getTanggalTerakhirPadaBulan(parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)), 12),
+            bulan: 12,
             tahun: getDataFromTanggal(asetData.tanggal_beli, "-", 0),
             harga_beli: parseFloat(asetData.harga_satuan),
             akumulasi_penyusutan_awal_tahun: null,
@@ -113,8 +114,8 @@ export const hitungPenyusutanSaldoMenurun = (asetData) => {
         penyusutanResult.push(
             {
                 tahun_perolehan: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
-                tanggal: getDataFromTanggal(asetData.tanggal_beli, "-", 2),
-                bulan: getDataFromTanggal(asetData.tanggal_beli, "-", 1),
+                tanggal: getTanggalTerakhirPadaBulan(parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i, 12),
+                bulan: 12,
                 tahun: parseFloat(getDataFromTanggal(asetData.tanggal_beli, "-", 0)) + i,
                 harga_beli: parseFloat(asetData.harga_satuan),
                 akumulasi_penyusutan_awal_tahun: parseFloat(penyusutanResult[i - 1].harga_beli) - penyusutanResult[i - 1].nilai_buku_akhir_tahun,

@@ -9,7 +9,8 @@ export const getAllKategoriAsetRepo = async (pageNumber, size, search, req_id) =
             SELECT 
                 COUNT(0) AS count 
             FROM ${generateDatabaseName(req_id)}.kategori_aset_tab kat 
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kat.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kat.kode_akun_perkiraan_debet
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt2 ON kapt2.uuid = kat.kode_akun_perkiraan_kredit  
             WHERE kat.enabled = 1
             AND kat.name LIKE '%${search}%'
         `,
@@ -23,9 +24,11 @@ export const getAllKategoriAsetRepo = async (pageNumber, size, search, req_id) =
         `
             SELECT 
                 kat.*,
-                kapt.name AS kode_akun_perkiraan_name
+                kapt.name AS kode_akun_perkiraan_debet_name,
+                kapt2.name AS kode_akun_perkiraan_kredit_name
             FROM ${generateDatabaseName(req_id)}.kategori_aset_tab kat 
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kat.kode_akun_perkiraan 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kat.kode_akun_perkiraan_debet
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt2 ON kapt2.uuid = kat.kode_akun_perkiraan_kredit  
             WHERE kat.enabled = 1
             AND kat.name LIKE '%${search}%'
             LIMIT ${pageNumber}, ${size}
@@ -75,7 +78,8 @@ export const createKategoriAsetRepo = async (kategoriAsetData, req_id) => {
         KategoriAsetModel,
         {
             name: kategoriAsetData.name,
-            kode_akun_perkiraan: kategoriAsetData.kode_akun_perkiraan,
+            kode_akun_perkiraan_debet: kategoriAsetData.kode_akun_perkiraan_debet,
+            kode_akun_perkiraan_kredit: kategoriAsetData.kode_akun_perkiraan_kredit,
             name: kategoriAsetData.name,
             enabled: kategoriAsetData.enabled
         }
@@ -103,7 +107,8 @@ export const updateKategoriAsetByUuidRepo = async (uuid, kategoriAsetData, req_i
         KategoriAsetModel,
         {
             name: kategoriAsetData.name,
-            kode_akun_perkiraan: kategoriAsetData.kode_akun_perkiraan,
+            kode_akun_perkiraan_debet: kategoriAsetData.kode_akun_perkiraan_debet,
+            kode_akun_perkiraan_kredit: kategoriAsetData.kode_akun_perkiraan_kredit,
         },
         {
             uuid
