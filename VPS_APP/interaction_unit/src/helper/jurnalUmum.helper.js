@@ -28,10 +28,16 @@ export const normalizeDataJurnalPerintahStokOpname = (data) => {
 
     let transaksiPerintahStokOpname = []
 
+    let transaksiStokAwalBarang = []
+
     for (let i = 0; i < data.length; i++) {
         const x = data[i];
         if (x.sumber == "PERINTAH STOK OPNAME" && !transaksiPerintahStokOpname.includes(x.transaksi)) {
             transaksiPerintahStokOpname.push(x.transaksi)
+        }
+
+        if (x.sumber == "STOK AWAL BARANG" && !transaksiStokAwalBarang.includes(x.transaksi)) {
+            transaksiStokAwalBarang.push(x.transaksi)
         }
     }
 
@@ -76,6 +82,20 @@ export const normalizeDataJurnalPerintahStokOpname = (data) => {
                 dataInput["harga"] = detail_data.harga
                 dataInput["ppn"] = detail_data.ppn
                 dataInput["diskon_persentase"] = detail_data.diskon_persentase
+                dataInput["waktu_show"] = true
+            }
+        }
+        else if (x.sumber == "STOK AWAL BARANG") {
+            if (transaksiStokAwalBarang.includes(x.transaksi)) {
+
+                transaksiStokAwalBarang[transaksiStokAwalBarang.indexOf(x.transaksi)] = -1
+
+                dataInput["daftar_barang_name"] = detail_data.daftar_barang_name
+                dataInput["daftar_gudang_name"] = detail_data.daftar_gudang_name
+                dataInput["harga_beli"] = detail_data.harga_beli
+                dataInput["kategori_harga_barang_kode_barang"] = detail_data.kategori_harga_barang_kode_barang
+                dataInput["satuan_barang_name"] = detail_data.satuan_barang_name
+                dataInput["jumlah"] = detail_data.jumlah
                 dataInput["waktu_show"] = true
             }
         } else {

@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllPenyesuaianPersediaans)
 router.get("/:uuid", authTokenMiddleware(), getPenyesuaianPersediaanByUUID)
-router.get("/daftar_barang/:perintah_stok_opname", getPenyesuaianPersediaanByPerintahStokOpname)
+router.get("/daftar_barang/:perintah_stok_opname", authTokenMiddleware(), getPenyesuaianPersediaanByPerintahStokOpname)
 router.post("/", authTokenMiddleware(), postCreatePenyesuaianPersediaan)
 router.put("/:uuid", authTokenMiddleware(), updatePenyesuaianPersediaanByUUID)
 router.delete("/:uuid", authTokenMiddleware(), deletePenyesuaianPersediaanByUUID)

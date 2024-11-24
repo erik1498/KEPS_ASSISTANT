@@ -49,6 +49,9 @@ export const getAllBarangAktifByPerintahStokOpnameRepo = async (perintah_stok_op
             AND dbt.kategori_barang = (
                 SELECT psot.kategori_barang FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot WHERE psot.uuid = "${perintah_stok_opname}"
             )
+            AND MONTH(sabt.tanggal) <= (
+                SELECT psot.bulan_transaksi FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_tab psot WHERE psot.uuid = "${perintah_stok_opname}"
+            )
             AND dbt.enabled = 1
             AND sabt.enabled = 1
         `,

@@ -5,6 +5,74 @@ export const perintahStokOpnameQueryBuilder = (bulan, tahun, req_id) => {
     return `
         SELECT 
             "NOT_AVAILABLE" AS uuid,
+            khbt.kode_barang AS bukti_transaksi,
+            sabt.tanggal AS tanggal,
+            LPAD(MONTH(sabt.tanggal), 2, '0') AS bulan,
+            YEAR(sabt.tanggal) AS tahun,
+            sabt.id AS transaksi,
+            sabt.jumlah * khbt.harga_beli AS debet,
+            0 AS kredit,
+            kapt.name AS nama_akun,
+            kapt.code AS kode_akun,
+            kapt.type AS type_akun,
+            kapt.uuid AS uuid_akun,
+            CONCAT("Inisialisasi Stok Awal Barang ", khbt.kode_barang, "  ", dgt.name) AS uraian,
+            JSON_OBJECT (
+                'kategori_harga_barang_kode_barang', khbt.kode_barang,
+                'daftar_gudang_name', dgt.name,
+                'daftar_barang_name', dbt.name,
+                'harga_beli', khbt.harga_beli,
+                'satuan_barang_name', sbt.name,
+                'stok_awal_barang', sabt.uuid,
+                'jumlah', sabt.jumlah
+            ) AS detail_data,
+            "STOK AWAL BARANG" AS sumber
+        FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt
+        JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
+        JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang 
+        JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang 
+        JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "4710e8be-e0c2-4318-8b42-ea8c58aa2312"
+        WHERE MONTH(sabt.tanggal) = ${bulan}
+        AND YEAR(sabt.tanggal) = ${tahun}
+        AND sabt.enabled = 1
+        UNION ALL
+        SELECT 
+            "NOT_AVAILABLE" AS uuid,
+            khbt.kode_barang AS bukti_transaksi,
+            sabt.tanggal AS tanggal,
+            LPAD(MONTH(sabt.tanggal), 2, '0') AS bulan,
+            YEAR(sabt.tanggal) AS tahun,
+            sabt.id AS transaksi,
+            0 AS debet,
+            sabt.jumlah * khbt.harga_beli AS kredit,
+            kapt.name AS nama_akun,
+            kapt.code AS kode_akun,
+            kapt.type AS type_akun,
+            kapt.uuid AS uuid_akun,
+            CONCAT("Inisialisasi Stok Awal Barang ", khbt.kode_barang, "  ", dgt.name) AS uraian,
+            JSON_OBJECT (
+                'kategori_harga_barang_kode_barang', khbt.kode_barang,
+                'daftar_gudang_name', dgt.name,
+                'daftar_barang_name', dbt.name,
+                'harga_beli', khbt.harga_beli,
+                'satuan_barang_name', sbt.name,
+                'stok_awal_barang', sabt.uuid,
+                'jumlah', sabt.jumlah
+            ) AS detail_data,
+            "STOK AWAL BARANG" AS sumber
+        FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt
+        JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
+        JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang 
+        JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang 
+        JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
+        JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "0ebe1d2e-f18b-4c4e-bfdc-304f3dd83735"
+        WHERE MONTH(sabt.tanggal) = ${bulan}
+        AND YEAR(sabt.tanggal) = ${tahun}
+        AND sabt.enabled = 1
+        UNION ALL
+        SELECT 
+            "NOT_AVAILABLE" AS uuid,
             psot.nomor_surat_perintah AS bukti_transaksi,
             "${tahun}-${`${bulan}`.padStart(2, '0')}-${getTanggalTerakhirPadaBulan(tahun, bulan)}T23:59:59" AS tanggal,
             LPAD(psot.bulan_transaksi, 2, '0') AS bulan,

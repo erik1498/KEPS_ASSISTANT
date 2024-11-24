@@ -59,6 +59,7 @@ const JurnalStokOpnamePage = () => {
 
         const normalizedData = await normalizeDataJurnalUmum(normalizeDataJurnalPerintahStokOpname(jurnal))
 
+        console.log(normalizedData)
         setDebet(normalizedData.totalDebet)
         setKredit(normalizedData.totalKredit)
         setJurnalNormalized(normalizedData?.returnData)
