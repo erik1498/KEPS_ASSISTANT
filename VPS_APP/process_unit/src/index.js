@@ -62,17 +62,18 @@ await connectDatabase();
 
 app.use((req, res, next) => {
     try {
-        if (!req.header("Client_id")) {
-            throw Error(JSON.stringify({
-                message: "Akun Tidak Terdaftar",
-                prop: "password"
-            }))
-        }
+        // if (!req.header("Client_id")) {
+        //     throw Error(JSON.stringify({
+        //         message: "Akun Tidak Terdaftar",
+        //         prop: "password"
+        //     }))
+        // }
         let genUUID = v4()
         req.identity = JSON.stringify({
             "id": genUUID,
             "userId": null,
-            "client_id": req.header("Client_id")
+            // "client_id": req.header("Client_id")
+            "client_id": "keps"
         })
         res.setHeader("request-id", genUUID);
         next();

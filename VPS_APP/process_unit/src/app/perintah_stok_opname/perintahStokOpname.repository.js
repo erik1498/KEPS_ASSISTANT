@@ -239,6 +239,7 @@ export const perintahStokOpnameStatusRepo = async (perintah_stok_opname, req_id)
                         COUNT(0)
                     FROM ${generateDatabaseName(req_id)}.neraca_tab nt 
                     WHERE nt.bulan = MONTH(psot.tanggal) AND nt.tahun = YEAR(psot.tanggal)
+                    AND nt.enabled = 1
                 ) AS status_validasi,
                 YEAR(psot.tanggal) AS tahun,
                 MONTH(psot.tanggal) AS bulan,
@@ -572,10 +573,10 @@ export const checkPerintahStokOpnameSudahAdaBulanTransaksiSebelumOrSesudahRepo =
 export const removeJurnalPerintahStokOpanameRepo = async (uuid, req_id) => {
     return await db.query(
         `
-            DELETE FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab WHERE perintah_stok_opname = "${uuid}"
+            UPDATE ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab SET enabled = 0 WHERE perintah_stok_opname = "${uuid}"
         `,
         {
-            type: Sequelize.QueryTypes.DELETE
+            type: Sequelize.QueryTypes.UPDATE
         }
     )
 }

@@ -8,8 +8,8 @@ export const getPerubahanModalByTahunRepo = async (tahun, req_id) => {
             SELECT 
                 nt.*
             FROM ${generateDatabaseName(req_id)}.neraca_tab nt 
-            WHERE 
-            nt.tahun = '${tahun}'
+            WHERE nt.tahun = '${tahun}'
+            AND nt.enabled = 1
             ORDER BY nt.bulan ASC
         `,
         { type: Sequelize.QueryTypes.SELECT }

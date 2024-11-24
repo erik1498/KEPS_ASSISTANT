@@ -23,7 +23,8 @@ export const validasiNeracaServices = async (bulan, tahun, req_identity) => {
         const neracaData = {
             bulan: bulan,
             tahun: tahun,
-            json: JSON.stringify(neraca)
+            json: JSON.stringify(neraca),
+            enabled: 1
         }
         await createNeracaRepo(neracaData, req_identity)
         return neraca

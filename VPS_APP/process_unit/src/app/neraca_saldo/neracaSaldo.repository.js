@@ -101,6 +101,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                     psojt.debet,
                     psojt.kredit 
                 FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab psojt
+                WHERE psojt.enabled = 1
                 UNION ALL
                 SELECT 
                     "c85ac20d-1b1e-45c5-80e1-8db80c5dd283" AS kode_akun_perkiraan,

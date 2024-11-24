@@ -5,15 +5,15 @@ services:
     build:
       context: ./process_unit
       args:
-        - DB_HOST=192.168.15.46
-        - DB_PORT=3306
+        - DB_HOST=192.168.107.46
+        - DB_PORT=9838
         - DB_NAME=db_keps_assistant
-        - DB_MIGRATION=true
-        - DEMO_TYPE=true
+        - DB_MIGRATION=false
+        - DEMO_TYPE=false
         - USE_INTERACTION=true
-        - DB_USER=root
-        - DB_PASSWORD=
-        - CLIENT_HOST=["http://192.168.15.46:5173"]
+        - DB_USER=kepsAssistantUserDB123@#%__
+        - DB_PASSWORD=kepsAssistantPassDB123@#%__
+        - CLIENT_HOST=["http://192.168.107.46:5173"]
         - USER_PERMISSION_SECURITY_ENABLED=false
         - USER_PARAMETER_SECURITY_ENABLED=false
     container_name: keps_assistant_process

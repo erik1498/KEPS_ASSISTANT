@@ -1257,6 +1257,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         psojt.enabled 
                     FROM ${generateDatabaseName(req_id)}.perintah_stok_opname_jurnal_tab psojt 
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = psojt.kode_akun_perkiraan 
+                    WHERE psojt.enabled = 1
                     UNION ALL -- JURNAL PENYUSUTAN ASET
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,

@@ -118,6 +118,7 @@ export const generatePerintahStokOpnameQueryRepo = async (uuid, bulan, tahun, re
         }
             ${uuid ? `AND` : `WHERE`} psojt.bulan = ${bulan}
             AND psojt.tahun = ${tahun}
+            AND psojt.enabled = 1
         `,
         {
             type: Sequelize.QueryTypes.SELECT
