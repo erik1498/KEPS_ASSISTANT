@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import LoadingPage from "./LoadingPage";
 import { useState } from "react";
 import DisplayNotCompatiblePage from "./DisplayNotCompatible";
+import ContentWidthAllowed from "./ContentWidthAllowed";
 
 const Wrap = ({
   children,
@@ -28,42 +29,32 @@ const Wrap = ({
     setNavigateOpen(x => x = false)
   }
 
-  const [displayNotCompatible, setDisplayNotCompatible] = useState(false)
-
-  useEffect(() => {
-    window.addEventListener("resize", () => {
-      if (window.innerWidth < 1680 || window.innerHeight < 900) {
-        setDisplayNotCompatible(true)
-      } else {
-        setDisplayNotCompatible(false)
-      }
-    })
-  }, [])
-
-  return displayNotCompatible ? <DisplayNotCompatiblePage /> : <div className="page-container">
-    <div className="page-container-wp">
-      <div className="relative">
-        {
-          isLoading ? <LoadingPage /> : <>
-            <Navigasi
-              setNavigateOpen={setNavigateOpen}
-              navigateOpen={navigateOpen}
-              closeAllDetailByParent={_closeAllDetailByParent}
-            />
-            {
-              navigateOpen ? <>
-                <div
-                  className="fixed top-0 left-0 right-0 bottom-0 bg-black z-[99] opacity-60 cursor-pointer"
-                  onClick={() => _closeAllDetailByParent()}
-                ></div>
-              </> : <></>
-            }
-            <div className="content px-8 relative">{children}</div>
-          </>
-        }
+  return <ContentWidthAllowed>
+    <div className="page-container">
+      <div className="page-container-wp">
+        <div className="relative">
+          {
+            isLoading ? <LoadingPage /> : <>
+              <Navigasi
+                setNavigateOpen={setNavigateOpen}
+                navigateOpen={navigateOpen}
+                closeAllDetailByParent={_closeAllDetailByParent}
+              />
+              {
+                navigateOpen ? <>
+                  <div
+                    className="fixed top-0 left-0 right-0 bottom-0 bg-black z-[99] opacity-60 cursor-pointer"
+                    onClick={() => _closeAllDetailByParent()}
+                  ></div>
+                </> : <></>
+              }
+              <div className="content px-8 relative">{children}</div>
+            </>
+          }
+        </div>
       </div>
     </div>
-  </div>
+  </ContentWidthAllowed>
 };
 
 export default Wrap
