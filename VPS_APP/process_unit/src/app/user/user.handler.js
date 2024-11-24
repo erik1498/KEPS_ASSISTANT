@@ -37,6 +37,16 @@ export const loginUser = async (req, res) => {
                 }))
             }
         }
+        const origin = req.headers.origin
+        const whitelist = JSON.parse(getEnv("CLIENT_HOST"))
+
+        let reqJSON = JSON.parse(req.identity)
+
+        req.identity = JSON.stringify({
+            "id": reqJSON.uuid,
+            "userId": reqJSON.userId,
+            "client_id": whitelist.filter(x => x.host == origin).at(0).user_db
+        })
 
         let user = await getUserByUsername(username, req.identity)
 
@@ -86,6 +96,7 @@ export const loginUser = async (req, res) => {
         const token = jwt.sign({
             userId: user.uuid,
             userKey: user.serial_key,
+            userClientId: user.client_id,
             userJumlahEntryData: user.jumlah_entry_data,
             userBatasEntryData: user.batas_entry_data,
             userEndDateAkses: user.end_date_akses,
@@ -96,7 +107,8 @@ export const loginUser = async (req, res) => {
 
         const refreshToken = jwt.sign({
             userId: user.uuid,
-            userKey: user.serial_key
+            userKey: user.serial_key,
+            userClientId: user.client_id,
         }, getEnv("REFRESH_SECRET"), {
             expiresIn: '1w'
         });
@@ -162,6 +174,17 @@ export const postCreateUser = async (req, res) => {
 
 export const refreshToken = async (req, res) => {
     try {
+        const origin = req.headers.origin
+        const whitelist = JSON.parse(getEnv("CLIENT_HOST"))
+
+        let reqJSON = JSON.parse(req.identity)
+
+        req.identity = JSON.stringify({
+            "id": reqJSON.uuid,
+            "userId": reqJSON.userId,
+            "client_id": whitelist.filter(x => x.host == origin).at(0).user_db
+        })
+
         let user = await getUserByUuid({
             uuid: req.body.userId
         }, req.identity)
@@ -169,6 +192,7 @@ export const refreshToken = async (req, res) => {
         const token = jwt.sign({
             userId: user.uuid,
             userKey: user.serial_key,
+            userClientId: user.client_id,
             userJumlahEntryData: user.jumlah_entry_data,
             userBatasEntryData: user.batas_entry_data,
             userEndDateAkses: user.end_date_akses,
@@ -179,7 +203,8 @@ export const refreshToken = async (req, res) => {
 
         const refreshToken = jwt.sign({
             userId: user.uuid,
-            userKey: user.serial_key
+            userKey: user.serial_key,
+            userClientId: user.client_id
         }, getEnv("REFRESH_SECRET"), {
             expiresIn: '1w'
         });

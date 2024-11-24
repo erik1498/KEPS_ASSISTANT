@@ -48,7 +48,7 @@ LOGGER(logType.INFO, "ALLOWED CLIENT", whitelist);
 app.use(cors({
     credentials: true,
     origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1) {
+        if (whitelist.filter(x => x.host == origin).length > 0) {
             callback(null, true)
         } else {
             callback("Not Allowed by CORS")
@@ -62,7 +62,7 @@ await connectDatabase();
 
 app.use((req, res, next) => {
     try {
-        if (!req.header("Client_id")) {
+        if (!req.header("keyFromNginx")) {
             throw Error(JSON.stringify({
                 message: "Akun Tidak Terdaftar",
                 prop: "password"
@@ -71,8 +71,7 @@ app.use((req, res, next) => {
         let genUUID = v4()
         req.identity = JSON.stringify({
             "id": genUUID,
-            "userId": null,
-            "client_id": req.header("Client_id")
+            "userId": null
         })
         res.setHeader("request-id", genUUID);
         next();

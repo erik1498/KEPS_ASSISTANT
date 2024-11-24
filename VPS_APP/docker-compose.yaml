@@ -9,11 +9,11 @@ services:
         - DB_PORT=9838
         - DB_NAME=db_keps_assistant
         - DB_MIGRATION=false
-        - DEMO_TYPE=false
+        - DEMO_TYPE=true
         - USE_INTERACTION=true
         - DB_USER=kepsAssistantUserDB123@#%__
         - DB_PASSWORD=kepsAssistantPassDB123@#%__
-        - CLIENT_HOST=["http://192.168.107.46:5173"]
+        - CLIENT_HOST=[{"host":"http://192.168.107.46:5173","user_db":"keps"}]
         - USER_PERMISSION_SECURITY_ENABLED=false
         - USER_PARAMETER_SECURITY_ENABLED=false
     container_name: keps_assistant_process

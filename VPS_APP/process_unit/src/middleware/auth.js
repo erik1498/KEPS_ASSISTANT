@@ -105,12 +105,11 @@ export const authTokenMiddleware = (roles = []) => {
                 }
             }
 
-
             let uuid = JSON.parse(req.identity).id
             req.identity = JSON.stringify({
                 "id": uuid,
                 "userId": decode.userId,
-                "client_id": JSON.parse(req.identity).client_id,
+                "client_id": decode.userClientId,
                 "user_request": userParameter?.osInfo
             })
 
@@ -193,7 +192,7 @@ export const verifyRefreshToken = (req, res, next) => {
     }
 
     // Lakukan verifikasi token
-    jwt.verify(decryptString(req.body.refreshToken, getEnv("REFRESH_ENCRYPT_KEY")), getEnv("REFRESH_SECRET"), async (err, decoded) => {
+    jwt.verify(decryptString(req.body.refreshToken, getEnv("REFRESH_ENCRYPT_KEY")), getEnv("REFRESH_SECRET"), async (err, decode) => {
         if (err) {
             LOGGER(logType.ERROR, "Refresh Token Tidak Sesuai", null, req.identity, req.originalUrl, req.method, false)
             return res.status(401).json({
@@ -207,7 +206,7 @@ export const verifyRefreshToken = (req, res, next) => {
         }
 
         if (getEnv("USER_PERMISSION_SECURITY_ENABLED") == "true") {
-            let reqKey = decryptString(req.header("User-Permission"), decoded.userKey)
+            let reqKey = decryptString(req.header("User-Permission"), decode.userKey)
             if (reqKey != getEnv("LICENSE_KEY")) {
                 LOGGER(logType.ERROR, "User-Permission Tidak Sesuai Dengan Licence Key", null, req.identity, req.originalUrl, req.method, false)
                 return res.status(401).json({
@@ -221,7 +220,7 @@ export const verifyRefreshToken = (req, res, next) => {
             }
         }
         // Jika verifikasi berhasil, lanjutkan ke pemrosesan permintaan selanjutnya
-        req.body = decoded; // Simpan informasi pengguna dari token di objek req
+        req.body = decode; // Simpan informasi pengguna dari token di objek req
         next(); // Lanjutkan ke pemrosesan permintaan selanjutnya
     });
 };
