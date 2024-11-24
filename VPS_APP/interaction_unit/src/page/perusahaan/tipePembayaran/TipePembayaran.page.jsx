@@ -100,7 +100,7 @@ const TipePembayaranPage = () => {
     return <Wrap
         isLoading={isLoading}>
         <div>
-            <PageTitle title="TipePembayaran" />
+            <PageTitle title="Tipe Pembayaran" />
             {
                 addTipePembayaran ?
                     <TipePembayaranForm

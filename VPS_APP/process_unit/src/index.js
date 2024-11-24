@@ -68,6 +68,12 @@ app.use((req, res, next) => {
                 prop: "password"
             }))
         }
+        if (req.header("keyFromNginx") != "REALKEPSSERVER") {
+            throw Error(JSON.stringify({
+                message: "Akun Tidak Terdaftar",
+                prop: "password"
+            }))
+        }
         let genUUID = v4()
         req.identity = JSON.stringify({
             "id": genUUID,
