@@ -78,9 +78,11 @@ export const checkSatuanJasaAllowToEditService = async (uuid, req_identity) => {
     const kategoriHargaJasaUsed = await checkSatuanJasaAllowToEditRepo(uuid, req_identity)
 
     if (kategoriHargaJasaUsed.length > 0) {
-        throw Error(JSON.stringify({
-            message: `Satuan Jasa Sudah Terpakai Pada Kategori Harga Jasa, Kode Jasa : ${kategoriHargaJasaUsed[0].kode_jasa}`,
-            prop: "error"
-        }))
+        if (kategoriHargaJasaUsed[0].kode_barang) {
+            throw Error(JSON.stringify({
+                message: `Satuan Jasa Sudah Terpakai Pada Kategori Harga Jasa, Kode Jasa : ${kategoriHargaJasaUsed[0].kode_jasa}`,
+                prop: "error"
+            }))
+        }
     }
 }

@@ -78,9 +78,11 @@ export const checkSatuanBarangAllowToEditService = async (uuid, req_identity) =>
     const kategoriHargaBarangUsed = await checkSatuanBarangAllowToEditRepo(uuid, req_identity)
 
     if (kategoriHargaBarangUsed.length > 0) {
-        throw Error(JSON.stringify({
-            message: `Satuan Barang Sudah Terpakai Pada Kategori Harga Barang, Kode Barang : ${kategoriHargaBarangUsed[0].kode_barang}, Nomor Invoice Aset : ${kategoriHargaBarangUsed[0].nomor_invoice_aset}, Nomor Invoice Perlengkapan: ${kategoriHargaBarangUsed[0].nomor_invoice_perlengkapan}`,
-            prop: "error"
-        }))
+        if (kategoriHargaBarangUsed[0].kode_barang || kategoriHargaBarangUsed[0].nomor_invoice_aset || kategoriHargaBarangUsed.nomor_invoice_perlengkapan) {
+            throw Error(JSON.stringify({
+                message: `Satuan Barang Sudah Terpakai Pada Kategori Harga Barang, Kode Barang : ${kategoriHargaBarangUsed[0].kode_barang}${kategoriHargaBarangUsed[0].nomor_invoice_aset ? `, Nomor Invoice Aset : ${kategoriHargaBarangUsed[0].nomor_invoice_aset}` : ``}${kategoriHargaBarangUsed[0].nomor_invoice_perlengkapan ? `, Nomor Invoice Perlengkapan : ${kategoriHargaBarangUsed[0].nomor_invoice_perlengkapan}` : ``}`,
+                prop: "error"
+            }))
+        }
     }
 }

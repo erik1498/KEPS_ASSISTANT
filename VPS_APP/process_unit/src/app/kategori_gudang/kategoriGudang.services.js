@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createKategoriGudangRepo, deleteKategoriGudangByUuidRepo, getAllKategoriGudangRepo, getKategoriGudangByUuidRepo, updateKategoriGudangByUuidRepo } from "./kategoriGudang.repository.js"
+import { checkKategoriGudangSudahDigunakanRepo, createKategoriGudangRepo, deleteKategoriGudangByUuidRepo, getAllKategoriGudangRepo, getKategoriGudangByUuidRepo, updateKategoriGudangByUuidRepo } from "./kategoriGudang.repository.js"
 
 export const getAllKategoriGudangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllKategoriGudangService", null, req_identity)
@@ -47,6 +47,9 @@ export const createKategoriGudangService = async (kategoriGudangData, req_identi
 export const deleteKategoriGudangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteKategoriGudangByUuidService [${uuid}]`, null, req_identity)
     await getKategoriGudangByUuidService(uuid, req_identity)
+
+    await checkKategoriGudangSudahDigunakanService(uuid, req_identity)
+    
     await deleteKategoriGudangByUuidRepo(uuid, req_identity)
     return true
 }
@@ -54,6 +57,9 @@ export const deleteKategoriGudangByUuidService = async (uuid, req_identity) => {
 export const updateKategoriGudangByUuidService = async (uuid, kategoriGudangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateKategoriGudangByUuidService [${uuid}]`, kategoriGudangData, req_identity)
     const beforeData = await getKategoriGudangByUuidService(uuid, req_identity)
+
+    await checkKategoriGudangSudahDigunakanService(uuid, req_identity)
+
     const kategoriGudang = await updateKategoriGudangByUuidRepo(uuid, kategoriGudangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
@@ -62,4 +68,17 @@ export const updateKategoriGudangByUuidService = async (uuid, kategoriGudangData
     }, req_identity)
 
     return kategoriGudang
+}
+
+export const checkKategoriGudangSudahDigunakanService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkKategoriGudangSudahDigunakanService`, {
+        uuid
+    }, req_identity)
+    const kategoriGudangGet = await checkKategoriGudangSudahDigunakanRepo(uuid, req_identity)
+    if (kategoriGudangGet.length > 0 && kategoriGudangGet[0].count > 0) {
+        throw Error(JSON.stringify({
+            message: "Tidak Dapat Dieksekusi, Kategori Gudang Sudah Digunakan",
+            prop: "error"
+        }))
+    }
 }

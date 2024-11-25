@@ -80,3 +80,18 @@ export const updateKategoriGudangByUuidRepo = async (uuid, kategoriGudangData, r
         }
     )
 }
+
+export const checkKategoriGudangSudahDigunakanRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT
+                COUNT(0) AS count
+            FROM ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt
+            WHERE dgt.kategori_gudang = "${uuid}"
+            AND dgt.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}

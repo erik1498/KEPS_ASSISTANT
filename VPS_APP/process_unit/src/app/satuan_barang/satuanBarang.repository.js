@@ -84,17 +84,32 @@ export const updateSatuanBarangByUuidRepo = async (uuid, satuanBarangData, req_i
 export const checkSatuanBarangAllowToEditRepo = async (uuid, req_id) => {
     return await db.query(
         `
-            SELECT
-                khbt.kode_barang,
-                dat.nomor_invoice AS nomor_invoice_aset,
-                dpt.nomor_invoice AS nomor_invoice_perlengkapan
-            FROM ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt, ${generateDatabaseName(req_id)}.daftar_aset_tab dat, ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
-            WHERE khbt.satuan_barang = "${uuid}"
-            AND khbt.enabled = 1
-            AND dat.satuan_barang = "${uuid}"
-            AND dat.enabled = 1
-            AND dpt.satuan_barang = "${uuid}"
-            AND dpt.enabled = 1
+            SELECT 
+                (
+                    SELECT 
+                        khbt.kode_barang 
+                    FROM ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt
+                    JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang
+                    WHERE khbt.satuan_barang = sbt.uuid
+                    AND khbt.enabled = 1
+                    AND dbt.enabled = 1
+                    LIMIT 1
+                ) AS kode_barang, 
+                (
+                    SELECT 
+                        dat.nomor_invoice
+                    FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat
+                    WHERE dat.satuan_barang = sbt.uuid
+                    AND dat.enabled = 1
+                ) AS nomor_invoice_aset, 
+                (
+                    SELECT 
+                        dpt.nomor_invoice
+                    FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt
+                    WHERE dpt.satuan_barang = sbt.uuid
+                    AND dpt.enabled = 1
+                ) AS nomor_invoice_perlengkapan
+            FROM ${generateDatabaseName(req_id)}.satuan_barang_tab sbt WHERE sbt.uuid = "${uuid}"
         `,
         {
             type: Sequelize.QueryTypes.SELECT

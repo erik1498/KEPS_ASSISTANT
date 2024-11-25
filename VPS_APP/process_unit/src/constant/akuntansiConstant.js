@@ -21,14 +21,29 @@ export const UTANG_MINUS_KODE_AKUN = []
 export const MODAL_MINUS_KODE_AKUN = ["302", "303"]
 
 
+// TRUNCATE TABLE db_keps_assistant_alor.aktivitas_dokumen_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.daftar_aset_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.daftar_barang_tab;
-// TRUNCATE TABLE db_keps_assistant_alor.kategori_harga_barang_tab;
-// TRUNCATE TABLE db_keps_assistant_alor.stok_awal_barang_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.daftar_jasa_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.daftar_perlengkapan_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.dokumen_klien_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.faktur_pembelian_barang_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.faktur_penjualan_barang_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.faktur_penjualan_jasa_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.gaji_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.hadiah_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.hasil_stok_opname_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.hitungan_penyusutan_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.jurnal_umum_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.kategori_harga_barang_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.kategori_harga_jasa_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.kerugian_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.konversi_barang_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.lain_lain_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.lembur_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.logger_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.metode_penyusutan_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.neraca_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.pelunasan_pembelian_barang_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.pelunasan_penjualan_barang_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.pelunasan_penjualan_jasa_tab;
@@ -38,9 +53,12 @@ export const MODAL_MINUS_KODE_AKUN = ["302", "303"]
 // TRUNCATE TABLE db_keps_assistant_alor.penyesuaian_persediaan_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.perintah_stok_opname_jurnal_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.perintah_stok_opname_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.persentase_penyusutan_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.pesanan_pembelian_barang_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.pesanan_penjualan_barang_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.pesanan_penjualan_jasa_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.piutang_karyawan_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.pph2126_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.retur_pembelian_barang_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.retur_penjualan_barang_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.retur_penjualan_jasa_tab;
@@ -60,3 +78,18 @@ export const MODAL_MINUS_KODE_AKUN = ["302", "303"]
 // TRUNCATE TABLE db_keps_assistant_alor.rincian_retur_pembelian_barang_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.rincian_retur_penjualan_barang_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.rincian_retur_penjualan_jasa_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.rincian_transaksi_bank_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.rincian_transaksi_kas_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.rincian_transfer_barang_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.riwayat_aktivitas_dokumen_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.riwayat_pembayaran_aktivitas_dokumen_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.role_permission_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.status_riwayat_aktivitas_dokumen_keterangan_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.status_riwayat_aktivitas_dokumen_pegawai_pelaksana_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.status_riwayat_aktivitas_dokumen_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.stok_awal_barang_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.stok_awal_jasa_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.transaksi_bank_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.transaksi_kas_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.transfer_barang_tab;
+// TRUNCATE TABLE db_keps_assistant_alor.tunjangan_uang_tab;

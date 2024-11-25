@@ -84,15 +84,18 @@ export const updateSatuanJasaByUuidRepo = async (uuid, satuanJasaData, req_id) =
 export const checkSatuanJasaAllowToEditRepo = async (uuid, req_id) => {
     return await db.query(
         `
-            SELECT
-                khbt.kode_jasa
-            FROM ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khbt 
-            WHERE khbt.satuan_jasa = "${uuid}"
-            AND khbt.enabled = 1
-            AND dat.satuan_jasa = "${uuid}"
-            AND dat.enabled = 1
-            AND dpt.satuan_jasa = "${uuid}"
-            AND dpt.enabled = 1
+            SELECT 
+                (
+                    SELECT 
+                        khjt.kode_jasa 
+                    FROM ${generateDatabaseName(req_id)}.kategori_harga_jasa_tab khjt
+                    JOIN ${generateDatabaseName(req_id)}.daftar_jasa_tab djt ON djt.uuid = khjt.daftar_jasa
+                    WHERE khjt.satuan_jasa = sjt.uuid
+                    AND khjt.enabled = 1
+                    AND djt.enabled = 1
+                    LIMIT 1
+                ) AS kode_jasa
+            FROM ${generateDatabaseName(req_id)}.satuan_jasa_tab sjt WHERE sjt.uuid = "${uuid}"
         `,
         {
             type: Sequelize.QueryTypes.SELECT

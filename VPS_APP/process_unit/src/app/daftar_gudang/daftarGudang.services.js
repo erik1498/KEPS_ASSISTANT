@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createDaftarGudangRepo, deleteDaftarGudangByUuidRepo, getAllDaftarGudangRepo, getDaftarGudangByUuidRepo, updateDaftarGudangByUuidRepo } from "./daftarGudang.repository.js"
+import { checkDaftarGudangSudahDigunakanRepo, createDaftarGudangRepo, deleteDaftarGudangByUuidRepo, getAllDaftarGudangRepo, getDaftarGudangByUuidRepo, updateDaftarGudangByUuidRepo } from "./daftarGudang.repository.js"
 
 export const getAllDaftarGudangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllDaftarGudangService", null, req_identity)
@@ -47,6 +47,7 @@ export const createDaftarGudangService = async (daftarGudangData, req_identity) 
 export const deleteDaftarGudangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteDaftarGudangByUuidService [${uuid}]`, null, req_identity)
     await getDaftarGudangByUuidService(uuid, req_identity)
+    await checkDaftarGudangSudahDigunakanService(uuid, req_identity)
     await deleteDaftarGudangByUuidRepo(uuid, req_identity)
     return true
 }
@@ -54,6 +55,7 @@ export const deleteDaftarGudangByUuidService = async (uuid, req_identity) => {
 export const updateDaftarGudangByUuidService = async (uuid, daftarGudangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateDaftarGudangByUuidService [${uuid}]`, daftarGudangData, req_identity)
     const beforeData = await getDaftarGudangByUuidService(uuid, req_identity)
+    await checkDaftarGudangSudahDigunakanService(uuid, req_identity)
     const daftarGudang = await updateDaftarGudangByUuidRepo(uuid, daftarGudangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
@@ -62,4 +64,17 @@ export const updateDaftarGudangByUuidService = async (uuid, daftarGudangData, re
     }, req_identity)
 
     return daftarGudang
+}
+
+export const checkDaftarGudangSudahDigunakanService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkDaftarGudangSudahDigunakanService`, {
+        uuid
+    }, req_identity)
+    const DaftarGudangGet = await checkDaftarGudangSudahDigunakanRepo(uuid, req_identity)
+    if (DaftarGudangGet.length > 0 && DaftarGudangGet[0].count > 0) {
+        throw Error(JSON.stringify({
+            message: "Tidak Dapat Dieksekusi, Daftar Gudang Sudah Digunakan",
+            prop: "error"
+        }))
+    }
 }

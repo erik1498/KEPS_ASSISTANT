@@ -99,3 +99,21 @@ export const updateDaftarGudangByUuidRepo = async (uuid, daftarGudangData, req_i
         }
     )
 }
+
+
+export const checkDaftarGudangSudahDigunakanRepo = async (uuid, req_id) => {
+    return await db.query(
+        `
+            SELECT
+                COUNT(0) AS count
+            FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt
+            JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang
+            WHERE sabt.daftar_gudang = "${uuid}"
+            AND sabt.enabled = 1
+            AND dbt.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
