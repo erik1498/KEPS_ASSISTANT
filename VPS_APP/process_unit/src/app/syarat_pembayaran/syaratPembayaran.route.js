@@ -5,7 +5,7 @@ import { authTokenMiddleware } from "../../middleware/auth.js"
 const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllSyaratPembayarans)
-router.get("/type/:tipe_pembayaran", getAllSyaratPembayaranByTipePembayaranUUID)
+router.get("/type/:tipe_pembayaran", authTokenMiddleware(), getAllSyaratPembayaranByTipePembayaranUUID)
 router.get("/:uuid", authTokenMiddleware(), getSyaratPembayaranByUUID)
 router.post("/", authTokenMiddleware(), postCreateSyaratPembayaran)
 router.put("/:uuid", authTokenMiddleware(), updateSyaratPembayaranByUUID)

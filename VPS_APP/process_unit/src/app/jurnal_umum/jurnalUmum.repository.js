@@ -1600,8 +1600,7 @@ export const createJurnalUmumRepo = async (jurnalUmumData, req_id) => {
             kode_akun_uuid: jurnalUmumData.kode_akun_uuid,
             bukti_transaksi: jurnalUmumData.bukti_transaksi,
             transaksi: jurnalUmumData.transaksi,
-            enabled: jurnalUmumData.enabled,
-            client_id: JSON.parse(req_id).client_id
+            enabled: jurnalUmumData.enabled
         }
     )
 }

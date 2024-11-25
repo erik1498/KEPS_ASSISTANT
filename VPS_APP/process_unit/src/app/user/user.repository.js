@@ -33,8 +33,7 @@ export const createUserRepo = async (userData, req_id) => {
             username: userData.username,
             password: userData.password,
             name: userData.name,
-            role: userData.role,
-            client_id: JSON.parse(req_id).client_id
+            role: userData.role
         }
     )
 }

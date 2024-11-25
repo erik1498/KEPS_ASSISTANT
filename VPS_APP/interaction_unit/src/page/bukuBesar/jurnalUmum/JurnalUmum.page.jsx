@@ -91,8 +91,6 @@ const JurnalUmumPage = () => {
 
         let normalizedData = await normalizeDataJurnalUmum(normalData.concat(...normalizedDataPerintahStokOpname).concat(...normalizedDataasetTetapDanPerlengkapan))
 
-        console.log(normalizedData)
-
         setBalanceStatus(searchParam.length < 1)
 
         setJurnalUmum(normalizedData.returnData)

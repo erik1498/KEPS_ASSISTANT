@@ -105,12 +105,13 @@ export const authTokenMiddleware = (roles = []) => {
                 }
             }
 
-            let uuid = JSON.parse(req.identity).id
+            let JSONREQ = JSON.parse(req.identity)
+
             req.identity = JSON.stringify({
-                "id": uuid,
+                "id": JSONREQ.id,
                 "userId": decode.userId,
-                "client_id": decode.userClientId,
-                "user_request": userParameter?.osInfo
+                "clientId": JSONREQ.clientId,
+                "userRequest": userParameter?.osInfo
             })
 
             if (getEnv("DEMO_TYPE") == "true" && decode.userEndDateAkses != "UNLIMITED") {

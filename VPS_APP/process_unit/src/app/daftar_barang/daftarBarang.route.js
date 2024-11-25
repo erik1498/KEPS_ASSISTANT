@@ -5,8 +5,8 @@ import { authTokenMiddleware } from "../../middleware/auth.js"
 const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllDaftarBarangs)
-router.get("/transaksi", getAllDaftarBarangUntukTransaksi)
-router.get("/by_gudang/:daftar_gudang", getAllDaftarBarangsAktifByDaftarGudang)
+router.get("/transaksi", authTokenMiddleware(), getAllDaftarBarangUntukTransaksi)
+router.get("/by_gudang/:daftar_gudang", authTokenMiddleware(), getAllDaftarBarangsAktifByDaftarGudang)
 router.get("/:uuid", authTokenMiddleware(), getDaftarBarangByUUID)
 router.post("/", authTokenMiddleware(), postCreateDaftarBarang)
 router.put("/:uuid", authTokenMiddleware(), updateDaftarBarangByUUID)

@@ -5,7 +5,7 @@ import { authTokenMiddleware } from "../../middleware/auth.js"
 const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllRincianKonversiBarangs)
-router.get("/by_konversi_barang/:konversi_barang", getRincianKonversiBarangByKonversiBarangUuid)
+router.get("/by_konversi_barang/:konversi_barang", authTokenMiddleware(), getRincianKonversiBarangByKonversiBarangUuid)
 router.get("/:uuid", authTokenMiddleware(), getRincianKonversiBarangByUUID)
 router.post("/", authTokenMiddleware(), postCreateRincianKonversiBarang)
 router.put("/:uuid", authTokenMiddleware(), updateRincianKonversiBarangByUUID)

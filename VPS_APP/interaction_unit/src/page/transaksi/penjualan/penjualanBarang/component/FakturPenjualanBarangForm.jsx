@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { apiFakturPenjualanBarangCRUD, apiSyaratPembayaranCRUD, apiTipePembayaranCRUD } from "../../../../../service/endPointList.api"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
-import { getHariTanggalFull } from "../../../../../helper/date.helper"
-import { FaSave, FaTimes } from "react-icons/fa"
+import { getDataFromTanggal, getHariTanggalFull } from "../../../../../helper/date.helper"
+import { FaPrint, FaSave, FaTimes } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import RiwayatTransaksiPenjualanBarang from "./RiwayatTransaksiPenjualanBarang"
+import { useReactToPrint } from "react-to-print"
+import { FakturPenjualanBarangPrint } from "./FakturPenjualanBarangPrint"
 
 const FakturPenjualanBarangForm = ({
     pesananPenjualanBarang,
+    rincianPesananPenjualanBarang,
     setFakturStatus = () => { },
     fakturStatus,
     ppnStatus,
@@ -27,6 +30,11 @@ const FakturPenjualanBarangForm = ({
     const [syaratPembayaran, setSyaratPembayaran] = useState()
     const [keteranganFakturPenjualanBarang, setKeteranganFakturPenjualanBarang] = useState()
     const [nomorFakturPajakFakturPenjualanBarang, setNomorFakturPajakFakturPenjualanBarang] = useState("")
+
+    const fakturPenjualanBarangPrintRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => fakturPenjualanBarangPrintRef.current,
+    });
 
     const _getDataTipePembayaran = () => {
         apiTipePembayaranCRUD
@@ -114,7 +122,6 @@ const FakturPenjualanBarangForm = ({
     useEffect(() => {
         if (fakturStatus != null) {
             _getFakturPenjualan()
-        } else {
             _getDataTipePembayaran()
         }
     }, [fakturStatus])
@@ -181,7 +188,7 @@ const FakturPenjualanBarangForm = ({
                                 addClassInput={fakturStatus ? "border-none px-1" : ""}
                                 others={
                                     {
-                                        value: tipePembayaran,
+                                        value: tipePembayaran.label,
                                         name: "tipePembayaran",
                                         disabled: fakturStatus
                                     }
@@ -194,7 +201,7 @@ const FakturPenjualanBarangForm = ({
                                 addClassInput={fakturStatus ? "border-none px-1" : ""}
                                 others={
                                     {
-                                        value: syaratPembayaran,
+                                        value: syaratPembayaran.label,
                                         name: "syaratPembayaran",
                                         disabled: fakturStatus
                                     }
@@ -276,6 +283,19 @@ const FakturPenjualanBarangForm = ({
                                     onClick={() => _deleteFakturPenjualanBarang()}
                                 >
                                     <FaTimes /> Batalkan Faktur
+                                </button>
+                                <div className="hidden">
+                                    <FakturPenjualanBarangPrint
+                                        ref={fakturPenjualanBarangPrintRef}
+                                        rincianPesananPenjualanBarang={rincianPesananPenjualanBarang}
+                                    />
+                                </div>
+                                <button
+                                    className="btn btn-sm bg-red-800 mt-4 text-white"
+                                    type="button"
+                                    onClick={handlePrint}
+                                >
+                                    <FaPrint /> Cetak Faktur
                                 </button>
                             </> : <></>
                         }

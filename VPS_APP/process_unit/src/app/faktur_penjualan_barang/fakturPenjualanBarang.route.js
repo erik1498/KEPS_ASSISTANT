@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllFakturPenjualanBarangs)
 router.get("/riwayat_transaksi/:uuid", authTokenMiddleware(), getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUID)
-router.get("/pesanan_penjualan_barang/:pesanan_penjualan_barang_uuid", getFakturPenjualanBarangByPesananPenjualanBarangUUID)
+router.get("/pesanan_penjualan_barang/:pesanan_penjualan_barang_uuid", authTokenMiddleware(), getFakturPenjualanBarangByPesananPenjualanBarangUUID)
 router.get("/:uuid", authTokenMiddleware(), getFakturPenjualanBarangByUUID)
 router.post("/", authTokenMiddleware(), postCreateFakturPenjualanBarang)
 router.put("/:uuid", authTokenMiddleware(), updateFakturPenjualanBarangByUUID)

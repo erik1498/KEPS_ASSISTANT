@@ -3,9 +3,10 @@ import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel
 import { apiFakturPenjualanJasaCRUD, apiSyaratPembayaranCRUD, apiTipePembayaranCRUD } from "../../../../../service/endPointList.api"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
-import { FaSave, FaTimes } from "react-icons/fa"
+import { FaPrint, FaSave, FaTimes } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import RiwayatTransaksiPenjualanJasa from "./RiwayatTransaksiPenjualanJasa"
+import { FakturPenjualanJasaPrint } from "./FakturPenjualanJasaPrint"
 
 const FakturPenjualanJasaForm = ({
     pesananPenjualanJasa,
@@ -27,6 +28,11 @@ const FakturPenjualanJasaForm = ({
     const [syaratPembayaran, setSyaratPembayaran] = useState()
     const [keteranganFakturPenjualanJasa, setKeteranganFakturPenjualanJasa] = useState()
     const [nomorFakturPajakFakturPenjualanJasa, setNomorFakturPajakFakturPenjualanJasa] = useState("")
+
+    const fakturPenjualanJasaPrintRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => fakturPenjualanJasaPrintRef.current,
+    });
 
     const _getDataTipePembayaran = () => {
         apiTipePembayaranCRUD
@@ -114,7 +120,6 @@ const FakturPenjualanJasaForm = ({
     useEffect(() => {
         if (fakturStatus != null) {
             _getFakturPenjualan()
-        } else {
             _getDataTipePembayaran()
         }
     }, [fakturStatus])
@@ -276,6 +281,19 @@ const FakturPenjualanJasaForm = ({
                                     onClick={() => _deleteFakturPenjualanJasa()}
                                 >
                                     <FaTimes /> Batalkan Faktur
+                                </button>
+                                <div className="hidden">
+                                    <FakturPenjualanJasaPrint
+                                        ref={fakturPenjualanJasaPrintRef}
+                                        rincianPesananPenjualanJasa={rincianPesananPenjualanJasa}
+                                    />
+                                </div>
+                                <button
+                                    className="btn btn-sm bg-red-800 mt-4 text-white"
+                                    type="button"
+                                    onClick={handlePrint}
+                                >
+                                    <FaPrint /> Cetak Faktur
                                 </button>
                             </> : <></>
                         }

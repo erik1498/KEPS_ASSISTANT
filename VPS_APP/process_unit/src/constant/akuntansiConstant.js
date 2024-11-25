@@ -83,7 +83,6 @@ export const MODAL_MINUS_KODE_AKUN = ["302", "303"]
 // TRUNCATE TABLE db_keps_assistant_alor.rincian_transfer_barang_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.riwayat_aktivitas_dokumen_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.riwayat_pembayaran_aktivitas_dokumen_tab;
-// TRUNCATE TABLE db_keps_assistant_alor.role_permission_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.status_riwayat_aktivitas_dokumen_keterangan_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.status_riwayat_aktivitas_dokumen_pegawai_pelaksana_tab;
 // TRUNCATE TABLE db_keps_assistant_alor.status_riwayat_aktivitas_dokumen_tab;

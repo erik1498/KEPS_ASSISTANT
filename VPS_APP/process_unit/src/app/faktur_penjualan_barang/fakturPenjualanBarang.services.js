@@ -101,10 +101,7 @@ export const getFakturPenjualanBarangByPesananPenjualanBarangUUIDService = async
     LOGGER(logType.INFO, `Start getFakturPenjualanBarangByPesananPenjualanBarangUUIDService`, { pesanan_penjualan_barang_uuid }, req_identity)
     const fakturPenjualanBarang = await getFakturPenjualanBarangByPesananPenjualanBarangUUIDRepo(pesanan_penjualan_barang_uuid, req_identity)
     if (fakturPenjualanBarang.length == 0) {
-        throw new Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
+        return null
     }
     return fakturPenjualanBarang[0]
 }

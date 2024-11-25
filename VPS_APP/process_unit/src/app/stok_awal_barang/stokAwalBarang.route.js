@@ -5,7 +5,7 @@ import { authTokenMiddleware } from "../../middleware/auth.js"
 const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllStokAwalBarangs)
-router.get("/gudang_barang/:kategori_harga_barang/:pesanan_penjualan_barang", getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUID)
+router.get("/gudang_barang/:kategori_harga_barang/:pesanan_penjualan_barang", authTokenMiddleware(), getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUID)
 router.get("/riwayat_penjualan/:uuid", authTokenMiddleware(), getRiwayatTransaksiPenjualanByStokAwalBarangUuid)
 router.get("/riwayat_pembelian/:uuid", authTokenMiddleware(), getRiwayatTransaksiPembelianByStokAwalBarangUuid)
 router.get("/:uuid", authTokenMiddleware(), getStokAwalBarangByBarangUUID)

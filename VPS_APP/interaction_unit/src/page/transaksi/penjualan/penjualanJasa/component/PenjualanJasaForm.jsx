@@ -409,6 +409,7 @@ const PenjualanJasaForm = ({
                 />
                 <FakturPenjualanJasaForm
                     pesananPenjualanJasa={pesananPenjualanJasa}
+                    rincianPesananPenjualanJasa={rincianPesananPenjualanJasa}
                     setFakturStatus={setFakturStatus}
                     fakturStatus={fakturStatus}
                     ppnStatus={ppnStatus}

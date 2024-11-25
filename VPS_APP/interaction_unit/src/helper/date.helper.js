@@ -96,3 +96,8 @@ export const convertTo12HoursFormat = (time) => {
 }
 
 export const myDays = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+export const getDataFromTanggal = (tanggal, delimiter, index) => {
+    tanggal = String(tanggal).length > 10 ? String(tanggal).split("T")[0] : tanggal
+    return String(tanggal).split(delimiter)[index]
+}
