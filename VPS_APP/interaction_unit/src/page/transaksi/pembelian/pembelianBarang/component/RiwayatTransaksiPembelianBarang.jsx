@@ -228,7 +228,7 @@ const RiwayatTransaksiPembelianBarang = ({
                                                         y.type == "pelunasan_pembelian_barang" ? <>
                                                             <RiwayatTransaksiPelunasanPembelianBarang
                                                                 riwayatPelunasanPembelianBarang={y}
-                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
+                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah)?.hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>
@@ -237,7 +237,7 @@ const RiwayatTransaksiPembelianBarang = ({
                                                         y.type == "retur_pembelian_barang" ? <>
                                                             <RiwayatTransaksiReturPembelianBarang
                                                                 riwayatReturPembelianBarang={y}
-                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
+                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah)?.hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>
@@ -246,7 +246,7 @@ const RiwayatTransaksiPembelianBarang = ({
                                                         y.type == "pengembalian_denda_pembelian_barang" ? <>
                                                             <RiwayatTransaksiPengembalianDendaPembelianBarang
                                                                 riwayatPengembalianDendaPembelianBarang={y}
-                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah).hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
+                                                                edited={JSON.parse(y.perintah_stok_opname_nomor_surat_perintah)?.hasil_stok_opname_count > 0 ? false : i == 0 && j == 0}
                                                                 _getDaftarRiwayatTransaksi={_getDaftarRiwayatTransaksi}
                                                             />
                                                         </> : <></>

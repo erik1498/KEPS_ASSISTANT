@@ -18,7 +18,6 @@ const FakturPembelianBarangForm = ({
     const [fakturCancel, setFakturCancel] = useState(true)
 
     const [tipePembayaranList, setTipePembayaranList] = useState([])
-    const [syaratPembayaranList, setSyaratPembayaranList] = useState([])
 
     const [tanggalFakturPembelianBarang, setTanggalFakturPembelianBarang] = useState(getHariTanggalFull())
     const [nomorFakturPembelianBarang, setNomorFakturPembelianBarang] = useState()

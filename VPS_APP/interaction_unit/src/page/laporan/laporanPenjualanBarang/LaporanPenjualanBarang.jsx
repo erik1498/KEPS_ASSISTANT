@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react"
-import Wrap from "../../../../component/layout/Wrap"
-import PageTitle from "../../../../component/general/PageTitle"
-import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
-import { apiDaftarBarangCRUD, apiStokAwalBarangCRUD } from "../../../../service/endPointList.api"
 import { FaPager } from "react-icons/fa"
-import { showError } from "../../../../helper/form.helper"
-import { convertTo12HoursFormat, formatDate, getHariTanggalFormated } from "../../../../helper/date.helper"
-import { getNormalizedByDate } from "../../../../helper/jurnalUmum.helper"
-import { parseToRupiahText } from "../../../../helper/number.helper"
+import { apiDaftarBarangCRUD, apiStokAwalBarangCRUD } from "../../../service/endPointList.api"
+import Wrap from "../../../component/layout/Wrap"
+import PageTitle from "../../../component/general/PageTitle"
+import FormSelectWithLabel from "../../../component/form/FormSelectWithLabel"
+import { convertTo12HoursFormat, formatDate, getHariTanggalFormated } from "../../../helper/date.helper"
+import { parseToRupiahText } from "../../../helper/number.helper"
+import { showError } from "../../../helper/form.helper"
+import { getNormalizedByDate } from "../../../helper/jurnalUmum.helper"
 
-const LaporanPembelianBarangPage = () => {
+const LaporanPenjualanBarangPage = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     const [kategoriHargaBarangSelected, setKategoriHargaBarangSelected] = useState()
@@ -47,7 +47,7 @@ const LaporanPembelianBarangPage = () => {
 
     const _getRiwayatStokAwalBarang = () => {
         apiStokAwalBarangCRUD
-            .custom(`/riwayat_pembelian/${gudangBarang.value}`, "GET")
+            .custom(`/riwayat_penjualan/${gudangBarang.value}`, "GET")
             .then(resData => {
                 const data = getNormalizedByDate(resData.data)
                 setRiwayatLaporan(x => x = data)
@@ -72,7 +72,7 @@ const LaporanPembelianBarangPage = () => {
         isLoading={isLoading}
     >
         <div>
-            <PageTitle title="Laporan Pembelian Barang" />
+            <PageTitle title="Laporan Penjualan Barang" />
             <div className="grid grid-cols-12">
                 <div className="col-span-3">
                     <div className="bg-white py-6 px-6 rounded-md">
@@ -112,13 +112,13 @@ const LaporanPembelianBarangPage = () => {
                             className="btn mt-3 btn-sm bg-blue-800 text-white"
                             onClick={() => _getRiwayatStokAwalBarang()}
                         >
-                            <FaPager /> Lihat Laporan Pembelian Barang
+                            <FaPager /> Lihat Laporan Penjualan Barang
                         </button>
                     </div>
                 </div>
                 <div className="col-span-9 px-2 h-[80vh] overflow-y-scroll no-scrollbar">
                     <div className="bg-white rounded-md p-3">
-                        <h1 className="font-bold text-2xl pb-6">Laporan Riwayat Pembelian Barang</h1>
+                        <h1 className="font-bold text-2xl pb-6">Laporan Riwayat Penjualan Barang</h1>
                         {
                             riwayatLaporan.map((x, i) => {
                                 return <>
@@ -143,7 +143,7 @@ const LaporanPembelianBarangPage = () => {
                                                         </div>
                                                         <div className="col-span-3">
                                                             <p className="text-sm pr-2 px-3 pb-2 font-bold">{y.bukti_transaksi}</p>
-                                                            <p className="text-sm pr-2 px-3 pb-2 font-bold">Supplier {y.supplier} ( {y.supplier_code} )</p>
+                                                            <p className="text-sm pr-2 px-3 pb-2 font-bold">Oleh {y.customer} ( {y.customer_code} )</p>
                                                             {
                                                                 detail?.jumlah ? <p className="text-sm pr-2 font-normal px-3"> Jumlah {parseToRupiahText(detail.jumlah)} {detail.satuan_barang}</p> : ""
                                                             }
@@ -175,4 +175,4 @@ const LaporanPembelianBarangPage = () => {
     </Wrap>
 
 }
-export default LaporanPembelianBarangPage
+export default LaporanPenjualanBarangPage

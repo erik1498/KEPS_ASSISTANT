@@ -20,7 +20,7 @@ const PembelianBarangForm = ({
 
     const [tanggalTransaksiAkhir, setTanggalTransaksiAkhir] = useState(getHariTanggalFull())
     const [fakturStatus, setFakturStatus] = useState(false)
-    const [ppnStatus, setPPNStatus] = useState(false)
+    const [ppnStatus, setPPNStatus] = useState(true)
     const [pilihPesananPembelianBarang, setPilihPesananPembelianBarang] = useState(false)
     const [editNomorPesananPembelian, setEditNomorPesananPembelian] = useState(false)
     const [pesananPembelianBarangListData, setPesananPembelianBarangListData] = useState([])

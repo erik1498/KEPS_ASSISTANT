@@ -42,7 +42,7 @@ export const getStokAwalBarangByUuidRepo = async (uuid, req_id) => {
     )
 }
 
-export const getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDRepo = async (kategori_harga_barang, pesanan_penjualan_barang, req_id) => {
+export const getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDRepo = async (kategori_harga_barang, pesanan_penjualan_or_pembelian_barang, type, req_id) => {
     const daftarGudangBarangs = await db.query(
         `
             SELECT 
@@ -52,12 +52,15 @@ export const getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBa
             JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
             WHERE sabt.kategori_harga_barang = "${kategori_harga_barang}"
             AND sabt.enabled = 1
-            AND sabt.tanggal <= (
-                SELECT 
-                    ppbt.tanggal_pesanan_penjualan_barang
-                FROM ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt
-                WHERE ppbt.uuid = "${pesanan_penjualan_barang}"
-            )
+            ${pesanan_penjualan_or_pembelian_barang ? `
+                    AND sabt.tanggal <= (
+                        SELECT 
+                            ppbt.tanggal_pesanan_${type}_barang
+                        FROM ${generateDatabaseName(req_id)}.pesanan_${type}_barang_tab ppbt
+                        WHERE ppbt.uuid = "${pesanan_penjualan_or_pembelian_barang}"
+                    )
+                ` : ``
+        }
         `,
         {
             type: Sequelize.QueryTypes.SELECT
@@ -185,7 +188,7 @@ export const getRiwayatTransaksiPenjualanByStokAwalBarangUuidRepo = async (uuid,
                 AND ppbt.enabled = 1
                 UNION ALL
                 SELECT 
-                    fpbt.bukti_transaksi,
+                    fpbt.nomor_faktur_penjualan_barang,
                     "faktur_penjualan_barang" AS type,
                     fpbt.tanggal,
                     ct.name AS customer,
@@ -313,12 +316,12 @@ export const getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo = async (uuid,
                 JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier
                 JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 
                 JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
-                WHERE rppbt.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                WHERE rppbt.stok_awal_barang = "${uuid}"
                 AND rppbt.enabled = 1
                 AND ppbt.enabled = 1
                 UNION ALL
                 SELECT 
-                    fpbt.bukti_transaksi,
+                    fpbt.nomor_faktur_pembelian_barang,
                     "faktur_pembelian_barang" AS type,
                     fpbt.tanggal,
                     st.name AS supplier,
@@ -334,7 +337,7 @@ export const getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo = async (uuid,
                         COUNT(0)
                     FROM ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt 
                     WHERE rppbt.pesanan_pembelian_barang = ppbt.uuid 
-                    AND rppbt.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                    AND rppbt.stok_awal_barang = "${uuid}"
                     AND rppbt.enabled = 1
                 ) > 0
                 UNION ALL
@@ -352,7 +355,7 @@ export const getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo = async (uuid,
                 JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_pembelian_barang
                 JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt2.supplier
                 JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pelunasan_pembelian_barang 
-                WHERE rppbt2.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                WHERE rppbt2.stok_awal_barang = "${uuid}"
                 AND rppbt.enabled = 1
                 AND ppbt.enabled = 1
                 AND ppbt.enabled = 1
@@ -371,7 +374,7 @@ export const getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo = async (uuid,
                 JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt2 ON ppbt2.uuid = rppbt2.pesanan_pembelian_barang
                 JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt2.supplier
                 JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pelunasan_pembelian_barang 
-                WHERE rppbt2.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                WHERE rppbt2.stok_awal_barang = "${uuid}"
                 AND rppbt.enabled = 1
                 AND ppbt.enabled = 1
                 AND ppbt.enabled = 1
@@ -391,7 +394,7 @@ export const getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo = async (uuid,
                 JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_pembelian_barang
                 JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier
                 JOIN ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_pembelian_barang 
-                WHERE rppbt.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                WHERE rppbt.stok_awal_barang = "${uuid}"
                 AND rrpbt.enabled = 1
                 AND ppbt.enabled = 1
                 AND rpbt.enabled = 1
@@ -410,7 +413,7 @@ export const getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo = async (uuid,
                 JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_pembelian_barang
                 JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier
                 JOIN ${generateDatabaseName(req_id)}.pengembalian_denda_pembelian_barang_tab pdpbt ON pdpbt.uuid = rpdpbt.pengembalian_denda_pembelian_barang 
-                WHERE rppbt.stok_awal_barang = "d9120905-3090-474b-b16a-1f7b29d6bf06"
+                WHERE rppbt.stok_awal_barang = "${uuid}"
                 AND rpdpbt.enabled = 1
                 AND ppbt.enabled = 1
                 AND pdpbt.enabled = 1

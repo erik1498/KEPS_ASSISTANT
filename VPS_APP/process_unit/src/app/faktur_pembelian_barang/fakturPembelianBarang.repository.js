@@ -29,6 +29,140 @@ export const getAllFakturPembelianBarangRepo = async (pageNumber, size, search, 
     }
 }
 
+export const getFakturReportPembelianBarangsRepo = async (pageNumber, size, search, req_id) => {
+    const fakturPembelianBarangsCount = await db.query(
+        `
+            SELECT 
+                COUNT(0) AS count
+            FROM (
+                SELECT 
+                    IFNULL((
+                        SELECT 
+                            SUM(rppbt.total_harga)
+                        FROM ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt 
+                        WHERE rppbt.enabled = 1
+                        AND rppbt.pesanan_pembelian_barang = fpbt.pesanan_pembelian_barang
+                    ), 0) AS total_beli,
+                    IFNULL((
+                        SELECT 
+                            rrpbt.nilai_retur_sebelum 
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_pembelian_barang_tab rrpbt 
+                        JOIN ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_pembelian_barang 
+                        WHERE rrpbt.enabled = 1
+                        AND rpbt.enabled = 1
+                        AND rpbt.faktur_pembelian_barang = fpbt.uuid 
+                        ORDER BY rpbt.tanggal DESC 
+                        LIMIT 1
+                    ), 0) AS total_retur, 
+                    IFNULL((
+                        SELECT 
+                            rppbt.sudah_dibayar 
+                        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_barang_tab rppbt
+                        JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt2 ON ppbt2.uuid = rppbt.pelunasan_pembelian_barang 
+                        WHERE rppbt.enabled = 1
+                        AND ppbt2.enabled = 1
+                        AND ppbt2.faktur_pembelian_barang = fpbt.uuid 
+                        ORDER BY ppbt2.tanggal DESC
+                        LIMIT 1
+                    ), 0) AS total_pelunasan,
+                    fpbt.tanggal,
+                    fpbt.nomor_faktur_pembelian_barang,
+                    fpbt.bukti_transaksi AS bukti_transaksi_faktur,
+                    ppbt.nomor_pesanan_pembelian_barang,
+                    st.name AS supplier_name,
+                    st.code AS supplier_code
+                FROM ${generateDatabaseName(req_id)}.faktur_pembelian_barang_tab fpbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt ON ppbt.uuid = fpbt.pesanan_pembelian_barang 
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier 
+                WHERE fpbt.enabled = 1
+                AND ppbt.enabled = 1
+            ) AS res
+            WHERE CONCAT(
+                res.nomor_faktur_pembelian_barang,
+                res.bukti_transaksi_faktur,
+                res.nomor_pesanan_pembelian_barang,
+                res.supplier_name,
+                res.supplier_code
+            ) 
+            LIKE '%${search}%' 
+            ORDER BY res.tanggal DESC
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+
+    pageNumber = pageNumber && pageNumber > -1 ? pageNumber : 0
+    size = size ? size : fakturPembelianBarangsCount[0].count
+
+    const fakturPembelianBarangs = await db.query(
+        `
+            SELECT 
+                res.total_beli - (res.total_pelunasan - res.total_retur) AS piutang,
+                res.*
+            FROM (
+                SELECT 
+                    IFNULL((
+                        SELECT 
+                            SUM(rppbt.total_harga)
+                        FROM ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt 
+                        WHERE rppbt.enabled = 1
+                        AND rppbt.pesanan_pembelian_barang = fpbt.pesanan_pembelian_barang
+                    ), 0) AS total_beli,
+                    IFNULL((
+                        SELECT 
+                            rrpbt.nilai_retur_sebelum 
+                        FROM ${generateDatabaseName(req_id)}.rincian_retur_pembelian_barang_tab rrpbt 
+                        JOIN ${generateDatabaseName(req_id)}.retur_pembelian_barang_tab rpbt ON rpbt.uuid = rrpbt.retur_pembelian_barang 
+                        WHERE rrpbt.enabled = 1
+                        AND rpbt.enabled = 1
+                        AND rpbt.faktur_pembelian_barang = fpbt.uuid 
+                        ORDER BY rpbt.tanggal DESC 
+                        LIMIT 1
+                    ), 0) AS total_retur, 
+                    IFNULL((
+                        SELECT 
+                            rppbt.sudah_dibayar 
+                        FROM ${generateDatabaseName(req_id)}.rincian_pelunasan_pembelian_barang_tab rppbt
+                        JOIN ${generateDatabaseName(req_id)}.pelunasan_pembelian_barang_tab ppbt2 ON ppbt2.uuid = rppbt.pelunasan_pembelian_barang 
+                        WHERE rppbt.enabled = 1
+                        AND ppbt2.enabled = 1
+                        AND ppbt2.faktur_pembelian_barang = fpbt.uuid 
+                        ORDER BY ppbt2.tanggal DESC
+                        LIMIT 1
+                    ), 0) AS total_pelunasan,
+                    fpbt.tanggal,
+                    fpbt.nomor_faktur_pembelian_barang,
+                    fpbt.bukti_transaksi AS bukti_transaksi_faktur,
+                    ppbt.nomor_pesanan_pembelian_barang,
+                    st.name AS supplier_name,
+                    st.code AS supplier_code
+                FROM ${generateDatabaseName(req_id)}.faktur_pembelian_barang_tab fpbt 
+                JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt ON ppbt.uuid = fpbt.pesanan_pembelian_barang 
+                JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier 
+                WHERE fpbt.enabled = 1
+                AND ppbt.enabled = 1
+            ) AS res
+            WHERE CONCAT(
+                res.nomor_faktur_pembelian_barang,
+                res.bukti_transaksi_faktur,
+                res.nomor_pesanan_pembelian_barang,
+                res.supplier_name,
+                res.supplier_code
+            ) 
+            LIKE '%${search}%'
+            ORDER BY res.tanggal DESC
+            LIMIT ${pageNumber}, ${size}
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+
+    return {
+        entry: fakturPembelianBarangs,
+        count: fakturPembelianBarangsCount[0].count,
+        pageNumber: pageNumber == 0 ? pageNumber + 1 : (pageNumber / size) + 1,
+        size
+    }
+}
+
 export const getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo = async (faktur_pembelian_barang_uuid, req_id) => {
     return await db.query(
         `
@@ -166,7 +300,7 @@ export const getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo =
     )
 }
 
-export const getFakturPembelianBarangByPesananPembelianBarangUUIDRepo = async (pesanan_pembelian_barang_uuid, req_id) => {
+export const getFakturPembelianBarangByPesananPembelianBarangUUIDRepo = async (pesanan_pembelian_barang, req_id) => {
     return await db.query(
         `
             SELECT 
@@ -174,7 +308,7 @@ export const getFakturPembelianBarangByPesananPembelianBarangUUIDRepo = async (p
                 tpt.name AS tipe_pembayaran_name
             FROM ${generateDatabaseName(req_id)}.faktur_pembelian_barang_tab fpbt 
             JOIN ${generateDatabaseName(req_id)}.tipe_pembayaran_tab tpt ON tpt.uuid = fpbt.tipe_pembayaran
-            WHERE fpbt.pesanan_pembelian_barang = "${pesanan_pembelian_barang_uuid}"
+            WHERE fpbt.pesanan_pembelian_barang = "${pesanan_pembelian_barang}"
             AND fpbt.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }

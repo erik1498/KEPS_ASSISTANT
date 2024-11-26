@@ -1,5 +1,5 @@
 import { stokAwalBarangValidation } from "./stokAwalBarang.validation.js"
-import { createStokAwalBarangService, deleteStokAwalBarangByUuidService, getAllStokAwalBarangService, getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDService, getRiwayatTransaksiPembelianByStokAwalBarangUuidService, getRiwayatTransaksiPenjualanByStokAwalBarangUuidService, getStokAwalBarangByBarangUUIDService, updateStokAwalBarangByUuidService } from "./stokAwalBarang.services.js"
+import { createStokAwalBarangService, deleteStokAwalBarangByUuidService, getAllStokAwalBarangService, getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanOrPembelianBarangUUIDService, getDaftarGudangBarangByKategoriHargaBarangUUIDService, getRiwayatTransaksiPembelianByStokAwalBarangUuidService, getRiwayatTransaksiPenjualanByStokAwalBarangUuidService, getStokAwalBarangByBarangUUIDService, updateStokAwalBarangByUuidService } from "./stokAwalBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -20,10 +20,27 @@ export const getAllStokAwalBarangs = async (req, res) => {
     }
 }
 
-export const getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUID = async (req, res) => {
-    LOGGER(logType.INFO, "Start getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUID", null, req.identity)
+export const getDaftarGudangBarangByKategoriHargaBarangUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getDaftarGudangBarangByKategoriHargaBarangUUID", null, req.identity)
     try {
-        const daftarGudangBarangs = await getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDService(req.params.kategori_harga_barang, req.params.pesanan_penjualan_barang, req.identity)
+        const daftarGudangBarangs = await getDaftarGudangBarangByKategoriHargaBarangUUIDService(req.params.kategori_harga_barang, req.identity)
+        res.json({
+            data: daftarGudangBarangs,
+            message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanOrPembelianBarangUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanOrPembelianBarangUUID", null, req.identity)
+    try {
+        const daftarGudangBarangs = await getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanOrPembelianBarangUUIDService(req.params.kategori_harga_barang, req.params.pesanan_penjualan_or_pembelian_barang, req.params.type, req.identity)
         res.json({
             data: daftarGudangBarangs,
             message: "Get Data Success"

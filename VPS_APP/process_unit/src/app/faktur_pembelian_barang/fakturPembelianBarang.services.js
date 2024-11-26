@@ -3,7 +3,7 @@ import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
-import { createFakturPembelianBarangRepo, deleteFakturPembelianBarangByUuidRepo, getAllFakturPembelianBarangRepo, getFakturPembelianBarangByPesananPembelianBarangUUIDRepo, getFakturPembelianBarangByUuidRepo, getJumlahRincianTransaksiDendaOnTableByTanggalRepo, getJumlahRincianTransaksiOnTableByTanggalRepo, getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo, getTanggalTransaksiTerakhirByFakturPembelianRepo, updateFakturPembelianBarangByUuidRepo } from "./fakturPembelianBarang.repository.js"
+import { createFakturPembelianBarangRepo, deleteFakturPembelianBarangByUuidRepo, getAllFakturPembelianBarangRepo, getFakturPembelianBarangByPesananPembelianBarangUUIDRepo, getFakturPembelianBarangByUuidRepo, getFakturReportPembelianBarangsRepo, getJumlahRincianTransaksiDendaOnTableByTanggalRepo, getJumlahRincianTransaksiOnTableByTanggalRepo, getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo, getTanggalTransaksiTerakhirByFakturPembelianRepo, updateFakturPembelianBarangByUuidRepo } from "./fakturPembelianBarang.repository.js"
 
 export const getAllFakturPembelianBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllFakturPembelianBarangService", null, req_identity)
@@ -23,6 +23,27 @@ export const getAllFakturPembelianBarangService = async (query, req_identity) =>
     }, req_identity)
 
     const fakturPembelianBarangs = await getAllFakturPembelianBarangRepo(pageNumber, size, search, req_identity)
+    return generatePaginationResponse(fakturPembelianBarangs.entry, fakturPembelianBarangs.count, fakturPembelianBarangs.pageNumber, fakturPembelianBarangs.size)
+}
+
+export const getFakturReportPembelianBarangsService = async (query, req_identity) => {
+    LOGGER(logType.INFO, "Start getFakturReportPembelianBarangsService", null, req_identity)
+
+    let { page, size, search } = query
+    page = page ? page : null
+    size = size ? size : null
+    if (size == "all") {
+        page = null
+        size = null
+    }
+    search = search ? search : ""
+    const pageNumber = (page - 1) * size
+
+    LOGGER(logType.INFO, "Pagination", {
+        pageNumber, size, search
+    }, req_identity)
+
+    const fakturPembelianBarangs = await getFakturReportPembelianBarangsRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(fakturPembelianBarangs.entry, fakturPembelianBarangs.count, fakturPembelianBarangs.pageNumber, fakturPembelianBarangs.size)
 }
 
@@ -97,9 +118,9 @@ export const getJumlahRincianTransaksiDendaOnTableByTanggalService = async (tabl
     return jumlahTransaksi
 }
 
-export const getFakturPembelianBarangByPesananPembelianBarangUUIDService = async (pesanan_pembelian_barang_uuid, req_identity) => {
-    LOGGER(logType.INFO, `Start getFakturPembelianBarangByPesananPembelianBarangUUIDService`, { pesanan_pembelian_barang_uuid }, req_identity)
-    const fakturPembelianBarang = await getFakturPembelianBarangByPesananPembelianBarangUUIDRepo(pesanan_pembelian_barang_uuid, req_identity)
+export const getFakturPembelianBarangByPesananPembelianBarangUUIDService = async (pesanan_pembelian_barang, req_identity) => {
+    LOGGER(logType.INFO, `Start getFakturPembelianBarangByPesananPembelianBarangUUIDService`, { pesanan_pembelian_barang }, req_identity)
+    const fakturPembelianBarang = await getFakturPembelianBarangByPesananPembelianBarangUUIDRepo(pesanan_pembelian_barang, req_identity)
     if (fakturPembelianBarang.length == 0) {
         throw new Error(JSON.stringify({
             message: "Data Not Found",

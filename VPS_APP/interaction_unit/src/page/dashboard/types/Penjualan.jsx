@@ -86,7 +86,6 @@ const Penjualan = () => {
 
     useEffect(() => {
         let normalizedPenjualan = normalizedDataPenjualan()
-        console.log(normalizedPenjualan)
         setDataPenjualan(normalizedPenjualan)
     }, [bulanSelectedSet, loadNormalized])
 

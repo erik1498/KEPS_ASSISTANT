@@ -49,12 +49,21 @@ export const getRiwayatTransaksiPembelianByStokAwalBarangUuidService = async (uu
     return riwayatBarang
 }
 
-export const getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDService = async (kategori_harga_barang, pesanan_penjualan_barang, req_identity) => {
-    LOGGER(logType.INFO, `Start getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDService`, {
-        kategori_harga_barang,
-        pesanan_penjualan_barang
+export const getDaftarGudangBarangByKategoriHargaBarangUUIDService = async (kategori_harga_barang, req_identity) => {
+    LOGGER(logType.INFO, `Start getDaftarGudangBarangByKategoriHargaBarangUUIDService`, {
+        kategori_harga_barang
     }, req_identity)
-    const daftarGudangBarangs = await getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDRepo(kategori_harga_barang, pesanan_penjualan_barang, req_identity)
+    const daftarGudangBarangs = await getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDRepo(kategori_harga_barang, null, null, req_identity)
+    return daftarGudangBarangs
+}
+
+export const getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanOrPembelianBarangUUIDService = async (kategori_harga_barang, pesanan_penjualan_or_pembelian_barang, type, req_identity) => {
+    LOGGER(logType.INFO, `Start getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanOrPembelianBarangUUIDService`, {
+        kategori_harga_barang,
+        pesanan_penjualan_or_pembelian_barang,
+        type
+    }, req_identity)
+    const daftarGudangBarangs = await getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDRepo(kategori_harga_barang, pesanan_penjualan_or_pembelian_barang, type, req_identity)
     return daftarGudangBarangs
 }
 

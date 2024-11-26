@@ -57,8 +57,12 @@ import perintahStokOpnamePath from './path/persediaan/opname/perintahStokOpname.
 import hasilStokOpnamePath from './path/persediaan/opname/hasilStokOpname.path';
 import penyesuaianPersediaanPath from './path/persediaan/opname/penyesuaianPersediaan.path';
 import jurnalStokOpnamePath from './path/persediaan/opname/jurnalStokOpname.path';
-import laporanPenjualanBarangPath from './path/transaksi/penjualan/laporanPenjualanBarang';
-import laporanPembelianBarangPath from './path/transaksi/pembelian/laporanPembelianBarang';
+import laporanPenjualanBarangPath from './path/laporan/laporanPenjualanBarang';
+import laporanPembelianBarangPath from './path/laporan/laporanPembelianBarang';
+import LaporanPembelianBarangPage from './page/laporan/laporanPembelianBarang/LaporanPembelianBarang';
+import LaporanPenjualanBarangPage from './page/laporan/laporanPenjualanBarang/LaporanPenjualanBarang';
+import laporanFakturPenjualanBarangPath from './path/laporan/laporanFakturPenjualanBarang';
+import laporanFakturPembelianBarangPath from './path/laporan/laporanFakturPembelianBarang';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -109,13 +113,13 @@ const PotonganPegawaiPage = React.lazy(() => import('./page/transaksi/payroll/po
 const SlipGajiPegawaiPage = React.lazy(() => import('./page/transaksi/payroll/slipGajiPegawai/SlipGajiPegawaiPage'))
 const PenjualanJasaPage = React.lazy(() => import('./page/transaksi/penjualan/penjualanJasa/PenjualanJasaPage'))
 const PenjualanBarangPage = React.lazy(() => import('./page/transaksi/penjualan/penjualanBarang/PenjualanBarangPage'))
-const LaporanPenjualanBarangPage = React.lazy(() => import('./page/transaksi/penjualan/laporanPenjualanBarang/LaporanPenjualanBarang'));
 const PembelianBarangPage = React.lazy(() => import('./page/transaksi/pembelian/pembelianBarang/PembelianBarangPage'))
-const LaporanPembelianBarangPage = React.lazy(() => import('./page/transaksi/pembelian/laporanPembelianBarang/LaporanPembelianBarang'));
 const PerintahStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/perintahStokOpname/PerintahStokOpname.page'))
 const HasilStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/hasilStokOpname/HasilStokOpname.page'));
 const PenyesuaianPersediaanPage = React.lazy(() => import('./page/persediaan/opname/penyesuaianPersediaan/PenyesuaianPersediaan.page'));
 const JurnalStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/jurnalStokOpname/JurnalStokOpname.page'))
+const LaporanFakturPenjualanBarangPage = React.lazy(() => import('./page/laporan/laporanFakturPenjualanBarang/LaporanFakturPenjualanBarang'));
+const LaporanFakturPembelianBarangPage = React.lazy(() => import('./page/laporan/laporanFakturPembelianBarang/LaporanFakturPembelianBarang'));
 
 function App() {
   return (
@@ -250,6 +254,18 @@ function App() {
         <Routes basename={historyAkunPath.main}>
           <Route path={historyAkunPath.main} element={<HistoryAkunPage />} />
         </Routes>
+        <Routes basename={laporanFakturPenjualanBarangPath.main}>
+          <Route path={laporanFakturPenjualanBarangPath.main} element={<LaporanFakturPenjualanBarangPage />} />
+        </Routes>
+        <Routes basename={laporanFakturPembelianBarangPath.main}>
+          <Route path={laporanFakturPembelianBarangPath.main} element={<LaporanFakturPembelianBarangPage />} />
+        </Routes>
+        <Routes basename={laporanPenjualanBarangPath.main}>
+          <Route path={laporanPenjualanBarangPath.main} element={<LaporanPenjualanBarangPage />} />
+        </Routes>
+        <Routes basename={laporanPembelianBarangPath.main}>
+          <Route path={laporanPembelianBarangPath.main} element={<LaporanPembelianBarangPage />} />
+        </Routes>
         <Routes basename={neracaSaldoPath.main}>
           <Route path={neracaSaldoPath.main} element={<NeracaSaldoPage />} />
         </Routes>
@@ -271,9 +287,6 @@ function App() {
         <Routes basename={penjualanBarangPath.main}>
           <Route path={penjualanBarangPath.main} element={<PenjualanBarangPage />} />
         </Routes>
-        <Routes basename={laporanPenjualanBarangPath.main}>
-          <Route path={laporanPenjualanBarangPath.main} element={<LaporanPenjualanBarangPage />} />
-        </Routes>
         <Routes basename={penjualanJasaPath.main}>
           <Route path={penjualanJasaPath.main} element={<PenjualanJasaPage />} />
         </Routes>
@@ -285,9 +298,6 @@ function App() {
         </Routes>
         <Routes basename={potonganPegawaiPath.main}>
           <Route path={potonganPegawaiPath.main} element={<PotonganPegawaiPage />} />
-        </Routes>
-        <Routes basename={laporanPembelianBarangPath.main}>
-          <Route path={laporanPembelianBarangPath.main} element={<LaporanPembelianBarangPage />} />
         </Routes>
         <Routes basename={slipGajiPegawaiPath.main}>
           <Route path={slipGajiPegawaiPath.main} element={<SlipGajiPegawaiPage />} />

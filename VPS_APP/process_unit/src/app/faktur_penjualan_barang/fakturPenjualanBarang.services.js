@@ -3,7 +3,7 @@ import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
-import { createFakturPenjualanBarangRepo, deleteFakturPenjualanBarangByUuidRepo, getAllFakturPenjualanBarangRepo, getFakturPenjualanBarangByPesananPenjualanBarangUUIDRepo, getFakturPenjualanBarangByUuidRepo, getJumlahRincianTransaksiDendaOnTableByTanggalRepo, getJumlahRincianTransaksiOnTableByTanggalRepo, getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo, getTanggalTransaksiTerakhirByFakturPenjualanRepo, updateFakturPenjualanBarangByUuidRepo } from "./fakturPenjualanBarang.repository.js"
+import { createFakturPenjualanBarangRepo, deleteFakturPenjualanBarangByUuidRepo, getAllFakturPenjualanBarangRepo, getFakturPenjualanBarangByPesananPenjualanBarangUUIDRepo, getFakturPenjualanBarangByUuidRepo, getFakturReportPenjualanBarangsRepo, getJumlahRincianTransaksiDendaOnTableByTanggalRepo, getJumlahRincianTransaksiOnTableByTanggalRepo, getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo, getTanggalTransaksiTerakhirByFakturPenjualanRepo, updateFakturPenjualanBarangByUuidRepo } from "./fakturPenjualanBarang.repository.js"
 
 export const getAllFakturPenjualanBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllFakturPenjualanBarangService", null, req_identity)
@@ -23,6 +23,27 @@ export const getAllFakturPenjualanBarangService = async (query, req_identity) =>
     }, req_identity)
 
     const fakturPenjualanBarangs = await getAllFakturPenjualanBarangRepo(pageNumber, size, search, req_identity)
+    return generatePaginationResponse(fakturPenjualanBarangs.entry, fakturPenjualanBarangs.count, fakturPenjualanBarangs.pageNumber, fakturPenjualanBarangs.size)
+}
+
+export const getFakturReportPenjualanBarangsService = async (query, req_identity) => {
+    LOGGER(logType.INFO, "Start getFakturReportPenjualanBarangsService", null, req_identity)
+
+    let { page, size, search } = query
+    page = page ? page : null
+    size = size ? size : null
+    if (size == "all") {
+        page = null
+        size = null
+    }
+    search = search ? search : ""
+    const pageNumber = (page - 1) * size
+
+    LOGGER(logType.INFO, "Pagination", {
+        pageNumber, size, search
+    }, req_identity)
+
+    const fakturPenjualanBarangs = await getFakturReportPenjualanBarangsRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(fakturPenjualanBarangs.entry, fakturPenjualanBarangs.count, fakturPenjualanBarangs.pageNumber, fakturPenjualanBarangs.size)
 }
 
@@ -97,9 +118,9 @@ export const getJumlahRincianTransaksiDendaOnTableByTanggalService = async (tabl
     return jumlahTransaksi
 }
 
-export const getFakturPenjualanBarangByPesananPenjualanBarangUUIDService = async (pesanan_penjualan_barang_uuid, req_identity) => {
-    LOGGER(logType.INFO, `Start getFakturPenjualanBarangByPesananPenjualanBarangUUIDService`, { pesanan_penjualan_barang_uuid }, req_identity)
-    const fakturPenjualanBarang = await getFakturPenjualanBarangByPesananPenjualanBarangUUIDRepo(pesanan_penjualan_barang_uuid, req_identity)
+export const getFakturPenjualanBarangByPesananPenjualanBarangUUIDService = async (pesanan_penjualan_barang, req_identity) => {
+    LOGGER(logType.INFO, `Start getFakturPenjualanBarangByPesananPenjualanBarangUUIDService`, { pesanan_penjualan_barang }, req_identity)
+    const fakturPenjualanBarang = await getFakturPenjualanBarangByPesananPenjualanBarangUUIDRepo(pesanan_penjualan_barang, req_identity)
     if (fakturPenjualanBarang.length == 0) {
         return null
     }

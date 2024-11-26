@@ -218,7 +218,6 @@ const Overview = () => {
 
     useEffect(() => {
         let normalizedOverview = normalizedDataOverview()
-        console.log(data)
         setDataOverview(normalizedOverview)
     }, [bulanSelectedSet, kodeAkunTypeSet, loadNormalized])
 

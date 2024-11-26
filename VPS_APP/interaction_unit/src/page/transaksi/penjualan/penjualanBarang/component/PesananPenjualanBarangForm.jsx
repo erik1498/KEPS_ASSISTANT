@@ -32,7 +32,7 @@ const PesananPenjualanBarangForm = ({
     const _getDataDaftarGudangByKategoriHarga = () => {
         setGudangBarang(x => x = null)
         apiStokAwalBarangCRUD
-            .custom(`/gudang_barang/${kategoriHargaBarang.value}/${pesananPenjualanBarang.uuid}`, "GET")
+            .custom(`/gudang_barang/${kategoriHargaBarang.value}/${pesananPenjualanBarang.uuid}/penjualan`, "GET")
             .then(resData => {
                 setGudangBarangList(resData.data)
                 if (resData.data.length > 0) {

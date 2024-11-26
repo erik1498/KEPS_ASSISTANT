@@ -94,7 +94,6 @@ const Biaya = () => {
     useEffect(() => {
         let normalizedBiaya = normalizedDataBiaya()
         setDataBiaya(normalizedBiaya)
-        console.log(normalizedBiaya)
     }, [bulanSelectedSet, loadNormalized])
 
     return <div className="flex flex-col gap-y-3">

@@ -223,13 +223,6 @@ const Navigasi = ({
                                                             </li>
                                                         </> : <></>
                                                     }
-                                                    {
-                                                        getRolesInCookie("Transaksi_Laporan_Penjualan_Barang") ? <>
-                                                            <li>
-                                                                <NavigationLink to="/transaksi/penjualan/laporan_penjualan_barang" addClass={"my-1"} label={"Laporan Barang"} />
-                                                            </li>
-                                                        </> : <></>
-                                                    }
                                                 </ul>
                                             </li>
                                         </> : <></>
@@ -243,13 +236,6 @@ const Navigasi = ({
                                                         getRolesInCookie("Transaksi_Pembelian_Barang") ? <>
                                                             <li>
                                                                 <NavigationLink to="/transaksi/pembelian/barang" addClass={"my-1"} label={"Barang"} />
-                                                            </li>
-                                                        </> : <></>
-                                                    }
-                                                    {
-                                                        getRolesInCookie("Transaksi_Laporan_Pembelian_Barang") ? <>
-                                                            <li>
-                                                                <NavigationLink to="/transaksi/pembelian/laporan_pembelian_barang" addClass={"my-1"} label={"Laporan Barang"} />
                                                             </li>
                                                         </> : <></>
                                                     }
@@ -620,6 +606,34 @@ const Navigasi = ({
                                     sideBars={sideBars[0]}
                                 />
                                 <ul className="menu z-50 bg-gray-100 rounded-md w-max">
+                                    {
+                                        getRolesInCookie("Laporan_Faktur_Penjualan_Barang") ? <>
+                                            <li>
+                                                <NavigationLink to="/laporan/laporanFakturPenjualanBarang" addClass={"my-1"} label={"Laporan Faktur Penjualan Barang"} />
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Laporan_Faktur_Pembelian_Barang") ? <>
+                                            <li>
+                                                <NavigationLink to="/laporan/laporanFakturPembelianBarang" addClass={"my-1"} label={"Laporan Faktur Pembelian Barang"} />
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Laporan_Penjualan_Barang") ? <>
+                                            <li>
+                                                <NavigationLink to="/laporan/laporanPenjualanBarang" addClass={"my-1"} label={"Laporan Penjualan Barang"} />
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Laporan_Pembelian_Barang") ? <>
+                                            <li>
+                                                <NavigationLink to="/laporan/laporanPembelianBarang" addClass={"my-1"} label={"Laporan Pembelian Barang"} />
+                                            </li>
+                                        </> : <></>
+                                    }
                                     {
                                         getRolesInCookie("Laporan_NeracaSaldo") ? <>
                                             <li>
