@@ -85,6 +85,7 @@ export const getFakturReportPembelianBarangsRepo = async (pageNumber, size, sear
                 res.supplier_code
             ) 
             LIKE '%${search}%' 
+            AND res.total_beli - (res.total_pelunasan - res.total_retur) > 0
             ORDER BY res.tanggal DESC
         `,
         { type: Sequelize.QueryTypes.SELECT }
@@ -149,6 +150,7 @@ export const getFakturReportPembelianBarangsRepo = async (pageNumber, size, sear
                 res.supplier_code
             ) 
             LIKE '%${search}%'
+            AND res.total_beli - (res.total_pelunasan - res.total_retur) > 0
             ORDER BY res.tanggal DESC
             LIMIT ${pageNumber}, ${size}
         `,

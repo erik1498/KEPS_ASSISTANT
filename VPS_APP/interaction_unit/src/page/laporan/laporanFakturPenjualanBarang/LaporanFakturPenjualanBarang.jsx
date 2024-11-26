@@ -8,60 +8,37 @@ import Pagination from "../../../component/general/Pagination"
 import { showError } from "../../../helper/form.helper"
 import { parseToRupiahText } from "../../../helper/number.helper"
 import { formatDate } from "../../../helper/date.helper"
+import { getNormalizedCustomKey, getNormalizedFaktur } from "../../../helper/jurnalUmum.helper"
 
 const LaporanFakturPenjualanBarangPage = () => {
 
     const dataContext = useDataContext()
     const { data } = dataContext
 
+    const [search, setSearch] = useState("")
+    const [searchStatus, setSearchStatus] = useState(true)
+
     const [laporanFakturPenjualanBarang, setLaporanFakturPenjualanBarang] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-
-    const [searchStatus, setSearchStatus] = useState(false)
-    const [search, setSearch] = useState("")
-
-    // const DaftarAsetPrintRef = useRef();
-    // const handlePrint = useReactToPrint({
-    //     content: () => DaftarAsetPrintRef.current,
-    // });
-
-    const [pagination, setPagination] = useState({
-        page: 1,
-        size: 10,
-        count: 118,
-        lastPage: 12
-    })
 
     const _getData = (searchParam = "") => {
         if (searchParam == "") {
             setSearch(searchParam)
+            setSearchStatus(true)
         }
         setIsLoading(true)
         apiFakturPenjualanBarangCRUD
-            .custom(`/faktur_report?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
+            .custom(`/faktur_report?search=${searchParam}`, "GET")
             .then(resData => {
-                setSearchStatus(searchParam.length < 1)
-                setLaporanFakturPenjualanBarang(resData?.data?.entry)
-                setPagination(resData?.data?.pagination)
+
+                let data = getNormalizedCustomKey(resData.data.entry, "customer_name")
+
+                data = getNormalizedFaktur(data, ["total_retur", "total_pelunasan", "total_beli", "piutang"])
+                setLaporanFakturPenjualanBarang(data)
                 setIsLoading(false)
             }).catch(err => {
                 showError(err)
             })
-    }
-
-    const paginateUpdatePage = ({ selected }) => {
-        let paginateCopy = pagination
-        paginateCopy.page = selected + 1
-        setPagination(paginateCopy)
-        _getData()
-    }
-
-    const setSize = (sizeSelected) => {
-        let paginateCopy = pagination
-        paginateCopy.size = sizeSelected
-        paginateCopy.page = 1
-        setPagination(paginateCopy)
-        _getData()
     }
 
     useEffect(() => {
@@ -99,47 +76,77 @@ const LaporanFakturPenjualanBarangPage = () => {
                     </button> */}
                 </div>
             </div>
-            <div className="overflow-x-auto bg-white shadow-xl rounded-md h-[50vh] no-scrollbar px-6 pb-4">
-                <table className="table">
-                    {/* head */}
-                    <thead>
-                        <tr className="sticky top-0 bg-white py-4 text-black">
-                            <th width={12}>No</th>
-                            <th>Tanggal Faktur</th>
-                            <th>Bukti Transaksi Faktur</th>
-                            <th>Nomor Faktur Penjualan Barang</th>
-                            <th>Nomor Pesanan Penjualan Barang</th>
-                            <th>Customer</th>
-                            <th>Total Pembelian</th>
-                            <th>Total Pelunasan</th>
-                            <th>Total Retur</th>
-                            <th>Piutang</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            laporanFakturPenjualanBarang?.map((item, i) => {
-                                return <>
-                                    <tr key={i}>
-                                        <td>{i + 1}.</td>
-                                        <td>{formatDate(item.tanggal)}</td>
-                                        <td>{item.bukti_transaksi_faktur}</td>
-                                        <td>{item.nomor_faktur_penjualan_barang}</td>
-                                        <td>{item.nomor_pesanan_penjualan_barang}</td>
-                                        <td>{item.customer_name} <br /> {item.customer_code}</td>
-                                        <td>Rp. {parseToRupiahText(item.total_beli)}</td>
-                                        <td>Rp. {parseToRupiahText(item.total_pelunasan)}</td>
-                                        <td>Rp. {parseToRupiahText(item.total_retur)}</td>
-                                        <td>Rp. {parseToRupiahText(item.piutang)}</td>
-                                    </tr>
-                                </>
-                            })
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <Pagination paginateUpdatePage={paginateUpdatePage} paginate={pagination} setSize={setSize} />
+            <div className="bg-white rounded-md px-6 py-3">
+                {
+                    laporanFakturPenjualanBarang.map((x, i) => {
+                        return <>
+                            <p className="font-bold sticky top-0 z-20 mt-4">{x.parent}</p>
+                            <div className="flex flex-col">
+                                <div className="font-medium px-10 my-4">
+                                    <div className="grid grid-cols-12">
+                                        <div className="col-span-3">
+                                            <p className="border-b-2 py-2 border-black mx-4">No. Faktur Penjualan Barang</p>
+                                        </div>
+                                        <div className="col-span-3">
+                                            <p className="border-b-2 py-2 border-black mx-4">Tanggal Faktur</p>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <p className="border-b-2 py-2 border-black mx-4">Total Penjualan</p>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <p className="border-b-2 py-2 border-black mx-4">Sudah Dibayar</p>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <p className="border-b-2 py-2 border-black mx-4">Piutang</p>
+                                        </div>
+                                    </div>
+                                    {
+                                        x.data.map((y, j) => {
+                                            return <>
+                                                <div className="grid grid-cols-12 my-4">
+                                                    <div className="col-span-3">
+                                                        <p className="mx-4">{y.nomor_faktur_penjualan_barang}</p>
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                        <p className="mx-4">{formatDate(y.tanggal)}</p>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <p className="mx-4">{parseToRupiahText(y.total_beli.toFixed(2))}</p>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <p className="mx-4">{parseToRupiahText(y.total_pelunasan.toFixed(2))}</p>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <p className="mx-4">{parseToRupiahText(y.piutang.toFixed(2))}</p>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        })
+                                    }
+                                    <div className="grid grid-cols-12 my-3">
+                                        <div className="col-span-3">
+                                            <p className="mx-4"></p>
+                                        </div>
+                                        <div className="col-span-3">
+                                            <p className="mx-4"></p>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <p className="border-t-2 py-2 border-black mx-4">{parseToRupiahText(x.total_beli.toFixed(2))}</p>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <p className="border-t-2 py-2 border-black mx-4">{parseToRupiahText(x.total_pelunasan.toFixed(2))}</p>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <p className="border-t-2 py-2 border-black mx-4">{parseToRupiahText(x.piutang.toFixed(2))}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div >
+                        </>
+                    })
+                }
+            </div >
         </div>
-    </Wrap>
+    </Wrap >
 }
 export default LaporanFakturPenjualanBarangPage

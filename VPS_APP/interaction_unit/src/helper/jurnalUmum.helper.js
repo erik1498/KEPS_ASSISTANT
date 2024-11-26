@@ -1,6 +1,43 @@
 import { myDays } from "./date.helper";
 import { getSumOfStringValue, parseRupiahToFloat } from "./number.helper";
 
+export const getNormalizedCustomKey = (data, key) => {
+    let keys = []
+    data = data.map(x => {
+        x.parent = x[key]
+
+        if (!keys.includes(x.parent)) {
+            keys.push(x.parent)
+        }
+
+        return x
+    })
+
+    let fixedData = keys.map(x => {
+        let selected = data.filter(y => y.parent == x)
+        return {
+            parent: x,
+            data: selected
+        }
+    })
+    return fixedData
+}
+
+export const getNormalizedFaktur = (data, keys) => {
+    let datacopy = data
+    for (let i = 0; i < datacopy.length; i++) {
+        for (let k = 0; k < keys.length; k++) {
+            datacopy[i][keys[k]] = 0.0                
+        }
+        for (let j = 0; j < datacopy[i].data.length; j++) {
+            for (let k = 0; k < keys.length; k++) {
+                datacopy[i][keys[k]] += datacopy[i].data[j][keys[k]]       
+            }
+        }
+    }
+    return datacopy
+}
+
 export const getNormalizedByDate = (data) => {
     let keys = []
     data = data.map(x => {
