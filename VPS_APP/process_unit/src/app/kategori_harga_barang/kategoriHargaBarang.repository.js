@@ -51,6 +51,26 @@ export const getAllKategoriHargaBarangRepo = async (daftar_barang, pageNumber, s
     }
 }
 
+export const getHargaBeliByDaftarBarangAndSatuanBarangReportRepo = async (daftar_barang, satuan_barang, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                khbt.kode_barang,
+                khbt.harga_beli,
+                ppbt.tanggal_pesanan_pembelian_barang,
+                st.name AS supplier_name
+            FROM ${generateDatabaseName(req_id)}.rincian_pesanan_pembelian_barang_tab rppbt 
+            JOIN ${generateDatabaseName(req_id)}.pesanan_pembelian_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_pembelian_barang 
+            JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = ppbt.supplier 
+            JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 
+            WHERE khbt.satuan_barang = "${satuan_barang}"
+            AND khbt.daftar_barang = "${daftar_barang}"
+            ORDER BY khbt.harga_beli ASC, ppbt.tanggal_pesanan_pembelian_barang DESC 
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+}
+
 export const getKategoriHargaBarangByUuidRepo = async (uuid, req_id) => {
     return selectOneQueryUtil(
         generateDatabaseName(req_id),

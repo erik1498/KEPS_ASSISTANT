@@ -1,7 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { checkDaftarBarangAllowToEditService } from "../daftar_barang/daftarBarang.services.js"
-import { createKategoriHargaBarangRepo, deleteKategoriHargaBarangByUuidRepo, getAllKategoriHargaBarangRepo, getKategoriHargaBarangByKodeBarangRepo, getKategoriHargaBarangByUuidRepo, updateKategoriHargaBarangByUuidRepo } from "./kategoriHargaBarang.repository.js"
+import { createKategoriHargaBarangRepo, deleteKategoriHargaBarangByUuidRepo, getAllKategoriHargaBarangRepo, getHargaBeliByDaftarBarangAndSatuanBarangReportRepo, getKategoriHargaBarangByKodeBarangRepo, getKategoriHargaBarangByUuidRepo, updateKategoriHargaBarangByUuidRepo } from "./kategoriHargaBarang.repository.js"
 
 export const getAllKategoriHargaBarangService = async (daftar_barang, query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllKategoriHargaBarangService", null, req_identity)
@@ -22,6 +22,19 @@ export const getAllKategoriHargaBarangService = async (daftar_barang, query, req
 
     const kategoriHargaBarangs = await getAllKategoriHargaBarangRepo(daftar_barang, pageNumber, size, search, req_identity)
     return generatePaginationResponse(kategoriHargaBarangs.entry, kategoriHargaBarangs.count, kategoriHargaBarangs.pageNumber, kategoriHargaBarangs.size)
+}
+
+export const getHargaBeliByDaftarBarangAndSatuanBarangReportService = async (daftar_barang, satuan_barang, req_identity) => {
+    LOGGER(logType.INFO, `Start getHargaBeliByDaftarBarangAndSatuanBarangReportService`,
+        {
+            daftar_barang,
+            satuan_barang
+        },
+        req_identity
+    )
+
+    const kategoriHargaBarang = await getHargaBeliByDaftarBarangAndSatuanBarangReportRepo(daftar_barang, satuan_barang, req_identity)
+    return kategoriHargaBarang
 }
 
 export const getKategoriHargaBarangByUuidService = async (uuid, req_identity) => {
@@ -49,7 +62,7 @@ export const createKategoriHargaBarangService = async (kategoriHargaBarangData, 
 export const deleteKategoriHargaBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteKategoriHargaBarangByUuidService [${uuid}]`, null, req_identity)
 
-    await getKategoriHargaBarangByUuidService(uuid, req_identity)    
+    await getKategoriHargaBarangByUuidService(uuid, req_identity)
 
     await checkDaftarBarangAllowToEditService(true, uuid, req_identity)
 
