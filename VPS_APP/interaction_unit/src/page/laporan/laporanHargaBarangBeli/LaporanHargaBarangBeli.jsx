@@ -67,7 +67,7 @@ const LaporanHargaBarangBeliPage = () => {
         isLoading={isLoading}
     >
         <div>
-            <PageTitle title="Laporan Pembelian Barang" />
+            <PageTitle title="Laporan Harga Barang Beli" />
             <div className="grid grid-cols-12">
                 <div className="col-span-12">
                     <div className="bg-white py-6 px-6 rounded-t-md">

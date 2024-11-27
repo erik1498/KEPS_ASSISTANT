@@ -76,7 +76,7 @@ const LaporanFakturPembelianBarangPage = () => {
                     </button> */}
                 </div>
             </div>
-            <div className="bg-white rounded-md px-6 py-3">
+            <div className="text-xs bg-white rounded-md px-6 py-3">
                 {
                     laporanFakturPembelianBarang.map((x, i) => {
                         return <>

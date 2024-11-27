@@ -122,7 +122,7 @@ const LaporanPenjualanBarangPage = () => {
                         {
                             riwayatLaporan.map((x, i) => {
                                 return <>
-                                    <p className="font-bold sticky top-0 bg-gray-300 p-2 z-20">{getHariTanggalFormated("/", formatDate(x.parent, false))}</p>
+                                    <p className="font-bold text-xs sticky top-0 bg-gray-300 p-2 z-20">{getHariTanggalFormated("/", formatDate(x.parent, false))}</p>
                                     <div className="flex flex-col">
                                         {
                                             x.data.map((y, j) => {
@@ -132,32 +132,32 @@ const LaporanPenjualanBarangPage = () => {
                                                 return <div className="my-6 pl-6">
                                                     <div className="grid grid-cols-12 mb-3">
                                                         <div className="col-span-1">
-                                                            <p className="text-sm pr-2 font-medium">{convertTo12HoursFormat(y.tanggal.split("T")[1])}</p>
+                                                            <p className="text-xs pr-2 font-medium">{convertTo12HoursFormat(y.tanggal.split("T")[1])}</p>
                                                         </div>
                                                         <div className="col-span-3">
-                                                            <p className="text-sm pr-2 font-medium px-3">{y.type.replaceAll("_", " ").toUpperCase()}</p>
+                                                            <p className="text-xs pr-2 font-medium px-3">{y.type.replaceAll("_", " ").toUpperCase()}</p>
                                                         </div>
                                                     </div>
                                                     <div className="grid grid-cols-12">
                                                         <div className="col-span-1">
                                                         </div>
                                                         <div className="col-span-3">
-                                                            <p className="text-sm pr-2 px-3 pb-2 font-bold">{y.bukti_transaksi}</p>
-                                                            <p className="text-sm pr-2 px-3 pb-2 font-bold">Oleh {y.customer} ( {y.customer_code} )</p>
+                                                            <p className="text-xs pr-2 px-3 pb-2 font-bold">{y.bukti_transaksi}</p>
+                                                            <p className="text-xs pr-2 px-3 pb-2 font-bold">Oleh {y.customer} ( {y.customer_code} )</p>
                                                             {
-                                                                detail?.jumlah ? <p className="text-sm pr-2 font-normal px-3"> Jumlah {parseToRupiahText(detail.jumlah)} {detail.satuan_barang}</p> : ""
+                                                                detail?.jumlah ? <p className="text-xs pr-2 font-normal px-3"> Jumlah {parseToRupiahText(detail.jumlah)} {detail.satuan_barang}</p> : ""
                                                             }
                                                             {
-                                                                detail?.diskon_persentase ? <p className="text-sm pr-2 font-normal px-3"> Diskon {detail.diskon_persentase} % </p> : ""
+                                                                detail?.diskon_persentase ? <p className="text-xs pr-2 font-normal px-3"> Diskon {detail.diskon_persentase} % </p> : ""
                                                             }
                                                             {
-                                                                detail?.total ? <p className="text-sm pr-2 font-normal px-3"> Total Rp.{parseToRupiahText(detail.total)}</p> : ""
+                                                                detail?.total ? <p className="text-xs pr-2 font-normal px-3"> Total Rp.{parseToRupiahText(detail.total)}</p> : ""
                                                             }
                                                             {
-                                                                detail?.nilai_pelunasan ? <p className="text-sm pr-2 font-normal px-3"> Nilai Pelunasan Rp.{parseToRupiahText(detail.nilai_pelunasan)}</p> : ""
+                                                                detail?.nilai_pelunasan ? <p className="text-xs pr-2 font-normal px-3"> Nilai Pelunasan Rp.{parseToRupiahText(detail.nilai_pelunasan)}</p> : ""
                                                             }
                                                             {
-                                                                detail?.retur ? <p className="text-sm pr-2 font-normal px-3"> Jumlah Retur {parseToRupiahText(detail.retur)} Dengan Nilai Rp.{parseToRupiahText(detail.nilai_retur)}</p> : ""
+                                                                detail?.retur ? <p className="text-xs pr-2 font-normal px-3"> Jumlah Retur {parseToRupiahText(detail.retur)} Dengan Nilai Rp.{parseToRupiahText(detail.nilai_retur)}</p> : ""
                                                             }
                                                         </div>
                                                     </div>
