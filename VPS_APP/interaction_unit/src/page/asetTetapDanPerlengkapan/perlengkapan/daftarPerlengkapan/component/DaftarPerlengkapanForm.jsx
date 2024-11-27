@@ -7,7 +7,7 @@ import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLab
 import { initialDataFromEditObject } from "../../../../../helper/select.helper"
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
-import { apiDaftarPerlengkapanCRUD, apiKategoriPerlengkapanCRUD, apiMetodePenyusutanCRUD, apiSatuanBarangCRUD, apiSupplierCRUD } from "../../../../../service/endPointList.api"
+import { apiDaftarPerlengkapanCRUD, apiKategoriPerlengkapanCRUD, apiKodeAkunCRUD, apiMetodePenyusutanCRUD, apiSatuanBarangCRUD, apiSupplierCRUD } from "../../../../../service/endPointList.api"
 
 const DaftarPerlengkapanForm = ({
     setAddDaftarPerlengkapanEvent = () => { },
@@ -16,6 +16,7 @@ const DaftarPerlengkapanForm = ({
 }) => {
     const [supplierList, setSupplierList] = useState([])
     const [satuanBarangList, setSatuanBarangList] = useState([])
+    const [kodeAkunPerkiraanList, setKodeAkunPerkiraanList] = useState([])
     const [kategoriPerlengkapanList, setKategoriPerlengkapanList] = useState([])
 
     const [namaDaftarPerlengkapan, setNamaDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.name ? daftarPerlengkapanEdit.name : ``)
@@ -27,6 +28,7 @@ const DaftarPerlengkapanForm = ({
     const [hargaSatuanDaftarPerlengkapan, setHargaSatuanDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.harga_satuan ? parseToRupiahText(daftarPerlengkapanEdit.harga_satuan) : ``)
     const [DPPDaftarPerlengkapan, setDPPDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.dpp ? parseToRupiahText(daftarPerlengkapanEdit.dpp) : ``)
     const [PPNDaftarPerlengkapan, setPPNDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.ppn ? parseToRupiahText(daftarPerlengkapanEdit.ppn) : ``)
+    const [kodeAkunPerkiraanDaftarPerlengkapan, setKodeAkunPerkiraanDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.kode_akun_perkiraan ? daftarPerlengkapanEdit.kode_akun_perkiraan : ``)
     const [kategoriPerlengkapanDaftarPerlengkapan, setKategoriPerlengkapanDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.kategori_perlengkapan ? daftarPerlengkapanEdit.kategori_perlengkapan : ``)
 
     const _getDataSupplier = () => {
@@ -81,6 +83,33 @@ const DaftarPerlengkapanForm = ({
             })
     }
 
+
+    const _getDataKodeAkunPerkiraan = () => {
+        apiKodeAkunCRUD
+            .custom(`/kas_bank`, "GET")
+            .then(resData => {
+                setKodeAkunPerkiraanList(resData.data)
+                if (resData.data.length > 0) {
+                    if (daftarPerlengkapanEdit) {
+                        initialDataFromEditObject({
+                            editObject: daftarPerlengkapanEdit.kode_akun_perkiraan,
+                            dataList: resData.data,
+                            setState: setKodeAkunPerkiraanDaftarPerlengkapan,
+                            labelKey: "name",
+                            valueKey: "uuid",
+                        })
+                        return
+                    }
+                    setKodeAkunPerkiraanDaftarPerlengkapan({
+                        label: `${resData.data[0].code} - ${resData.data[0].name}`,
+                        value: resData.data[0].uuid,
+                    })
+                }
+            }).catch(err => {
+                showError(err)
+            })
+    }
+
     const _getDataKategoriPerlengkapan = () => {
         apiKategoriPerlengkapanCRUD
             .custom(``, "GET")
@@ -118,6 +147,7 @@ const DaftarPerlengkapanForm = ({
                         kategori_perlengkapan: kategoriPerlengkapanDaftarPerlengkapan.value,
                         supplier: supplierDaftarPerlengkapan.value,
                         kuantitas: kuantitasDaftarPerlengkapan,
+                        kode_akun_perkiraan: kodeAkunPerkiraanDaftarPerlengkapan.value,
                         satuan_barang: satuanBarangDaftarPerlengkapan.value,
                         harga_satuan: hargaSatuanDaftarPerlengkapan,
                         dpp: DPPDaftarPerlengkapan,
@@ -140,6 +170,7 @@ const DaftarPerlengkapanForm = ({
     useEffect(() => {
         _getDataSupplier()
         _getDataSatuanBarang()
+        _getDataKodeAkunPerkiraan()
         _getDataKategoriPerlengkapan()
     }, [])
 
@@ -192,6 +223,19 @@ const DaftarPerlengkapanForm = ({
                             name: "tanggalBeliDaftarPerlengkapan"
                         }
                     }
+                />
+                <FormSelectWithLabel
+                    label={"Kode Akun"}
+                    optionsDataList={kodeAkunPerkiraanList}
+                    optionsLabel={["code", "name"]}
+                    optionsLabelIsArray={true}
+                    optionsValue={"uuid"}
+                    optionsDelimiter={"-"}
+                    selectValue={kodeAkunPerkiraanDaftarPerlengkapan}
+                    onchange={(e) => {
+                        setKodeAkunPerkiraanDaftarPerlengkapan(e)
+                    }}
+                    selectName={`kodeAkunPerkiraanDaftarPerlengkapan`}
                 />
                 <FormSelectWithLabel
                     label={"Kategori Perlengkapan"}

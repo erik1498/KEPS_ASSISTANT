@@ -150,6 +150,7 @@ const KategoriPerlengkapanPage = () => {
                                     <tr className="sticky top-0 bg-white py-4 text-black">
                                         <th width={12}>No</th>
                                         <th>Nama Kategori Perlengkapan</th>
+                                        <th>Kode Akun Perkiraan</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -160,6 +161,7 @@ const KategoriPerlengkapanPage = () => {
                                                 <tr key={i}>
                                                     <td>{i + 1}.</td>
                                                     <td>{item.name}</td>
+                                                    <td>{item.kode_akun_perkiraan_name}</td>
                                                     <td className="flex gap-x-2">
                                                         <FaPen size={12} className="text-yellow-500 cursor-pointer"
                                                             onClick={() => {

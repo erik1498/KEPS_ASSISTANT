@@ -20,6 +20,13 @@ const KategoriPerlengkapanModel = db.define("kategori_perlengkapan_tab",
                 notEmpty:true,
             }
         },
+        kode_akun_perkiraan: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
     }), {
     freezeTableName: true
 }

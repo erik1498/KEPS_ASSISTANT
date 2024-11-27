@@ -371,6 +371,7 @@ const DaftarAsetForm = ({
                     optionsLabel={["code", "name"]}
                     optionsLabelIsArray={true}
                     optionsValue={"uuid"}
+                    optionsDelimiter={"-"}
                     selectValue={kodeAkunPerkiraanDaftarAset}
                     onchange={(e) => {
                         setKodeAkunPerkiraanDaftarAset(e)

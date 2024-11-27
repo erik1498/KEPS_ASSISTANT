@@ -6,7 +6,12 @@ import { generateDatabaseName, insertQueryUtil, selectOneQueryUtil, updateQueryU
 export const getAllKategoriPerlengkapanRepo = async (pageNumber, size, search, req_id) => {
     const kategoriPerlengkapansCount = await db.query(
         `
-            SELECT COUNT(0) AS count FROM ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab WHERE name LIKE '%${search}%' AND enabled = 1
+            SELECT 
+                COUNT(0) AS count 
+            FROM ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan
+            WHERE kpt.enabled = 1
+            AND kpt.name LIKE '%${search}%'
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -16,7 +21,14 @@ export const getAllKategoriPerlengkapanRepo = async (pageNumber, size, search, r
 
     const kategoriPerlengkapans = await db.query(
         `
-            SELECT * FROM ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab WHERE name LIKE '%${search}%' AND enabled = 1 LIMIT ${pageNumber}, ${size}
+            SELECT 
+                kpt.*,
+                kapt.name AS kode_akun_perkiraan_name
+            FROM ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt 
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan
+            WHERE kpt.enabled = 1
+            AND kpt.name LIKE '%${search}%'
+            LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -61,8 +73,9 @@ export const createKategoriPerlengkapanRepo = async (kategoriPerlengkapanData, r
         req_id,
         generateDatabaseName(req_id),
         KategoriPerlengkapanModel,
-        {   
-        name: kategoriPerlengkapanData.name,
+        {
+            name: kategoriPerlengkapanData.name,
+            kode_akun_perkiraan: kategoriPerlengkapanData.kode_akun_perkiraan,
             enabled: kategoriPerlengkapanData.enabled
         }
     )
@@ -88,7 +101,8 @@ export const updateKategoriPerlengkapanByUuidRepo = async (uuid, kategoriPerleng
         generateDatabaseName(req_id),
         KategoriPerlengkapanModel,
         {
-        name: kategoriPerlengkapanData.name,
+            name: kategoriPerlengkapanData.name,
+            kode_akun_perkiraan: kategoriPerlengkapanData.kode_akun_perkiraan,
         },
         {
             uuid

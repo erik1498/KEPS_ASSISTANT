@@ -11,6 +11,7 @@ export const getAllDaftarPerlengkapanRepo = async (pageNumber, size, search, req
                 COUNT(0) AS count
             FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
             JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kat ON kat.uuid = dpt.kategori_perlengkapan
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = dpt.kode_akun_perkiraan
             WHERE dpt.enabled = 1
             AND kat.enabled = 1
             AND dpt.name LIKE '%${search}%'
@@ -28,6 +29,7 @@ export const getAllDaftarPerlengkapanRepo = async (pageNumber, size, search, req
                 kat.name AS kategori_perlengkapan_name
             FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
             JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kat ON kat.uuid = dpt.kategori_perlengkapan
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = dpt.kode_akun_perkiraan
             WHERE dpt.enabled = 1
             AND kat.enabled = 1
             AND dpt.name LIKE '%${search}%'
@@ -68,6 +70,7 @@ export const createDaftarPerlengkapanRepo = async (daftarPerlengkapanData, req_i
             name: daftarPerlengkapanData.name,
             nomor_invoice: daftarPerlengkapanData.nomor_invoice,
             kategori_perlengkapan: daftarPerlengkapanData.kategori_perlengkapan,
+            kode_akun_perkiraan: daftarPerlengkapanData.kode_akun_perkiraan,
             tanggal_beli: daftarPerlengkapanData.tanggal_beli,
             supplier: daftarPerlengkapanData.supplier,
             kuantitas: daftarPerlengkapanData.kuantitas,
@@ -106,6 +109,7 @@ export const updateDaftarPerlengkapanByUuidRepo = async (uuid, daftarPerlengkapa
             name: daftarPerlengkapanData.name,
             nomor_invoice: daftarPerlengkapanData.nomor_invoice,
             kategori_perlengkapan: daftarPerlengkapanData.kategori_perlengkapan,
+            kode_akun_perkiraan: daftarPerlengkapanData.kode_akun_perkiraan,
             tanggal_beli: daftarPerlengkapanData.tanggal_beli,
             supplier: daftarPerlengkapanData.supplier,
             kuantitas: daftarPerlengkapanData.kuantitas,
