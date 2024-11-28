@@ -76,76 +76,54 @@ const LaporanFakturPenjualanBarangPage = () => {
                     </button> */}
                 </div>
             </div>
-            <div className="text-xs bg-white rounded-md px-6 py-3">
-                {
-                    laporanFakturPenjualanBarang.map((x, i) => {
-                        return <>
-                            <p className="font-bold sticky top-0 z-20 mt-4">{x.parent}</p>
-                            <div className="flex flex-col">
-                                <div className="font-medium px-10 my-4">
-                                    <div className="grid grid-cols-12">
-                                        <div className="col-span-3">
-                                            <p className="border-b-2 py-2 border-black mx-4">No. Faktur Penjualan Barang</p>
-                                        </div>
-                                        <div className="col-span-3">
-                                            <p className="border-b-2 py-2 border-black mx-4">Tanggal Faktur</p>
-                                        </div>
-                                        <div className="col-span-2">
-                                            <p className="border-b-2 py-2 border-black mx-4">Total Penjualan</p>
-                                        </div>
-                                        <div className="col-span-2">
-                                            <p className="border-b-2 py-2 border-black mx-4">Sudah Dibayar</p>
-                                        </div>
-                                        <div className="col-span-2">
-                                            <p className="border-b-2 py-2 border-black mx-4">Piutang</p>
-                                        </div>
-                                    </div>
+            <div className="overflow-x-auto bg-white shadow-xl rounded-md h-[50vh] no-scrollbar">
+                <table className="table table-sm">
+                    <tbody>
+                        {
+                            laporanFakturPenjualanBarang?.map((item, i) => {
+                                return <>
+                                    <tr key={i} className="bg-gray-200 uppercase font-bold">
+                                        <td>{item.parent}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>FAKTUR PENJUALAN</td>
+                                        <td>TANGGAL FAKTUR</td>
+                                        <td>PENJUALAN</td>
+                                        <td>PELUNASAN</td>
+                                        <td>PIUTANG</td>
+                                    </tr>
                                     {
-                                        x.data.map((y, j) => {
-                                            return <>
-                                                <div className="grid grid-cols-12 my-4">
-                                                    <div className="col-span-3">
-                                                        <p className="mx-4">{y.nomor_faktur_penjualan_barang}</p>
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                        <p className="mx-4">{formatDate(y.tanggal)}</p>
-                                                    </div>
-                                                    <div className="col-span-2">
-                                                        <p className="mx-4">{parseToRupiahText(y.total_beli.toFixed(2))}</p>
-                                                    </div>
-                                                    <div className="col-span-2">
-                                                        <p className="mx-4">{parseToRupiahText(y.total_pelunasan.toFixed(2))}</p>
-                                                    </div>
-                                                    <div className="col-span-2">
-                                                        <p className="mx-4">{parseToRupiahText(y.piutang.toFixed(2))}</p>
-                                                    </div>
-                                                </div>
-                                            </>
+                                        item.data.map(x => {
+                                            return <tr key={i}>
+                                                <td></td>
+                                                <td>{x.nomor_faktur_penjualan_barang}</td>
+                                                <td>{formatDate(x.tanggal)}</td>
+                                                <td>{parseToRupiahText(x.total_beli.toFixed(2))}</td>
+                                                <td>{parseToRupiahText(x.total_pelunasan.toFixed(2))}</td>
+                                                <td>{parseToRupiahText(x.piutang.toFixed(2))}</td>
+                                            </tr>
                                         })
                                     }
-                                    <div className="grid grid-cols-12 my-3">
-                                        <div className="col-span-3">
-                                            <p className="mx-4"></p>
-                                        </div>
-                                        <div className="col-span-3">
-                                            <p className="mx-4"></p>
-                                        </div>
-                                        <div className="col-span-2">
-                                            <p className="border-t-2 py-2 border-black mx-4">{parseToRupiahText(x.total_beli.toFixed(2))}</p>
-                                        </div>
-                                        <div className="col-span-2">
-                                            <p className="border-t-2 py-2 border-black mx-4">{parseToRupiahText(x.total_pelunasan.toFixed(2))}</p>
-                                        </div>
-                                        <div className="col-span-2">
-                                            <p className="border-t-2 py-2 border-black mx-4">{parseToRupiahText(x.piutang.toFixed(2))}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div >
-                        </>
-                    })
-                }
-            </div >
+                                    <tr className="font-bold">
+                                        <td></td>
+                                        <td>TOTAL</td>
+                                        <td></td>
+                                        <td>{parseToRupiahText(item.total_beli.toFixed(2))}</td>
+                                        <td>{parseToRupiahText(item.total_pelunasan.toFixed(2))}</td>
+                                        <td>{parseToRupiahText(item.piutang.toFixed(2))}</td>
+                                    </tr>
+                                </>
+                            })
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </Wrap >
 }

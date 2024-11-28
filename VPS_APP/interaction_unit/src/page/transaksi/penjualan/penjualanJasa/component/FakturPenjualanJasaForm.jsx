@@ -11,6 +11,7 @@ import { FakturPenjualanJasaPrint } from "./FakturPenjualanJasaPrint"
 const FakturPenjualanJasaForm = ({
     pesananPenjualanJasa,
     setFakturStatus = () => { },
+    customer,
     fakturStatus,
     ppnStatus,
     setTanggalTransaksiAkhir = () => { }
@@ -284,8 +285,15 @@ const FakturPenjualanJasaForm = ({
                                 </button>
                                 <div className="hidden">
                                     <FakturPenjualanJasaPrint
+                                        customer={customer}
                                         ref={fakturPenjualanJasaPrintRef}
                                         rincianPesananPenjualanJasa={rincianPesananPenjualanJasa}
+                                        pesananPenjualanJasa={pesananPenjualanJasa}
+                                        nomorFakturPenjualanJasa={nomorFakturPenjualanJasa}
+                                        tanggalFakturPenjualanJasa={tanggalFakturPenjualanJasa}
+                                        keteranganFakturPenjualanJasa={keteranganFakturPenjualanJasa}
+                                        tipePembayaran={tipePembayaran.label}
+                                        syaratPembayaran={syaratPembayaran.label}
                                     />
                                 </div>
                                 <button

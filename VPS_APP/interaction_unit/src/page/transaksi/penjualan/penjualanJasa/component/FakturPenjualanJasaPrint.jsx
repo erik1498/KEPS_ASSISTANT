@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PDFHeader from "../../../../../component/general/PDFHeader";
 import { keTerbilang, parseToRupiahText } from "../../../../../helper/number.helper";
+import { formatDate } from "../../../../../helper/date.helper";
 
 export const FakturPenjualanJasaPrint = React.forwardRef((props, ref) => {
+    const [total, setTotal] = useState(0)
+
+    useEffect(() => {
+        if (props.rincianPesananPenjualanJasa) {
+            const total = props.rincianPesananPenjualanJasa.reduce((p, c) => {
+                return p + c.total_harga
+            }, 0)
+            setTotal(x => x = total)
+        }
+    }, [])
     return (
         <div
             ref={ref}
@@ -15,23 +26,24 @@ export const FakturPenjualanJasaPrint = React.forwardRef((props, ref) => {
             <div className="flex justify-between">
                 <div>
                     <p className="font-bold">KEPADA :</p>
-                    <p>Customer 1</p>
-                    <p>CS00001 | 081276391273</p>
+                    <p>{props.customer.name}</p>
+                    <p>{props.customer.code}</p>
+                    <p>HP. {props.customer.no_hp}</p>
                 </div>
                 <div className="text-right">
                     <p className="font-bold">TANGGAL :</p>
-                    <p>Senin, 19 Agustus 2024</p>
+                    <p>{formatDate(props.tanggalFakturPenjualanJasa)}</p>
                 </div>
             </div>
             <div className="flex justify-between">
                 <div className="mt-6">
-                    <p className="font-bold">NO FAKTUR PENJUALAN BARANG :</p>
-                    <p>1890309801297939</p>
+                    <p className="font-bold">NO FAKTUR PENJUALAN Jasa :</p>
+                    <p>{props.nomorFakturPenjualanJasa}</p>
                 </div>
                 <div className="text-right">
                     <div className="mt-6">
-                        <p className="font-bold">NO PESANAN PENJUALAN BARANG :</p>
-                        <p>1890309801297939</p>
+                        <p className="font-bold">NO PESANAN PENJUALAN Jasa :</p>
+                        <p>{props.pesananPenjualanJasa.nomor_pesanan_penjualan_jasa}</p>
                     </div>
                 </div>
             </div>
@@ -81,11 +93,6 @@ export const FakturPenjualanJasaPrint = React.forwardRef((props, ref) => {
                                 </div>
                                 <div className="col-span-2">
                                     <p>Jumlah : {parseToRupiahText(x.jumlah)}</p>
-                                    {
-                                        x?.retur ? <>
-                                            <p>Retur : {parseToRupiahText(x.retur)}</p>
-                                        </> : <></>
-                                    }
                                 </div>
                                 <div className="col-span-3">
                                     {
@@ -113,25 +120,38 @@ export const FakturPenjualanJasaPrint = React.forwardRef((props, ref) => {
                     </>
                 })
             }
-            <div className="grid grid-cols-12 gap-x-2 px-6 py-5 items-start font-bold border-t-2">
+            <div className="grid grid-cols-12 gap-x-2 px-6 pt-5 items-start font-bold border-t-2">
                 <div className="col-span-9">
                     <p>PEMBAYARAN</p>
-                    <p className="font-normal mt-5">TERBILANG</p>
-                    <p>{keTerbilang(300000).toString().toUpperCase()} RUPIAH</p>
                 </div>
                 <div className="col-span-3">
-                    <p>TOTAL <br /> Rp. {parseToRupiahText(300000)}</p>
+                    <p>TOTAL <br /> Rp. {parseToRupiahText(total)}</p>
                 </div>
-            </div><div className="grid grid-cols-12 gap-x-2 px-6 py-5 items-start font-bold">
-                <div className="col-span-12">
-                    <p className="mb-2">TIPE PEMBAYARAN : KREDIT</p>
-                    <p className="font-normal">SYARAT PEMBAYARAN : PELUNASAN 30 HARI</p>
+            </div>
+            <div className="px-6 pb-5">
+                <p className="font-bold mt-5">TERBILANG</p>
+                <p className="font-normal">{keTerbilang(total).toString().toUpperCase()} RUPIAH</p>
+            </div>
+            <div className="grid grid-cols-12 gap-x-2 px-6 pt-5 items-start font-bold">
+                <div className="col-span-3">
+                    <p>TIPE PEMBAYARAN</p>
+                </div>
+                <div className="col-span-8">
+                    <p>: &nbsp;&nbsp;{props.tipePembayaran}</p>
+                </div>
+            </div>
+            <div className="grid grid-cols-12 gap-x-2 px-6 pb-5 items-start font-bold">
+                <div className="col-span-3">
+                    <p>SYARAT PEMBAYARAN</p>
+                </div>
+                <div className="col-span-8">
+                    <p>: &nbsp;&nbsp;{props.syaratPembayaran}</p>
                 </div>
             </div>
             <div className="grid grid-cols-12 gap-x-2 px-6 py-5 items-start font-bold">
                 <div className="col-span-12">
                     <p className="mb-2">KETERANGAN</p>
-                    <p className="font-normal">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae consequatur sequi doloremque, aliquid tempora earum officiis quae quis ipsa saepe in quo fuga animi cum eum perspiciatis! Nemo, inventore doloribus.</p>
+                    <p className="font-normal">{props.keteranganFakturPenjualanJasa}</p>
                 </div>
             </div>
         </div>

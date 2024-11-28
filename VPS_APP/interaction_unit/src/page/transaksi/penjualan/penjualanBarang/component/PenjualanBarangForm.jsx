@@ -411,6 +411,7 @@ const PenjualanBarangForm = ({
                     pesananPenjualanBarang={pesananPenjualanBarang}
                     rincianPesananPenjualanBarang={rincianPesananPenjualanBarang}
                     setFakturStatus={setFakturStatus}
+                    customer={customer}
                     fakturStatus={fakturStatus}
                     ppnStatus={ppnStatus}
                     setTanggalTransaksiAkhir={setTanggalTransaksiAkhir}
