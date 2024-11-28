@@ -104,23 +104,22 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 WHERE psojt.enabled = 1
                 UNION ALL
                 SELECT 
-                    dpt.kode_akun_perkiraan AS kode_akun_perkiraan,
+                    kpt.kode_akun_perkiraan AS kode_akun_perkiraan,
                     LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dpt.tanggal_beli) AS tahun,
                     dpt.kuantitas * dpt.harga_satuan AS debet,
                     0 AS kredit
                 FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
+                JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
                 WHERE dpt.enabled = 1
                 UNION ALL
                 SELECT 
-                    kpt.kode_akun_perkiraan,
+                    dpt.kode_akun_perkiraan,
                     LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dpt.tanggal_beli) AS tahun,
                     0 AS debet,
                     dpt.kuantitas * dpt.harga_satuan AS kredit
                 FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
-                JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
-                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid =  kpt.kode_akun_perkiraan 
                 WHERE dpt.enabled = 1
                 UNION ALL
                 SELECT 
