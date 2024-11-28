@@ -128,11 +128,11 @@ export const FakturPenjualanBarangPrint = React.forwardRef((props, ref) => {
                     <p>TOTAL <br /> Rp. {parseToRupiahText(total)}</p>
                 </div>
             </div>
-            <div className="px-6 pb-5">
+            <div className="pb-5">
                 <p className="font-bold mt-5">TERBILANG</p>
                 <p className="font-normal">{keTerbilang(total).toString().toUpperCase()} RUPIAH</p>
             </div>
-            <div className="grid grid-cols-12 gap-x-2 px-6 pt-5 items-start font-bold">
+            <div className="grid grid-cols-12 gap-x-2 pt-5 items-start font-bold">
                 <div className="col-span-3">
                     <p>TIPE PEMBAYARAN</p>
                 </div>
@@ -140,7 +140,7 @@ export const FakturPenjualanBarangPrint = React.forwardRef((props, ref) => {
                     <p>: &nbsp;&nbsp;{props.tipePembayaran}</p>
                 </div>
             </div>
-            <div className="grid grid-cols-12 gap-x-2 px-6 pb-5 items-start font-bold">
+            <div className="grid grid-cols-12 gap-x-2 pb-5 items-start font-bold">
                 <div className="col-span-3">
                     <p>SYARAT PEMBAYARAN</p>
                 </div>
@@ -148,7 +148,7 @@ export const FakturPenjualanBarangPrint = React.forwardRef((props, ref) => {
                     <p>: &nbsp;&nbsp;{props.syaratPembayaran}</p>
                 </div>
             </div>
-            <div className="grid grid-cols-12 gap-x-2 px-6 py-5 items-start font-bold">
+            <div className="grid grid-cols-12 gap-x-2 py-5 items-start font-bold">
                 <div className="col-span-12">
                     <p className="mb-2">KETERANGAN</p>
                     <p className="font-normal">{props.keteranganFakturPenjualanBarang}</p>
