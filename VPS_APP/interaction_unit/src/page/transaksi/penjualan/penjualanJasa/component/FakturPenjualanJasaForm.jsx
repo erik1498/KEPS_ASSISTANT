@@ -1,17 +1,19 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { apiFakturPenjualanJasaCRUD, apiSyaratPembayaranCRUD, apiTipePembayaranCRUD } from "../../../../../service/endPointList.api"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
-import { getHariTanggalFull } from "../../../../../helper/date.helper"
+import { getDataFromTanggal, getHariTanggalFull } from "../../../../../helper/date.helper"
 import { FaPrint, FaSave, FaTimes } from "react-icons/fa"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import RiwayatTransaksiPenjualanJasa from "./RiwayatTransaksiPenjualanJasa"
+import { useReactToPrint } from "react-to-print"
 import { FakturPenjualanJasaPrint } from "./FakturPenjualanJasaPrint"
 
 const FakturPenjualanJasaForm = ({
     pesananPenjualanJasa,
-    setFakturStatus = () => { },
+    rincianPesananPenjualanJasa,
     customer,
+    setFakturStatus = () => { },
     fakturStatus,
     ppnStatus,
     setTanggalTransaksiAkhir = () => { }
@@ -93,7 +95,7 @@ const FakturPenjualanJasaForm = ({
     }
 
     useEffect(() => {
-        if (tipePembayaran?.value) {
+        if (tipePembayaran?.value && !fakturStatus) {
             _getDataSyaratPembayaran()
         }
     }, [tipePembayaran])
@@ -121,6 +123,7 @@ const FakturPenjualanJasaForm = ({
     useEffect(() => {
         if (fakturStatus != null) {
             _getFakturPenjualan()
+        }else{
             _getDataTipePembayaran()
         }
     }, [fakturStatus])
@@ -292,8 +295,8 @@ const FakturPenjualanJasaForm = ({
                                         nomorFakturPenjualanJasa={nomorFakturPenjualanJasa}
                                         tanggalFakturPenjualanJasa={tanggalFakturPenjualanJasa}
                                         keteranganFakturPenjualanJasa={keteranganFakturPenjualanJasa}
-                                        tipePembayaran={tipePembayaran.label}
-                                        syaratPembayaran={syaratPembayaran.label}
+                                        tipePembayaran={tipePembayaran}
+                                        syaratPembayaran={syaratPembayaran}
                                     />
                                 </div>
                                 <button

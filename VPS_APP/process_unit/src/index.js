@@ -62,23 +62,24 @@ await connectDatabase();
 
 app.use((req, res, next) => {
     try {
-        if (!req.header("keyFromNginx") && req.header("keyFromNginx") != "REALKEPSSERVER") {
-            throw Error(JSON.stringify({
-                message: "Akun Tidak Terdaftar",
-                prop: "password"
-            }))
-        }
-        if (!req.header("clientId")) {
-            throw Error(JSON.stringify({
-                message: "Akun Tidak Terdaftar",
-                prop: "password"
-            }))
-        }
+        // if (!req.header("keyFromNginx") && req.header("keyFromNginx") != "REALKEPSSERVER") {
+        //     throw Error(JSON.stringify({
+        //         message: "Akun Tidak Terdaftar",
+        //         prop: "password"
+        //     }))
+        // }
+        // if (!req.header("clientId")) {
+        //     throw Error(JSON.stringify({
+        //         message: "Akun Tidak Terdaftar",
+        //         prop: "password"
+        //     }))
+        // }
         let genUUID = v4()
         req.identity = JSON.stringify({
             "id": genUUID,
             "userId": null,
-            "clientId": req.header("clientId")
+            // "clientId": req.header("clientId")
+            "clientId": "alor"
         })
         res.setHeader("request-id", genUUID);
         next();
