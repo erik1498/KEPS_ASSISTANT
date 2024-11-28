@@ -104,30 +104,33 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 WHERE psojt.enabled = 1
                 UNION ALL
                 SELECT 
-                    "c85ac20d-1b1e-45c5-80e1-8db80c5dd283" AS kode_akun_perkiraan,
+                    dpt.kode_akun_perkiraan AS kode_akun_perkiraan,
                     LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dpt.tanggal_beli) AS tahun,
                     dpt.kuantitas * dpt.harga_satuan AS debet,
                     0 AS kredit
-                FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt
+                FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
                 WHERE dpt.enabled = 1
                 UNION ALL
                 SELECT 
-                    "6e376191-0454-4172-a78b-2bc5f9c8fd6e" AS kode_akun_perkiraan,
+                    kpt.kode_akun_perkiraan,
                     LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dpt.tanggal_beli) AS tahun,
                     0 AS debet,
                     dpt.kuantitas * dpt.harga_satuan AS kredit
                 FROM ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt 
+                JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid =  kpt.kode_akun_perkiraan 
                 WHERE dpt.enabled = 1
                 UNION ALL
                 SELECT 
-                    "a88b16d3-4071-4503-9c5b-17cdac4a411f" AS kode_akun_perkiraan,
+                    kat2.kode_akun_perkiraan_debet AS kode_akun_perkiraan,
                     LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dat.tanggal_beli) AS tahun,
                     dat.harga_satuan * dat.kuantitas AS debet,
                     0 AS kredit
                 FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
+                JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
                 WHERE dat.enabled = 1
                 UNION ALL
                 SELECT 
@@ -140,7 +143,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 WHERE dat.enabled = 1
                 UNION ALL
                 SELECT 
-                    "915ac6e8-c528-4f10-9215-74fda0b1c99e" AS kode_akun_perkiraan,
+                    kat2.kode_akun_perkiraan_kredit AS kode_akun_perkiraan,
                     LPAD(hpt.bulan, 2, '0') AS bulan,
                     hpt.tahun AS tahun,
                     CASE
@@ -150,12 +153,13 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                     END AS debet,
                     0 AS kredit
                 FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
-                JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset
+                JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset 
+                JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
                 WHERE hpt.enabled = 1
                 AND dat.enabled = 1
                 UNION ALL
                 SELECT 
-                    "a88b16d3-4071-4503-9c5b-17cdac4a411f" AS kode_akun_perkiraan,
+                    kat2.kode_akun_perkiraan_debet AS kode_akun_perkiraan,
                     LPAD(hpt.bulan, 2, '0') AS bulan,
                     hpt.tahun AS tahun,
                     0 AS debet,
@@ -165,7 +169,8 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                         ELSE 0
                     END AS kredit
                 FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
-                JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset
+                JOIN ${generateDatabaseName(req_id)}.daftar_aset_tab dat ON dat.uuid = hpt.daftar_aset 
+                JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
                 WHERE hpt.enabled = 1
                 AND dat.enabled = 1
                 UNION ALL ${payrollPegawaiNeracaSaldo(req_id)}

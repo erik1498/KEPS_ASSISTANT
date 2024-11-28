@@ -1301,13 +1301,13 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dpt.supplier 
                     JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dpt.satuan_barang 
                     JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
-                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "c85ac20d-1b1e-45c5-80e1-8db80c5dd283"
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = dpt.kode_akun_perkiraan 
                     AND dpt.enabled = 1
                     UNION ALL
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,
                         dpt.nomor_invoice AS bukti_transaksi,
-                        1 AS transaksi,
+                        0 AS transaksi,
                         LPAD(DAY(dpt.tanggal_beli), 2, '0') AS tanggal,
                         LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
                         YEAR(dpt.tanggal_beli) AS tahun,
@@ -1346,7 +1346,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dpt.supplier 
                     JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dpt.satuan_barang 
                     JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
-                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "6e376191-0454-4172-a78b-2bc5f9c8fd6e"
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid =  kpt.kode_akun_perkiraan 
                     AND dpt.enabled = 1
                     UNION ALL
                     SELECT 
@@ -1388,20 +1388,20 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS nilai_lembur_per_menit,
                         NULL AS pegawai_name,
                         NULL AS periode,
-                        dat.enabled 
+                        dat.enabled
                     FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
                     JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dat.satuan_barang
                     JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dat.supplier 
                     JOIN ${generateDatabaseName(req_id)}.metode_penyusutan_tab mpt ON mpt.uuid = dat.metode_penyusutan 
                     JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
                     JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
-                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a88b16d3-4071-4503-9c5b-17cdac4a411f"
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kat2.kode_akun_perkiraan_debet
                     AND dat.enabled = 1
                     UNION ALL
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,
                         dat.nomor_invoice AS bukti_transaksi,
-                        1 AS transaksi,
+                        0 AS transaksi,
                         LPAD(DAY(dat.tanggal_beli), 2, '0') AS tanggal,
                         LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,
                         YEAR(dat.tanggal_beli) AS tahun,
@@ -1437,7 +1437,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                         NULL AS nilai_lembur_per_menit,
                         NULL AS pegawai_name,
                         NULL AS periode,
-                        dat.enabled 
+                        dat.enabled
                     FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
                     JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dat.satuan_barang
                     JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dat.supplier 
@@ -1498,7 +1498,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.metode_penyusutan_tab mpt ON mpt.uuid = dat.metode_penyusutan 
                     JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
                     JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
-                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "915ac6e8-c528-4f10-9215-74fda0b1c99e"
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kat2.kode_akun_perkiraan_kredit
                     AND hpt.enabled = 1
                     AND dat.enabled = 1
                     UNION ALL
@@ -1553,7 +1553,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.metode_penyusutan_tab mpt ON mpt.uuid = dat.metode_penyusutan 
                     JOIN ${generateDatabaseName(req_id)}.kelompok_aset_tab kat ON kat.uuid = dat.kelompok_aset
                     JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
-                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a88b16d3-4071-4503-9c5b-17cdac4a411f"
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kat2.kode_akun_perkiraan_debet
                     AND hpt.enabled = 1
                     AND dat.enabled = 1
                 ) AS res
