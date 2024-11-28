@@ -1261,7 +1261,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     UNION ALL -- JURNAL PENYUSUTAN ASET
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,
-                        dpt.nomor_invoice AS bukti_transaksi,
+                        dpt.bukti_transaksi AS bukti_transaksi,
                         0 AS transaksi,
                         LPAD(DAY(dpt.tanggal_beli), 2, '0') AS tanggal,
                         LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
@@ -1306,7 +1306,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     UNION ALL
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,
-                        dpt.nomor_invoice AS bukti_transaksi,
+                        dpt.bukti_transaksi AS bukti_transaksi,
                         1 AS transaksi,
                         LPAD(DAY(dpt.tanggal_beli), 2, '0') AS tanggal,
                         LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
@@ -1351,7 +1351,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     UNION ALL
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,
-                        dat.nomor_invoice AS bukti_transaksi,
+                        dat.bukti_transaksi AS bukti_transaksi,
                         0 AS transaksi,
                         LPAD(DAY(dat.tanggal_beli), 2, '0') AS tanggal,
                         LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,
@@ -1400,7 +1400,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     UNION ALL
                     SELECT 
                         "NOT_AVAILABLE" AS uuid,
-                        dat.nomor_invoice AS bukti_transaksi,
+                        dat.bukti_transaksi AS bukti_transaksi,
                         1 AS transaksi,
                         LPAD(DAY(dat.tanggal_beli), 2, '0') AS tanggal,
                         LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,

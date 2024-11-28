@@ -170,7 +170,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                 UNION ALL -- JURNAL PENYUSUTAN ASET
                 SELECT 
                     "NOT_AVAILABLE" AS uuid,
-                    dpt.nomor_invoice AS bukti_transaksi,
+                    dpt.bukti_transaksi AS bukti_transaksi,
                     LPAD(DAY(dpt.tanggal_beli), 2, '0') AS tanggal,
                     LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dpt.tanggal_beli) AS tahun,
@@ -206,7 +206,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                 UNION ALL
                 SELECT 
                     "NOT_AVAILABLE" AS uuid,
-                    dpt.nomor_invoice AS bukti_transaksi,
+                    dpt.bukti_transaksi AS bukti_transaksi,
                     LPAD(DAY(dpt.tanggal_beli), 2, '0') AS tanggal,
                     LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dpt.tanggal_beli) AS tahun,
@@ -242,7 +242,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                 UNION ALL
                 SELECT 
                     "NOT_AVAILABLE" AS uuid,
-                    dat.nomor_invoice AS bukti_transaksi,
+                    dat.bukti_transaksi AS bukti_transaksi,
                     LPAD(DAY(dat.tanggal_beli), 2, '0') AS tanggal,
                     LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dat.tanggal_beli) AS tahun,
@@ -282,7 +282,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                 UNION ALL
                 SELECT 
                     "NOT_AVAILABLE" AS uuid,
-                    dat.nomor_invoice AS bukti_transaksi,
+                    dat.bukti_transaksi AS bukti_transaksi,
                     LPAD(DAY(dat.tanggal_beli), 2, '0') AS tanggal,
                     LPAD(MONTH(dat.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dat.tanggal_beli) AS tahun,

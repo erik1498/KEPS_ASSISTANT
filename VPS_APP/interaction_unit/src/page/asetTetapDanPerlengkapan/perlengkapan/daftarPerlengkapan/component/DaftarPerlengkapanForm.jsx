@@ -21,6 +21,7 @@ const DaftarPerlengkapanForm = ({
 
     const [namaDaftarPerlengkapan, setNamaDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.name ? daftarPerlengkapanEdit.name : ``)
     const [nomorInvoiceDaftarPerlengkapan, setNomorInvoiceDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.nomor_invoice ? daftarPerlengkapanEdit.nomor_invoice : ``)
+    const [buktiTransaksiDaftarPerlengkapan, setBuktiTransaksiDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.bukti_transaksi ? daftarPerlengkapanEdit.bukti_transaksi : ``)
     const [tanggalBeliDaftarPerlengkapan, setTanggalBeliDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.tanggal_beli ? daftarPerlengkapanEdit.tanggal_beli : getHariTanggalFull())
     const [supplierDaftarPerlengkapan, setSupplierDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.supplier ? daftarPerlengkapanEdit.supplier : ``)
     const [kuantitasDaftarPerlengkapan, setKuantitasDaftarPerlengkapan] = useState(daftarPerlengkapanEdit?.kuantitas ? parseToRupiahText(daftarPerlengkapanEdit.kuantitas) : ``)
@@ -143,6 +144,7 @@ const DaftarPerlengkapanForm = ({
                     data: {
                         name: namaDaftarPerlengkapan,
                         nomor_invoice: nomorInvoiceDaftarPerlengkapan,
+                        bukti_transaksi: buktiTransaksiDaftarPerlengkapan,
                         tanggal_beli: tanggalBeliDaftarPerlengkapan,
                         kategori_perlengkapan: kategoriPerlengkapanDaftarPerlengkapan.value,
                         supplier: supplierDaftarPerlengkapan.value,
@@ -208,6 +210,19 @@ const DaftarPerlengkapanForm = ({
                         {
                             value: nomorInvoiceDaftarPerlengkapan,
                             name: "nomorInvoiceDaftarPerlengkapan"
+                        }
+                    }
+                />
+                <FormInputWithLabel
+                    label={"Bukti Transaksi"}
+                    type={"text"}
+                    onchange={(e) => {
+                        setBuktiTransaksiDaftarPerlengkapan(e.target.value)
+                    }}
+                    others={
+                        {
+                            value: buktiTransaksiDaftarPerlengkapan,
+                            name: "buktiTransaksiDaftarPerlengkapan"
                         }
                     }
                 />

@@ -20,6 +20,13 @@ const DaftarPerlengkapanModel = db.define("daftar_perlengkapan_tab",
                 notEmpty:true,
             }
         },
+        bukti_transaksi: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
         name: {
             type: DataTypes.STRING,
             allowNull: false,

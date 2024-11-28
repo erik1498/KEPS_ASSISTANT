@@ -34,6 +34,13 @@ const DaftarAsetModel = db.define("daftar_aset_tab",
                 notEmpty:true,
             }
         },
+        bukti_transaksi: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
         nomor_invoice: {
             type: DataTypes.STRING,
             allowNull: false,

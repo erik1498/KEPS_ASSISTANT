@@ -69,6 +69,7 @@ export const createDaftarPerlengkapanRepo = async (daftarPerlengkapanData, req_i
         {
             name: daftarPerlengkapanData.name,
             nomor_invoice: daftarPerlengkapanData.nomor_invoice,
+            bukti_transaksi: daftarPerlengkapanData.bukti_transaksi,
             kategori_perlengkapan: daftarPerlengkapanData.kategori_perlengkapan,
             kode_akun_perkiraan: daftarPerlengkapanData.kode_akun_perkiraan,
             tanggal_beli: daftarPerlengkapanData.tanggal_beli,
@@ -108,6 +109,7 @@ export const updateDaftarPerlengkapanByUuidRepo = async (uuid, daftarPerlengkapa
         {
             name: daftarPerlengkapanData.name,
             nomor_invoice: daftarPerlengkapanData.nomor_invoice,
+            bukti_transaksi: daftarPerlengkapanData.bukti_transaksi,
             kategori_perlengkapan: daftarPerlengkapanData.kategori_perlengkapan,
             kode_akun_perkiraan: daftarPerlengkapanData.kode_akun_perkiraan,
             tanggal_beli: daftarPerlengkapanData.tanggal_beli,
