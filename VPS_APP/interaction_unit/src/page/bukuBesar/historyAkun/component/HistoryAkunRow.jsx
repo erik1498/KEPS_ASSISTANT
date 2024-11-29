@@ -85,7 +85,7 @@ const HistoryAkunRow = ({
                                                                 !ASETTETAPDANPERLENGKAPANSUMBERLIST.includes(item1.sumber) ? <p>{item1.uraian}</p>
                                                                     : <JurnalPenyusutanUraian
                                                                         data={item1}
-                                                                        bg_color={forPrint}
+                                                                        bg_color={true}
                                                                     />
                                                             }
                                                         </> : <PayrollPendapatanPotonganUraian item={item1} />

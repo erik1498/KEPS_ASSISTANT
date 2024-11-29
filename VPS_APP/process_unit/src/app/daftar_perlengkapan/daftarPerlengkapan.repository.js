@@ -125,3 +125,17 @@ export const updateDaftarPerlengkapanByUuidRepo = async (uuid, daftarPerlengkapa
         }
     )
 }
+
+export const checkPerlengkapanSudahDigunakanByUuidRepo = async (uuid, req_id) => {
+    const digunakanStatus = await db.query(
+        `
+            SELECT
+                COUNT(0) AS count
+            FROM ${generateDatabaseName(req_id)}.penggunaan_perlengkapan_tab ppt
+            WHERE ppt.daftar_perlengkapan = "${uuid}"
+            AND ppt.enabled = 1
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return digunakanStatus
+}

@@ -215,6 +215,10 @@ export const SrvDaftarPerlengkapan = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/daftar_perlengkapan'
 )
 
+export const SrvPenggunaanPerlengkapan = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/penggunaan_perlengkapan'
+)
+
 export const SrvKategoriPerlengkapan = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kategori_perlengkapan'
 )

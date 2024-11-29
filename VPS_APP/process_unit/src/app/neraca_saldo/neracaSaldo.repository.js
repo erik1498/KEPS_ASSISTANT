@@ -172,6 +172,30 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 JOIN ${generateDatabaseName(req_id)}.kategori_aset_tab kat2 ON kat2.uuid = dat.kategori_aset 
                 WHERE hpt.enabled = 1
                 AND dat.enabled = 1
+                UNION ALL
+                SELECT 
+                    "6e376191-0454-4172-a78b-2bc5f9c8fd6e" AS kode_akun_perkiraan,
+                    LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
+                    YEAR(ppt.tanggal) AS tahun,
+                    ppt.jumlah * dpt.harga_satuan AS debet,
+                    0 AS kredit                     
+                FROM ${generateDatabaseName(req_id)}.penggunaan_perlengkapan_tab ppt 
+                JOIN ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt ON dpt.uuid = ppt.daftar_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                WHERE ppt.enabled = 1
+                AND dpt.enabled = 1 
+                UNION ALL
+                SELECT 
+                    kpt.kode_akun_perkiraan AS kode_akun_perkiraan,
+                    LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
+                    YEAR(ppt.tanggal) AS tahun,
+                    0 AS debet,
+                    ppt.jumlah * dpt.harga_satuan AS kredit
+                FROM ${generateDatabaseName(req_id)}.penggunaan_perlengkapan_tab ppt 
+                JOIN ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt ON dpt.uuid = ppt.daftar_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan
+                WHERE ppt.enabled = 1
+                AND dpt.enabled = 1 
                 UNION ALL ${payrollPegawaiNeracaSaldo(req_id)}
             ) AS res
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = res.kode_akun_perkiraan

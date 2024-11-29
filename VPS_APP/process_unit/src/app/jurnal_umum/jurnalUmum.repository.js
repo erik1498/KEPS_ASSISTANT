@@ -1556,6 +1556,94 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                     JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kat2.kode_akun_perkiraan_debet
                     AND hpt.enabled = 1
                     AND dat.enabled = 1
+                    UNION ALL
+                    SELECT 
+                        "NOT_AVAILABLE" AS uuid,
+                        ppt.bukti_transaksi AS bukti_transaksi,
+                        0 AS transaksi,
+                        LPAD(DAY(ppt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
+                        YEAR(ppt.tanggal) AS tahun,
+                        TIME(ppt.tanggal) AS waktu,
+                        ppt.jumlah * dpt.harga_satuan AS debet,
+                        0 AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        JSON_OBJECT(
+                            'detail', JSON_OBJECT (
+                                'jumlah', ppt.jumlah,
+                                'keterangan', ppt.keterangan,
+                                'kuantitas', dpt.kuantitas,
+                                'harga_satuan', dpt.harga_satuan,
+                                'dpp', dpt.dpp,
+                                'ppn', dpt.ppn,
+                                'kategori_perlengkaan', kpt.name,
+                                'daftar_perlengkapan_name', dpt.name,
+                                'daftar_perlengkapan_invoice', dpt.nomor_invoice
+                            )
+                        ) AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "PENGGUNAAN PERLENGKAPAN" AS sumber,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        NULL AS pegawai_name,
+                        NULL AS periode,
+                        ppt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.penggunaan_perlengkapan_tab ppt 
+                    JOIN ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt ON dpt.uuid = ppt.daftar_perlengkapan 
+                    JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "6e376191-0454-4172-a78b-2bc5f9c8fd6e" 
+                    WHERE ppt.enabled = 1
+                    AND dpt.enabled = 1 
+                    UNION ALL
+                    SELECT 
+                        "NOT_AVAILABLE" AS uuid,
+                        ppt.bukti_transaksi AS bukti_transaksi,
+                        1 AS transaksi,
+                        LPAD(DAY(ppt.tanggal), 2, '0') AS tanggal,
+                        LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
+                        YEAR(ppt.tanggal) AS tahun,
+                        TIME(ppt.tanggal) AS waktu,
+                        0 AS debet,
+                        ppt.jumlah * dpt.harga_satuan AS kredit,
+                        kapt.code AS kode_akun,
+                        kapt.name AS nama_akun,
+                        kapt.type AS type_akun,
+                        JSON_OBJECT(
+                            'detail', JSON_OBJECT (
+                                'jumlah', ppt.jumlah,
+                                'keterangan', ppt.keterangan,
+                                'kuantitas', dpt.kuantitas,
+                                'harga_satuan', dpt.harga_satuan,
+                                'dpp', dpt.dpp,
+                                'ppn', dpt.ppn,
+                                'kategori_perlengkaan', kpt.name,
+                                'daftar_perlengkapan_name', dpt.name,
+                                'daftar_perlengkapan_invoice', dpt.nomor_invoice
+                            )
+                        ) AS uraian,
+                        NULL AS deskripsi_kerja,
+                        NULL AS keterangan_kerja,
+                        "PENGGUNAAN PERLENGKAPAN" AS sumber,
+                        NULL AS waktu_mulai,
+                        NULL AS waktu_selesai,
+                        NULL AS total_jam,
+                        NULL AS total_menit,
+                        NULL AS nilai_lembur_per_menit,
+                        NULL AS pegawai_name,
+                        NULL AS periode,
+                        ppt.enabled 
+                    FROM ${generateDatabaseName(req_id)}.penggunaan_perlengkapan_tab ppt 
+                    JOIN ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt ON dpt.uuid = ppt.daftar_perlengkapan 
+                    JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                    JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan 
+                    WHERE ppt.enabled = 1
+                    AND dpt.enabled = 1 
                 ) AS res
                 WHERE res.bulan = :bulan AND res.tahun = :tahun
                 AND (

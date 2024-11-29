@@ -39,6 +39,9 @@ const JurnalPenyusutanUraian = ({
                 {
                     data?.detail_data?.keterangan_penyesuaian_persediaan && <p className="mb-2 text-xs">Keterangan <br /> {data?.detail_data?.keterangan_penyesuaian_persediaan}</p>
                 }
+                {
+                    data?.detail_data?.keterangan && <p className="mb-2 text-xs">Keterangan <br /> {data?.detail_data?.keterangan}</p>
+                }
             </div>
         </div>
     </>

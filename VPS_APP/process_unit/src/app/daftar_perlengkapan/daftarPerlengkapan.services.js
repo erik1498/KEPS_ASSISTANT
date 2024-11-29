@@ -1,6 +1,7 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createDaftarPerlengkapanRepo, deleteDaftarPerlengkapanByUuidRepo, getAllDaftarPerlengkapanRepo, getDaftarPerlengkapanByUuidRepo, updateDaftarPerlengkapanByUuidRepo } from "./daftarPerlengkapan.repository.js"
+import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
+import { checkPerlengkapanSudahDigunakanByUuidRepo, createDaftarPerlengkapanRepo, deleteDaftarPerlengkapanByUuidRepo, getAllDaftarPerlengkapanRepo, getDaftarPerlengkapanByUuidRepo, updateDaftarPerlengkapanByUuidRepo } from "./daftarPerlengkapan.repository.js"
 
 export const getAllDaftarPerlengkapanService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllDaftarPerlengkapanService", null, req_identity)
@@ -40,6 +41,8 @@ export const createDaftarPerlengkapanService = async (daftarPerlengkapanData, re
     LOGGER(logType.INFO, `Start createDaftarPerlengkapanService`, daftarPerlengkapanData, req_identity)
     daftarPerlengkapanData.enabled = 1
 
+    await getNeracaValidasiByTanggalService(null, daftarPerlengkapanData.tanggal, req_identity)
+
     const daftarPerlengkapan = await createDaftarPerlengkapanRepo(daftarPerlengkapanData, req_identity)
     return daftarPerlengkapan
 }
@@ -47,6 +50,11 @@ export const createDaftarPerlengkapanService = async (daftarPerlengkapanData, re
 export const deleteDaftarPerlengkapanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteDaftarPerlengkapanByUuidService [${uuid}]`, null, req_identity)
     await getDaftarPerlengkapanByUuidService(uuid, req_identity)
+
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal_beli, req_identity)
+
+    await checkPerlengkapanSudahDigunakanByUuidService(uuid, req_identity);
+    
     await deleteDaftarPerlengkapanByUuidRepo(uuid, req_identity)
     return true
 }
@@ -54,6 +62,11 @@ export const deleteDaftarPerlengkapanByUuidService = async (uuid, req_identity) 
 export const updateDaftarPerlengkapanByUuidService = async (uuid, daftarPerlengkapanData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateDaftarPerlengkapanByUuidService [${uuid}]`, daftarPerlengkapanData, req_identity)
     const beforeData = await getDaftarPerlengkapanByUuidService(uuid, req_identity)
+    
+    await getNeracaValidasiByTanggalService(null, beforeData.tanggal_beli, req_identity)
+
+    await checkPerlengkapanSudahDigunakanByUuidService(uuid, req_identity);
+
     const daftarPerlengkapan = await updateDaftarPerlengkapanByUuidRepo(uuid, daftarPerlengkapanData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
@@ -62,4 +75,18 @@ export const updateDaftarPerlengkapanByUuidService = async (uuid, daftarPerlengk
     }, req_identity)
 
     return daftarPerlengkapan
+}
+
+export const checkPerlengkapanSudahDigunakanByUuidService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkPerlengkapanSudahDigunakanByUuidService`, {
+        uuid
+    }, req_identity)
+    const digunakanStatus = await checkPerlengkapanSudahDigunakanByUuidRepo(uuid, req_identity)
+
+    if (digunakanStatus.length > 0 && digunakanStatus[0].count > 0) {
+        throw Error(JSON.stringify({
+            message: "Tidak Dapat Dieksekusi, Hitungan Penyusutan Perlengkapan Sudah Divalidasi",
+            prop: "error"
+        }))
+    }
 }

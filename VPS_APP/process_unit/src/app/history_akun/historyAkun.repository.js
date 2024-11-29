@@ -411,6 +411,76 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                 JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "a88b16d3-4071-4503-9c5b-17cdac4a411f"
                 AND hpt.enabled = 1
                 AND dat.enabled = 1
+                UNION ALL
+                SELECT 
+                    "NOT_AVAILABLE" AS uuid,
+                    ppt.bukti_transaksi AS bukti_transaksi,
+                    LPAD(DAY(ppt.tanggal), 2, '0') AS tanggal,
+                    LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
+                    YEAR(ppt.tanggal) AS tahun,
+                    TIME(ppt.tanggal) AS waktu,
+                    0 AS transaksi,
+                    ppt.jumlah * dpt.harga_satuan AS debet,
+                    0 AS kredit,
+                    kapt.code AS kode_akun,
+                    kapt.name AS nama_akun,
+                    kapt.type AS type_akun,
+                    JSON_OBJECT(
+                        'detail', JSON_OBJECT (
+                            'jumlah', ppt.jumlah,
+                            'keterangan', ppt.keterangan,
+                            'kuantitas', dpt.kuantitas,
+                            'harga_satuan', dpt.harga_satuan,
+                            'dpp', dpt.dpp,
+                            'ppn', dpt.ppn,
+                            'kategori_perlengkaan', kpt.name,
+                            'daftar_perlengkapan_name', dpt.name,
+                            'daftar_perlengkapan_invoice', dpt.nomor_invoice
+                        )
+                    ) AS uraian,
+                    "PENGGUNAAN PERLENGKAPAN" AS sumber,
+                    ppt.enabled                     
+                FROM ${generateDatabaseName(req_id)}.penggunaan_perlengkapan_tab ppt 
+                JOIN ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt ON dpt.uuid = ppt.daftar_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "6e376191-0454-4172-a78b-2bc5f9c8fd6e" 
+                WHERE ppt.enabled = 1
+                AND dpt.enabled = 1 
+                UNION ALL
+                SELECT 
+                    "NOT_AVAILABLE" AS uuid,
+                    ppt.bukti_transaksi AS bukti_transaksi,
+                    LPAD(DAY(ppt.tanggal), 2, '0') AS tanggal,
+                    LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
+                    YEAR(ppt.tanggal) AS tahun,
+                    TIME(ppt.tanggal) AS waktu,
+                    1 AS transaksi,
+                    0 AS debet,
+                    ppt.jumlah * dpt.harga_satuan AS kredit,
+                    kapt.code AS kode_akun,
+                    kapt.name AS nama_akun,
+                    kapt.type AS type_akun,
+                    JSON_OBJECT(
+                        'detail', JSON_OBJECT (
+                            'jumlah', ppt.jumlah,
+                            'keterangan', ppt.keterangan,
+                            'kuantitas', dpt.kuantitas,
+                            'harga_satuan', dpt.harga_satuan,
+                            'dpp', dpt.dpp,
+                            'ppn', dpt.ppn,
+                            'kategori_perlengkaan', kpt.name,
+                            'daftar_perlengkapan_name', dpt.name,
+                            'daftar_perlengkapan_invoice', dpt.nomor_invoice
+                        )
+                    ) AS uraian,
+                    "PENGGUNAAN PERLENGKAPAN" AS sumber,
+                    ppt.enabled
+                FROM ${generateDatabaseName(req_id)}.penggunaan_perlengkapan_tab ppt 
+                JOIN ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt ON dpt.uuid = ppt.daftar_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan 
+                WHERE ppt.enabled = 1
+                AND dpt.enabled = 1 
             ) AS res
             JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.code = res.kode_akun
             WHERE res.bulan = "${bulan}" AND res.tahun = "${tahun}"

@@ -11,6 +11,76 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
             FROM (
                 SELECT 
                     "NOT_AVAILABLE" AS uuid,
+                    ppt.bukti_transaksi AS bukti_transaksi,
+                    LPAD(DAY(ppt.tanggal), 2, '0') AS tanggal,
+                    LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
+                    YEAR(ppt.tanggal) AS tahun,
+                    TIME(ppt.tanggal) AS waktu,
+                    0 AS transaksi,
+                    ppt.jumlah  * dpt.harga_satuan AS debet,
+                    0 AS kredit,
+                    kapt.name AS nama_akun,
+                    kapt.code AS kode_akun,
+                    kapt.type AS type_akun,
+                    kapt.uuid AS uuid_akun,
+                    NULL AS uraian,
+                    JSON_OBJECT (
+                        'kuantitas', ppt.jumlah,
+                        'keterangan', ppt.keterangan,
+                        'harga_satuan', dpt.harga_satuan,
+                        'dpp', dpt.dpp,
+                        'ppn', dpt.ppn,
+                        'kategori_perlengkaan', kpt.name,
+                        'daftar_perlengkapan_name', dpt.name,
+                        'daftar_perlengkapan_invoice', dpt.nomor_invoice
+                    ) AS detail_data,
+                    "PENGGUNAAN PERLENGKAPAN" AS sumber
+                FROM ${generateDatabaseName(req_id)}.penggunaan_perlengkapan_tab ppt 
+                JOIN ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt ON dpt.uuid = ppt.daftar_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "6e376191-0454-4172-a78b-2bc5f9c8fd6e" 
+                WHERE ppt.enabled = 1
+                AND dpt.enabled = 1 
+                AND MONTH(ppt.tanggal) = ${bulan}
+                AND YEAR(ppt.tanggal) = ${tahun}
+                UNION ALL
+                SELECT 
+                    "NOT_AVAILABLE" AS uuid,
+                    ppt.bukti_transaksi AS bukti_transaksi,
+                    LPAD(DAY(ppt.tanggal), 2, '0') AS tanggal,
+                    LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
+                    YEAR(ppt.tanggal) AS tahun,
+                    TIME(ppt.tanggal) AS waktu,
+                    1 AS transaksi,
+                    0 AS debet,
+                    ppt.jumlah  * dpt.harga_satuan AS kredit,
+                    kapt.name AS nama_akun,
+                    kapt.code AS kode_akun,
+                    kapt.type AS type_akun,
+                    kapt.uuid AS uuid_akun,
+                    NULL AS uraian,
+                    JSON_OBJECT (
+                        'kuantitas', ppt.jumlah,
+                        'keterangan', ppt.keterangan,
+                        'harga_satuan', dpt.harga_satuan,
+                        'dpp', dpt.dpp,
+                        'ppn', dpt.ppn,
+                        'kategori_perlengkaan', kpt.name,
+                        'daftar_perlengkapan_name', dpt.name,
+                        'daftar_perlengkapan_invoice', dpt.nomor_invoice
+                    ) AS detail_data,
+                    "PENGGUNAAN PERLENGKAPAN" AS sumber
+                FROM ${generateDatabaseName(req_id)}.penggunaan_perlengkapan_tab ppt 
+                JOIN ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt ON dpt.uuid = ppt.daftar_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan 
+                WHERE ppt.enabled = 1
+                AND dpt.enabled = 1 
+                AND MONTH(ppt.tanggal) = ${bulan}
+                AND YEAR(ppt.tanggal) = ${tahun}
+                UNION ALL
+                SELECT 
+                    "NOT_AVAILABLE" AS uuid,
                     dpt.bukti_transaksi AS bukti_transaksi,
                     LPAD(DAY(dpt.tanggal_beli), 2, '0') AS tanggal,
                     LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,

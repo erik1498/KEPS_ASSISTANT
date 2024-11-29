@@ -94,7 +94,7 @@ const Navigasi = ({
                                     parentName={"Perusahaan"}
                                     sideBars={sideBars[0]}
                                 />
-                                <ul className="menu z-50 bg-base-200 rounded-box w-56">
+                                <ul className="menu z-50 bg-base-200 rounded-box w-64">
                                     {
                                         getRolesInCookie("Perusahaan_Master") ? <>
                                             <li>
@@ -188,7 +188,7 @@ const Navigasi = ({
                                     parentName={"Transaksi"}
                                     sideBars={sideBars[0]}
                                 />
-                                <ul className="menu z-50 bg-base-200 rounded-box w-56">
+                                <ul className="menu z-50 bg-base-200 rounded-box w-64">
                                     {
                                         getRolesInCookie("Transaksi_KasDanBank") ? <>
                                             <li>
@@ -287,7 +287,7 @@ const Navigasi = ({
                                     parentName={"Aset Tetap Dan Perlengkapan"}
                                     sideBars={sideBars[0]}
                                 />
-                                <ul className="menu z-50 bg-base-200 rounded-box w-56">
+                                <ul className="menu z-50 bg-base-200 rounded-box w-64">
                                     {
                                         getRolesInCookie("AsetTetapDanPerlengkapan_Aset") ? <>
                                             <li>
@@ -327,6 +327,13 @@ const Navigasi = ({
                                                         getRolesInCookie("AsetTetapDanPerlengkapan_Perlengkapan_DaftarPerlengkapan") ? <>
                                                             <li>
                                                                 <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/daftarPerlengkapan" addClass={"my-1"} label={"Daftar Perlengkapan"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("AsetTetapDanPerlengkapan_Perlengkapan_PenggunaanPerlengkapan") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/asetTetapDanPerlengkapan/perlengkapan/penggunaanPerlengkapan" addClass={"my-1"} label={"Penggunaan Perlengkapan"} />
                                                             </li>
                                                         </> : <></>
                                                     }
