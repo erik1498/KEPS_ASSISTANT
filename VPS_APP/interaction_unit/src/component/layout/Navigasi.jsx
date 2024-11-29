@@ -540,6 +540,22 @@ const Navigasi = ({
                                         </> : <></>
                                     }
                                     {
+                                        getRolesInCookie("Persediaan_Pengiriman") ? <>
+                                            <li>
+                                                <p className="font-bold pointer-events-none">Pengiriman</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("Persediaan_Pengiriman_Barang") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/pengiriman/barang" addClass={"my-1"} label={"Barang"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
                                         getRolesInCookie("Persediaan_Gudang") ? <>
                                             <li>
                                                 <p className="font-bold pointer-events-none">Gudang</p>

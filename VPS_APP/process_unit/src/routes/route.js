@@ -98,6 +98,7 @@ import { getPenyesuaianPersediaanRoute } from "../app/penyesuaian_persediaan/pen
 import { getPerintahStokOpnameJurnalRoute } from "../app/perintah_stok_opname_jurnal/perintahStokOpnameJurnal.route.js";
 import { getHitunganPenyusutanRoute } from "../app/hitungan_penyusutan/hitunganPenyusutan.route.js";
 import { getPenggunaanPerlengkapanRoute } from "../app/penggunaan_perlengkapan/penggunaanPerlengkapan.route.js";
+import { getPengirimanBarangRoute } from "../app/pengiriman_barang/pengirimanBarang.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -201,4 +202,5 @@ export const routerList = new Array()
         getRincianReturPembelianBarangRoute(),
         getPengembalianDendaPembelianBarangRoute(),
         getRincianPengembalianDendaPembelianBarangRoute(),
+        getPengirimanBarangRoute()
     )

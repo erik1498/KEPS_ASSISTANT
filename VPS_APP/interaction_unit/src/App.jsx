@@ -65,6 +65,7 @@ import laporanFakturPenjualanBarangPath from './path/laporan/laporanFakturPenjua
 import laporanFakturPembelianBarangPath from './path/laporan/laporanFakturPembelianBarang';
 import laporanHargaBarangBeliPath from './path/laporan/laporanHargaBarangBeli';
 import penggunaanPerlengkapanPath from './path/asetTetapDanPerlengkapan/perlengkapan/penggunaanPerlengkapan.path';
+import pengirimanBarangPath from './path/persediaan/pengiriman/pengirimanBarang.path';
 
 const JurnalUmumPage = React.lazy(() => import('./page/bukuBesar/jurnalUmum/JurnalUmum.page'));
 const NeracaSaldoPage = React.lazy(() => import('./page/laporan/neracaSaldo/NeracaSaldo.page'));
@@ -124,6 +125,7 @@ const LaporanFakturPenjualanBarangPage = React.lazy(() => import('./page/laporan
 const LaporanFakturPembelianBarangPage = React.lazy(() => import('./page/laporan/laporanFakturPembelianBarang/LaporanFakturPembelianBarang'));
 const LaporanHargaBarangBeliPage = React.lazy(() => import('./page/laporan/laporanHargaBarangBeli/LaporanHargaBarangBeli'));
 const PenggunaanPerlengkapanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/perlengkapan/penggunaanPerlengkapan/PenggunaanPerlengkapan.page'));
+const PengirimanBarangPage = React.lazy(() => import('./page/persediaan/pengiriman/barang/PengirimanBarang.page'));
 
 function App() {
   return (
@@ -224,6 +226,9 @@ function App() {
         </Routes>
         <Routes basename={jenisGudangPath.main}>
           <Route path={jenisGudangPath.main} element={<JenisGudangPage />} />
+        </Routes>
+        <Routes basename={pengirimanBarangPath.main}>
+          <Route path={pengirimanBarangPath.main} element={<PengirimanBarangPage />} />
         </Routes>
         <Routes basename={daftarAsetPath.main}>
           <Route path={daftarAsetPath.main} element={<DaftarAsetPage />} />

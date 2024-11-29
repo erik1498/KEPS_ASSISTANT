@@ -48,7 +48,7 @@ export const FakturPenjualanJasaPrint = React.forwardRef((props, ref) => {
                 </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-12 text-sm gap-x-2 py-2 font-bold border-t-2 px-6">
+            <div className="mt-4 grid grid-cols-12 text-sm gap-x-2 py-2 font-bold border-t-2">
                 <div className="col-span-1">
                     <p>No.</p>
                 </div>
@@ -69,7 +69,7 @@ export const FakturPenjualanJasaPrint = React.forwardRef((props, ref) => {
                 props.rincianPesananPenjualanJasa.map((x, i) => {
                     return <>
                         <div className="py-3  border-t-2">
-                            <div className="grid grid-cols-12 gap-x-2 px-6 py-3 items-start font-bold">
+                            <div className="grid grid-cols-12 gap-x-2 py-3 items-start font-bold">
                                 <div className="col-span-1">
                                     <p className="text-sm">{i + 1}.</p>
                                 </div>
@@ -88,7 +88,7 @@ export const FakturPenjualanJasaPrint = React.forwardRef((props, ref) => {
                                     <p className="text-sm">PPN : Rp. {parseToRupiahText(x.ppn)}</p>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-12 text-sm gap-x-2 px-6 font-bold">
+                            <div className="grid grid-cols-12 text-sm gap-x-2 font-bold">
                                 <div className="col-span-1">
                                 </div>
                                 <div className="col-span-2">
@@ -120,7 +120,7 @@ export const FakturPenjualanJasaPrint = React.forwardRef((props, ref) => {
                     </>
                 })
             }
-            <div className="grid grid-cols-12 gap-x-2 px-6 pt-5 items-start font-bold border-t-2">
+            <div className="grid grid-cols-12 gap-x-2 pt-5 items-start font-bold border-t-2">
                 <div className="col-span-9">
                     <p>PEMBAYARAN</p>
                 </div>

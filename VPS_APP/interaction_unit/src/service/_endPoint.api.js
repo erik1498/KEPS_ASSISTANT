@@ -199,6 +199,10 @@ export const SrvJenisGudang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/jenis_gudang'
 )
 
+export const SrvPengirimanbarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/pengiriman_barang'
+)
+
 export const SrvDaftarAset = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/daftar_aset'
 )

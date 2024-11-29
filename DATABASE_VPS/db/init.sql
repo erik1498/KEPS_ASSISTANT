@@ -21,6 +21,7 @@ GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].daftar_barang_tab 
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].daftar_gudang_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].daftar_jasa_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].daftar_perlengkapan_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
+GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].penggunaan_perlengkapan_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].divisi_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].dokumen_klien_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].faktur_pembelian_barang_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
