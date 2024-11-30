@@ -181,8 +181,8 @@ const PengirimanBarangForm = ({
                         onchange={(e) => {
                             setTanggal(e.target.value)
                         }}
-                        addClassInput={idPengirimanBarang ? "border-none !px-1" : ""}
-                        disabled={idPengirimanBarang}
+                        addClassInput={idPengirimanBarang || pengirimanBarangEdit ? "border-none !px-1" : ""}
+                        disabled={idPengirimanBarang || pengirimanBarangEdit}
                         others={
                             {
                                 value: tanggal,

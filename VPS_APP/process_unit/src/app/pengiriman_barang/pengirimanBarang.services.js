@@ -65,7 +65,7 @@ export const deletePengirimanBarangByUuidService = async (uuid, req_identity) =>
 export const updatePengirimanBarangByUuidService = async (uuid, pengirimanBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updatePengirimanBarangByUuidService [${uuid}]`, pengirimanBarangData, req_identity)
     const beforeData = await getPengirimanBarangByUuidService(uuid, req_identity)
-    
+
     await checkNomorSuratJalanAndTanggalService(beforeData, req_identity)
 
     const pengirimanBarang = await updatePengirimanBarangByUuidRepo(uuid, pengirimanBarangData, req_identity)
@@ -85,11 +85,13 @@ export const checkNomorSuratJalanAndTanggalService = async (pengirimanBarangData
     const pengirimanBarang = await checkNomorSuratJalanAndTanggalRepo(pengirimanBarangData, req_identity)
 
     if (pengirimanBarang.length > 0) {
-        if (pengirimanBarang[0].tanggal_terakhir >= pengirimanBarangData.tanggal) {
-            throw Error(JSON.stringify({
-                message: `Tidak Dapat Dieksekusi, Tanggal Pengiriman Barang Harus Diatas ${formatDate(pengirimanBarang[0].tanggal_terakhir)}`,
-                prop: "error"
-            }))
+        if (!pengirimanBarangData.uuid) {
+            if (pengirimanBarang[0].tanggal_terakhir >= pengirimanBarangData.tanggal) {
+                throw Error(JSON.stringify({
+                    message: `Tidak Dapat Dieksekusi, Tanggal Pengiriman Barang Harus Diatas ${formatDate(pengirimanBarang[0].tanggal_terakhir)}`,
+                    prop: "error"
+                }))
+            }
         }
         if (pengirimanBarang[0].nomor_surat_jalan == pengirimanBarangData.nomor_surat_jalan) {
             throw Error(JSON.stringify({

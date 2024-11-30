@@ -34,6 +34,7 @@ export const getAllPengirimanBarangRepo = async (pageNumber, size, search, req_i
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt2 ON pt2.uuid = pbt.pegawai_pelaksana 
             WHERE CONCAT(pbt.nomor_surat_jalan, fpbt.nomor_faktur_penjualan_barang) LIKE '%${search}%' 
             AND pbt.enabled = 1
+            ORDER BY pbt.tanggal DESC
             LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }
@@ -150,9 +151,7 @@ export const updatePengirimanBarangByUuidRepo = async (uuid, pengirimanBarangDat
         generateDatabaseName(req_id),
         PengirimanBarangModel,
         {
-            tanggal: pengirimanBarangData.tanggal,
             nomor_surat_jalan: pengirimanBarangData.nomor_surat_jalan,
-            faktur_penjualan_barang: pengirimanBarangData.faktur_penjualan_barang,
             pegawai_penanggung_jawab: pengirimanBarangData.pegawai_penanggung_jawab,
             pegawai_pelaksana: pengirimanBarangData.pegawai_pelaksana,
         },

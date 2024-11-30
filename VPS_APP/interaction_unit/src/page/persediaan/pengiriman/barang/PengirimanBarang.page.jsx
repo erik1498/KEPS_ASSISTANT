@@ -6,9 +6,10 @@ import { showAlert, showDialog, showError } from "../../../../helper/form.helper
 import Wrap from "../../../../component/layout/Wrap"
 import PageTitle from "../../../../component/general/PageTitle"
 import PengirimanBarangForm from "./component/PengirimanBarangForm"
-import { FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
+import { FaEdit, FaEye, FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
 import Pagination from "../../../../component/general/Pagination"
 import { formatDate } from "../../../../helper/date.helper"
+import { getNormalizedCustomKey } from "../../../../helper/jurnalUmum.helper"
 
 const PengirimanBarangPage = () => {
 
@@ -16,6 +17,7 @@ const PengirimanBarangPage = () => {
     const { data } = dataContext
 
     const [pengirimanBarang, setPengirimanBarang] = useState([])
+    const [pengirimanBarangFix, setPengirimanBarangFix] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [addPengirimanBarang, setAddPengirimanBarang] = useState(false)
     const [pengirimanBarangEdit, setPengirimanBarangEdit] = useState({
@@ -25,9 +27,9 @@ const PengirimanBarangPage = () => {
     const [searchStatus, setSearchStatus] = useState(false)
     const [search, setSearch] = useState("")
 
-    const PengirimanBarangPrintRef = useRef();
+    const pengirimanBarangPrintRef = useRef();
     const handlePrint = useReactToPrint({
-        content: () => PengirimanBarangPrintRef.current,
+        content: () => pengirimanBarangPrintRef.current,
     });
 
     const [pagination, setPagination] = useState({
@@ -45,8 +47,9 @@ const PengirimanBarangPage = () => {
         apiPengirimanBarangCRUD
             .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
             .then(resData => {
-
+                let data = getNormalizedCustomKey(resData.data.entry, "nomor_faktur_penjualan_barang")
                 setSearchStatus(searchParam.length < 1)
+                setPengirimanBarangFix(data)
                 setPengirimanBarang(resData?.data?.entry)
                 setPagination(resData?.data?.pagination)
                 setIsLoading(false)
@@ -55,17 +58,15 @@ const PengirimanBarangPage = () => {
             })
     }
 
-    const _editPengirimanBarang = (i) => {
-        let pengirimanBarangSelected = pengirimanBarang[i]
-        setPengirimanBarangEdit(pengirimanBarangSelected)
+    const _editPengirimanBarang = (x) => {
+        setPengirimanBarangEdit(x)
         setAddPengirimanBarang(!addPengirimanBarang)
     }
 
-    const _deletePengirimanBarang = async (i) => {
+    const _deletePengirimanBarang = async (x) => {
         if (await showDialog("Hapus", "Yakin ingin hapus data ini ?")) {
-            let pengirimanBarangSelected = pengirimanBarang[i]
             apiPengirimanBarangCRUD
-                .custom(`/${pengirimanBarangSelected.uuid}`, "DELETE")
+                .custom(`/${x.uuid}`, "DELETE")
                 .then(() => {
                     showAlert("Berhasil", "Data berhasil dihapus")
                     _getData()
@@ -127,7 +128,7 @@ const PengirimanBarangPage = () => {
                                 <div className="hidden">
                                     {/* <PengirimanBarangPrint
                                         data={pengirimanBarang}
-                                        ref={PengirimanBarangPrintRef}
+                                        ref={pengirimanBarangPrintRef}
                                         bulan={getBulanByIndex(new Date().getMonth())}
                                         tahun={data.tahun}
                                     /> */}
@@ -140,49 +141,116 @@ const PengirimanBarangPage = () => {
                                 </button>
                             </div>
                         </div>
-                        <div className="overflow-x-auto bg-white shadow-xl rounded-md h-[50vh] no-scrollbar px-6 pb-4">
-                            <table className="table">
-                                {/* head */}
-                                <thead>
-                                    <tr className="sticky top-0 bg-white py-4 text-black">
-                                        <th width={12}>No</th>
-                                        <th>Tanggal</th>
-                                        <th>Nomor Surat Jalan</th>
-                                        <th>Nomor Faktur Penjualan Barang</th>
-                                        <th>Pegawai Penanggung Jawab</th>
-                                        <th>Pegawai Pelaksana</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
+                        <div className="overflow-x-auto bg-white shadow-xl rounded-md">
+                            {
+                                pengirimanBarangFix?.map((item, i) => {
+                                    return <>
+                                        <div className="bg-gray-200 p-3">
+                                            <p className="text-xs text-gray-500 font-bold">Nomor Faktur Penjualan</p>
+                                            <p className="font-bold">{item.parent}</p>
+                                        </div>
+                                        {
+                                            item.data.map((x, i) => {
+                                                return <>
+                                                    <div className="px-6 py-4 flex justify-between">
+                                                        <div>
+                                                            <p className="text-xs text-gray-500 font-bold">Nomor Surat Jalan</p>
+                                                            <p className="font-bold text-md">{x?.nomor_surat_jalan}</p>
+                                                            <p className="text-xs text-gray-500 font-bold">Tanggal : {formatDate(x?.tanggal)}</p>
+                                                            <div className="flex gap-x-2">
+                                                                <p className="text-xs font-bold mt-3 bg-gray-400 px-2 py-1 rounded-md text-white">Penanggung Jawab : {x.pegawai_penanggung_jawab_name}</p>
+                                                                <p className="text-xs font-bold mt-3 bg-gray-400 px-2 py-1 rounded-md text-white">Pelaksana : {x.pegawai_pelaksana_name}</p>
+                                                            </div>
+                                                        </div>
+                                                        {
+                                                            i == 0 ? <>
+                                                                <div>
+                                                                    <div className="flex items-center">
+                                                                        <button
+                                                                            className="btn btn-xs bg-transparent shadow-none border-0 text-yellow-400"
+                                                                            onClick={() => {
+                                                                                _editPengirimanBarang(x)
+                                                                            }}
+                                                                        >
+                                                                            <FaPen size={10} />
+                                                                            Edit
+                                                                        </button>
+                                                                        <button
+                                                                            className="btn btn-xs bg-transparent shadow-none border-0 text-red-600"
+                                                                            onClick={() => {
+                                                                                _deletePengirimanBarang(x)
+                                                                            }}
+                                                                        >
+                                                                            <FaTrash size={10} />
+                                                                            Hapus
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </> : <></>
+                                                        }
+                                                    </div>
+                                                </>
+                                            })
+                                        }
+                                    </>
+                                })
+                            }
+                        </div>
+                        {/* <div className="overflow-x-auto bg-white shadow-xl rounded-md h-[50vh] no-scrollbar">
+                            <table className="table table-sm">
                                 <tbody>
                                     {
-                                        pengirimanBarang?.map((item, i) => {
+                                        pengirimanBarangFix?.map((item, i) => {
                                             return <>
-                                                <tr key={i}>
-                                                    <td>{i + 1}.</td>
-                                                    <td>{formatDate(item.tanggal, true)}</td>
-                                                    <td>{item.nomor_surat_jalan}</td>
-                                                    <td>{item.nomor_faktur_penjualan_barang}</td>
-                                                    <td>{item.pegawai_penanggung_jawab_name}</td>
-                                                    <td>{item.pegawai_pelaksana_name}</td>
-                                                    <td className="flex gap-x-2">
-                                                        <FaPen size={12} className="text-yellow-500 cursor-pointer"
-                                                            onClick={() => {
-                                                                _editPengirimanBarang(i)
-                                                            }} />
-                                                        <FaTrash size={12} className="text-red-500 cursor-pointer"
-                                                            onClick={() => {
-                                                                _deletePengirimanBarang(i)
-                                                            }} />
-                                                    </td>
+                                                <tr key={i} className="bg-gray-200 uppercase font-bold">
+                                                    <td>{item.parent}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>NOMOR SURAT JALAN</td>
+                                                    <td>TANGGAL PENGIRIMAN</td>
+                                                    <td>PEGAWAI PENANGGUNG JAWAB</td>
+                                                    <td>PEGAWAI PELAKSANA</td>
+                                                    <td>AKSI</td>
+                                                </tr>
+                                                {
+                                                    item.data.map((x, i) => {
+                                                        return <>
+                                                            <tr key={i}>
+                                                                <td></td>
+                                                                <td>{x.nomor_surat_jalan}</td>
+                                                                <td>{formatDate(x.tanggal)}</td>
+                                                                <td>{x.pegawai_penanggung_jawab_name}</td>
+                                                                <td>{x.pegawai_pelaksana_name}</td>
+                                                                <td className="flex gap-x-2">
+                                                                    {
+                                                                        i == 0 ? <>
+                                                                            <FaPen size={12} className="text-yellow-500 cursor-pointer"
+                                                                                onClick={() => {
+                                                                                    _editPengirimanBarang(x)
+                                                                                }} />
+                                                                            <FaTrash size={12} className="text-red-500 cursor-pointer"
+                                                                                onClick={() => {
+                                                                                    _deletePengirimanBarang(x)
+                                                                                }} />
+                                                                        </> : <></>
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        </>
+                                                    })
+                                                }
                                             </>
                                         })
                                     }
                                 </tbody>
                             </table>
-                        </div>
-                        <Pagination paginateUpdatePage={paginateUpdatePage} paginate={pagination} setSize={setSize} />
+                        </div> */}
                     </>
             }
         </div>
