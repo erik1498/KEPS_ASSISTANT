@@ -8,6 +8,7 @@ import PageTitle from "../../../../component/general/PageTitle"
 import PengirimanBarangForm from "./component/PengirimanBarangForm"
 import { FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
 import Pagination from "../../../../component/general/Pagination"
+import { formatDate } from "../../../../helper/date.helper"
 
 const PengirimanBarangPage = () => {
 
@@ -17,7 +18,7 @@ const PengirimanBarangPage = () => {
     const [pengirimanBarang, setPengirimanBarang] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [addPengirimanBarang, setAddPengirimanBarang] = useState(false)
-    const [PengirimanBarangEdit, setPengirimanBarangEdit] = useState({
+    const [pengirimanBarangEdit, setPengirimanBarangEdit] = useState({
         name: "",
     })
 
@@ -102,7 +103,7 @@ const PengirimanBarangPage = () => {
                     <PengirimanBarangForm
                         setAddPengirimanBarangEvent={() => setAddPengirimanBarang(false)}
                         getData={_getData}
-                        PengirimanBarangEdit={PengirimanBarangEdit}
+                        pengirimanBarangEdit={pengirimanBarangEdit}
                     />
                     :
                     <>
@@ -161,6 +162,7 @@ const PengirimanBarangPage = () => {
                                                     <td>{i + 1}.</td>
                                                     <td>{formatDate(item.tanggal, true)}</td>
                                                     <td>{item.nomor_surat_jalan}</td>
+                                                    <td>{item.nomor_faktur_penjualan_barang}</td>
                                                     <td>{item.pegawai_penanggung_jawab_name}</td>
                                                     <td>{item.pegawai_pelaksana_name}</td>
                                                     <td className="flex gap-x-2">
@@ -168,15 +170,10 @@ const PengirimanBarangPage = () => {
                                                             onClick={() => {
                                                                 _editPengirimanBarang(i)
                                                             }} />
-
-                                                        {
-                                                            item.penyesuaian_persediaan_count > 0 ? <>
-                                                                <FaTrash size={12} className="text-red-500 cursor-pointer"
-                                                                    onClick={() => {
-                                                                        _deletePengirimanBarang(i)
-                                                                    }} />
-                                                            </> : <></>
-                                                        }
+                                                        <FaTrash size={12} className="text-red-500 cursor-pointer"
+                                                            onClick={() => {
+                                                                _deletePengirimanBarang(i)
+                                                            }} />
                                                     </td>
                                                 </tr>
                                             </>

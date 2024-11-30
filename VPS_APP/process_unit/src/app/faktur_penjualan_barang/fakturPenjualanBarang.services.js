@@ -3,7 +3,7 @@ import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
 import { getNeracaValidasiByTanggalService } from "../neraca/neraca.services.js"
 import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
-import { createFakturPenjualanBarangRepo, deleteFakturPenjualanBarangByUuidRepo, getAllFakturPenjualanBarangRepo, getFakturPenjualanBarangByPesananPenjualanBarangUUIDRepo, getFakturPenjualanBarangByUuidRepo, getFakturReportPenjualanBarangsRepo, getJumlahRincianTransaksiDendaOnTableByTanggalRepo, getJumlahRincianTransaksiOnTableByTanggalRepo, getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo, getTanggalTransaksiTerakhirByFakturPenjualanRepo, updateFakturPenjualanBarangByUuidRepo } from "./fakturPenjualanBarang.repository.js"
+import { checkPengirimanBarangFakturPenjualanBarangRepo, createFakturPenjualanBarangRepo, deleteFakturPenjualanBarangByUuidRepo, getAllFakturPenjualanBarangRepo, getFakturPenjualanBarangByPesananPenjualanBarangUUIDRepo, getFakturPenjualanBarangByUuidRepo, getFakturReportPenjualanBarangsRepo, getJumlahRincianTransaksiDendaOnTableByTanggalRepo, getJumlahRincianTransaksiOnTableByTanggalRepo, getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo, getTanggalTransaksiTerakhirByFakturPenjualanRepo, updateFakturPenjualanBarangByUuidRepo } from "./fakturPenjualanBarang.repository.js"
 
 export const getAllFakturPenjualanBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllFakturPenjualanBarangService", null, req_identity)
@@ -160,6 +160,8 @@ export const deleteFakturPenjualanBarangByUuidService = async (uuid, req_identit
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)
 
+    await checkPengirimanBarangFakturPenjualanBarangService(uuid, req_identity)
+
     await deleteFakturPenjualanBarangByUuidRepo(uuid, req_identity)
     return true
 }
@@ -180,4 +182,18 @@ export const updateFakturPenjualanBarangByUuidService = async (uuid, fakturPenju
     }, req_identity)
 
     return fakturPenjualanBarang
+}
+
+export const checkPengirimanBarangFakturPenjualanBarangService = async (uuid, req_identity) => {
+    LOGGER(logType.INFO, `Start checkPengirimanBarangFakturPenjualanBarangService`, {
+        uuid
+    }, req_identity)
+
+    const pengirimanPesananPenjualanBarang = await checkPengirimanBarangFakturPenjualanBarangRepo(uuid, req_identity)
+    if (pengirimanPesananPenjualanBarang.length > 0) {
+        throw Error(JSON.stringify({
+            message: `Tidak Bisa Dieksekusi, Karena Pengiriman Barang Dengan Faktur Ini Telah Terdaftar Dengan Nomor Surat Jalan : ${pengirimanPesananPenjualanBarang[0].nomor_surat_jalan}`,
+            prop: "error"
+        }))
+    }
 }

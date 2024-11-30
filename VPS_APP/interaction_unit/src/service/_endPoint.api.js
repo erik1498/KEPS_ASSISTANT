@@ -203,6 +203,10 @@ export const SrvPengirimanbarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/pengiriman_barang'
 )
 
+export const SrvRincianPengirimanbarang = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_pengiriman_barang'
+)
+
 export const SrvDaftarAset = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/daftar_aset'
 )

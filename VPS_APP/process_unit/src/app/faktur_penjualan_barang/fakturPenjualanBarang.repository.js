@@ -532,3 +532,16 @@ export const getJumlahRincianTransaksiDendaOnTableByTanggalRepo = async (table_n
 
     return fakturPenjualans
 }
+
+export const checkPengirimanBarangFakturPenjualanBarangRepo = async (uuid, req_id) => {
+    return await db.query(`
+            SELECT 
+                pbt.nomor_surat_jalan 
+            FROM ${generateDatabaseName(req_id)}.pengiriman_barang_tab pbt 
+            WHERE pbt.faktur_penjualan_barang = "${uuid}"
+            AND pbt.enabled = 1
+            LIMIT 1
+        `, {
+        type: Sequelize.QueryTypes.SELECT
+    })
+}

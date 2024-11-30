@@ -1,5 +1,5 @@
 import { pengirimanBarangValidation } from "./pengirimanBarang.validation.js"
-import { createPengirimanBarangService, deletePengirimanBarangByUuidService, getAllPengirimanBarangService, getDaftarPesananByFakturPenjualanUUIDService, getPengirimanBarangByUuidService, updatePengirimanBarangByUuidService } from "./pengirimanBarang.services.js"
+import { createPengirimanBarangService, deletePengirimanBarangByUuidService, getAllPengirimanBarangService, getDaftarPesananByUUIDService, getPengirimanBarangByUuidService, updatePengirimanBarangByUuidService } from "./pengirimanBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -20,13 +20,13 @@ export const getAllPengirimanBarangs = async (req, res) => {
     }
 }
 
-export const getDaftarPesananByFakturPenjualanUUID = async (req, res) => {
-    LOGGER(logType.INFO, "Start getDaftarPesananByFakturPenjualanUUID", null, req.identity)
+export const getDaftarPesananByUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getDaftarPesananByUUID", null, req.identity)
     try {
-        const { faktur_penjualan_barang } = req.params
+        const { pengiriman_barang } = req.params
 
         res.json({
-            data: await getDaftarPesananByFakturPenjualanUUIDService(faktur_penjualan_barang, req.identity),
+            data: await getDaftarPesananByUUIDService(pengiriman_barang, req.identity),
             message: "Get Data By UUID Success"
         })
     } catch (error) {

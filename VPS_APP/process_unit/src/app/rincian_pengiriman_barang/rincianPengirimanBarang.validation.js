@@ -1,32 +1,27 @@
 import Joi from "joi"
 
-export const pengirimanBarangValidation = (payload) => {
+export const rincianPengirimanBarangValidation = (payload) => {
     const schema = Joi.object({
-        tanggal: Joi.string().required().messages({
+        pengiriman_barang: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        nomor_surat_jalan: Joi.string().required().messages({
+        jumlah: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        faktur_penjualan_barang: Joi.string().required().messages({
+        pengiriman: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        pegawai_penanggung_jawab: Joi.string().required().messages({
+        rincian_pesanan_penjualan_barang: Joi.string().required().messages({
             'string.base': "Harus Berupa Text",
             "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
-        }),
-        pegawai_pelaksana: Joi.string().required().messages({
-            'string.base': "Harus Berupa Text",
-            "string.empty": "Harus Diisi",
-            "any.required": "Harus Diisi",
-        }),
+        })
     })
 
     return schema.validate(payload)

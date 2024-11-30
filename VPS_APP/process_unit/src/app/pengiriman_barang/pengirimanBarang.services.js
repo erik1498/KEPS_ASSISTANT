@@ -1,6 +1,7 @@
+import { formatDate } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { createPengirimanBarangRepo, deletePengirimanBarangByUuidRepo, getAllPengirimanBarangRepo, getDaftarPesananByFakturPenjualanUUIDRepo, getPengirimanBarangByUuidRepo, updatePengirimanBarangByUuidRepo } from "./pengirimanBarang.repository.js"
+import { checkNomorSuratJalanAndTanggalRepo, createPengirimanBarangRepo, deletePengirimanBarangByUuidRepo, getAllPengirimanBarangRepo, getDaftarPesananByUUIDRepo, getPengirimanBarangByUuidRepo, updatePengirimanBarangByUuidRepo } from "./pengirimanBarang.repository.js"
 
 export const getAllPengirimanBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllPengirimanBarangService", null, req_identity)
@@ -23,11 +24,11 @@ export const getAllPengirimanBarangService = async (query, req_identity) => {
     return generatePaginationResponse(pengirimanBarangs.entry, pengirimanBarangs.count, pengirimanBarangs.pageNumber, pengirimanBarangs.size)
 }
 
-export const getDaftarPesananByFakturPenjualanUUIDService = async (faktur_penjualan_barang, req_identity) => {
-    LOGGER(logType.INFO, `Start getDaftarPesananByFakturPenjualanUUIDService`, {
-        faktur_penjualan_barang
+export const getDaftarPesananByUUIDService = async (pengiriman_barang, req_identity) => {
+    LOGGER(logType.INFO, `Start getDaftarPesananByUUIDService`, {
+        pengiriman_barang
     }, req_identity)
-    const pesananPenjualanBarang = await getDaftarPesananByFakturPenjualanUUIDRepo(faktur_penjualan_barang, req_identity)
+    const pesananPenjualanBarang = await getDaftarPesananByUUIDRepo(pengiriman_barang, req_identity)
     return pesananPenjualanBarang
 }
 
@@ -48,6 +49,8 @@ export const createPengirimanBarangService = async (pengirimanBarangData, req_id
     LOGGER(logType.INFO, `Start createPengirimanBarangService`, pengirimanBarangData, req_identity)
     pengirimanBarangData.enabled = 1
 
+    await checkNomorSuratJalanAndTanggalService(pengirimanBarangData, req_identity)
+
     const pengirimanBarang = await createPengirimanBarangRepo(pengirimanBarangData, req_identity)
     return pengirimanBarang
 }
@@ -62,6 +65,9 @@ export const deletePengirimanBarangByUuidService = async (uuid, req_identity) =>
 export const updatePengirimanBarangByUuidService = async (uuid, pengirimanBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updatePengirimanBarangByUuidService [${uuid}]`, pengirimanBarangData, req_identity)
     const beforeData = await getPengirimanBarangByUuidService(uuid, req_identity)
+    
+    await checkNomorSuratJalanAndTanggalService(beforeData, req_identity)
+
     const pengirimanBarang = await updatePengirimanBarangByUuidRepo(uuid, pengirimanBarangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
@@ -70,4 +76,26 @@ export const updatePengirimanBarangByUuidService = async (uuid, pengirimanBarang
     }, req_identity)
 
     return pengirimanBarang
+}
+
+export const checkNomorSuratJalanAndTanggalService = async (pengirimanBarangData, req_identity) => {
+    LOGGER(logType.INFO, `Start checkNomorSuratJalanAndTanggalService`, {
+        pengirimanBarangData
+    }, req_identity)
+    const pengirimanBarang = await checkNomorSuratJalanAndTanggalRepo(pengirimanBarangData, req_identity)
+
+    if (pengirimanBarang.length > 0) {
+        if (pengirimanBarang[0].tanggal_terakhir >= pengirimanBarangData.tanggal) {
+            throw Error(JSON.stringify({
+                message: `Tidak Dapat Dieksekusi, Tanggal Pengiriman Barang Harus Diatas ${formatDate(pengirimanBarang[0].tanggal_terakhir)}`,
+                prop: "error"
+            }))
+        }
+        if (pengirimanBarang[0].nomor_surat_jalan == pengirimanBarangData.nomor_surat_jalan) {
+            throw Error(JSON.stringify({
+                message: `Tidak Dapat Dieksekusi, Nomor Surat Perintah Sudah Terdaftar`,
+                prop: "error"
+            }))
+        }
+    }
 }
