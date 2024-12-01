@@ -1,14 +1,12 @@
 import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
-import { formValidation, showAlert, showError } from "../../../../../helper/form.helper"
-import { apiFakturPenjualanBarangCRUD, apiPegawaiCRUD, apiPengirimanBarangCRUD, apiPerintahStokOpnameCRUD, apiRincianPengirimanBarangCRUD } from "../../../../../service/endPointList.api"
+import { formValidation, showError } from "../../../../../helper/form.helper"
+import { apiFakturPenjualanBarangCRUD, apiPegawaiCRUD, apiPengirimanBarangCRUD, apiRincianPengirimanBarangCRUD } from "../../../../../service/endPointList.api"
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
 import { initialDataFromEditObject } from "../../../../../helper/select.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInput from "../../../../../component/form/FormInput"
-import { parseToRupiahText } from "../../../../../helper/number.helper"
-import { useDataContext } from "../../../../../context/dataContext.context"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
 
 const PengirimanBarangForm = ({
@@ -16,9 +14,6 @@ const PengirimanBarangForm = ({
     pengirimanBarangEdit,
     getData = () => { }
 }) => {
-    const dataContext = useDataContext()
-    const { data } = dataContext
-
     const [tanggal, setTanggal] = useState(pengirimanBarangEdit?.tanggal ? pengirimanBarangEdit.tanggal : getHariTanggalFull())
     const [fakturPenjualanBarang, setFakturPenjualanBarang] = useState(pengirimanBarangEdit?.faktur_penjualan_barang ? pengirimanBarangEdit.faktur_penjualan_barang : ``)
     const [nomorSuratJalan, setNomorSuratJalan] = useState(pengirimanBarangEdit?.nomor_surat_jalan ? pengirimanBarangEdit.nomor_surat_jalan : ``)
@@ -68,7 +63,7 @@ const PengirimanBarangForm = ({
                 }).then((res) => {
                     if (pengirimanBarangEdit) {
                         setIdPengirimanBarang(x => x = pengirimanBarangEdit.uuid)
-                    }else{
+                    } else {
                         setIdPengirimanBarang(x => x = res.data.uuid)
                     }
                 }).catch((err) => {
@@ -161,16 +156,19 @@ const PengirimanBarangForm = ({
     useEffect(() => {
         _getDataFakturPenjualanBarang()
         _getDataPegawai()
+        if (pengirimanBarangEdit?.preview) {
+            setIdPengirimanBarang(pengirimanBarangEdit?.uuid)
+        }
     }, [])
 
     return <>
         <div className="bg-white px-6 py-3 rounded-md shadow-2xl">
             <div className="mb-3 flex justify-between items-center">
-                <h1 className="uppercase text-gray-600 font-bold">{pengirimanBarangEdit ? `Edit` : `Tambahkan`} Pengiriman Barang</h1>
+                <h1 className="uppercase text-gray-600 font-bold">{pengirimanBarangEdit ? `${pengirimanBarangEdit?.preview ? "Lihat" : "Edit"}` : `Tambahkan`} Pengiriman Barang</h1>
                 <button
                     className="btn btn-sm bg-red-900 text-white border-none"
                     onClick={() => setAddPengirimanBarangEvent()}
-                ><FaTimes /> Batalkan Pengiriman Barang
+                ><FaTimes /> {pengirimanBarangEdit?.preview ? "Tutup" : "Batalkan Pengiriman Barang"}
                 </button>
             </div>
             <form onSubmit={(e) => _savePengirimanBarang(e)}>
@@ -206,11 +204,11 @@ const PengirimanBarangForm = ({
                     <FormInputWithLabel
                         label={"Nomor Surat Jalan"}
                         type={"text"}
-                        addClassInput={idPengirimanBarang ? "border-none !px-1" : ""}
+                        addClassInput={idPengirimanBarang || pengirimanBarangEdit?.preview ? "border-none !px-1" : ""}
                         onchange={(e) => {
                             setNomorSuratJalan(e.target.value)
                         }}
-                        disabled={idPengirimanBarang}
+                        disabled={idPengirimanBarang || pengirimanBarangEdit?.preview}
                         others={
                             {
                                 value: nomorSuratJalan,
@@ -224,8 +222,8 @@ const PengirimanBarangForm = ({
                         optionsLabel={"name"}
                         optionsValue={"uuid"}
                         selectValue={pegawaiPenanggungJawab}
-                        addClass={idPengirimanBarang ? "border-none !px-1" : ""}
-                        disabled={idPengirimanBarang}
+                        addClass={idPengirimanBarang || pengirimanBarangEdit?.preview ? "border-none !px-1" : ""}
+                        disabled={idPengirimanBarang || pengirimanBarangEdit?.preview}
                         onchange={(e) => {
                             setPegawaiPenanggungJawab(e)
                         }}
@@ -233,12 +231,12 @@ const PengirimanBarangForm = ({
                     />
                     <FormSelectWithLabel
                         label={"Pegawai Pelaksana"}
-                        addClass={idPengirimanBarang ? "border-none !px-1" : ""}
+                        addClass={idPengirimanBarang || pengirimanBarangEdit?.preview ? "border-none !px-1" : ""}
                         optionsDataList={pegawaiList}
                         optionsLabel={"name"}
                         optionsValue={"uuid"}
                         selectValue={pegawaiPelaksana}
-                        disabled={idPengirimanBarang}
+                        disabled={idPengirimanBarang || pengirimanBarangEdit?.preview}
                         onchange={(e) => {
                             setPegawaiPelaksana(e)
                         }}
@@ -279,17 +277,23 @@ const PengirimanBarangForm = ({
                                                 <td>{item.satuan_barang_name}</td>
                                                 <td>{item.jumlah}</td>
                                                 <td>
-                                                    <FormInput
-                                                        name={"pengiriman_" + i}
-                                                        type={"text"}
-                                                        other={{
-                                                            defaultValue: item.pengiriman
-                                                        }}
-                                                        onchange={(e) => {
-                                                            inputOnlyRupiah(e, item.jumlah)
-                                                            _updatePengiriman(e.target.value, item.rincian_pesanan_penjualan_barang)
-                                                        }}
-                                                    />
+                                                    {
+                                                        pengirimanBarangEdit?.preview ? <>
+                                                            {item.pengiriman}
+                                                        </> : <>
+                                                            <FormInput
+                                                                name={"pengiriman_" + i}
+                                                                type={"text"}
+                                                                other={{
+                                                                    defaultValue: item.pengiriman
+                                                                }}
+                                                                onchange={(e) => {
+                                                                    inputOnlyRupiah(e, item.jumlah)
+                                                                    _updatePengiriman(e.target.value, item.rincian_pesanan_penjualan_barang)
+                                                                }}
+                                                            />
+                                                        </>
+                                                    }
                                                 </td>
                                             </tr>
                                         </>
@@ -298,12 +302,15 @@ const PengirimanBarangForm = ({
                             </tbody>
                         </table>
                     </div>
-                    <button className="btn btn-sm bg-green-800 mt-4 text-white"
-                        type="button"
-                        onClick={() => {
-                            _saveRincianPengirimanBarang(0)
-                        }}
-                    ><FaSave /> Simpan</button>
+                    {
+                        pengirimanBarangEdit?.preview ? <></> :
+                            <button className="btn btn-sm bg-green-800 mt-4 text-white"
+                                type="button"
+                                onClick={() => {
+                                    _saveRincianPengirimanBarang(0)
+                                }}
+                            ><FaSave /> Simpan</button>
+                    }
                 </> : <></>
             }
         </div>

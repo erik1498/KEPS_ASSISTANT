@@ -49,7 +49,7 @@ export const createDaftarPerlengkapanService = async (daftarPerlengkapanData, re
 
 export const deleteDaftarPerlengkapanByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteDaftarPerlengkapanByUuidService [${uuid}]`, null, req_identity)
-    await getDaftarPerlengkapanByUuidService(uuid, req_identity)
+    const beforeData = await getDaftarPerlengkapanByUuidService(uuid, req_identity)
 
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal_beli, req_identity)
 
@@ -85,7 +85,7 @@ export const checkPerlengkapanSudahDigunakanByUuidService = async (uuid, req_ide
 
     if (digunakanStatus.length > 0 && digunakanStatus[0].count > 0) {
         throw Error(JSON.stringify({
-            message: "Tidak Dapat Dieksekusi, Hitungan Penyusutan Perlengkapan Sudah Divalidasi",
+            message: "Tidak Dapat Dieksekusi, Perlengkapan Sudah Digunakan",
             prop: "error"
         }))
     }

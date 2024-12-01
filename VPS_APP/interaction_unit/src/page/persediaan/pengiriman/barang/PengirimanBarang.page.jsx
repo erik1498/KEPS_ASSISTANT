@@ -6,7 +6,7 @@ import { showAlert, showDialog, showError } from "../../../../helper/form.helper
 import Wrap from "../../../../component/layout/Wrap"
 import PageTitle from "../../../../component/general/PageTitle"
 import PengirimanBarangForm from "./component/PengirimanBarangForm"
-import { FaEdit, FaEye, FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
+import { FaDotCircle, FaEdit, FaEye, FaPen, FaPlus, FaPrint, FaSearch, FaTimes, FaTrash } from "react-icons/fa"
 import Pagination from "../../../../component/general/Pagination"
 import { formatDate } from "../../../../helper/date.helper"
 import { getNormalizedCustomKey } from "../../../../helper/jurnalUmum.helper"
@@ -59,6 +59,12 @@ const PengirimanBarangPage = () => {
     }
 
     const _editPengirimanBarang = (x) => {
+        setPengirimanBarangEdit(x)
+        setAddPengirimanBarang(!addPengirimanBarang)
+    }
+
+    const _previewPengirimanBarang = (x) => {
+        x.preview = true
         setPengirimanBarangEdit(x)
         setAddPengirimanBarang(!addPengirimanBarang)
     }
@@ -125,35 +131,92 @@ const PengirimanBarangPage = () => {
                                         setAddPengirimanBarang(!addPengirimanBarang)
                                     }}
                                 ><FaPlus /> Tambah Pengiriman Barang</button>
-                                <div className="hidden">
-                                    {/* <PengirimanBarangPrint
-                                        data={pengirimanBarang}
-                                        ref={pengirimanBarangPrintRef}
-                                        bulan={getBulanByIndex(new Date().getMonth())}
-                                        tahun={data.tahun}
-                                    /> */}
-                                </div>
-                                <button
-                                    onClick={handlePrint}
-                                    className="btn btn-sm bg-red-600 hover:bg-red-600 text-white border-red-600"
-                                >
-                                    <FaPrint /> Cetak Pengiriman Barang
-                                </button>
                             </div>
                         </div>
-                        <div className="overflow-x-auto bg-white shadow-xl rounded-md">
+                        <div className="overflow-x-auto px-3 bg-white shadow-xl rounded-md">
                             {
                                 pengirimanBarangFix?.map((item, i) => {
                                     return <>
-                                        <div className="bg-gray-200 p-3">
-                                            <p className="text-xs text-gray-500 font-bold">Nomor Faktur Penjualan</p>
+                                        <div className="p-3 border-b-2 border-gray-400">
+                                            <p className="text-xs">Nomor Faktur Penjualan</p>
                                             <p className="font-bold">{item.parent}</p>
                                         </div>
                                         {
                                             item.data.map((x, i) => {
                                                 return <>
-                                                    <div className="px-6 py-4 flex justify-between">
-                                                        <div>
+                                                    <div className="px-6 py-4 flex gap-x-4 items-center">
+                                                        <FaDotCircle className="text-blue-800" size={11} />
+                                                        <div className="grid grid-cols-9 w-full">
+                                                            <div className="col-span-2">
+                                                                <p className="text-xs">Tanggal</p>
+                                                                <p className="text-sm font-bold">{formatDate(x.tanggal)}</p>
+                                                            </div>
+                                                            <div className="col-span-2">
+                                                                <p className="text-xs">Nomor Surat Jalan</p>
+                                                                <p className="text-sm font-bold">{x?.nomor_surat_jalan}</p>
+                                                            </div>
+                                                            <div className="col-span-2">
+                                                                <p className="text-xs">Penanggung Jawab</p>
+                                                                <p className="text-sm font-bold">{x.pegawai_penanggung_jawab_name}</p>
+                                                            </div>
+                                                            <div className="col-span-2">
+                                                                <p className="text-xs">Pelaksana</p>
+                                                                <p className="text-sm font-bold">{x.pegawai_pelaksana_name}</p>
+                                                            </div>
+                                                            <div className="col-span-1">
+                                                                <p className="text-xs">Aksi</p>
+                                                                {
+                                                                    i == 0 ? <>
+                                                                        <div>
+                                                                            <div className="flex items-center">
+                                                                                <button
+                                                                                    className="btn btn-xs bg-transparent shadow-none border-0 text-green-400"
+                                                                                    onClick={() => {
+                                                                                        _previewPengirimanBarang(x)
+                                                                                    }}
+                                                                                >
+                                                                                    <FaEye size={10} />
+                                                                                    Lihat
+                                                                                </button>
+                                                                                <button
+                                                                                    className="btn btn-xs bg-transparent shadow-none border-0 text-yellow-400"
+                                                                                    onClick={() => {
+                                                                                        _editPengirimanBarang(x)
+                                                                                    }}
+                                                                                >
+                                                                                    <FaPen size={10} />
+                                                                                    Edit
+                                                                                </button>
+                                                                                <button
+                                                                                    className="btn btn-xs bg-transparent shadow-none border-0 text-red-600"
+                                                                                    onClick={() => {
+                                                                                        _deletePengirimanBarang(x)
+                                                                                    }}
+                                                                                >
+                                                                                    <FaTrash size={10} />
+                                                                                    Hapus
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </> : <>
+                                                                        <div>
+                                                                            <div className="flex items-center">
+                                                                                <button
+                                                                                    className="btn btn-xs bg-transparent shadow-none border-0 text-green-400"
+                                                                                    onClick={() => {
+                                                                                        _previewPengirimanBarang(x)
+                                                                                    }}
+                                                                                >
+                                                                                    <FaEye size={10} />
+                                                                                    Lihat
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        {/* <div>
                                                             <p className="text-xs text-gray-500 font-bold">Nomor Surat Jalan</p>
                                                             <p className="font-bold text-md">{x?.nomor_surat_jalan}</p>
                                                             <p className="text-xs text-gray-500 font-bold">Tanggal : {formatDate(x?.tanggal)}</p>
@@ -161,8 +224,8 @@ const PengirimanBarangPage = () => {
                                                                 <p className="text-xs font-bold mt-3 bg-gray-400 px-2 py-1 rounded-md text-white">Penanggung Jawab : {x.pegawai_penanggung_jawab_name}</p>
                                                                 <p className="text-xs font-bold mt-3 bg-gray-400 px-2 py-1 rounded-md text-white">Pelaksana : {x.pegawai_pelaksana_name}</p>
                                                             </div>
-                                                        </div>
-                                                        {
+                                                        </div> */}
+                                                        {/* {
                                                             i == 0 ? <>
                                                                 <div>
                                                                     <div className="flex items-center">
@@ -187,73 +250,18 @@ const PengirimanBarangPage = () => {
                                                                     </div>
                                                                 </div>
                                                             </> : <></>
-                                                        }
-                                                    </div>
+                                                        } */}
+                                                    </div >
                                                 </>
                                             })
                                         }
                                     </>
                                 })
                             }
-                        </div>
-                        {/* <div className="overflow-x-auto bg-white shadow-xl rounded-md h-[50vh] no-scrollbar">
-                            <table className="table table-sm">
-                                <tbody>
-                                    {
-                                        pengirimanBarangFix?.map((item, i) => {
-                                            return <>
-                                                <tr key={i} className="bg-gray-200 uppercase font-bold">
-                                                    <td>{item.parent}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td>NOMOR SURAT JALAN</td>
-                                                    <td>TANGGAL PENGIRIMAN</td>
-                                                    <td>PEGAWAI PENANGGUNG JAWAB</td>
-                                                    <td>PEGAWAI PELAKSANA</td>
-                                                    <td>AKSI</td>
-                                                </tr>
-                                                {
-                                                    item.data.map((x, i) => {
-                                                        return <>
-                                                            <tr key={i}>
-                                                                <td></td>
-                                                                <td>{x.nomor_surat_jalan}</td>
-                                                                <td>{formatDate(x.tanggal)}</td>
-                                                                <td>{x.pegawai_penanggung_jawab_name}</td>
-                                                                <td>{x.pegawai_pelaksana_name}</td>
-                                                                <td className="flex gap-x-2">
-                                                                    {
-                                                                        i == 0 ? <>
-                                                                            <FaPen size={12} className="text-yellow-500 cursor-pointer"
-                                                                                onClick={() => {
-                                                                                    _editPengirimanBarang(x)
-                                                                                }} />
-                                                                            <FaTrash size={12} className="text-red-500 cursor-pointer"
-                                                                                onClick={() => {
-                                                                                    _deletePengirimanBarang(x)
-                                                                                }} />
-                                                                        </> : <></>
-                                                                    }
-                                                                </td>
-                                                            </tr>
-                                                        </>
-                                                    })
-                                                }
-                                            </>
-                                        })
-                                    }
-                                </tbody>
-                            </table>
-                        </div> */}
+                        </div >
                     </>
             }
         </div>
-    </Wrap>
+    </Wrap >
 }
 export default PengirimanBarangPage
