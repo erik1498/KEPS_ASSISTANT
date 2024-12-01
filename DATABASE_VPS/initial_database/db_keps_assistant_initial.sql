@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 24, 2024 at 07:18 AM
+-- Generation Time: Dec 01, 2024 at 05:50 AM
 -- Server version: 10.3.16-MariaDB
 -- PHP Version: 7.3.6
 
@@ -119,7 +119,8 @@ CREATE TABLE `daftar_aset_tab` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `kategori_aset` varchar(255) NOT NULL,
-  `kode_akun_perkiraan` varchar(255) NOT NULL
+  `kode_akun_perkiraan` varchar(255) NOT NULL,
+  `bukti_transaksi` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -208,7 +209,9 @@ CREATE TABLE `daftar_perlengkapan_tab` (
   `enabled` tinyint(1) NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
-  `nomor_invoice` varchar(255) NOT NULL
+  `nomor_invoice` varchar(255) NOT NULL,
+  `kode_akun_perkiraan` varchar(255) NOT NULL,
+  `bukti_transaksi` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -553,32 +556,6 @@ CREATE TABLE `jurnal_umum_tab` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jurnal_umum_tab_old`
---
-
-CREATE TABLE `jurnal_umum_tab_old` (
-  `id` int(11) NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `tanggal` varchar(255) NOT NULL,
-  `bulan` varchar(255) NOT NULL,
-  `tahun` varchar(255) NOT NULL,
-  `waktu` varchar(255) NOT NULL,
-  `uraian` varchar(255) NOT NULL,
-  `debet` varchar(255) NOT NULL,
-  `kredit` varchar(255) NOT NULL,
-  `kode_akun_uuid` varchar(255) NOT NULL,
-  `bukti_transaksi` varchar(255) NOT NULL,
-  `transaksi` int(11) NOT NULL,
-  `enabled` tinyint(1) NOT NULL,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL,
-  `createdBy` varchar(255) NOT NULL,
-  `updatedBy` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `kategori_aset_tab`
 --
 
@@ -709,7 +686,8 @@ CREATE TABLE `kategori_perlengkapan_tab` (
   `updatedBy` varchar(255) NOT NULL,
   `enabled` tinyint(1) NOT NULL,
   `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL
+  `updatedAt` datetime NOT NULL,
+  `kode_akun_perkiraan` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -779,63 +757,65 @@ CREATE TABLE `kode_akun_perkiraan_tab` (
 -- Dumping data for table `kode_akun_perkiraan_tab`
 --
 
-INSERT INTO kode_akun_perkiraan_tab (id,uuid,`type`,name,code,enabled,createdAt,updatedAt,createdBy,updatedBy,type_transaksi_kas_bank,update_permission,type_transaksi_payroll) VALUES
-  (1,'76072236-7685-426b-8f10-6f2acf797c22','Harta','Kas Besar','101',1,'2023-11-11 16:38:43','2024-03-27 05:11:54','SYSTEM','',1,0,1),
-  (2,'9d331f11-7061-4f62-b286-0a87fcc0fd03','Harta','Kas Kecil','102',1,'2023-11-11 16:38:54','2023-11-11 16:38:54','SYSTEM','',1,0,1),
-  (3,'33105460-6ac0-4744-a56c-6822bb4d4ba3','Harta','Piutang Usaha','110',1,'2023-11-11 16:42:19','2023-11-11 16:42:19','SYSTEM','',0,0,0),
-  (4,'f15e2810-c736-42f6-9a80-6d70e03315de','Harta','Piutang Karyawan','111',1,'2023-11-11 16:42:33','2023-11-11 16:42:33','SYSTEM','',0,0,0),
-  (5,'0ebe1d2e-f18b-4c4e-bfdc-304f3dd83735','Modal','Modal','301',1,'2023-11-11 16:50:02','2023-11-17 12:23:48','SYSTEM','',0,0,0),
-  (6,'b073c676-1e2a-4b50-8bf9-eb2c4081e05d','Modal','Prive','302',1,'2023-11-11 16:50:29','2023-12-09 06:47:05','SYSTEM','',0,0,0),
-  (7,'8d975877-fdb8-4388-96c7-250b40942cb5','Modal','Laba/Rugi Periode Sebelumnya','398',1,'2023-11-11 16:50:54','2023-11-11 16:51:26','SYSTEM','',0,0,0),
-  (8,'8e5a1bf2-7180-41a4-ab86-12b417fe9ea8','Modal','Laba/Rugi Periode Berjalan','399',1,'2023-11-11 16:51:18','2023-11-11 16:51:18','SYSTEM','',0,0,0),
-  (9,'453764da-957f-4099-a03d-268367987dc2','Pendapatan','Penjualan Barang','401',1,'2023-11-11 16:52:06','2023-12-02 09:31:57','SYSTEM','',0,0,0),
-  (10,'0c0a1c04-ad98-4818-9a63-9be554b2ae55','Beban Operasional','Beban Gaji','505',1,'2023-11-11 16:55:14','2023-11-11 16:55:14','SYSTEM','',0,0,0),
-  (11,'eadfec72-7d66-4597-998d-8acf959d34b7','Beban Operasional','Beban Pajak','525',1,'2023-11-11 17:02:46','2023-11-11 17:02:46','SYSTEM','',0,0,0),
-  (12,'b7687ceb-6046-4062-979d-bfed5550bd87','Pendapatan Lain - Lain','Pendapatan Lain - Lain','699',1,'2023-11-11 17:05:40','2024-09-21 04:24:33','SYSTEM','',0,0,0),
-  (13,'e86d5fd7-958c-4cb3-839d-ca70f6abe123','Harga Pokok Penjualan','Pembelian','702',1,'2023-11-11 17:05:59','2023-11-11 17:05:59','SYSTEM','',0,0,0),
-  (14,'4710e8be-e0c2-4318-8b42-ea8c58aa2312','Harga Pokok Penjualan','Persediaan Barang Dagang Awal','701',1,'2023-11-11 17:07:27','2023-11-11 17:07:27','SYSTEM','',0,0,0),
-  (15,'018cdcf2-f5ce-4d1a-b320-17b89a0c5556','Harga Pokok Penjualan','Persediaan Barang Dagang Akhir','799',1,'2023-11-11 17:08:02','2023-11-11 17:08:02','SYSTEM','',0,0,0),
-  (16,'826a9418-4b0e-4ca4-8a83-6c392e7a4cf1','Pendapatan','Penjualan Jasa','405',1,'2023-12-02 09:34:10','2023-12-02 09:34:10','SYSTEM','',0,0,0),
-  (17,'96dc1c2e-1cd3-42b8-b580-3932ebe1e82d','Beban Operasional','Beban Lembur Pegawai','531',1,'2023-12-16 13:22:34','2024-09-20 20:14:18','SYSTEM','',0,0,0),
-  (18,'dc632a24-dba2-4c65-9b42-968de322fe1c','Beban Operasional','Beban Tunjangan Uang / Barang','532',1,'2023-12-16 13:55:09','2024-09-21 01:13:38','SYSTEM','',0,0,0),
-  (19,'f3eafc29-6a1c-4e57-b789-532b490dac33','Pendapatan Lain - Lain','Pendapatan Atas Kerugian','604',1,'2024-01-06 16:52:55','2024-09-21 04:28:22','SYSTEM','',0,0,0),
-  (20,'a09a5e0c-9544-4a83-b214-c47cf5c07bdd','Beban Operasional','Beban Tunjangan Hadiah','533',1,'2024-01-07 16:30:29','2024-09-21 00:50:52','SYSTEM','',0,0,0),
-  (21,'4677d2cc-11cb-11ef-a0da-145afc5d4423','Modal','Dividen','303',1,'2023-11-11 16:51:50','2023-11-11 16:51:50','SYSTEM','',0,0,0),
-  (22,'6453a29e-d506-46e5-8f05-1ff8817b8813','Utang','Hutang Dagang','201',1,'2024-10-14 12:21:39','2024-10-15 19:16:36','SYSTEM','',0,0,1),
-  (23,'063b765d-1ccf-4586-9006-64907046364d','Utang','Hutang Gaji','202',1,'2024-10-14 12:21:56','2024-10-15 19:16:45','SYSTEM','',0,0,1),
-  (24,'cb4da807-75ad-4202-b15c-ef6417211481','Utang','Hutang Bank','203',1,'2024-10-14 12:22:15','2024-10-15 19:17:13','SYSTEM','',0,0,1),
-  (25,'faf85905-7eb1-4092-ad6f-b151a9eba828','Utang','Hutang Pajak PPh Pasal 21/26','204',1,'2024-10-14 12:22:41','2024-10-14 12:22:41','SYSTEM','',0,0,1),
-  (26,'46381f2e-f256-4a5b-be56-76688e7b915d','Utang','Hutang Lain-Lain','206',1,'2024-10-14 12:23:11','2024-10-15 19:17:45','SYSTEM','',0,0,1),
-  (27,'261984b1-4a45-4332-aaae-9687fe550262','Utang','Hutang BPJS','215',1,'2024-10-14 12:23:55','2024-10-15 19:17:05','SYSTEM','',0,0,1),
-  (28,'fb8aadc0-f121-46fe-a83b-f56a1723b337','Pendapatan Lain - Lain','Pendapatan BPJS','610',1,'2024-10-14 12:34:46','2024-10-15 19:16:24','SYSTEM','',0,0,1),
-  (29,'5555ff3a-9de0-42b5-bdc8-f39c43947496','Beban Operasional','Beban BPJS Kesehatan','514',1,'2023-11-11 16:58:48','2024-09-21 02:06:46','SYSTEM','',0,0,0),
-  (30,'24af525c-4519-4f26-a339-df8ef261b42d','Beban Operasional','Beban BPJS Ketenagakerjaan','530',1,'2023-12-16 13:22:15','2024-09-21 02:15:33','SYSTEM','',0,0,0),
-  (31,'b896af3e-627a-465c-ab50-19533754b788','Pendapatan','Pendapatan BPJS','408',1,'2024-10-13 23:46:34','2024-10-13 23:46:34','SYSTEM','',0,0,0),
-  (32,'04eae5c2-ccf6-46b8-a0f3-2d3d1a723c79','Beban Operasional','Beban Bonus','520',1,'2023-11-11 17:01:03','2023-11-11 17:01:03','SYSTEM','',0,0,0),
-  (33,'885dd610-31f5-4be2-8a9b-87d7494c4942','Beban Operasional','Beban THR','521',1,'2023-11-11 17:01:33','2023-11-11 17:01:33','SYSTEM','',0,0,0),
-  (34,'5d93a16a-843e-42ba-9d3c-916a5998461d','Beban Operasional','Beban Insentif','522',1,'2023-11-11 17:01:55','2023-11-11 17:01:55','SYSTEM','',0,0,0),
-  (35,'c457def6-7f3c-478d-9190-15ab0b70e630','Utang','PPN Keluaran','205',1,'2023-11-11 16:48:47','2023-11-11 16:48:47','SYSTEM','',0,0,0),
-  (36,'f3827c1b-b8d8-4c1f-94e9-8249e9292a03','Pendapatan','Retur Penjualan Barang','403',1,'2023-11-11 16:52:23','2023-12-02 09:32:13','SYSTEM','',0,0,0),
-  (37,'5b04e881-b908-4400-a7f4-b78c34cc7a8c','Pendapatan','Diskon Penjualan Barang','404',1,'2023-11-11 16:53:13','2023-12-02 09:32:32','SYSTEM','',0,0,0),
-  (38,'ddb0e69f-9704-4555-b427-5748365034f7','Pendapatan Lain - Lain','Pendapatan Denda Penjualan Barang','605',1,'2024-01-12 10:33:54','2024-01-19 13:00:50','SYSTEM','',0,0,0),
-  (39,'eb5b6dcd-1146-4550-a9f0-1fe8439b085f','Harta','Piutang Denda Barang','133',1,'2024-01-19 12:59:11','2024-01-19 12:59:11','SYSTEM','',0,0,0),
-  (40,'675780c8-8ab4-401e-afe1-efc5684bb5f3','Pendapatan Lain - Lain','Pendapatan Penyesuaian Stok Opname Barang Lebih','611',1,'2024-11-15 15:11:28','2024-11-15 19:14:01','SYSTEM','',0,0,0),
-  (41,'06bb2055-466d-4c4b-a0f8-7805648ffd01','Beban Lainnya','Kerugian Barang Hasil Stok Opname Berkurang','804',1,'2024-11-15 15:08:15','2024-11-15 19:13:42','SYSTEM','',0,0,0),
-  (42,'c28c00b1-b274-4c33-9f47-2e0e7a01b21e','Beban Operasional','Denda Pembelian Barang','541',1,'2024-11-16 00:06:00','2024-11-16 00:06:00','SYSTEM','',0,0,0),
-  (43,'93919470-8a98-4f67-a373-fe6726b7aae2','Harta','PPN Masukan','117',1,'2023-11-11 16:44:35','2023-11-11 16:44:35','SYSTEM','',0,0,0),
-  (44,'71786d7c-f0e3-4e4e-b8da-ebd79cac3c02','Harga Pokok Penjualan','Diskon Pembelian','704',1,'2023-11-11 17:06:34','2023-11-11 17:06:34','SYSTEM','',0,0,0),
-  (45,'915ac6e8-c528-4f10-9215-74fda0b1c99e','Beban Operasional','Beban Penyusutan','509',1,'2023-11-11 16:56:41','2024-11-17 14:25:16','SYSTEM','',0,0,0),
-  (46,'a88b16d3-4071-4503-9c5b-17cdac4a411f','Harta','Akumulasi Penyusutan','135',1,'2024-11-17 14:51:26','2024-11-17 14:51:26','SYSTEM','',0,0,0),
-  (47,'c85ac20d-1b1e-45c5-80e1-8db80c5dd283','Harta','Perlengkapan Kantor','113',1,'2023-11-11 16:43:06','2023-11-11 16:43:06','SYSTEM','',0,0,0),
-  (48,'6e376191-0454-4172-a78b-2bc5f9c8fd6e','Beban Operasional','Beban Perlengkapan','501',1,'2023-11-11 16:53:48','2023-11-11 16:53:48','SYSTEM','',0,0,0),
-  (49,'ad6d4852-27dd-4b6e-8d26-eb812084d248','Pendapatan','Retur Penjualan Jasa','406',1,'2023-12-02 09:34:28','2023-12-02 09:34:28','SYSTEM','',0,0,0),
-  (50,'dea2ce84-fb39-4c6d-bac2-99e37b4fd492','Harga Pokok Penjualan','Retur Pembelian','703',1,'2023-11-11 17:06:15','2023-11-11 17:06:15','SYSTEM','',0,0,0),
-  (51,'7eee8bbd-b5c3-4351-9ff8-cdbe814806b9','Pendapatan','Diskon Penjualan Jasa','407',1,'2023-12-02 09:34:46','2023-12-02 09:34:46','SYSTEM','',0,0,0),
-  (52,'c5319b9f-41b9-4c92-bbc4-94bf07583263','Harta','Persediaan Barang Dagang','108',1,'2023-11-11 16:41:00','2023-11-11 16:41:00','SYSTEM','',0,0,0),
-  (53,'2e186c0a-bd7c-4266-89ab-b4fdd2957e6e','Beban Lainnya','Beban Pengembalian Denda Penjualan Jasa','806',1,'2024-11-23 17:00:05','2024-11-23 17:00:05','SYSTEM','',0,0,0),
-  (54,'7b7a9b89-a712-4085-bdac-617ce712561c','Beban Lainnya','Beban Pengembalian Denda Penjualan Barang','805',1,'2024-11-21 19:45:23','2024-11-21 19:45:23','SYSTEM','',0,0,0),
-  (55,'c48a5704-ffa6-471b-a468-12a74aedd100','Pendapatan Lain - Lain','Pendapatan Denda Pembelian Barang','613',1,'2024-11-21 18:57:52','2024-11-21 18:57:52','SYSTEM','',0,0,0),
-  (56,'c28c00b1-b274-4c33-9f47-2e0e7a01b21e','Beban Operasional','Denda Pembelian Barang','541',1,'2024-11-16 00:06:00','2024-11-16 00:06:00','SYSTEM','',0,0,0);
+INSERT INTO `kode_akun_perkiraan_tab` (`id`, `uuid`, `type`, `name`, `code`, `enabled`, `createdAt`, `updatedAt`, `createdBy`, `updatedBy`, `type_transaksi_kas_bank`, `update_permission`, `type_transaksi_payroll`) VALUES
+(1, '76072236-7685-426b-8f10-6f2acf797c22', 'Harta', 'Kas Besar', '101', 1, '2023-11-11 16:38:43', '2024-03-27 05:11:54', 'SYSTEM', '', 1, 0, 1),
+(2, '9d331f11-7061-4f62-b286-0a87fcc0fd03', 'Harta', 'Kas Kecil', '102', 1, '2023-11-11 16:38:54', '2023-11-11 16:38:54', 'SYSTEM', '', 1, 0, 1),
+(3, '33105460-6ac0-4744-a56c-6822bb4d4ba3', 'Harta', 'Piutang Usaha', '110', 1, '2023-11-11 16:42:19', '2023-11-11 16:42:19', 'SYSTEM', '', 0, 0, 0),
+(4, 'f15e2810-c736-42f6-9a80-6d70e03315de', 'Harta', 'Piutang Karyawan', '111', 1, '2023-11-11 16:42:33', '2023-11-11 16:42:33', 'SYSTEM', '', 0, 0, 0),
+(5, '0ebe1d2e-f18b-4c4e-bfdc-304f3dd83735', 'Modal', 'Modal', '301', 1, '2023-11-11 16:50:02', '2023-11-17 12:23:48', 'SYSTEM', '', 0, 0, 0),
+(6, 'b073c676-1e2a-4b50-8bf9-eb2c4081e05d', 'Modal', 'Prive', '302', 1, '2023-11-11 16:50:29', '2023-12-09 06:47:05', 'SYSTEM', '', 0, 0, 0),
+(7, '8d975877-fdb8-4388-96c7-250b40942cb5', 'Modal', 'Laba/Rugi Periode Sebelumnya', '398', 1, '2023-11-11 16:50:54', '2023-11-11 16:51:26', 'SYSTEM', '', 0, 0, 0),
+(8, '8e5a1bf2-7180-41a4-ab86-12b417fe9ea8', 'Modal', 'Laba/Rugi Periode Berjalan', '399', 1, '2023-11-11 16:51:18', '2023-11-11 16:51:18', 'SYSTEM', '', 0, 0, 0),
+(9, '453764da-957f-4099-a03d-268367987dc2', 'Pendapatan', 'Penjualan Barang', '401', 1, '2023-11-11 16:52:06', '2023-12-02 09:31:57', 'SYSTEM', '', 0, 0, 0),
+(10, '0c0a1c04-ad98-4818-9a63-9be554b2ae55', 'Beban Operasional', 'Beban Gaji', '505', 1, '2023-11-11 16:55:14', '2023-11-11 16:55:14', 'SYSTEM', '', 0, 0, 0),
+(11, 'eadfec72-7d66-4597-998d-8acf959d34b7', 'Beban Operasional', 'Beban Pajak', '525', 1, '2023-11-11 17:02:46', '2023-11-11 17:02:46', 'SYSTEM', '', 0, 0, 0),
+(12, 'b7687ceb-6046-4062-979d-bfed5550bd87', 'Pendapatan Lain - Lain', 'Pendapatan Lain - Lain', '699', 1, '2023-11-11 17:05:40', '2024-09-21 04:24:33', 'SYSTEM', '', 0, 0, 0),
+(13, 'e86d5fd7-958c-4cb3-839d-ca70f6abe123', 'Harga Pokok Penjualan', 'Pembelian', '702', 1, '2023-11-11 17:05:59', '2023-11-11 17:05:59', 'SYSTEM', '', 0, 0, 0),
+(14, '4710e8be-e0c2-4318-8b42-ea8c58aa2312', 'Harga Pokok Penjualan', 'Persediaan Barang Dagang Awal', '701', 1, '2023-11-11 17:07:27', '2023-11-11 17:07:27', 'SYSTEM', '', 0, 0, 0),
+(15, '018cdcf2-f5ce-4d1a-b320-17b89a0c5556', 'Harga Pokok Penjualan', 'Persediaan Barang Dagang Akhir', '799', 1, '2023-11-11 17:08:02', '2023-11-11 17:08:02', 'SYSTEM', '', 0, 0, 0),
+(16, '826a9418-4b0e-4ca4-8a83-6c392e7a4cf1', 'Pendapatan', 'Penjualan Jasa', '405', 1, '2023-12-02 09:34:10', '2023-12-02 09:34:10', 'SYSTEM', '', 0, 0, 0),
+(17, '96dc1c2e-1cd3-42b8-b580-3932ebe1e82d', 'Beban Operasional', 'Beban Lembur Pegawai', '531', 1, '2023-12-16 13:22:34', '2024-09-20 20:14:18', 'SYSTEM', '', 0, 0, 0),
+(18, 'dc632a24-dba2-4c65-9b42-968de322fe1c', 'Beban Operasional', 'Beban Tunjangan Uang / Barang', '532', 1, '2023-12-16 13:55:09', '2024-09-21 01:13:38', 'SYSTEM', '', 0, 0, 0),
+(19, 'f3eafc29-6a1c-4e57-b789-532b490dac33', 'Pendapatan Lain - Lain', 'Pendapatan Atas Kerugian', '604', 1, '2024-01-06 16:52:55', '2024-09-21 04:28:22', 'SYSTEM', '', 0, 0, 0),
+(20, 'a09a5e0c-9544-4a83-b214-c47cf5c07bdd', 'Beban Operasional', 'Beban Tunjangan Hadiah', '533', 1, '2024-01-07 16:30:29', '2024-09-21 00:50:52', 'SYSTEM', '', 0, 0, 0),
+(21, '4677d2cc-11cb-11ef-a0da-145afc5d4423', 'Modal', 'Dividen', '303', 1, '2023-11-11 16:51:50', '2023-11-11 16:51:50', 'SYSTEM', '', 0, 0, 0),
+(22, '6453a29e-d506-46e5-8f05-1ff8817b8813', 'Utang', 'Hutang Dagang', '201', 1, '2024-10-14 12:21:39', '2024-10-15 19:16:36', 'SYSTEM', '', 0, 0, 1),
+(23, '063b765d-1ccf-4586-9006-64907046364d', 'Utang', 'Hutang Gaji', '202', 1, '2024-10-14 12:21:56', '2024-10-15 19:16:45', 'SYSTEM', '', 0, 0, 1),
+(24, 'cb4da807-75ad-4202-b15c-ef6417211481', 'Utang', 'Hutang Bank', '203', 1, '2024-10-14 12:22:15', '2024-10-15 19:17:13', 'SYSTEM', '', 0, 0, 1),
+(25, 'faf85905-7eb1-4092-ad6f-b151a9eba828', 'Utang', 'Hutang Pajak PPh Pasal 21/26', '204', 1, '2024-10-14 12:22:41', '2024-10-14 12:22:41', 'SYSTEM', '', 0, 0, 1),
+(26, '46381f2e-f256-4a5b-be56-76688e7b915d', 'Utang', 'Hutang Lain-Lain', '206', 1, '2024-10-14 12:23:11', '2024-10-15 19:17:45', 'SYSTEM', '', 0, 0, 1),
+(27, '261984b1-4a45-4332-aaae-9687fe550262', 'Utang', 'Hutang BPJS', '215', 1, '2024-10-14 12:23:55', '2024-10-15 19:17:05', 'SYSTEM', '', 0, 0, 1),
+(28, 'fb8aadc0-f121-46fe-a83b-f56a1723b337', 'Pendapatan Lain - Lain', 'Pendapatan BPJS', '610', 1, '2024-10-14 12:34:46', '2024-10-15 19:16:24', 'SYSTEM', '', 0, 0, 1),
+(29, '5555ff3a-9de0-42b5-bdc8-f39c43947496', 'Beban Operasional', 'Beban BPJS Kesehatan', '514', 1, '2023-11-11 16:58:48', '2024-09-21 02:06:46', 'SYSTEM', '', 0, 0, 0),
+(30, '24af525c-4519-4f26-a339-df8ef261b42d', 'Beban Operasional', 'Beban BPJS Ketenagakerjaan', '530', 1, '2023-12-16 13:22:15', '2024-09-21 02:15:33', 'SYSTEM', '', 0, 0, 0),
+(31, 'b896af3e-627a-465c-ab50-19533754b788', 'Pendapatan', 'Pendapatan BPJS', '408', 1, '2024-10-13 23:46:34', '2024-10-13 23:46:34', 'SYSTEM', '', 0, 0, 0),
+(32, '04eae5c2-ccf6-46b8-a0f3-2d3d1a723c79', 'Beban Operasional', 'Beban Bonus', '520', 1, '2023-11-11 17:01:03', '2023-11-11 17:01:03', 'SYSTEM', '', 0, 0, 0),
+(33, '885dd610-31f5-4be2-8a9b-87d7494c4942', 'Beban Operasional', 'Beban THR', '521', 1, '2023-11-11 17:01:33', '2023-11-11 17:01:33', 'SYSTEM', '', 0, 0, 0),
+(34, '5d93a16a-843e-42ba-9d3c-916a5998461d', 'Beban Operasional', 'Beban Insentif', '522', 1, '2023-11-11 17:01:55', '2023-11-11 17:01:55', 'SYSTEM', '', 0, 0, 0),
+(35, 'c457def6-7f3c-478d-9190-15ab0b70e630', 'Utang', 'PPN Keluaran', '205', 1, '2023-11-11 16:48:47', '2023-11-11 16:48:47', 'SYSTEM', '', 0, 0, 0),
+(36, 'f3827c1b-b8d8-4c1f-94e9-8249e9292a03', 'Pendapatan', 'Retur Penjualan Barang', '403', 1, '2023-11-11 16:52:23', '2023-12-02 09:32:13', 'SYSTEM', '', 0, 0, 0),
+(37, '5b04e881-b908-4400-a7f4-b78c34cc7a8c', 'Pendapatan', 'Diskon Penjualan Barang', '404', 1, '2023-11-11 16:53:13', '2023-12-02 09:32:32', 'SYSTEM', '', 0, 0, 0),
+(38, 'ddb0e69f-9704-4555-b427-5748365034f7', 'Pendapatan Lain - Lain', 'Pendapatan Denda Penjualan Barang', '605', 1, '2024-01-12 10:33:54', '2024-01-19 13:00:50', 'SYSTEM', '', 0, 0, 0),
+(39, 'eb5b6dcd-1146-4550-a9f0-1fe8439b085f', 'Harta', 'Piutang Denda Barang', '133', 1, '2024-01-19 12:59:11', '2024-01-19 12:59:11', 'SYSTEM', '', 0, 0, 0),
+(40, '675780c8-8ab4-401e-afe1-efc5684bb5f3', 'Pendapatan Lain - Lain', 'Pendapatan Penyesuaian Stok Opname Barang Lebih', '611', 1, '2024-11-15 15:11:28', '2024-11-15 19:14:01', 'SYSTEM', '', 0, 0, 0),
+(41, '06bb2055-466d-4c4b-a0f8-7805648ffd01', 'Beban Lainnya', 'Kerugian Barang Hasil Stok Opname Berkurang', '804', 1, '2024-11-15 15:08:15', '2024-11-15 19:13:42', 'SYSTEM', '', 0, 0, 0),
+(42, 'c28c00b1-b274-4c33-9f47-2e0e7a01b21e', 'Beban Operasional', 'Denda Pembelian Barang', '541', 1, '2024-11-16 00:06:00', '2024-11-16 00:06:00', 'SYSTEM', '', 0, 0, 0),
+(43, '93919470-8a98-4f67-a373-fe6726b7aae2', 'Harta', 'PPN Masukan', '117', 1, '2023-11-11 16:44:35', '2023-11-11 16:44:35', 'SYSTEM', '', 0, 0, 0),
+(44, '71786d7c-f0e3-4e4e-b8da-ebd79cac3c02', 'Harga Pokok Penjualan', 'Diskon Pembelian', '704', 1, '2023-11-11 17:06:34', '2023-11-11 17:06:34', 'SYSTEM', '', 0, 0, 0),
+(45, '915ac6e8-c528-4f10-9215-74fda0b1c99e', 'Beban Operasional', 'Beban Penyusutan', '509', 1, '2023-11-11 16:56:41', '2024-11-17 14:25:16', 'SYSTEM', '', 0, 0, 0),
+(46, 'a88b16d3-4071-4503-9c5b-17cdac4a411f', 'Harta', 'Akumulasi Penyusutan', '135', 1, '2024-11-17 14:51:26', '2024-11-17 14:51:26', 'SYSTEM', '', 0, 0, 0),
+(47, 'c85ac20d-1b1e-45c5-80e1-8db80c5dd283', 'Harta', 'Perlengkapan Kantor', '113', 1, '2023-11-11 16:43:06', '2023-11-11 16:43:06', 'SYSTEM', '', 0, 0, 0),
+(48, '6e376191-0454-4172-a78b-2bc5f9c8fd6e', 'Beban Operasional', 'Beban Perlengkapan', '501', 1, '2023-11-11 16:53:48', '2023-11-11 16:53:48', 'SYSTEM', '', 0, 0, 0),
+(49, 'ad6d4852-27dd-4b6e-8d26-eb812084d248', 'Pendapatan', 'Retur Penjualan Jasa', '406', 1, '2023-12-02 09:34:28', '2023-12-02 09:34:28', 'SYSTEM', '', 0, 0, 0),
+(50, 'dea2ce84-fb39-4c6d-bac2-99e37b4fd492', 'Harga Pokok Penjualan', 'Retur Pembelian', '703', 1, '2023-11-11 17:06:15', '2023-11-11 17:06:15', 'SYSTEM', '', 0, 0, 0),
+(51, '7eee8bbd-b5c3-4351-9ff8-cdbe814806b9', 'Pendapatan', 'Diskon Penjualan Jasa', '407', 1, '2023-12-02 09:34:46', '2023-12-02 09:34:46', 'SYSTEM', '', 0, 0, 0),
+(52, 'c5319b9f-41b9-4c92-bbc4-94bf07583263', 'Harta', 'Persediaan Barang Dagang', '108', 1, '2023-11-11 16:41:00', '2023-11-11 16:41:00', 'SYSTEM', '', 0, 0, 0),
+(53, '2e186c0a-bd7c-4266-89ab-b4fdd2957e6e', 'Beban Lainnya', 'Beban Pengembalian Denda Penjualan Jasa', '806', 1, '2024-11-23 17:00:05', '2024-11-23 17:00:05', 'SYSTEM', '', 0, 0, 0),
+(54, '7b7a9b89-a712-4085-bdac-617ce712561c', 'Beban Lainnya', 'Beban Pengembalian Denda Penjualan Barang', '805', 1, '2024-11-21 19:45:23', '2024-11-21 19:45:23', 'SYSTEM', '', 0, 0, 0),
+(55, 'c48a5704-ffa6-471b-a468-12a74aedd100', 'Pendapatan Lain - Lain', 'Pendapatan Denda Pembelian Barang', '613', 1, '2024-11-21 18:57:52', '2024-11-21 18:57:52', 'SYSTEM', '', 0, 0, 0),
+(56, 'c28c00b1-b274-4c33-9f47-2e0e7a01b21e', 'Beban Operasional', 'Denda Pembelian Barang', '541', 1, '2024-11-16 00:06:00', '2024-11-16 00:06:00', 'SYSTEM', '', 0, 0, 0),
+(57, '500f7537-125d-466a-8118-152a98bf3121', 'Harta', 'Bank BCA', '103', 1, '2024-11-28 17:02:22', '2024-11-28 17:02:37', 'SYSTEM', '', 2, 0, 1),
+(58, '91bf765b-6876-4c6d-9ccc-d25bfe546c57', 'Harga Pokok Penjualan', 'Beban Pokok Penjualan', '710', 1, '2024-11-28 18:57:05', '2024-11-28 18:57:05', 'SYSTEM', '', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -930,9 +910,9 @@ CREATE TABLE `metode_penyusutan_tab` (
 -- Dumping data for table `metode_penyusutan_tab`
 --
 
-INSERT INTO metode_penyusutan_tab (id,uuid,name,createdBy,updatedBy,enabled,createdAt,updatedAt) VALUES
-(1,'22687f1e-964c-43f8-91ef-fa2016a8aa1e','Garis Lurus','SYSTEM','',1,'2024-09-06 00:08:02','2024-09-06 00:08:02'),
-(2,'d4a81ba9-d30e-475e-87ee-1dfc12b013c1','Saldo Menurun','SYSTEM','',1,'2024-09-06 00:08:12','2024-09-06 00:08:12');
+INSERT INTO `metode_penyusutan_tab` (`id`, `uuid`, `name`, `createdBy`, `updatedBy`, `enabled`, `createdAt`, `updatedAt`) VALUES
+(1, 'ea1fdb87-1fc3-46fa-a363-6a5e71cc924c', 'Garis Lurus', 'SYSTEM', '', 1, '2023-11-02 17:04:34', '2024-02-21 11:29:44'),
+(2, 'e16b39d9-543b-4289-92ed-dfe822aa7be6', 'Saldo Menurun', 'SYSTEM', '', 1, '2023-11-04 09:45:52', '2023-11-04 09:45:52');
 
 -- --------------------------------------------------------
 
@@ -1113,6 +1093,48 @@ CREATE TABLE `pengembalian_denda_penjualan_jasa_tab` (
   `enabled` tinyint(1) NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `penggunaan_perlengkapan_tab`
+--
+
+CREATE TABLE `penggunaan_perlengkapan_tab` (
+  `id` int(11) NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `tanggal` varchar(255) NOT NULL,
+  `daftar_perlengkapan` varchar(255) NOT NULL,
+  `keterangan` varchar(255) NOT NULL,
+  `createdBy` varchar(255) NOT NULL,
+  `updatedBy` varchar(255) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  `bukti_transaksi` varchar(255) NOT NULL,
+  `jumlah` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pengiriman_barang_tab`
+--
+
+CREATE TABLE `pengiriman_barang_tab` (
+  `id` int(11) NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `tanggal` varchar(255) NOT NULL,
+  `nomor_surat_jalan` varchar(255) NOT NULL,
+  `pegawai_penanggung_jawab` varchar(255) NOT NULL,
+  `pegawai_pelaksana` varchar(255) NOT NULL,
+  `createdBy` varchar(255) NOT NULL,
+  `updatedBy` varchar(255) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  `faktur_penjualan_barang` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1589,6 +1611,26 @@ CREATE TABLE `rincian_pengembalian_denda_penjualan_jasa_tab` (
   `enabled` tinyint(1) NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rincian_pengiriman_barang_tab`
+--
+
+CREATE TABLE `rincian_pengiriman_barang_tab` (
+  `id` int(11) NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `pengiriman_barang` varchar(255) NOT NULL,
+  `jumlah` int(11) NOT NULL,
+  `pengiriman` int(11) NOT NULL,
+  `createdBy` varchar(255) NOT NULL,
+  `updatedBy` varchar(255) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  `rincian_pesanan_penjualan_barang` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -2187,8 +2229,7 @@ CREATE TABLE `user_tab` (
   `perusahaan` varchar(255) NOT NULL,
   `jumlah_entry_data` int(11) NOT NULL,
   `batas_entry_data` int(11) NOT NULL,
-  `end_date_akses` varchar(255) NOT NULL,
-  `client_id` varchar(255) NOT NULL
+  `end_date_akses` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -2340,12 +2381,6 @@ ALTER TABLE `jurnal_umum_tab`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `jurnal_umum_tab_old`
---
-ALTER TABLE `jurnal_umum_tab_old`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `kategori_aset_tab`
 --
 ALTER TABLE `kategori_aset_tab`
@@ -2478,6 +2513,18 @@ ALTER TABLE `pengembalian_denda_penjualan_jasa_tab`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `penggunaan_perlengkapan_tab`
+--
+ALTER TABLE `penggunaan_perlengkapan_tab`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pengiriman_barang_tab`
+--
+ALTER TABLE `pengiriman_barang_tab`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `penyesuaian_persediaan_tab`
 --
 ALTER TABLE `penyesuaian_persediaan_tab`
@@ -2607,6 +2654,12 @@ ALTER TABLE `rincian_pengembalian_denda_penjualan_barang_tab`
 -- Indexes for table `rincian_pengembalian_denda_penjualan_jasa_tab`
 --
 ALTER TABLE `rincian_pengembalian_denda_penjualan_jasa_tab`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `rincian_pengiriman_barang_tab`
+--
+ALTER TABLE `rincian_pengiriman_barang_tab`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -2920,12 +2973,6 @@ ALTER TABLE `jurnal_umum_tab`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `jurnal_umum_tab_old`
---
-ALTER TABLE `jurnal_umum_tab_old`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `kategori_aset_tab`
 --
 ALTER TABLE `kategori_aset_tab`
@@ -2983,7 +3030,7 @@ ALTER TABLE `kerugian_tab`
 -- AUTO_INCREMENT for table `kode_akun_perkiraan_tab`
 --
 ALTER TABLE `kode_akun_perkiraan_tab`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT for table `konversi_barang_tab`
@@ -3055,6 +3102,18 @@ ALTER TABLE `pengembalian_denda_penjualan_barang_tab`
 -- AUTO_INCREMENT for table `pengembalian_denda_penjualan_jasa_tab`
 --
 ALTER TABLE `pengembalian_denda_penjualan_jasa_tab`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `penggunaan_perlengkapan_tab`
+--
+ALTER TABLE `penggunaan_perlengkapan_tab`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pengiriman_barang_tab`
+--
+ALTER TABLE `pengiriman_barang_tab`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -3187,6 +3246,12 @@ ALTER TABLE `rincian_pengembalian_denda_penjualan_barang_tab`
 -- AUTO_INCREMENT for table `rincian_pengembalian_denda_penjualan_jasa_tab`
 --
 ALTER TABLE `rincian_pengembalian_denda_penjualan_jasa_tab`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `rincian_pengiriman_barang_tab`
+--
+ALTER TABLE `rincian_pengiriman_barang_tab`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
