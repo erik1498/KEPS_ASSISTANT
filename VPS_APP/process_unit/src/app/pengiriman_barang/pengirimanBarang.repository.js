@@ -10,6 +10,8 @@ export const getAllPengirimanBarangRepo = async (pageNumber, size, search, req_i
                 COUNT(0) AS count
             FROM ${generateDatabaseName(req_id)}.pengiriman_barang_tab pbt 
             JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.uuid = pbt.faktur_penjualan_barang 
+            JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = fpbt.pesanan_penjualan_barang 
+            JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer 
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = pbt.pegawai_penanggung_jawab 
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt2 ON pt2.uuid = pbt.pegawai_pelaksana 
             WHERE CONCAT(pbt.nomor_surat_jalan, fpbt.nomor_faktur_penjualan_barang) LIKE '%${search}%' 
@@ -25,11 +27,18 @@ export const getAllPengirimanBarangRepo = async (pageNumber, size, search, req_i
         `
             SELECT 
                 pbt.*,
+                ct.name AS customer_name,
+                ct.code AS customer_code,
+                ct.alamat_kantor AS customer_alamat_kantor,
+                ct.no_hp AS customer_no_hp,
+                ppbt.nomor_pesanan_penjualan_barang AS nomor_pesanan_penjualan_barang,
                 fpbt.nomor_faktur_penjualan_barang,
                 pt.name AS pegawai_penanggung_jawab_name,
                 pt2.name AS pegawai_pelaksana_name
             FROM ${generateDatabaseName(req_id)}.pengiriman_barang_tab pbt 
             JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.uuid = pbt.faktur_penjualan_barang 
+            JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = fpbt.pesanan_penjualan_barang 
+            JOIN ${generateDatabaseName(req_id)}.customer_tab ct ON ct.uuid = ppbt.customer 
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt ON pt.uuid = pbt.pegawai_penanggung_jawab 
             JOIN ${generateDatabaseName(req_id)}.pegawai_tab pt2 ON pt2.uuid = pbt.pegawai_pelaksana 
             WHERE CONCAT(pbt.nomor_surat_jalan, fpbt.nomor_faktur_penjualan_barang) LIKE '%${search}%' 

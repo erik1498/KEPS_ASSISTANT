@@ -1,6 +1,6 @@
-import { FaSave, FaTimes } from "react-icons/fa"
+import { FaPrint, FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../../component/form/FormInputWithLabel"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { formValidation, showError } from "../../../../../helper/form.helper"
 import { apiFakturPenjualanBarangCRUD, apiPegawaiCRUD, apiPengirimanBarangCRUD, apiRincianPengirimanBarangCRUD } from "../../../../../service/endPointList.api"
 import { getHariTanggalFull } from "../../../../../helper/date.helper"
@@ -8,6 +8,8 @@ import { initialDataFromEditObject } from "../../../../../helper/select.helper"
 import FormSelectWithLabel from "../../../../../component/form/FormSelectWithLabel"
 import FormInput from "../../../../../component/form/FormInput"
 import { inputOnlyRupiah } from "../../../../../helper/actionEvent.helper"
+import { PengirimanBarangPrint } from "./PengirimanBarangPrint"
+import { useReactToPrint } from "react-to-print"
 
 const PengirimanBarangForm = ({
     setAddPengirimanBarangEvent = () => { },
@@ -45,6 +47,11 @@ const PengirimanBarangForm = ({
                 showError(err)
             })
     }
+
+    const pengirimanBarangPrintRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => pengirimanBarangPrintRef.current,
+    });
 
     const _savePengirimanBarang = async (e) => {
         e.preventDefault()
@@ -303,7 +310,23 @@ const PengirimanBarangForm = ({
                         </table>
                     </div>
                     {
-                        pengirimanBarangEdit?.preview ? <></> :
+                        pengirimanBarangEdit?.preview ? <>
+                            <div className="hidden">
+                                <PengirimanBarangPrint
+                                    ref={pengirimanBarangPrintRef}
+                                    pengirimanBarangList={pengirimanBarangList}
+                                    pengirimanBarangEdit={pengirimanBarangEdit}
+                                    fakturPenjualanBarang={fakturPenjualanBarangList.filter(x => x.uuid == fakturPenjualanBarang.value)}
+                                />
+                            </div>
+                            <button
+                                className="btn btn-sm bg-red-800 mt-4 text-white"
+                                type="button"
+                                onClick={handlePrint}
+                            >
+                                <FaPrint /> Cetak Surat Jalan
+                            </button>
+                        </> :
                             <button className="btn btn-sm bg-green-800 mt-4 text-white"
                                 type="button"
                                 onClick={() => {

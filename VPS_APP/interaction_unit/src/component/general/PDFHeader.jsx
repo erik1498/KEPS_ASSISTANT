@@ -6,7 +6,8 @@ const PDFHeader = ({
     title,
     bulan,
     tahun,
-    qrcode = false
+    qrcode = false,
+    useTime = true
 }) => {
     const waktu = formatDate(getHariTanggalFull())
     return <>
@@ -21,7 +22,12 @@ const PDFHeader = ({
         <h1 className="text-2xl font-bold">{getCookie("perusahaan")}</h1>
         <h1 className="text-6xl font-bold uppercase mt-4">{title}</h1>
         <h1 className="text-2xl font-bold">{bulan} {tahun}</h1>
-        <p className="mb-5 mt-3">Waktu Cetak - {waktu}</p>
+        {
+            useTime ? <>
+                <p className="mt-3">Waktu Cetak - {waktu}</p>
+            </> : <></>
+        }
+        <p className="mb-5">&nbsp;</p>
     </>
 }
 export default PDFHeader

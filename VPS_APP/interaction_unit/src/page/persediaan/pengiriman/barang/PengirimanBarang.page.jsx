@@ -45,7 +45,7 @@ const PengirimanBarangPage = () => {
         }
         setIsLoading(true)
         apiPengirimanBarangCRUD
-            .custom(`?search=${searchParam}&page=${pagination.page}&size=${pagination.size}`, "GET")
+            .custom(`?search=${searchParam}`, "GET")
             .then(resData => {
                 let data = getNormalizedCustomKey(resData.data.entry, "nomor_faktur_penjualan_barang")
                 setSearchStatus(searchParam.length < 1)
@@ -59,6 +59,7 @@ const PengirimanBarangPage = () => {
     }
 
     const _editPengirimanBarang = (x) => {
+        x.preview = false
         setPengirimanBarangEdit(x)
         setAddPengirimanBarang(!addPengirimanBarang)
     }
