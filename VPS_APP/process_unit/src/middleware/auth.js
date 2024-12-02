@@ -45,6 +45,17 @@ export const authTokenMiddleware = (roles = []) => {
             }
         }
 
+        if (!req.header("Authorization")) {
+            return res.status(401).json({
+                type: "unauthorizedError",
+                errorData: JSON.stringify({
+                    message: "Akun Tidak Terdaftar",
+                    prop: "error",
+                    redirect_to_login: true,
+                })
+            });
+        }
+
         jwt.verify(decryptString(req.header("Authorization").split("Bearer ")[1], getEnv("JWT_ENCRYPT_KEY")), getEnv("JWT_SECRET"), async (err, decode) => {
             if (err) {
                 LOGGER(logType.ERROR, "JWT Authorization Error", err.stack, req.identity, req.originalUrl, req.method, false)

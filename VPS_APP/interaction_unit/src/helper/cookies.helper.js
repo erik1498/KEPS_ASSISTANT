@@ -22,5 +22,5 @@ export const eraseCookie = (name) =>  {
 }
 
 export const getRolesInCookie = (roleName) => {
-    return JSON.parse(getCookie("role")).includes(roleName)
+    return JSON.parse(getCookie("role"))?.includes(roleName)
 }

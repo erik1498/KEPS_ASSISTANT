@@ -1,19 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import Navigasi from "./Navigasi";
 import { getCookie } from "../../helper/cookies.helper";
-import { useEffect } from "react";
 import LoadingPage from "./LoadingPage";
-import { useState } from "react";
-import DisplayNotCompatiblePage from "./DisplayNotCompatible";
+import { useEffect, useState } from "react";
 import ContentWidthAllowed from "./ContentWidthAllowed";
 
 const Wrap = ({
   children,
   isLoading = false,
 }) => {
+  const [tokenStatus, setTokenStatus] = useState(getCookie("token"))
   const navigate = useNavigate()
+
   useEffect(() => {
-    if (!getCookie("login")) {
+    if (!tokenStatus) {
       navigate("/")
     }
   }, [])
