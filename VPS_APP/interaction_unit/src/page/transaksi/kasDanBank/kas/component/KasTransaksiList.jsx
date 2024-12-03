@@ -12,6 +12,7 @@ import { getCookie } from "../../../../../helper/cookies.helper"
 const KasTransaksiList = ({
     idTransaksiKas,
     nilaiTransaksi = 0,
+    getData = () => { },
     type = 1
 }) => {
     const [loadingSave, setIsLoadingSave] = useState(false)
@@ -65,6 +66,8 @@ const KasTransaksiList = ({
                 }).catch(err => {
                     showError(err)
                 })
+        } else {
+            getData()
         }
     }
 
@@ -90,6 +93,8 @@ const KasTransaksiList = ({
                 }).catch(err => {
                     showError(err)
                 })
+        } else {
+            getData()
         }
     }
 

@@ -116,10 +116,6 @@ const KasPage = () => {
         }
     }, [addTransaksi])
 
-    useEffect(() => {
-
-    })
-
     return <Wrap
         isLoading={isLoading}>
         <div>
@@ -130,6 +126,7 @@ const KasPage = () => {
                             () => setAddTransaksi(!addTransaksi)
                         }
                         transaksiSelected={transaksiSelected}
+                        getData={_getData}
                     /> :
                     <>
                         <PageTitle title="Transaksi Kas" />
@@ -164,22 +161,6 @@ const KasPage = () => {
                                             kredit={kredit}
                                         /> : <></>
                                 }
-                                {/* <div className="hidden">
-                        <TransaksiKasPrint
-                            data={TransaksiKas}
-                            debet={debet}
-                            kredit={kredit}
-                            tahun={data.tahun}
-                            bulan={getBulanByIndex(bulan)}
-                            ref={TransaksiKasPrintRef}
-                        />
-                    </div>
-                    <button
-                        onClick={handlePrint}
-                        className="btn btn-sm bg-red-600 hover:bg-red-600 text-white mt-2 border-red-600"
-                    >
-                        <FaPrint /> Cetak Jurnal Umum
-                    </button> */}
                             </div>
                             <div className="col-span-5">
                                 <div className="h-[65vh] pl-2">

@@ -14,6 +14,7 @@ import { parseToRupiahText } from "../../../../../helper/number.helper";
 const KasForm = ({
     setAddTransaksiEvent,
     transaksiSelected,
+    getData = () => { }
 }) => {
     const [loadingSave, setIsLoadingSave] = useState(false)
     const [tipeTransaksi, setTipeTransaksi] = useState({
@@ -110,7 +111,7 @@ const KasForm = ({
     }, [])
 
     return <>
-        <div className="bg-white rounded-md shadow-2xl h-[70vh] overflow-scroll no-scrollbar relative">
+        <div className="bg-white rounded-md shadow-2xl no-scrollbar relative">
             <div className="sticky top-0 pt-3 px-6 h-max bg-white w-full z-10">
                 <div className="mb-3 flex justify-between items-center">
                     <h1 className="uppercase text-gray-600 font-bold">{transaksiSelected != null ? "Edit " : "Tambah "} Transaksi</h1>
@@ -216,6 +217,7 @@ const KasForm = ({
             {
                 idTransaksiKas ? <>
                     <KasTransaksiList
+                        getData={getData}
                         kodeAkunList={kodeAkunList}
                         idTransaksiKas={idTransaksiKas}
                         nilaiTransaksi={nilai}
