@@ -4,19 +4,6 @@ import { parseToRupiahText } from "../../../../../helper/number.helper";
 import { formatDate } from "../../../../../helper/date.helper";
 
 export const PengirimanBarangPrint = React.forwardRef((props, ref) => {
-
-    const [gudangList, setGudangList] = useState([])
-
-    useEffect(() => {
-        let gudangListCopy = gudangList
-        props?.pengirimanBarangList?.map((x) => {
-            if (!gudangListCopy.includes(x.daftar_gudang_name)) {
-                gudangListCopy.push(x.daftar_gudang_name)
-            }
-        })
-        setGudangList(x => x = gudangListCopy)
-    }, [props?.pengirimanBarangList])
-
     return (
         <div
             ref={ref}
@@ -117,24 +104,24 @@ export const PengirimanBarangPrint = React.forwardRef((props, ref) => {
             }
             <div className="grid grid-cols-12 py-5 gap-5 items-start font-bold">
                 {
-                    gudangList.map(x => {
+                    props.gudangList.map(x => {
                         return <>
-                            <div className="col-span-3 border-b-2 border-black">
+                            <div className="col-span-4 border-b-2 border-black">
                                 <p className="mb-20">Pihak {x}</p>
                                 <p>&nbsp;</p>
                             </div>
                         </>
                     })
                 }
-                <div className="col-span-3 border-b-2 border-black">
+                <div className="col-span-4 border-b-2 border-black">
                     <p className="mb-20">Penanggung Jawab</p>
                     <p className="font-normal">{props?.pengirimanBarangEdit?.pegawai_penanggung_jawab_name}</p>
                 </div>
-                <div className="col-span-3 border-b-2 border-black">
+                <div className="col-span-4 border-b-2 border-black">
                     <p className="mb-20">Pelaksana</p>
                     <p className="font-normal">{props?.pengirimanBarangEdit?.pegawai_pelaksana_name}</p>
                 </div>
-                <div className="col-span-3 border-b-2 border-black">
+                <div className="col-span-4 border-b-2 border-black">
                     <p className="mb-20">Diterima Oleh</p>
                     <p>&nbsp;</p>
                 </div>

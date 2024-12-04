@@ -16,6 +16,7 @@ const PengirimanBarangForm = ({
     pengirimanBarangEdit,
     getData = () => { }
 }) => {
+    const [gudangList, setGudangList] = useState([])
     const [tanggal, setTanggal] = useState(pengirimanBarangEdit?.tanggal ? pengirimanBarangEdit.tanggal : getHariTanggalFull())
     const [fakturPenjualanBarang, setFakturPenjualanBarang] = useState(pengirimanBarangEdit?.faktur_penjualan_barang ? pengirimanBarangEdit.faktur_penjualan_barang : ``)
     const [nomorSuratJalan, setNomorSuratJalan] = useState(pengirimanBarangEdit?.nomor_surat_jalan ? pengirimanBarangEdit.nomor_surat_jalan : ``)
@@ -153,6 +154,16 @@ const PengirimanBarangForm = ({
         }
         setPengirimanBarangList(x => x = pengirimanBarangListCopy)
     }
+
+    useEffect(() => {
+        let gudangListCopy = gudangList
+        pengirimanBarangList.map((x) => {
+            if (!gudangListCopy.includes(x.daftar_gudang_name)) {
+                gudangListCopy.push(x.daftar_gudang_name)
+            }
+        })
+        setGudangList(x => x = gudangListCopy)
+    }, [pengirimanBarangList])
 
     useEffect(() => {
         if (idPengirimanBarang) {
@@ -315,6 +326,7 @@ const PengirimanBarangForm = ({
                                 <PengirimanBarangPrint
                                     ref={pengirimanBarangPrintRef}
                                     pengirimanBarangList={pengirimanBarangList}
+                                    gudangList={gudangList}
                                     pengirimanBarangEdit={pengirimanBarangEdit}
                                     fakturPenjualanBarang={fakturPenjualanBarangList.filter(x => x.uuid == fakturPenjualanBarang.value)}
                                 />
