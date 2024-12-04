@@ -198,7 +198,6 @@ const PegawaiForm = ({
                     label={"NIP Pegawai"}
                     type={"text"}
                     onchange={(e) => {
-                        inputOnlyNumber(e)
                         setNIPPegawai(e.target.value)
                     }}
                     others={
@@ -226,7 +225,6 @@ const PegawaiForm = ({
                     label={"NPWP Pegawai"}
                     type={"text"}
                     onchange={(e) => {
-                        inputOnlyNumber(e)
                         setNPWPPegawai(e.target.value)
                     }}
                     others={
