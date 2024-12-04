@@ -56,42 +56,43 @@ export const PengirimanBarangPrint = React.forwardRef((props, ref) => {
                 <div className="col-span-1">
                     <p>No.</p>
                 </div>
-                <div className="col-span-2">
-                    <p>Kode Barang</p>
+                <div className="col-span-4">
+                    <p>Kode / Nama Barang</p>
                 </div>
-                <div className="col-span-3">
-                    <p>Nama Barang</p>
-                </div>
-                <div className="col-span-2">
-                    <p>Satuan Barang</p>
+                <div className="col-span-1">
+                    <p>Satuan</p>
                 </div>
                 <div className="col-span-2">
-                    <p>Jumlah Beli</p>
+                    <p>Pembelian</p>
                 </div>
                 <div className="col-span-2">
-                    <p>Jumlah Pengiriman</p>
+                    <p>Telah Dikirim</p>
+                </div>
+                <div className="col-span-2">
+                    <p>Jumlah</p>
                 </div>
             </div>
             {
                 props?.pengirimanBarangList?.map((x, i) => {
                     return <>
-                        <div className="py-3  border-y-2">
-                            <div className="grid grid-cols-12 gap-x-2 py-3 items-start font-bold">
+                        <div className="py-3 border-y-2">
+                            <div className="grid grid-cols-12 gap-x-2 py-3 items-center font-bold">
                                 <div className="col-span-1">
                                     <p className="text-sm">{i + 1}.</p>
                                 </div>
-                                <div className="col-span-2">
+                                <div className="col-span-4">
                                     <p className="text-sm">{x?.kategori_harga_barang_kode_barang}</p>
                                     <p className="text-xs font-normal">{x?.daftar_gudang_name}</p>
-                                </div>
-                                <div className="col-span-3">
                                     <p className="text-sm">{x?.daftar_barang_name}</p>
                                 </div>
-                                <div className="col-span-2">
+                                <div className="col-span-1">
                                     <p className="text-sm">{x?.satuan_barang_name}</p>
                                 </div>
                                 <div className="col-span-2">
                                     <p className="text-sm">{parseToRupiahText(x?.jumlah)}</p>
+                                </div>
+                                <div className="col-span-2">
+                                    <p className="text-sm">{parseToRupiahText(x?.jumlah_sudah_dikirim)}</p>
                                 </div>
                                 <div className="col-span-2">
                                     <p className="text-sm">{parseToRupiahText(x?.pengiriman)}</p>

@@ -271,16 +271,16 @@ const PengirimanBarangForm = ({
                 idPengirimanBarang ? <>
 
                     <div className="overflow-x-auto rounded-md h-max max-h-[90vh] no-scrollbar mt-5 pb-4">
-                        <table className="table">
+                        <table className="table table-sm table-zebra">
                             {/* head */}
                             <thead>
                                 <tr className="sticky top-0 bg-white py-4 text-black">
                                     <th width={12}>No</th>
-                                    <th>Kode Barang</th>
-                                    <th>Nama Barang</th>
+                                    <th>Kode / Nama Barang</th>
                                     <th>Satuan Barang</th>
-                                    <th>Jumlah Beli</th>
-                                    <th width={30}>Jumlah Pengiriman</th>
+                                    <th>Pembelian</th>
+                                    <th>Telah Dikirim</th>
+                                    <th>Jumlah</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -289,9 +289,16 @@ const PengirimanBarangForm = ({
                                         return <>
                                             <tr key={i}>
                                                 <td>{i + 1}.</td>
-                                                <td>{item.kategori_harga_barang_kode_barang}</td>
-                                                <td>{item.daftar_barang_name}</td>
+                                                <td>
+                                                    <b>{item.kategori_harga_barang_kode_barang}</b>
+                                                    <br />
+                                                    {item.daftar_gudang_name}
+                                                    <br />
+                                                    <br />
+                                                    {item.daftar_barang_name}
+                                                </td>
                                                 <td>{item.satuan_barang_name}</td>
+                                                <td>{item.jumlah_sudah_dikirim}</td>
                                                 <td>{item.jumlah}</td>
                                                 <td>
                                                     {

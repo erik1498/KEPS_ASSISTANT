@@ -64,7 +64,8 @@ export const getDaftarPesananByUUIDRepo = async (pengiriman_barang, req_id) => {
                 dgt.name AS daftar_gudang_name,
                 dbt.name AS daftar_barang_name,
                 sbt.name AS satuan_barang_name,
-                rppbt.jumlah - IFNULL((
+                rppbt.jumlah AS jumlah,
+                IFNULL((
                     SELECT 
                         SUM(rpbt.pengiriman)
                     FROM ${generateDatabaseName(req_id)}.rincian_pengiriman_barang_tab rpbt 
@@ -77,7 +78,7 @@ export const getDaftarPesananByUUIDRepo = async (pengiriman_barang, req_id) => {
                         WHERE pbt2.uuid = "${pengiriman_barang}"
                     )
                     AND pbt.enabled = 1
-                ), 0) AS jumlah,
+                ), 0) AS jumlah_sudah_dikirim,
                 rppbt.uuid AS rincian_pesanan_penjualan_barang,
                 IFNULL((
                     SELECT rpbt.pengiriman FROM ${generateDatabaseName(req_id)}.rincian_pengiriman_barang_tab rpbt 
