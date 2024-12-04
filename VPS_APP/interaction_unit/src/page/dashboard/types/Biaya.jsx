@@ -6,6 +6,7 @@ import { useState } from "react"
 import { apiJurnalUmumCRUD } from "../../../service/endPointList.api"
 import { useEffect } from "react"
 import { useDataContext } from "../../../context/dataContext.context"
+import { ASETTETAPDANPERLENGKAPANSUMBERLIST } from "../../../config/objectList.config"
 
 const Biaya = () => {
 
@@ -157,7 +158,15 @@ const Biaya = () => {
                                                 </div>
                                                 <div className="col-span-7 pl-2">
                                                     <p className="text-xs font-bold mb-2">{j.nama_akun}</p>
-                                                    <p className="text-xs">{j.uraian}</p>
+                                                    {
+                                                        ASETTETAPDANPERLENGKAPANSUMBERLIST.includes(j.sumber) ? <>
+                                                            <p className="text-xs">{JSON.parse(j.uraian).detail.keterangan} <br /><br />
+                                                            Perlengkapan : {JSON.parse(j.uraian).detail.daftar_perlengkapan_name}
+                                                            <br />
+                                                            Jumlah : {JSON.parse(j.uraian).detail.jumlah} 
+                                                            </p>
+                                                        </> : <p className="text-xs">{j.uraian}</p>
+                                                    }
                                                 </div>
                                                 <div className="col-span-3 flex justify-center">
                                                     {

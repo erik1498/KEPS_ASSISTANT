@@ -1279,7 +1279,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                                 'harga_satuan', dpt.harga_satuan,
                                 'dpp', dpt.dpp,
                                 'ppn', dpt.ppn,
-                                'kategori_perlengkaan', kpt.name,
+                                'kategori_perlengkapan', kpt.name,
                                 'supplier_name', st.name,
                                 'supplier_code', st.code,
                                 'daftar_perlengkapan_name', dpt.name,
@@ -1324,7 +1324,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                                 'harga_satuan', dpt.harga_satuan,
                                 'dpp', dpt.dpp,
                                 'ppn', dpt.ppn,
-                                'kategori_perlengkaan', kpt.name,
+                                'kategori_perlengkapan', kpt.name,
                                 'supplier_name', st.name,
                                 'supplier_code', st.code,
                                 'daftar_perlengkapan_name', dpt.name,
@@ -1578,7 +1578,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                                 'harga_satuan', dpt.harga_satuan,
                                 'dpp', dpt.dpp,
                                 'ppn', dpt.ppn,
-                                'kategori_perlengkaan', kpt.name,
+                                'kategori_perlengkapan', kpt.name,
                                 'daftar_perlengkapan_name', dpt.name,
                                 'daftar_perlengkapan_invoice', dpt.nomor_invoice
                             )
@@ -1622,7 +1622,7 @@ export const getJurnalUmumByBulanRepo = async (bulan, tahun, search, sorting, re
                                 'harga_satuan', dpt.harga_satuan,
                                 'dpp', dpt.dpp,
                                 'ppn', dpt.ppn,
-                                'kategori_perlengkaan', kpt.name,
+                                'kategori_perlengkapan', kpt.name,
                                 'daftar_perlengkapan_name', dpt.name,
                                 'daftar_perlengkapan_invoice', dpt.nomor_invoice
                             )

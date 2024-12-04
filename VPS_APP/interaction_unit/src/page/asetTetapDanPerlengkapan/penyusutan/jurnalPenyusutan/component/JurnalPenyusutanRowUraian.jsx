@@ -4,6 +4,7 @@ const JurnalPenyusutanUraian = ({
     data,
     bg_color = false
 }) => {
+    console.log(data)
     return <>
         <div className={`px-1`}>
             <div className={`${!bg_color ? "bg-gray-200 px-2 py-1" : ""}`}>
