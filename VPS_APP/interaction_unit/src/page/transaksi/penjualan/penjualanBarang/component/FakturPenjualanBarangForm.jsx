@@ -41,11 +41,11 @@ const FakturPenjualanBarangForm = ({
         apiTipePembayaranCRUD
             .custom("", "GET")
             .then(resData => {
-                setTipePembayaranList(x => x = resData.data.entry)
-                if (resData.data.entry.length > 0) {
+                setTipePembayaranList(x => x = resData?.data?.entry)
+                if (resData?.data?.entry.length > 0) {
                     setTipePembayaran(x => x = {
-                        label: resData.data.entry[0].name,
-                        value: resData.data.entry[0].uuid,
+                        label: resData?.data?.entry[0].name,
+                        value: resData?.data?.entry[0].uuid,
                     })
                 }
             })
@@ -55,11 +55,11 @@ const FakturPenjualanBarangForm = ({
         apiSyaratPembayaranCRUD
             .custom("/type/" + tipePembayaran.value, "GET")
             .then(resData => {
-                setSyaratPembayaranList(x => x = resData.data)
-                if (resData.data.length > 0) {
+                setSyaratPembayaranList(x => x = resData?.data)
+                if (resData?.data?.length > 0) {
                     setSyaratPembayaran(x => x = {
-                        label: resData.data[0].name,
-                        value: resData.data[0].uuid,
+                        label: resData?.data[0].name,
+                        value: resData?.data[0].uuid,
                     })
                 }
             })
@@ -82,7 +82,7 @@ const FakturPenjualanBarangForm = ({
                     }
                 }).then(resData => {
                     _getFakturPenjualan()
-                    // setFakturStatus(x => x = resData.data.uuid)
+                    // setFakturStatus(x => x = resData?.data?.uuid)
                 }).catch(err => showError(err))
         }
     }
@@ -105,16 +105,16 @@ const FakturPenjualanBarangForm = ({
         apiFakturPenjualanBarangCRUD
             .custom(`/pesanan_penjualan_barang/${pesananPenjualanBarang.uuid}`, "GET")
             .then(resData => {
-                if (resData.data) {
-                    setFakturPenjualanBarang(x => x = resData.data)
-                    setNomorFakturPenjualanBarang(x => x = resData.data.nomor_faktur_penjualan_barang)
-                    setBuktiTransaksi(x => x = resData.data.bukti_transaksi)
-                    setTanggalFakturPenjualanBarang(x => x = resData.data.tanggal)
-                    setTipePembayaran(x => x = resData.data.tipe_pembayaran_name)
-                    setSyaratPembayaran(x => x = resData.data.syarat_pembayaran_name)
-                    setKeteranganFakturPenjualanBarang(x => x = resData.data.keterangan)
-                    setFakturStatus(x => x = resData.data.uuid)
-                    setNomorFakturPajakFakturPenjualanBarang(x => x = resData.data.nomor_faktur_pajak_penjualan_barang != "EMPTY" ? resData.data.nomor_faktur_pajak_penjualan_barang : "")
+                if (resData?.data) {
+                    setFakturPenjualanBarang(x => x = resData?.data)
+                    setNomorFakturPenjualanBarang(x => x = resData?.data?.nomor_faktur_penjualan_barang)
+                    setBuktiTransaksi(x => x = resData?.data?.bukti_transaksi)
+                    setTanggalFakturPenjualanBarang(x => x = resData?.data?.tanggal)
+                    setTipePembayaran(x => x = resData?.data?.tipe_pembayaran_name)
+                    setSyaratPembayaran(x => x = resData?.data?.syarat_pembayaran_name)
+                    setKeteranganFakturPenjualanBarang(x => x = resData?.data?.keterangan)
+                    setFakturStatus(x => x = resData?.data?.uuid)
+                    setNomorFakturPajakFakturPenjualanBarang(x => x = resData?.data?.nomor_faktur_pajak_penjualan_barang != "EMPTY" ? resData?.data?.nomor_faktur_pajak_penjualan_barang : "")
                 }
             }).catch(err => {
                 setFakturStatus(x => x = null)

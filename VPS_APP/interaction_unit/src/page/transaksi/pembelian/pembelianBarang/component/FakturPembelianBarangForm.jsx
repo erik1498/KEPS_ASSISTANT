@@ -31,11 +31,11 @@ const FakturPembelianBarangForm = ({
         apiTipePembayaranCRUD
             .custom("", "GET")
             .then(resData => {
-                setTipePembayaranList(x => x = resData.data.entry)
-                if (resData.data.entry.length > 0) {
+                setTipePembayaranList(x => x = resData.data?.entry)
+                if (resData.data?.entry.length > 0) {
                     setTipePembayaran(x => x = {
-                        label: resData.data.entry[0].name,
-                        value: resData.data.entry[0].uuid,
+                        label: resData.data?.entry[0].name,
+                        value: resData.data?.entry[0].uuid,
                     })
                 }
             })
@@ -74,15 +74,15 @@ const FakturPembelianBarangForm = ({
         apiFakturPembelianBarangCRUD
             .custom(`/pesanan_pembelian_barang/${pesananPembelianBarang.uuid}`, "GET")
             .then(resData => {
-                setFakturPembelianBarang(x => x = resData.data)
-                setNomorFakturPembelianBarang(x => x = resData.data.nomor_faktur_pembelian_barang)
-                setBuktiTransaksi(x => x = resData.data.bukti_transaksi)
-                setTanggalFakturPembelianBarang(x => x = resData.data.tanggal)
-                setTipePembayaran(x => x = resData.data.tipe_pembayaran_name)
-                setSyaratPembayaran(x => x = resData.data.syarat_pembayaran)
-                setKeteranganFakturPembelianBarang(x => x = resData.data.keterangan)
-                setFakturStatus(x => x = resData.data.uuid)
-                setNomorFakturPajakFakturPembelianBarang(x => x = resData.data.nomor_faktur_pajak_pembelian_barang != "EMPTY" ? resData.data.nomor_faktur_pajak_pembelian_barang : "")
+                setFakturPembelianBarang(x => x = resData?.data)
+                setNomorFakturPembelianBarang(x => x = resData?.data?.nomor_faktur_pembelian_barang)
+                setBuktiTransaksi(x => x = resData?.data?.bukti_transaksi)
+                setTanggalFakturPembelianBarang(x => x = resData?.data?.tanggal)
+                setTipePembayaran(x => x = resData?.data?.tipe_pembayaran_name)
+                setSyaratPembayaran(x => x = resData?.data?.syarat_pembayaran)
+                setKeteranganFakturPembelianBarang(x => x = resData?.data?.keterangan)
+                setFakturStatus(x => x = resData?.data?.uuid)
+                setNomorFakturPajakFakturPembelianBarang(x => x = resData?.data?.nomor_faktur_pajak_pembelian_barang != "EMPTY" ? resData.data?.nomor_faktur_pajak_pembelian_barang : "")
             }).catch(err => {
                 setFakturStatus(x => x = null)
             })
