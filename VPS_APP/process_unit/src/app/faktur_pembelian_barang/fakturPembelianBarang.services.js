@@ -122,10 +122,7 @@ export const getFakturPembelianBarangByPesananPembelianBarangUUIDService = async
     LOGGER(logType.INFO, `Start getFakturPembelianBarangByPesananPembelianBarangUUIDService`, { pesanan_pembelian_barang }, req_identity)
     const fakturPembelianBarang = await getFakturPembelianBarangByPesananPembelianBarangUUIDRepo(pesanan_pembelian_barang, req_identity)
     if (fakturPembelianBarang.length == 0) {
-        throw new Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
+        return null
     }
     return fakturPembelianBarang[0]
 }
@@ -147,6 +144,15 @@ export const createFakturPembelianBarangService = async (fakturPembelianBarangDa
     LOGGER(logType.INFO, `Start createFakturPembelianBarangService`, fakturPembelianBarangData, req_identity)
     fakturPembelianBarangData.enabled = 1
 
+    const fakturPembelianBarangPesananPembelianbarang = await getFakturPembelianBarangByPesananPembelianBarangUUIDService(fakturPembelianBarangData.pesanan_pembelian_barang, req_identity)
+
+    if (fakturPembelianBarangPesananPembelianbarang != null) {
+        throw Error(JSON.stringify({
+            message: "Faktur Pembelian Barang Sudah Terdaftar Sebelumnya",
+            prop: "error"
+        }))
+    }
+
     await getNeracaValidasiByTanggalService(null, fakturPembelianBarangData.tanggal, req_identity)
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, fakturPembelianBarangData.tanggal, null, null, req_identity)
@@ -159,6 +165,15 @@ export const deleteFakturPembelianBarangByUuidService = async (uuid, req_identit
     LOGGER(logType.INFO, `Start deleteFakturPembelianBarangByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getFakturPembelianBarangByUuidService(uuid, req_identity)
 
+    const riwayatTransaksi = await getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo(beforeData.uuid, req_identity)
+
+    if (riwayatTransaksi.length > 0) {
+        throw Error(JSON.stringify({
+            message: "Batalkan Faktur Ditolak, Sudah Ada Transaksi Pelunasan/Retur",
+            prop: "error"
+        }))
+    }
+
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)
@@ -170,6 +185,16 @@ export const deleteFakturPembelianBarangByUuidService = async (uuid, req_identit
 export const updateFakturPembelianBarangByUuidService = async (uuid, fakturPembelianBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateFakturPembelianBarangByUuidService [${uuid}]`, fakturPembelianBarangData, req_identity)
     const beforeData = await getFakturPembelianBarangByUuidService(uuid, req_identity)
+
+    const riwayatTransaksi = await getRiwayatTransaksiPembelianBarangByFakturPembelianBarangUUIDRepo(beforeData.uuid, req_identity)
+
+    if (riwayatTransaksi.length > 0) {
+        throw Error(JSON.stringify({
+            message: "Edit Faktur Ditolak, Sudah Ada Transaksi Pelunasan/Retur",
+            prop: "error"
+        }))
+    }
+    
 
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 

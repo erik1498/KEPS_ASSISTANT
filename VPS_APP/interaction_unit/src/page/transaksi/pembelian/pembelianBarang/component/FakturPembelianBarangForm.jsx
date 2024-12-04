@@ -57,7 +57,7 @@ const FakturPembelianBarangForm = ({
                         nomor_faktur_pajak_pembelian_barang: nomorFakturPajakFakturPembelianBarang ? nomorFakturPajakFakturPembelianBarang : "EMPTY"
                     }
                 }).then(resData => {
-                    setFakturStatus(x => x = resData.data.uuid)
+                    _getFakturPembelian()
                 }).catch(err => showError(err))
         }
     }

@@ -1,5 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getTanggalTransaksiTerakhirByFakturPembelianService } from "../faktur_pembelian_barang/fakturPembelianBarang.services.js"
 import { getPelunasanPembelianBarangByUuidService } from "../pelunasan_pembelian_barang/pelunasanPembelianBarang.services.js"
 import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createRincianPelunasanPembelianBarangRepo, deleteRincianPelunasanPembelianBarangByUuidRepo, getAllRincianPelunasanPembelianBarangRepo, getAllRincianPesananPembelianBarangByPelunasanPembelianRepo, getRincianPelunasanPembelianBarangByUuidRepo, updateRincianPelunasanPembelianBarangByUuidRepo } from "./rincianPelunasanPembelianBarang.repository.js"
@@ -65,6 +66,8 @@ export const createRincianPelunasanPembelianBarangService = async (rincianPeluna
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPembelianBarang.tanggal, null, null, req_identity)
 
+    await getTanggalTransaksiTerakhirByFakturPembelianService(pelunasanPembelianBarang.faktur_pembelian_barang, pelunasanPembelianBarang.tanggal, pelunasanPembelianBarang.tanggal, true, req_identity)
+
     const rincianPelunasanPembelianBarang = await createRincianPelunasanPembelianBarangRepo(rincianPelunasanPembelianBarangData, req_identity)
     return rincianPelunasanPembelianBarang
 }
@@ -75,8 +78,10 @@ export const deleteRincianPelunasanPembelianBarangByUuidService = async (uuid, r
     const beforeData = await getRincianPelunasanPembelianBarangByUuidService(uuid, req_identity)
 
     const pelunasanPembelianBarang = await getPelunasanPembelianBarangByUuidService(beforeData.pelunasan_pembelian_barang, req_identity)
-
+    
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPembelianBarang.tanggal, null, null, req_identity)
+    
+    await getTanggalTransaksiTerakhirByFakturPembelianService(pelunasanPembelianBarang.faktur_pembelian_barang, pelunasanPembelianBarang.tanggal, pelunasanPembelianBarang.tanggal, true, req_identity)
 
     await deleteRincianPelunasanPembelianBarangByUuidRepo(uuid, req_identity)
     return true
@@ -90,6 +95,8 @@ export const updateRincianPelunasanPembelianBarangByUuidService = async (uuid, r
     const pelunasanPembelianBarang = await getPelunasanPembelianBarangByUuidService(beforeData.pelunasan_pembelian_barang, req_identity)
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pelunasanPembelianBarang.tanggal, null, null, req_identity)
+
+    await getTanggalTransaksiTerakhirByFakturPembelianService(pelunasanPembelianBarang.faktur_pembelian_barang, pelunasanPembelianBarang.tanggal, pelunasanPembelianBarang.tanggal, true, req_identity)
 
     const rincianPelunasanPembelianBarang = await updateRincianPelunasanPembelianBarangByUuidRepo(uuid, rincianPelunasanPembelianBarangData, req_identity)
 

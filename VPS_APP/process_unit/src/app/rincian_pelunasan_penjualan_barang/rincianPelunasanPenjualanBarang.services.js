@@ -1,6 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { getJumlahRincianTransaksiDendaOnTableByTanggalService, getJumlahRincianTransaksiOnTableByTanggalService, getTanggalTransaksiTerakhirByFakturPenjualanService } from "../faktur_penjualan_barang/fakturPenjualanBarang.services.js"
+import { getTanggalTransaksiTerakhirByFakturPenjualanService } from "../faktur_penjualan_barang/fakturPenjualanBarang.services.js"
 import { getPelunasanPenjualanBarangByUuidService } from "../pelunasan_penjualan_barang/pelunasanPenjualanBarang.services.js"
 import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { createRincianPelunasanPenjualanBarangRepo, deleteRincianPelunasanPenjualanBarangByUuidRepo, getAllRincianPelunasanPenjualanBarangRepo, getAllRincianPesananPenjualanBarangByPelunasanPenjualanRepo, getRincianPelunasanPenjualanBarangByUuidRepo, updateRincianPelunasanPenjualanBarangByUuidRepo } from "./rincianPelunasanPenjualanBarang.repository.js"

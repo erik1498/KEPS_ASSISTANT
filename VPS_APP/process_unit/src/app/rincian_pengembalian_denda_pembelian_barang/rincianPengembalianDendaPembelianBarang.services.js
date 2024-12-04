@@ -65,6 +65,8 @@ export const createRincianPengembalianDendaPembelianBarangService = async (rinci
     }
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pengembalianDendaPembelianBarang.tanggal, null, null, req_identity)
+    
+    await getTanggalTransaksiTerakhirByFakturPembelianService(pengembalianDendaPembelianBarang.faktur_pembelian_barang, pengembalianDendaPembelianBarang.tanggal, pengembalianDendaPembelianBarang.tanggal, true, req_identity)
 
     const rincianPengembalianDendaPembelianBarang = await createRincianPengembalianDendaPembelianBarangRepo(rincianPengembalianDendaPembelianBarangData, req_identity)
     return rincianPengembalianDendaPembelianBarang
@@ -72,7 +74,14 @@ export const createRincianPengembalianDendaPembelianBarangService = async (rinci
 
 export const deleteRincianPengembalianDendaPembelianBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteRincianPengembalianDendaPembelianBarangByUuidService [${uuid}]`, null, req_identity)
-    await getRincianPengembalianDendaPembelianBarangByUuidService(uuid, req_identity)
+    const beforeData = await getRincianPengembalianDendaPembelianBarangByUuidService(uuid, req_identity)
+
+    const pengembalianDendaPembelianBarang = await getPengembalianDendaPembelianBarangByUuidService(beforeData.pengembalian_denda_pembelian_barang, req_identity)
+    
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pengembalianDendaPembelianBarang.tanggal, null, null, req_identity)
+    
+    await getTanggalTransaksiTerakhirByFakturPembelianService(pengembalianDendaPembelianBarang.faktur_pembelian_barang, pengembalianDendaPembelianBarang.tanggal, pengembalianDendaPembelianBarang.tanggal, true, req_identity)
+
     await deleteRincianPengembalianDendaPembelianBarangByUuidRepo(uuid, req_identity)
     return true
 }
@@ -80,6 +89,13 @@ export const deleteRincianPengembalianDendaPembelianBarangByUuidService = async 
 export const updateRincianPengembalianDendaPembelianBarangByUuidService = async (uuid, rincianPengembalianDendaPembelianBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateRincianPengembalianDendaPembelianBarangByUuidService [${uuid}]`, rincianPengembalianDendaPembelianBarangData, req_identity)
     const beforeData = await getRincianPengembalianDendaPembelianBarangByUuidService(uuid, req_identity)
+
+    const pengembalianDendaPembelianBarang = await getPengembalianDendaPembelianBarangByUuidService(beforeData.pengembalian_denda_pembelian_barang, req_identity)
+    
+    await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, pengembalianDendaPembelianBarang.tanggal, null, null, req_identity)
+    
+    await getTanggalTransaksiTerakhirByFakturPembelianService(pengembalianDendaPembelianBarang.faktur_pembelian_barang, pengembalianDendaPembelianBarang.tanggal, pengembalianDendaPembelianBarang.tanggal, true, req_identity)
+    
     const rincianPengembalianDendaPembelianBarang = await updateRincianPengembalianDendaPembelianBarangByUuidRepo(uuid, rincianPengembalianDendaPembelianBarangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {
