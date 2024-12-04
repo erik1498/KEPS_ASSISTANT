@@ -3,7 +3,6 @@ import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
 import { useState } from "react"
 import { formValidation, showAlert, showError } from "../../../../helper/form.helper"
 import { apiCustomerCRUD } from "../../../../service/endPointList.api"
-import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
 import { kodeHargaList } from "../../../../config/objectList.config"
 
@@ -95,7 +94,6 @@ const CustomerForm = ({
                     label={"NPWP Customer"}
                     type={"text"}
                     onchange={(e) => {
-                        inputOnlyNumber(e)
                         setNPWPCustomer(e.target.value)
                     }}
                     others={
@@ -137,7 +135,6 @@ const CustomerForm = ({
                     label={"Nomor Telepon"}
                     type={"text"}
                     onchange={(e) => {
-                        inputOnlyNumber(e)
                         setNomorTeleponCustomer(e.target.value)
                     }}
                     others={

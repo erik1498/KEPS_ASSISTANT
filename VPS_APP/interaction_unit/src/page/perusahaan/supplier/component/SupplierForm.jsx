@@ -3,7 +3,6 @@ import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
 import { useEffect, useState } from "react"
 import { formValidation, showAlert, showError } from "../../../../helper/form.helper"
 import { apiJenisBarangCRUD, apiSupplierCRUD } from "../../../../service/endPointList.api"
-import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
 
 const SupplierForm = ({
@@ -109,7 +108,6 @@ const SupplierForm = ({
                     label={"NPWP Supplier"}
                     type={"text"}
                     onchange={(e) => {
-                        inputOnlyNumber(e)
                         setNPWPSupplier(e.target.value)
                     }}
                     others={
@@ -151,7 +149,6 @@ const SupplierForm = ({
                     label={"Nomor Telepon"}
                     type={"text"}
                     onchange={(e) => {
-                        inputOnlyNumber(e)
                         setNomorTeleponSupplier(e.target.value)
                     }}
                     others={
