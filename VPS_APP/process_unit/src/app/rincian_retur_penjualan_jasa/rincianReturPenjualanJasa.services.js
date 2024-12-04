@@ -1,5 +1,6 @@
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getTanggalTransaksiTerakhirByFakturPenjualanService } from "../faktur_penjualan_jasa/fakturPenjualanJasa.services.js"
 import { checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService } from "../perintah_stok_opname/perintahStokOpname.services.js"
 import { getReturPenjualanJasaByUuidService } from "../retur_penjualan_jasa/returPenjualanJasa.services.js"
 import { createRincianReturPenjualanJasaRepo, deleteRincianReturPenjualanJasaByUuidRepo, getAllRincianPesananPenjualanJasaByReturPenjualanRepo, getAllRincianReturPenjualanJasaRepo, getRincianReturPenjualanJasaByUuidRepo, updateRincianReturPenjualanJasaByUuidRepo } from "./rincianReturPenjualanJasa.repository.js"
@@ -58,6 +59,8 @@ export const createRincianReturPenjualanJasaService = async (rincianReturPenjual
     }
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanJasa.tanggal, null, null, req_identity)
+    
+    await getTanggalTransaksiTerakhirByFakturPenjualanService(returPenjualanJasa.faktur_penjualan_jasa, returPenjualanJasa.tanggal, returPenjualanJasa.tanggal, true, req_identity)
 
     const rincianReturPenjualanJasa = await createRincianReturPenjualanJasaRepo(rincianReturPenjualanJasaData, req_identity)
     return rincianReturPenjualanJasa
@@ -66,11 +69,13 @@ export const createRincianReturPenjualanJasaService = async (rincianReturPenjual
 export const deleteRincianReturPenjualanJasaByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteRincianReturPenjualanJasaByUuidService [${uuid}]`, null, req_identity)
 
-    const returPenjualanJasa = await getReturPenjualanJasaByUuidService(rincianReturPenjualanJasaData.retur_penjualan_jasa, req_identity)
+    const beforeData = await getRincianReturPenjualanJasaByUuidService(uuid, req_identity)
+
+    const returPenjualanJasa = await getReturPenjualanJasaByUuidService(beforeData.retur_penjualan_jasa, req_identity)
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanJasa.tanggal, null, null, req_identity)
 
-    await getRincianReturPenjualanJasaByUuidService(uuid, req_identity)
+    await getTanggalTransaksiTerakhirByFakturPenjualanService(returPenjualanJasa.faktur_penjualan_jasa, returPenjualanJasa.tanggal, returPenjualanJasa.tanggal, true, req_identity)
 
     await deleteRincianReturPenjualanJasaByUuidRepo(uuid, req_identity)
     return true
@@ -79,11 +84,13 @@ export const deleteRincianReturPenjualanJasaByUuidService = async (uuid, req_ide
 export const updateRincianReturPenjualanJasaByUuidService = async (uuid, rincianReturPenjualanJasaData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateRincianReturPenjualanJasaByUuidService [${uuid}]`, rincianReturPenjualanJasaData, req_identity)
 
-    const returPenjualanJasa = await getReturPenjualanJasaByUuidService(rincianReturPenjualanJasaData.retur_penjualan_jasa, req_identity)
+    const beforeData = await getRincianReturPenjualanJasaByUuidService(uuid, req_identity)
+
+    const returPenjualanJasa = await getReturPenjualanJasaByUuidService(beforeData.retur_penjualan_jasa, req_identity)
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, returPenjualanJasa.tanggal, null, null, req_identity)
 
-    const beforeData = await getRincianReturPenjualanJasaByUuidService(uuid, req_identity)
+    await getTanggalTransaksiTerakhirByFakturPenjualanService(returPenjualanJasa.faktur_penjualan_jasa, returPenjualanJasa.tanggal, returPenjualanJasa.tanggal, true, req_identity)
 
     const rincianReturPenjualanJasa = await updateRincianReturPenjualanJasaByUuidRepo(uuid, rincianReturPenjualanJasaData, req_identity)
 

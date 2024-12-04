@@ -17,9 +17,9 @@ export const rincianPelunasanPenjualanJasaValidation = (payload) => {
             "number.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
-        piutang: Joi.number().required().messages({
-            'number.base': "Harus Berupa Number",
-            "number.empty": "Harus Diisi",
+        piutang: Joi.string().required().messages({
+            'string.base': "Harus Berupa Text",
+            "string.empty": "Harus Diisi",
             "any.required": "Harus Diisi",
         }),
         nilai_pelunasan: Joi.string().required().messages({

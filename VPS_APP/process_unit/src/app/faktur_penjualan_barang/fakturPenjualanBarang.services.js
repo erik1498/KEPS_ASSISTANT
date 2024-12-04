@@ -144,6 +144,15 @@ export const createFakturPenjualanBarangService = async (fakturPenjualanBarangDa
     LOGGER(logType.INFO, `Start createFakturPenjualanBarangService`, fakturPenjualanBarangData, req_identity)
     fakturPenjualanBarangData.enabled = 1
 
+    const fakturPenjualanBarangPesananPenjualanbarang = await getFakturPenjualanBarangByPesananPenjualanBarangUUIDService(fakturPenjualanBarangData.pesanan_penjualan_barang, req_identity)
+
+    if (fakturPenjualanBarangPesananPenjualanbarang != null) {
+        throw Error(JSON.stringify({
+            message: "Faktur Penjualan Barang Sudah Terdaftar Sebelumnya",
+            prop: "error"
+        }))
+    }
+
     await getNeracaValidasiByTanggalService(null, fakturPenjualanBarangData.tanggal, req_identity)
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, fakturPenjualanBarangData.tanggal, null, null, req_identity)
@@ -155,6 +164,15 @@ export const createFakturPenjualanBarangService = async (fakturPenjualanBarangDa
 export const deleteFakturPenjualanBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteFakturPenjualanBarangByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getFakturPenjualanBarangByUuidService(uuid, req_identity)
+
+    const riwayatTransaksi = await getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo(beforeData.uuid, req_identity)
+
+    if (riwayatTransaksi.length > 0) {
+        throw Error(JSON.stringify({
+            message: "Batalkan Faktur Ditolak, Sudah Ada Transaksi Pelunasan/Retur",
+            prop: "error"
+        }))
+    }
 
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
@@ -169,6 +187,16 @@ export const deleteFakturPenjualanBarangByUuidService = async (uuid, req_identit
 export const updateFakturPenjualanBarangByUuidService = async (uuid, fakturPenjualanBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateFakturPenjualanBarangByUuidService [${uuid}]`, fakturPenjualanBarangData, req_identity)
     const beforeData = await getFakturPenjualanBarangByUuidService(uuid, req_identity)
+
+    const riwayatTransaksi = await getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo(beforeData.uuid, req_identity)
+
+    if (riwayatTransaksi.length > 0) {
+        throw Error(JSON.stringify({
+            message: "Edit Faktur Ditolak, Sudah Ada Transaksi Pelunasan/Retur",
+            prop: "error"
+        }))
+    }
+    
 
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 

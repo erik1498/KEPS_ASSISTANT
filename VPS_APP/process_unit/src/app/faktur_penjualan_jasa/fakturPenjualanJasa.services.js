@@ -97,14 +97,11 @@ export const getJumlahRincianTransaksiDendaOnTableByTanggalService = async (tabl
     return jumlahTransaksi
 }
 
-export const getFakturPenjualanJasaByPesananPenjualanJasaUUIDService = async (pesanan_penjualan_jasa_uuid, req_identity) => {
-    LOGGER(logType.INFO, `Start getFakturPenjualanJasaByPesananPenjualanJasaUUIDService`, { pesanan_penjualan_jasa_uuid }, req_identity)
-    const fakturPenjualanJasa = await getFakturPenjualanJasaByPesananPenjualanJasaUUIDRepo(pesanan_penjualan_jasa_uuid, req_identity)
+export const getFakturPenjualanJasaByPesananPenjualanJasaUUIDService = async (pesanan_penjualan_jasa, req_identity) => {
+    LOGGER(logType.INFO, `Start getFakturPenjualanJasaByPesananPenjualanJasaUUIDService`, { pesanan_penjualan_jasa }, req_identity)
+    const fakturPenjualanJasa = await getFakturPenjualanJasaByPesananPenjualanJasaUUIDRepo(pesanan_penjualan_jasa, req_identity)
     if (fakturPenjualanJasa.length == 0) {
-        throw new Error(JSON.stringify({
-            message: "Data Not Found",
-            prop: "error"
-        }))
+        return null
     }
     return fakturPenjualanJasa[0]
 }
@@ -126,6 +123,15 @@ export const createFakturPenjualanJasaService = async (fakturPenjualanJasaData, 
     LOGGER(logType.INFO, `Start createFakturPenjualanJasaService`, fakturPenjualanJasaData, req_identity)
     fakturPenjualanJasaData.enabled = 1
 
+    const fakturPenjualanJasaPesananPenjualanJasa = await getFakturPenjualanJasaByPesananPenjualanJasaUUIDService(fakturPenjualanJasaData.pesanan_penjualan_jasa, req_identity)
+
+    if (fakturPenjualanJasaPesananPenjualanJasa != null) {
+        throw Error(JSON.stringify({
+            message: "Faktur Penjualan Jasa Sudah Terdaftar Sebelumnya",
+            prop: "error"
+        }))
+    }
+
     await getNeracaValidasiByTanggalService(null, fakturPenjualanJasaData.tanggal, req_identity)
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, fakturPenjualanJasaData.tanggal, null, null, req_identity)
@@ -138,6 +144,15 @@ export const deleteFakturPenjualanJasaByUuidService = async (uuid, req_identity)
     LOGGER(logType.INFO, `Start deleteFakturPenjualanJasaByUuidService [${uuid}]`, null, req_identity)
     const beforeData = await getFakturPenjualanJasaByUuidService(uuid, req_identity)
 
+    const riwayatTransaksi = await getRiwayatTransaksiPenjualanJasaByFakturPenjualanJasaUUIDRepo(beforeData.uuid, req_identity)
+
+    if (riwayatTransaksi.length > 0) {
+        throw Error(JSON.stringify({
+            message: "Batalkan Faktur Ditolak, Sudah Ada Transaksi Pelunasan/Retur",
+            prop: "error"
+        }))
+    }
+
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 
     await checkPerintahStokOpnameByNomorSuratPerintahAndBulanTransaksiService(null, beforeData.tanggal, null, null, req_identity)
@@ -149,6 +164,15 @@ export const deleteFakturPenjualanJasaByUuidService = async (uuid, req_identity)
 export const updateFakturPenjualanJasaByUuidService = async (uuid, fakturPenjualanJasaData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateFakturPenjualanJasaByUuidService [${uuid}]`, fakturPenjualanJasaData, req_identity)
     const beforeData = await getFakturPenjualanJasaByUuidService(uuid, req_identity)
+
+    const riwayatTransaksi = await getRiwayatTransaksiPenjualanJasaByFakturPenjualanJasaUUIDRepo(beforeData.uuid, req_identity)
+
+    if (riwayatTransaksi.length > 0) {
+        throw Error(JSON.stringify({
+            message: "Edit Faktur Ditolak, Sudah Ada Transaksi Pelunasan/Retur",
+            prop: "error"
+        }))
+    }
 
     await getNeracaValidasiByTanggalService(null, beforeData.tanggal, req_identity)
 

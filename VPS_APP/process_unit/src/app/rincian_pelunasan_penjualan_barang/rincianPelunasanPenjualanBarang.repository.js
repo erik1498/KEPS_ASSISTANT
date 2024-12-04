@@ -38,7 +38,7 @@ export const getAllRincianPesananPenjualanBarangByPelunasanPenjualanRepo = async
                 (res.jumlah - res.retur) * (res.harga_setelah_diskon + res.ppn_setelah_diskon) AS total_harga,
                 CASE
                     WHEN ((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.nilai_retur) > 0
-                    THEN ((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.nilai_retur)
+                    THEN FORMAT(((res.harga_setelah_diskon + res.ppn_setelah_diskon) * (res.jumlah - res.retur)) - (res.sudah_dibayar - res.nilai_retur), 2)
                     ELSE 0
                 END AS piutang,
                 (res.jumlah - res.retur) AS jumlah,
@@ -148,7 +148,7 @@ export const getRincianPelunasanPenjualanBarangByUuidRepo = async (uuid, req_id)
 
 export const createRincianPelunasanPenjualanBarangRepo = async (rincianPelunasanPenjualanBarangData, req_id) => {
     rincianPelunasanPenjualanBarangData = removeDotInRupiahInput(rincianPelunasanPenjualanBarangData, [
-        "nilai_pelunasan"
+        "nilai_pelunasan", "piutang"
     ])
     return insertQueryUtil(
         req_id,
@@ -181,7 +181,7 @@ export const deleteRincianPelunasanPenjualanBarangByUuidRepo = async (uuid, req_
 
 export const updateRincianPelunasanPenjualanBarangByUuidRepo = async (uuid, rincianPelunasanPenjualanBarangData, req_id) => {
     rincianPelunasanPenjualanBarangData = removeDotInRupiahInput(rincianPelunasanPenjualanBarangData, [
-        "nilai_pelunasan"
+        "nilai_pelunasan", "piutang"
     ])
     return updateQueryUtil(
         req_id,

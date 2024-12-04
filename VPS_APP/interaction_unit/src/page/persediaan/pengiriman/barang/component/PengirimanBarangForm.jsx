@@ -143,6 +143,15 @@ const PengirimanBarangForm = ({
         apiPengirimanBarangCRUD.custom(`/daftar_pesanan/${idPengirimanBarang}`, "GET")
             .then(resData => {
                 setPengirimanBarangList(resData.data)
+
+                let gudangListCopy = gudangList
+                resData?.data?.map((x) => {
+                    if (!gudangListCopy.includes(x.daftar_gudang_name)) {
+                        gudangListCopy.push(x.daftar_gudang_name)
+                    }
+                })
+                setGudangList(x => x = gudangListCopy)
+
             }).catch(err => showError(err))
     }
 
@@ -154,16 +163,6 @@ const PengirimanBarangForm = ({
         }
         setPengirimanBarangList(x => x = pengirimanBarangListCopy)
     }
-
-    useEffect(() => {
-        let gudangListCopy = gudangList
-        pengirimanBarangList.map((x) => {
-            if (!gudangListCopy.includes(x.daftar_gudang_name)) {
-                gudangListCopy.push(x.daftar_gudang_name)
-            }
-        })
-        setGudangList(x => x = gudangListCopy)
-    }, [pengirimanBarangList])
 
     useEffect(() => {
         if (idPengirimanBarang) {

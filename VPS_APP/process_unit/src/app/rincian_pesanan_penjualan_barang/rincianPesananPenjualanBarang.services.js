@@ -1,5 +1,7 @@
+import { formatDate } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
+import { getPesananPenjualanBarangByUuidService, getTanggalTransaksiTerakhirByPesananPenjualanService } from "../pesanan_penjualan_barang/pesananPenjualanBarang.services.js"
 import { createRincianPesananPenjualanBarangRepo, deleteRincianPesananPenjualanBarangByUuidRepo, getAllRincianPesananPenjualanBarangRepo, getRincianPesananPenjualanBarangByPesananPenjualanUUIDRepo, getRincianPesananPenjualanBarangByUuidRepo, updateRincianPesananPenjualanBarangByUuidRepo } from "./rincianPesananPenjualanBarang.repository.js"
 
 export const getAllRincianPesananPenjualanBarangService = async (query, req_identity) => {
@@ -18,7 +20,7 @@ export const getAllRincianPesananPenjualanBarangService = async (query, req_iden
     LOGGER(logType.INFO, "Pagination", {
         pageNumber, size, search
     }, req_identity)
-    
+
     const rincianPesananPenjualanBarangs = await getAllRincianPesananPenjualanBarangRepo(pageNumber, size, search, req_identity)
     return generatePaginationResponse(rincianPesananPenjualanBarangs.entry, rincianPesananPenjualanBarangs.count, rincianPesananPenjualanBarangs.pageNumber, rincianPesananPenjualanBarangs.size)
 }
@@ -46,13 +48,36 @@ export const createRincianPesananPenjualanBarangService = async (rincianPesananP
     LOGGER(logType.INFO, `Start createRincianPesananPenjualanBarangService`, rincianPesananPenjualanBarangData, req_identity)
     rincianPesananPenjualanBarangData.enabled = 1
 
+    const pesananPenjualanBarang = await getPesananPenjualanBarangByUuidService(rincianPesananPenjualanBarangData.pesanan_penjualan_barang, req_identity)
+
+    const allowToEdit = await getTanggalTransaksiTerakhirByPesananPenjualanService(pesananPenjualanBarang.uuid, pesananPenjualanBarang.tanggal_pesanan_penjualan_barang, req_identity);
+
+    if (!allowToEdit.allow) {
+        throw Error(JSON.stringify({
+            message: "Tidak Bisa Diedit Karena Tanggal Terakhir Transaksi Adalah " + formatDate(allowToEdit.tanggal_minimum),
+            field: "error"
+        }))
+    }
+
     const rincianPesananPenjualanBarang = await createRincianPesananPenjualanBarangRepo(rincianPesananPenjualanBarangData, req_identity)
     return rincianPesananPenjualanBarang
 }
 
 export const deleteRincianPesananPenjualanBarangByUuidService = async (uuid, req_identity) => {
     LOGGER(logType.INFO, `Start deleteRincianPesananPenjualanBarangByUuidService [${uuid}]`, null, req_identity)
-    await getRincianPesananPenjualanBarangByUuidService(uuid, req_identity)
+    const beforeData = await getRincianPesananPenjualanBarangByUuidService(uuid, req_identity)
+
+    const pesananPenjualanBarang = await getPesananPenjualanBarangByUuidService(beforeData.pesanan_penjualan_barang, req_identity)
+
+    const allowToEdit = await getTanggalTransaksiTerakhirByPesananPenjualanService(pesananPenjualanBarang.uuid, pesananPenjualanBarang.tanggal_pesanan_penjualan_barang, req_identity);
+
+    if (!allowToEdit.allow) {
+        throw Error(JSON.stringify({
+            message: "Tidak Bisa Diedit Karena Tanggal Terakhir Transaksi Adalah " + formatDate(allowToEdit.tanggal_minimum),
+            field: "error"
+        }))
+    }
+
     await deleteRincianPesananPenjualanBarangByUuidRepo(uuid, req_identity)
     return true
 }
@@ -60,6 +85,18 @@ export const deleteRincianPesananPenjualanBarangByUuidService = async (uuid, req
 export const updateRincianPesananPenjualanBarangByUuidService = async (uuid, rincianPesananPenjualanBarangData, req_identity, req_original_url, req_method) => {
     LOGGER(logType.INFO, `Start updateRincianPesananPenjualanBarangByUuidService [${uuid}]`, rincianPesananPenjualanBarangData, req_identity)
     const beforeData = await getRincianPesananPenjualanBarangByUuidService(uuid, req_identity)
+
+    const pesananPenjualanBarang = await getPesananPenjualanBarangByUuidService(beforeData.pesanan_penjualan_barang, req_identity)
+
+    const allowToEdit = await getTanggalTransaksiTerakhirByPesananPenjualanService(pesananPenjualanBarang.uuid, pesananPenjualanBarang.tanggal_pesanan_penjualan_barang, req_identity);
+
+    if (!allowToEdit.allow) {
+        throw Error(JSON.stringify({
+            message: "Tidak Bisa Diedit Karena Tanggal Terakhir Transaksi Adalah " + formatDate(allowToEdit.tanggal_minimum),
+            field: "error"
+        }))
+    }
+
     const rincianPesananPenjualanBarang = await updateRincianPesananPenjualanBarangByUuidRepo(uuid, rincianPesananPenjualanBarangData, req_identity)
 
     LOGGER_MONITOR(req_original_url, req_method, {

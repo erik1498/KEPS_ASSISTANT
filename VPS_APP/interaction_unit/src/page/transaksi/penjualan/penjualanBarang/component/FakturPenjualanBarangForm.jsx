@@ -81,7 +81,8 @@ const FakturPenjualanBarangForm = ({
                         nomor_faktur_pajak_penjualan_barang: nomorFakturPajakFakturPenjualanBarang ? nomorFakturPajakFakturPenjualanBarang : "EMPTY"
                     }
                 }).then(resData => {
-                    setFakturStatus(x => x = resData.data.uuid)
+                    _getFakturPenjualan()
+                    // setFakturStatus(x => x = resData.data.uuid)
                 }).catch(err => showError(err))
         }
     }
@@ -123,7 +124,8 @@ const FakturPenjualanBarangForm = ({
     useEffect(() => {
         if (fakturStatus != null) {
             _getFakturPenjualan()
-        }else{
+        }
+        else{
             _getDataTipePembayaran()
         }
     }, [fakturStatus])

@@ -39,7 +39,7 @@ export const getAllRincianPesananPenjualanDendaBarangByPelunasanPenjualanRepo = 
                                 FROM (` : ``
             }
             SELECT 
-                (res.piutang * (res.syarat_pembayaran_denda / 100) * res.hari_terlewat) AS total_denda,
+                FORMAT((res.piutang * (res.syarat_pembayaran_denda / 100) * res.hari_terlewat), 2) AS total_denda,
                 (res.piutang * (res.syarat_pembayaran_denda / 100) * res.hari_terlewat) - res.denda_sudah_dibayar AS piutang_denda,
                 res.*
             FROM (

@@ -27,7 +27,7 @@ export const inputOnlyRupiah = (e, max) => {
         value = 0;
       }
       // Pastikan nilai tidak melebihi max
-      if (value > max) {
+      if (parseRupiahToFloat(value) > parseRupiahToFloat(max)) {
         value = max;
       }
       e.target.value = value
@@ -60,7 +60,7 @@ export const inputOnlyNumber = (e, max) => {
         value = 0;
       }
       // Pastikan nilai tidak melebihi max
-      if (value > max) {
+      if (parseRupiahToFloat(value) > parseRupiahToFloat(max)) {
         value = max;
       }
       e.target.value = value
