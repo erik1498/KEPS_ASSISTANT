@@ -130,6 +130,10 @@ const FakturPenjualanJasaForm = ({
         }
     }, [fakturStatus])
 
+    useEffect(() => {
+        _getDataTipePembayaran()
+    }, [])
+
     return <>
         <div className="bg-white rounded-md py-6 px-6 shadow-2xl">
             <h1 className="text-xl font-extrabold w-max text-white px-2 rounded-md bg-blue-900 mb-4">Faktur Penjualan Jasa</h1>
