@@ -115,6 +115,8 @@ const FakturPenjualanBarangForm = ({
                     setKeteranganFakturPenjualanBarang(x => x = resData.data.keterangan)
                     setFakturStatus(x => x = resData.data.uuid)
                     setNomorFakturPajakFakturPenjualanBarang(x => x = resData.data.nomor_faktur_pajak_penjualan_barang != "EMPTY" ? resData.data.nomor_faktur_pajak_penjualan_barang : "")
+                } else {
+                    _getDataTipePembayaran()
                 }
             }).catch(err => {
                 setFakturStatus(x => x = null)
@@ -125,14 +127,7 @@ const FakturPenjualanBarangForm = ({
         if (fakturStatus != null) {
             _getFakturPenjualan()
         }
-        else{
-            _getDataTipePembayaran()
-        }
     }, [fakturStatus])
-
-    useEffect(() => {
-        _getDataTipePembayaran()
-    }, [])
 
     return <>
         <div className="bg-white rounded-md py-6 px-6 shadow-2xl">

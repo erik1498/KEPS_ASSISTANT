@@ -84,6 +84,8 @@ const FakturPembelianBarangForm = ({
                     setKeteranganFakturPembelianBarang(x => x = resData.data.keterangan)
                     setFakturStatus(x => x = resData.data.uuid)
                     setNomorFakturPajakFakturPembelianBarang(x => x = resData.data.nomor_faktur_pajak_pembelian_barang != "EMPTY" ? resData.data.nomor_faktur_pajak_pembelian_barang : "")
+                } else {
+                    _getDataTipePembayaran()
                 }
             }).catch(err => {
                 setFakturStatus(x => x = null)
@@ -93,8 +95,6 @@ const FakturPembelianBarangForm = ({
     useEffect(() => {
         if (fakturStatus != null) {
             _getFakturPembelian()
-        } else {
-            _getDataTipePembayaran()
         }
     }, [fakturStatus])
 

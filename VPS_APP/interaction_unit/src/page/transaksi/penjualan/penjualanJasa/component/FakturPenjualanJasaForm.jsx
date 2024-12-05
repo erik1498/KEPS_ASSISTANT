@@ -82,7 +82,6 @@ const FakturPenjualanJasaForm = ({
                     }
                 }).then(resData => {
                     _getFakturPenjualan()
-                    // setFakturStatus(x => x = resData.data.uuid)
                 }).catch(err => showError(err))
         }
     }
@@ -115,6 +114,8 @@ const FakturPenjualanJasaForm = ({
                     setKeteranganFakturPenjualanJasa(x => x = resData.data.keterangan)
                     setFakturStatus(x => x = resData.data.uuid)
                     setNomorFakturPajakFakturPenjualanJasa(x => x = resData.data.nomor_faktur_pajak_penjualan_jasa != "EMPTY" ? resData.data.nomor_faktur_pajak_penjualan_jasa : "")
+                } else {
+                    _getDataTipePembayaran()
                 }
             }).catch(err => {
                 setFakturStatus(x => x = null)
@@ -125,14 +126,7 @@ const FakturPenjualanJasaForm = ({
         if (fakturStatus != null) {
             _getFakturPenjualan()
         }
-        else{
-            _getDataTipePembayaran()
-        }
     }, [fakturStatus])
-
-    useEffect(() => {
-        _getDataTipePembayaran()
-    }, [])
 
     return <>
         <div className="bg-white rounded-md py-6 px-6 shadow-2xl">
