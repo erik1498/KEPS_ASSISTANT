@@ -278,7 +278,8 @@ const PengirimanBarangForm = ({
                                     <th width={12}>No</th>
                                     <th>Kode / Nama Barang</th>
                                     <th>Satuan Barang</th>
-                                    <th>Pembelian</th>
+                                    <th>Jumlah Barang</th>
+                                    <th>Belum Dikirim</th>
                                     <th>Telah Dikirim</th>
                                     <th>Jumlah</th>
                                 </tr>
@@ -298,8 +299,9 @@ const PengirimanBarangForm = ({
                                                     {item.daftar_barang_name}
                                                 </td>
                                                 <td>{item.satuan_barang_name}</td>
-                                                <td>{item.jumlah_sudah_dikirim}</td>
                                                 <td>{item.jumlah}</td>
+                                                <td>{item.jumlah - item.jumlah_sudah_dikirim}</td>
+                                                <td>{item.jumlah_sudah_dikirim}</td>
                                                 <td>
                                                     {
                                                         pengirimanBarangEdit?.preview ? <>

@@ -59,16 +59,19 @@ export const PengirimanBarangPrint = React.forwardRef((props, ref) => {
                 <div className="col-span-4">
                     <p>Kode / Nama Barang</p>
                 </div>
-                <div className="col-span-1">
+                <div className="col-span-3">
                     <p>Satuan</p>
                 </div>
-                <div className="col-span-2">
-                    <p>Pembelian</p>
+                <div className="col-span-1">
+                    <p>Jumlah Barang</p>
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-1">
+                    <p>Belum Dikirim</p>
+                </div>
+                <div className="col-span-1">
                     <p>Telah Dikirim</p>
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-1">
                     <p>Jumlah</p>
                 </div>
             </div>
@@ -81,21 +84,24 @@ export const PengirimanBarangPrint = React.forwardRef((props, ref) => {
                                     <p className="text-sm">{i + 1}.</p>
                                 </div>
                                 <div className="col-span-4">
-                                    <p className="text-sm">{x?.kategori_harga_barang_kode_barang}</p>
-                                    <p className="text-xs font-normal">{x?.daftar_gudang_name}</p>
-                                    <p className="text-sm">{x?.daftar_barang_name}</p>
+                                    <p className="text-sm">{x.kategori_harga_barang_kode_barang}</p>
+                                    <p className="text-xs font-normal">{x.daftar_gudang_name}</p>
+                                    <p className="text-sm">{x.daftar_barang_name}</p>
+                                </div>
+                                <div className="col-span-3">
+                                    <p className="text-sm">{x.satuan_barang_name}</p>
                                 </div>
                                 <div className="col-span-1">
-                                    <p className="text-sm">{x?.satuan_barang_name}</p>
+                                    <p className="text-sm">{parseToRupiahText(x.jumlah)}</p>
                                 </div>
-                                <div className="col-span-2">
-                                    <p className="text-sm">{parseToRupiahText(x?.jumlah)}</p>
+                                <div className="col-span-1">
+                                    <p className="text-sm">{parseToRupiahText(x.jumlah - x.jumlah_sudah_dikirim)}</p>
                                 </div>
-                                <div className="col-span-2">
-                                    <p className="text-sm">{parseToRupiahText(x?.jumlah_sudah_dikirim)}</p>
+                                <div className="col-span-1">
+                                    <p className="text-sm">{parseToRupiahText(x.jumlah_sudah_dikirim)}</p>
                                 </div>
-                                <div className="col-span-2">
-                                    <p className="text-sm">{parseToRupiahText(x?.pengiriman)}</p>
+                                <div className="col-span-1">
+                                    <p className="text-sm">{parseToRupiahText(x.pengiriman)}</p>
                                 </div>
                             </div>
                             <p className="font-normal text-xs pb-16">Keterangan</p>
