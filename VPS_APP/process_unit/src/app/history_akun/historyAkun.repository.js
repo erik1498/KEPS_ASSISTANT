@@ -201,7 +201,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                 JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dpt.supplier 
                 JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dpt.satuan_barang 
                 JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
-                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "c85ac20d-1b1e-45c5-80e1-8db80c5dd283"
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan 
                 AND dpt.enabled = 1
                 UNION ALL
                 SELECT 
@@ -237,7 +237,7 @@ export const getHistoryAkunByUuidAndBulanRepo = async (uuid, bulan, tahun, searc
                 JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dpt.supplier 
                 JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dpt.satuan_barang 
                 JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
-                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = dpt.kode_akun_perkiraan
                 AND dpt.enabled = 1
                 UNION ALL
                 SELECT 
