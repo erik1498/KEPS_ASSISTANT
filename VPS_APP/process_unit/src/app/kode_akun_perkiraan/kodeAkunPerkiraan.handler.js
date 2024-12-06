@@ -1,5 +1,5 @@
 import { kodeAkunPerkiraanValidation } from "./kodeAkunPerkiraan.validation.js"
-import { createKodeAkunPerkiraanService, deleteKodeAkunPerkiraanByUuidService, getAllKodeAkunPerkiraanService, getAllKodeAkunPerkiraansPayrollService, getAllKodeAkunPerkiraanWhereInService, getKodeAkunPerkiraanByUuidService, updateKodeAkunPerkiraanByUuidService } from "./kodeAkunPerkiraan.services.js"
+import { createKodeAkunPerkiraanService, deleteKodeAkunPerkiraanByUuidService, getAllKodeAkunPerkiraansAsetPerlengkapanService, getAllKodeAkunPerkiraanService, getAllKodeAkunPerkiraansPayrollService, getAllKodeAkunPerkiraanWhereInService, getKodeAkunPerkiraanByUuidService, updateKodeAkunPerkiraanByUuidService } from "./kodeAkunPerkiraan.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -7,6 +7,23 @@ export const getAllKodeAkunPerkiraans = async (req, res) => {
     LOGGER(logType.INFO, "Start getAllKodeAkunPerkiraanController", null, req.identity)
     try {
         const kodeAkunPerkiraans = await getAllKodeAkunPerkiraanService(req.query, req.identity)
+        res.json({
+            data: kodeAkunPerkiraans,
+            message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getAllKodeAkunPerkiraansAsetPerlengkapan = async (req, res) => {
+    LOGGER(logType.INFO, "Start getAllKodeAkunPerkiraansAsetPerlengkapan", null, req.identity)
+    try {
+        const kodeAkunPerkiraans = await getAllKodeAkunPerkiraansAsetPerlengkapanService(req.identity)
         res.json({
             data: kodeAkunPerkiraans,
             message: "Get Data Success"

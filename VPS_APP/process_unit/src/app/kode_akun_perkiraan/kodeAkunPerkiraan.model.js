@@ -55,6 +55,13 @@ const KodeAkunPerkiraanModel = db.define("kode_akun_perkiraan_tab",
                 notEmpty: true,
             }
         },
+        type_transaksi_pembelian_aset_dan_perlengkapan: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            }
+        },
     }), {
     freezeTableName: true
 }

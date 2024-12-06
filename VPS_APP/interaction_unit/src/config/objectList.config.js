@@ -497,6 +497,17 @@ export const TipeTransaksiPayrollKodeAkunForm = [
     }
 ]
 
+export const TipeTransaksiPembelianAsetDanPerlengkapanKodeAkunForm = [
+    {
+        label: "Tidak",
+        value: 0
+    },
+    {
+        label: "Ya",
+        value: 1
+    }
+]
+
 
 export const PPN = 11
 export const BPJSKesehatanPersentase = (4 / 100).toFixed(5)

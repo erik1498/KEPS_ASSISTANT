@@ -87,7 +87,7 @@ const DaftarPerlengkapanForm = ({
 
     const _getDataKodeAkunPerkiraan = () => {
         apiKodeAkunCRUD
-            .custom(`/kas_bank`, "GET")
+            .custom(`/aset_perlengkapan`, "GET")
             .then(resData => {
                 setKodeAkunPerkiraanList(resData.data)
                 if (resData.data.length > 0) {

@@ -2,7 +2,7 @@ import { FaSave, FaTimes } from "react-icons/fa"
 import FormInputWithLabel from "../../../../component/form/FormInputWithLabel"
 import { useState } from "react"
 import { inputOnlyNumber } from "../../../../helper/actionEvent.helper"
-import { KodeAkunType, TipeTransaksiKasBankKodeAkunForm, TipeTransaksiPayrollKodeAkunForm } from "../../../../config/objectList.config"
+import { KodeAkunType, TipeTransaksiKasBankKodeAkunForm, TipeTransaksiPayrollKodeAkunForm, TipeTransaksiPembelianAsetDanPerlengkapanKodeAkunForm } from "../../../../config/objectList.config"
 import FormSelectWithLabel from "../../../../component/form/FormSelectWithLabel"
 import { formValidation, showAlert, showError } from "../../../../helper/form.helper"
 import { apiKodeAkunCRUD } from "../../../../service/endPointList.api"
@@ -18,6 +18,7 @@ const KodeAkunForm = ({
     const [kodeAkunTypeList, setKodeAkunTypeList] = useState(KodeAkunType())
     const [tipeTransaksiKasBank, setTipeTransaksiKasBank] = useState(kodeAkunEdit?.type_transaksi_kas_bank ? kodeAkunEdit?.type_transaksi_kas_bank : 0)
     const [tipeTransaksiPayroll, setTipeTransaksiPayroll] = useState(kodeAkunEdit?.type_transaksi_payroll ? kodeAkunEdit?.type_transaksi_payroll : 0)
+    const [typeTransaksiPembelianAsetDanPerlengkapan, setTypeTransaksiPembelianAsetDanPerlengkapan] = useState(kodeAkunEdit?.type_transaksi_pembelian_aset_dan_perlengkapan ? kodeAkunEdit?.type_transaksi_pembelian_aset_dan_perlengkapan : 0)
     const [typeKodeAkun, setTypeKodeAkun] = useState({
         label: kodeAkunEdit?.type ? kodeAkunEdit.type : `Harta`,
         value: kodeAkunEdit?.type ? kodeAkunEdit.type : `Harta`
@@ -35,6 +36,7 @@ const KodeAkunForm = ({
                         code: kodeAkun,
                         type_transaksi_kas_bank: tipeTransaksiKasBank,
                         type_transaksi_payroll: tipeTransaksiPayroll,
+                        type_transaksi_pembelian_aset_dan_perlengkapan: typeTransaksiPembelianAsetDanPerlengkapan
                     }
                 }).then(() => {
                     if (kodeAkunEdit) {
@@ -115,6 +117,14 @@ const KodeAkunForm = ({
                     setToggleBox={setTipeTransaksiPayroll}
                     toggleBox={tipeTransaksiPayroll}
                     toggleBoxList={TipeTransaksiPayrollKodeAkunForm}
+                />
+            </div>
+            <div className="flex gap-x-2">
+                <ToggleBox
+                    label="Tipe Untuk Transaksi Pembelian Aset Dan Perlengkapan"
+                    setToggleBox={setTypeTransaksiPembelianAsetDanPerlengkapan}
+                    toggleBox={typeTransaksiPembelianAsetDanPerlengkapan}
+                    toggleBoxList={TipeTransaksiPembelianAsetDanPerlengkapanKodeAkunForm}
                 />
             </div>
             <button className="btn btn-sm bg-green-800 mt-4 text-white"

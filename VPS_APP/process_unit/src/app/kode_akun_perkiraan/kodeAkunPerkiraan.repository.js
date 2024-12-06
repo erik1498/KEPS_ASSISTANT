@@ -32,6 +32,16 @@ export const getAllKodeAkunPerkiraanRepo = async (pageNumber, size, search, req_
     }
 }
 
+export const getAllKodeAkunPerkiraansAsetPerlengkapanRepo = async (req_id) => {
+    const kodeAkunPerkiraan = await db.query(
+        `
+            SELECT kapt.* FROM ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt WHERE kapt.type_transaksi_pembelian_aset_dan_perlengkapan = 1 AND enabled = 1
+        `,
+        { type: Sequelize.QueryTypes.SELECT }
+    )
+    return kodeAkunPerkiraan
+}
+
 export const getAllKodeAkunPerkiraansPayrollRepo = async (req_id) => {
     const kodeAkunPerkiraan = await db.query(
         `
@@ -193,6 +203,7 @@ export const createKodeAkunPerkiraanRepo = async (kodeAkunPerkiraanData, req_id)
             update_permission: kodeAkunPerkiraanData.update_permission,
             type_transaksi_kas_bank: kodeAkunPerkiraanData.type_transaksi_kas_bank,
             type_transaksi_payroll: kodeAkunPerkiraanData.type_transaksi_payroll,
+            type_transaksi_pembelian_aset_dan_perlengkapan: kodeAkunPerkiraanData.type_transaksi_pembelian_aset_dan_perlengkapan,
             enabled: kodeAkunPerkiraanData.enabled
         }
     )
@@ -223,6 +234,7 @@ export const updateKodeAkunPerkiraanByUuidRepo = async (uuid, kodeAkunPerkiraanD
             code: kodeAkunPerkiraanData.code,
             type_transaksi_kas_bank: kodeAkunPerkiraanData.type_transaksi_kas_bank,
             type_transaksi_payroll: kodeAkunPerkiraanData.type_transaksi_payroll,
+            type_transaksi_pembelian_aset_dan_perlengkapan: kodeAkunPerkiraanData.type_transaksi_pembelian_aset_dan_perlengkapan
         },
         {
             uuid
