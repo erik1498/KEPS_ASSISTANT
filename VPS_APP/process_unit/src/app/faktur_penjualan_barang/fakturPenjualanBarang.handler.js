@@ -1,5 +1,5 @@
 import { fakturPenjualanBarangValidation } from "./fakturPenjualanBarang.validation.js"
-import { createFakturPenjualanBarangService, deleteFakturPenjualanBarangByUuidService, getAllFakturPenjualanBarangService, getFakturPenjualanBarangByPesananPenjualanBarangUUIDService, getFakturPenjualanBarangByUuidService, getFakturReportPenjualanBarangsService, getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDService, updateFakturPenjualanBarangByUuidService } from "./fakturPenjualanBarang.services.js"
+import { createFakturPenjualanBarangService, deleteFakturPenjualanBarangByUuidService, getAllFakturPenjualanBarangService, getFakturPenjualanBarangByPesananPenjualanBarangUUIDService, getFakturPenjualanBarangByUuidService, getFakturReportPenjualanBarangsService, getRincianPengirimanBarangByFakturPenjualanBarangUUIDService, getRincianPesananPenjualanBarangByFakturPenjualanBarangUUIDService, getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDService, updateFakturPenjualanBarangByUuidService } from "./fakturPenjualanBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -44,6 +44,43 @@ export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUID = asy
         res.json({
             data: riwayatTransaksi,
             message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getRincianPesananPenjualanBarangByFakturPenjualanBarangUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getRincianPesananPenjualanBarangByFakturPenjualanBarangUUID", null, req.identity)
+    try {
+        const { faktur_penjualan_barang } = req.params
+
+        res.json({
+            data: await getRincianPesananPenjualanBarangByFakturPenjualanBarangUUIDService(faktur_penjualan_barang, req.identity),
+            message: "Get Data By UUID Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getRincianPengirimanBarangByFakturPenjualanBarangUUID = async (req, res) => {
+    LOGGER(logType.INFO, "Start getRincianPengirimanBarangByFakturPenjualanBarangUUID", null, req.identity)
+    try {
+        const { faktur_penjualan_barang } = req.params
+        const { rincian_pesanan_penjualan_barang_list } = req.body
+
+        res.json({
+            data: await getRincianPengirimanBarangByFakturPenjualanBarangUUIDService(faktur_penjualan_barang, rincian_pesanan_penjualan_barang_list, req.identity),
+            message: "Get Data By UUID Success"
         })
     } catch (error) {
         LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)

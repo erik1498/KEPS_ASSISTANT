@@ -64,6 +64,7 @@ import LaporanPenjualanBarangPage from './page/laporan/laporanPenjualanBarang/La
 import laporanFakturPenjualanBarangPath from './path/laporan/laporanFakturPenjualanBarang';
 import laporanFakturPembelianBarangPath from './path/laporan/laporanFakturPembelianBarang';
 import laporanHargaBarangBeliPath from './path/laporan/laporanHargaBarangBeli';
+import laporanPengirimanBarangPath from './path/laporan/laporanPengirimanBarang';
 import penggunaanPerlengkapanPath from './path/asetTetapDanPerlengkapan/perlengkapan/penggunaanPerlengkapan.path';
 import pengirimanBarangPath from './path/persediaan/pengiriman/pengirimanBarang.path';
 
@@ -124,6 +125,7 @@ const JurnalStokOpnamePage = React.lazy(() => import('./page/persediaan/opname/j
 const LaporanFakturPenjualanBarangPage = React.lazy(() => import('./page/laporan/laporanFakturPenjualanBarang/LaporanFakturPenjualanBarang'));
 const LaporanFakturPembelianBarangPage = React.lazy(() => import('./page/laporan/laporanFakturPembelianBarang/LaporanFakturPembelianBarang'));
 const LaporanHargaBarangBeliPage = React.lazy(() => import('./page/laporan/laporanHargaBarangBeli/LaporanHargaBarangBeli'));
+const LaporanPengirimanBarangPage = React.lazy(() => import('./page/laporan/laporanPengirimanBarang/LaporanPengirimanBarang'));
 const PenggunaanPerlengkapanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/perlengkapan/penggunaanPerlengkapan/PenggunaanPerlengkapan.page'));
 const PengirimanBarangPage = React.lazy(() => import('./page/persediaan/pengiriman/barang/PengirimanBarang.page'));
 
@@ -268,6 +270,9 @@ function App() {
         </Routes>
         <Routes basename={laporanHargaBarangBeliPath.main}>
           <Route path={laporanHargaBarangBeliPath.main} element={<LaporanHargaBarangBeliPage />} />
+        </Routes>
+        <Routes basename={laporanPengirimanBarangPath.main}>
+          <Route path={laporanPengirimanBarangPath.main} element={<LaporanPengirimanBarangPage />} />
         </Routes>
         <Routes basename={laporanFakturPenjualanBarangPath.main}>
           <Route path={laporanFakturPenjualanBarangPath.main} element={<LaporanFakturPenjualanBarangPage />} />

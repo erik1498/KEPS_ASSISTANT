@@ -632,6 +632,13 @@ const Navigasi = ({
                                     {
                                         getRolesInCookie("Laporan_Harga_Barang_Beli") ? <>
                                             <li>
+                                                <NavigationLink to="/laporan/laporanPengirimanBarang" addClass={"my-1"} label={"Laporan Pengiriman Barang"} />
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
+                                        getRolesInCookie("Laporan_Harga_Barang_Beli") ? <>
+                                            <li>
                                                 <NavigationLink to="/laporan/laporanHargaBarangBeli" addClass={"my-1"} label={"Laporan Harga Barang Beli"} />
                                             </li>
                                         </> : <></>

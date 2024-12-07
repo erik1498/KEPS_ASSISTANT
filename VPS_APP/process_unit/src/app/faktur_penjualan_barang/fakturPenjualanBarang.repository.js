@@ -302,6 +302,57 @@ export const getRiwayatTransaksiPenjualanBarangByFakturPenjualanBarangUUIDRepo =
     )
 }
 
+export const getRincianPesananPenjualanBarangByFakturPenjualanBarangUUIDRepo = async (faktur_penjualan_barang, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                khbt.kode_barang AS kategori_harga_barang_kode_barang,
+                dbt.name AS daftar_barang_name,
+                dgt.name AS daftar_gudang_name,
+                sbt.name AS satuan_barang_name,
+                jbt.code AS jenis_barang_code,
+                rppbt.*
+            FROM ${generateDatabaseName(req_id)}.rincian_pesanan_penjualan_barang_tab rppbt 
+            JOIN ${generateDatabaseName(req_id)}.pesanan_penjualan_barang_tab ppbt ON ppbt.uuid = rppbt.pesanan_penjualan_barang 
+            JOIN ${generateDatabaseName(req_id)}.faktur_penjualan_barang_tab fpbt ON fpbt.pesanan_penjualan_barang = ppbt.uuid 
+            JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = rppbt.kategori_harga_barang 
+            JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
+            JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = khbt.daftar_barang 
+            JOIN ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt ON sabt.uuid = rppbt.stok_awal_barang
+            JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang 
+            JOIN ${generateDatabaseName(req_id)}.jenis_barang_tab jbt ON jbt.uuid = dbt.jenis_barang 
+            WHERE fpbt.uuid = "${faktur_penjualan_barang}"
+            AND ppbt.enabled = 1
+            AND rppbt.enabled = 1
+            ORDER BY rppbt.id DESC
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
+export const getRincianPengirimanBarangByFakturPenjualanBarangUUIDRepo = async (faktur_penjualan_barang, rincian_pesanan_penjualan_barang_list, req_id) => {
+    return await db.query(
+        `
+            SELECT 
+                pbt.nomor_surat_jalan,
+                pbt.tanggal,
+                rpbt.jumlah,
+                rpbt.rincian_pesanan_penjualan_barang 
+            FROM ${generateDatabaseName(req_id)}.rincian_pengiriman_barang_tab rpbt 
+            JOIN ${generateDatabaseName(req_id)}.pengiriman_barang_tab pbt ON pbt.uuid = rpbt.pengiriman_barang 
+            WHERE rpbt.rincian_pesanan_penjualan_barang IN ("${rincian_pesanan_penjualan_barang_list.join('","')}")
+            AND pbt.faktur_penjualan_barang = "${faktur_penjualan_barang}"
+            AND pbt.enabled = 1
+            AND rpbt.enabled = 1
+        `,
+        {
+            type: Sequelize.QueryTypes.SELECT
+        }
+    )
+}
+
 export const getFakturPenjualanBarangByPesananPenjualanBarangUUIDRepo = async (pesanan_penjualan_barang, req_id) => {
     return await db.query(
         `
