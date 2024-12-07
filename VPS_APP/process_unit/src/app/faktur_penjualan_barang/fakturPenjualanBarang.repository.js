@@ -338,7 +338,7 @@ export const getRincianPengirimanBarangByFakturPenjualanBarangUUIDRepo = async (
             SELECT 
                 pbt.nomor_surat_jalan,
                 pbt.tanggal,
-                rpbt.jumlah,
+                rpbt.pengiriman,
                 rpbt.rincian_pesanan_penjualan_barang 
             FROM ${generateDatabaseName(req_id)}.rincian_pengiriman_barang_tab rpbt 
             JOIN ${generateDatabaseName(req_id)}.pengiriman_barang_tab pbt ON pbt.uuid = rpbt.pengiriman_barang 

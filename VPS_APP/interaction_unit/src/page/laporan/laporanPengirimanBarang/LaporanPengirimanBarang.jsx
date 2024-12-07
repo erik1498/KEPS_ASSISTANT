@@ -225,7 +225,7 @@ const LaporanPengirimanBarangPage = () => {
                                                         <p className="text-xs">{x.nomor_surat_jalan}</p>
                                                     </div>
                                                     <div className="col-span-2">
-                                                        <p className="text-xs">{parseToRupiahText(x.jumlah)}</p>
+                                                        <p className="text-xs">{parseToRupiahText(x.pengiriman)}</p>
                                                     </div>
                                                 </div>
                                             </>
