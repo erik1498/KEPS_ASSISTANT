@@ -11,7 +11,7 @@ import dashboardPath from './path/dashboard/dashboard.path';
 import loginPath from './path/login.path';
 import LoadingPage from './component/layout/LoadingPage';
 import LoginPage from './page/Login.page';
-import aktivitasDokumenPath from './path/aktivitasDokumen/aktivitasDokumen';
+import aktivitasDokumenPath from './path/aktivitasDokumen/aktivitasDokumen.path';
 import cabangPath from './path/perusahaan/cabang.path';
 import divisiPath from './path/perusahaan/divisi.path';
 import jabatanPath from './path/perusahaan/jabatan.path';
@@ -57,14 +57,13 @@ import perintahStokOpnamePath from './path/persediaan/opname/perintahStokOpname.
 import hasilStokOpnamePath from './path/persediaan/opname/hasilStokOpname.path';
 import penyesuaianPersediaanPath from './path/persediaan/opname/penyesuaianPersediaan.path';
 import jurnalStokOpnamePath from './path/persediaan/opname/jurnalStokOpname.path';
-import laporanPenjualanBarangPath from './path/laporan/laporanPenjualanBarang';
-import laporanPembelianBarangPath from './path/laporan/laporanPembelianBarang';
-import LaporanPembelianBarangPage from './page/laporan/laporanPembelianBarang/LaporanPembelianBarang';
-import LaporanPenjualanBarangPage from './page/laporan/laporanPenjualanBarang/LaporanPenjualanBarang';
-import laporanFakturPenjualanBarangPath from './path/laporan/laporanFakturPenjualanBarang';
-import laporanFakturPembelianBarangPath from './path/laporan/laporanFakturPembelianBarang';
-import laporanHargaBarangBeliPath from './path/laporan/laporanHargaBarangBeli';
-import laporanPengirimanBarangPath from './path/laporan/laporanPengirimanBarang';
+import laporanPenjualanBarangPath from './path/laporan/laporanPenjualanBarang.path';
+import laporanPembelianBarangPath from './path/laporan/laporanPembelianBarang.path';
+import laporanFakturPenjualanBarangPath from './path/laporan/laporanFakturPenjualanBarang.path';
+import laporanFakturPembelianBarangPath from './path/laporan/laporanFakturPembelianBarang.path';
+import laporanHargaBarangBeliPath from './path/laporan/laporanHargaBarangBeli.path';
+import laporanPengirimanBarangPath from './path/laporan/laporanPengirimanBarang.path';
+import laporanStokBarangPath from './path/laporan/laporanStokBarang.path';
 import penggunaanPerlengkapanPath from './path/asetTetapDanPerlengkapan/perlengkapan/penggunaanPerlengkapan.path';
 import pengirimanBarangPath from './path/persediaan/pengiriman/pengirimanBarang.path';
 
@@ -126,6 +125,9 @@ const LaporanFakturPenjualanBarangPage = React.lazy(() => import('./page/laporan
 const LaporanFakturPembelianBarangPage = React.lazy(() => import('./page/laporan/laporanFakturPembelianBarang/LaporanFakturPembelianBarang'));
 const LaporanHargaBarangBeliPage = React.lazy(() => import('./page/laporan/laporanHargaBarangBeli/LaporanHargaBarangBeli'));
 const LaporanPengirimanBarangPage = React.lazy(() => import('./page/laporan/laporanPengirimanBarang/LaporanPengirimanBarang'));
+const LaporanPembelianBarangPage = React.lazy(() => import('./page/laporan/laporanPembelianBarang/LaporanPembelianBarang'));
+const LaporanPenjualanBarangPage = React.lazy(() => import('./page/laporan/laporanPenjualanBarang/LaporanPenjualanBarang'));
+const LaporanStokBarangPage = React.lazy(() => import('./page/laporan/laporanStokBarang/LaporanStokBarang'));
 const PenggunaanPerlengkapanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/perlengkapan/penggunaanPerlengkapan/PenggunaanPerlengkapan.page'));
 const PengirimanBarangPage = React.lazy(() => import('./page/persediaan/pengiriman/barang/PengirimanBarang.page'));
 
@@ -273,6 +275,9 @@ function App() {
         </Routes>
         <Routes basename={laporanPengirimanBarangPath.main}>
           <Route path={laporanPengirimanBarangPath.main} element={<LaporanPengirimanBarangPage />} />
+        </Routes>
+        <Routes basename={laporanStokBarangPath.main}>
+          <Route path={laporanStokBarangPath.main} element={<LaporanStokBarangPage />} />
         </Routes>
         <Routes basename={laporanFakturPenjualanBarangPath.main}>
           <Route path={laporanFakturPenjualanBarangPath.main} element={<LaporanFakturPenjualanBarangPage />} />

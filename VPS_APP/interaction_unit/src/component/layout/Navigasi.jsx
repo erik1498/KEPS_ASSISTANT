@@ -630,6 +630,13 @@ const Navigasi = ({
                                 />
                                 <ul className="menu z-50 bg-gray-100 rounded-md w-max">
                                     {
+                                        getRolesInCookie("Laporan_Stok_Barang") ? <>
+                                            <li>
+                                                <NavigationLink to="/laporan/laporanStokBarang" addClass={"my-1"} label={"Laporan Stok Barang"} />
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
                                         getRolesInCookie("Laporan_Pengiriman_Barang") ? <>
                                             <li>
                                                 <NavigationLink to="/laporan/laporanPengirimanBarang" addClass={"my-1"} label={"Laporan Pengiriman Barang"} />
