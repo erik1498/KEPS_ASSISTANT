@@ -1,0 +1,1 @@
+import{j as e}from"./index-CfdqnSWR.js";const t=({item:c,checkedKey:o,updateCheckBox:s=()=>{}})=>e.jsx(e.Fragment,{children:e.jsx("input",{type:"checkbox",checked:c[o],className:"checkbox checkbox-sm",onChange:s})});export{t as F};
