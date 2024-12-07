@@ -1,8 +1,7 @@
 import { formatDate } from "../../utils/jurnalUmumUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 import { generatePaginationResponse } from "../../utils/paginationUtil.js"
-import { checkDaftarBarangAllowToEditService } from "../daftar_barang/daftarBarang.services.js"
-import { checkStokAwalBarangAllowToEditRepo, createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDRepo, getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo, getRiwayatTransaksiPenjualanByStokAwalBarangUuidRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, getStokAwalBarangByUuidRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
+import { checkStokAwalBarangAllowToEditRepo, createStokAwalBarangRepo, deleteStokAwalBarangByUuidRepo, getAllStokAwalBarangRepo, getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanBarangUUIDRepo, getReportStokAwalBarangsRepo, getRiwayatTransaksiPembelianByStokAwalBarangUuidRepo, getRiwayatTransaksiPenjualanByStokAwalBarangUuidRepo, getStokAwalBarangByBarangUUIDRepo, getStokAwalBarangByDaftarGudangDanKategoriHargaBarangRepo, getStokAwalBarangByUuidRepo, updateStokAwalBarangByUuidRepo } from "./stokAwalBarang.repository.js"
 
 export const getAllStokAwalBarangService = async (query, req_identity) => {
     LOGGER(logType.INFO, "Start getAllStokAwalBarangService", null, req_identity)
@@ -22,6 +21,30 @@ export const getAllStokAwalBarangService = async (query, req_identity) => {
     }, req_identity)
 
     const stokAwalBarangs = await getAllStokAwalBarangRepo(pageNumber, size, search, req_identity)
+    return generatePaginationResponse(stokAwalBarangs.entry, stokAwalBarangs.count, stokAwalBarangs.pageNumber, stokAwalBarangs.size)
+}
+
+export const getReportStokAwalBarangsService = async (bulan, tahun, query, req_identity) => {
+    LOGGER(logType.INFO, "Start getReportStokAwalBarangsService", {
+        bulan,
+        tahun
+    }, req_identity)
+
+    let { page, size, search } = query
+    page = page ? page : null
+    size = size ? size : null
+    if (size == "all") {
+        page = null
+        size = null
+    }
+    search = search ? search : ""
+    const pageNumber = (page - 1) * size
+
+    LOGGER(logType.INFO, "Pagination", {
+        pageNumber, size, search
+    }, req_identity)
+
+    const stokAwalBarangs = await getReportStokAwalBarangsRepo(pageNumber, size, search, bulan, tahun, req_identity)
     return generatePaginationResponse(stokAwalBarangs.entry, stokAwalBarangs.count, stokAwalBarangs.pageNumber, stokAwalBarangs.size)
 }
 

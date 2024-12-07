@@ -1,5 +1,5 @@
 import { stokAwalBarangValidation } from "./stokAwalBarang.validation.js"
-import { createStokAwalBarangService, deleteStokAwalBarangByUuidService, getAllStokAwalBarangService, getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanOrPembelianBarangUUIDService, getDaftarGudangBarangByKategoriHargaBarangUUIDService, getRiwayatTransaksiPembelianByStokAwalBarangUuidService, getRiwayatTransaksiPenjualanByStokAwalBarangUuidService, getStokAwalBarangByBarangUUIDService, updateStokAwalBarangByUuidService } from "./stokAwalBarang.services.js"
+import { createStokAwalBarangService, deleteStokAwalBarangByUuidService, getAllStokAwalBarangService, getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanOrPembelianBarangUUIDService, getDaftarGudangBarangByKategoriHargaBarangUUIDService, getReportStokAwalBarangsService, getRiwayatTransaksiPembelianByStokAwalBarangUuidService, getRiwayatTransaksiPenjualanByStokAwalBarangUuidService, getStokAwalBarangByBarangUUIDService, updateStokAwalBarangByUuidService } from "./stokAwalBarang.services.js"
 import { generateValidationMessage } from "../../utils/validationUtil.js"
 import { LOGGER, LOGGER_MONITOR, logType } from "../../utils/loggerUtil.js"
 
@@ -7,6 +7,23 @@ export const getAllStokAwalBarangs = async (req, res) => {
     LOGGER(logType.INFO, "Start getAllStokAwalBarangController", null, req.identity)
     try {
         const stokAwalBarangs = await getAllStokAwalBarangService(req.query, req.identity)
+        res.json({
+            data: stokAwalBarangs,
+            message: "Get Data Success"
+        })
+    } catch (error) {
+        LOGGER(logType.ERROR, "Error ", error.stack, req.identity, req.originalUrl, req.method, true)
+        res.status(500).json({
+            type: "internalServerError",
+            errorData: error.message
+        })
+    }
+}
+
+export const getReportStokAwalBarangs = async (req, res) => {
+    LOGGER(logType.INFO, "Start getReportStokAwalBarangs", null, req.identity)
+    try {
+        const stokAwalBarangs = await getReportStokAwalBarangsService(req.params.bulan, req.params.tahun, req.query, req.identity)
         res.json({
             data: stokAwalBarangs,
             message: "Get Data Success"

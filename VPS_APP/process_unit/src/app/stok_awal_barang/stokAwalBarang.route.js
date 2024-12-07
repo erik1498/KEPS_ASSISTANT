@@ -1,10 +1,11 @@
 import express from "express"
-import { deleteStokAwalBarangByUUID, getAllStokAwalBarangs, getDaftarGudangBarangByKategoriHargaBarangUUID, getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanOrPembelianBarangUUID, getRiwayatTransaksiPembelianByStokAwalBarangUuid, getRiwayatTransaksiPenjualanByStokAwalBarangUuid, getStokAwalBarangByBarangUUID, postCreateStokAwalBarang, updateStokAwalBarangByUUID } from "./stokAwalBarang.handler.js"
+import { deleteStokAwalBarangByUUID, getAllStokAwalBarangs, getDaftarGudangBarangByKategoriHargaBarangUUID, getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanOrPembelianBarangUUID, getReportStokAwalBarangs, getRiwayatTransaksiPembelianByStokAwalBarangUuid, getRiwayatTransaksiPenjualanByStokAwalBarangUuid, getStokAwalBarangByBarangUUID, postCreateStokAwalBarang, updateStokAwalBarangByUUID } from "./stokAwalBarang.handler.js"
 import { authTokenMiddleware } from "../../middleware/auth.js"
 
 const router = express.Router()
 
 router.get("/", authTokenMiddleware(), getAllStokAwalBarangs)
+router.get("/report/:bulan/:tahun", authTokenMiddleware(), getReportStokAwalBarangs)
 router.get("/gudang_barang/:kategori_harga_barang", authTokenMiddleware(), getDaftarGudangBarangByKategoriHargaBarangUUID)
 router.get("/gudang_barang/:kategori_harga_barang/:pesanan_penjualan_or_pembelian_barang/:type", authTokenMiddleware(), getDaftarGudangBarangByKategoriHargaBarangUUIDAndPesananPenjualanOrPembelianBarangUUID)
 router.get("/riwayat_penjualan/:uuid", authTokenMiddleware(), getRiwayatTransaksiPenjualanByStokAwalBarangUuid)
