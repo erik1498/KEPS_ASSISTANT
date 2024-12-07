@@ -167,6 +167,8 @@ export const getReportStokAwalBarangsRepo = async (pageNumber, size, search, bul
                 JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab kht ON kht.uuid = sabt.kategori_harga_barang
                 JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = kht.satuan_barang 
                 WHERE sabt.enabled = 1
+                AND LPAD(MONTH(sabt.tanggal), 2, "0") <= ${bulan}
+                AND YEAR(sabt.tanggal) <= ${tahun} 
             ) AS res    
             WHERE res.daftar_barang_name LIKE '%${search}%'
             LIMIT ${pageNumber}, ${size}
