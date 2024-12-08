@@ -503,6 +503,64 @@ const Navigasi = ({
                                         </> : <></>
                                     }
                                     {
+                                        getRolesInCookie("Persediaan_BahanBaku") ? <>
+                                            <li>
+                                                <p className="font-bold pointer-events-none">Bahan Baku</p>
+                                                <ul>
+                                                    {
+                                                        getRolesInCookie("Persediaan_BahanBaku_DaftarBahanBaku") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/bahanBaku/daftarBahanBaku" addClass={"my-1"} label={"Daftar Bahan Baku"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_BahanBaku_SatuanBahanBaku") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/bahanBaku/satuanBahanBaku" addClass={"my-1"} label={"Satuan Bahan Baku"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_BahanBaku_KategoriBahanBaku") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/bahanBaku/kategoriBahanBaku" addClass={"my-1"} label={"Kategori Bahan Baku"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_BahanBaku_Jenis_BahanBaku") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/bahanBaku/jenisBahanBaku" addClass={"my-1"} label={"Jenis Bahan Baku"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_BahanBaku_JenisPenjualanBahanBaku") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/bahanBaku/jenisPenjualanBahanBaku" addClass={"my-1"} label={"Jenis Penjualan Bahan Baku"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_BahanBaku_TransferBahanBaku") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/bahanBaku/transferBahanBaku" addClass={"my-1"} label={"Transfer Bahan Baku"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                    {
+                                                        getRolesInCookie("Persediaan_BahanBaku_KonversiBahanBaku") ? <>
+                                                            <li>
+                                                                <NavigationLink to="/persediaan/bahanBaku/konversiBahanBaku" addClass={"my-1"} label={"Konversi Bahan Baku"} />
+                                                            </li>
+                                                        </> : <></>
+                                                    }
+                                                </ul>
+                                            </li>
+                                        </> : <></>
+                                    }
+                                    {
                                         getRolesInCookie("Persediaan_Opname") ? <>
                                             <li>
                                                 <p className="font-bold pointer-events-none">Opname</p>

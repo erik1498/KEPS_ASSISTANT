@@ -155,6 +155,42 @@ export const SrvJenisPenjualanBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/jenis_penjualan_barang'
 )
 
+export const SrvDaftarBahanBaku = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/daftar_bahan_baku'
+)
+
+export const SrvSatuanBahanBaku = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/satuan_bahan_baku'
+)
+
+export const SrvTransferBahanBaku = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/transfer_bahan_baku'
+)
+
+export const SrvRincianTransferBahanBaku = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_transfer_bahan_baku'
+)
+
+export const SrvKonversiBahanBaku = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/konversi_bahan_baku'
+)
+
+export const SrvRincianKonversiBahanBaku = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/rincian_konversi_bahan_baku'
+)
+
+export const SrvKategoriBahanBaku = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/kategori_bahan_baku'
+)
+
+export const SrvJenisBahanBaku = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/jenis_bahan_baku'
+)
+
+export const SrvJenisPenjualanBahanBaku = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/jenis_penjualan_bahan_baku'
+)
+
 export const SrvDaftarJasa = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/daftar_jasa'
 )
@@ -247,8 +283,16 @@ export const SrvKategoriHargaBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/kategori_harga_barang'
 )
 
+export const SrvKategoriHargaBahanBaku = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/kategori_harga_bahan_baku'
+)
+
 export const SrvStokAwalBarang = objectPathEndPointAPI(
   baseAPIKepsAssistant + '/stok_awal_barang'
+)
+
+export const SrvStokAwalBahanBaku = objectPathEndPointAPI(
+  baseAPIKepsAssistant + '/stok_awal_bahan_baku'
 )
 
 export const SrvKategoriHargaJasa = objectPathEndPointAPI(

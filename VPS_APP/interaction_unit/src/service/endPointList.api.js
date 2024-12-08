@@ -1,5 +1,5 @@
 import { _shapeObjectMethodCRUD } from './_config.api';
-import { SrvAktivitasDokumen, SrvCabang, SrvCustomer, SrvDaftarAset, SrvDaftarBarang, SrvDaftarGudang, SrvDaftarJasa, SrvDaftarPerlengkapan, SrvDivisi, SrvDokumenKlien, SrvFakturPembelianBarang, SrvFakturPenjualanBarang, SrvFakturPenjualanJasa, SrvGaji, SrvHadiah, SrvHasilStokOpname, SrvHistoryAkun, SrvHitunganPenyusutan, SrvJabatan, SrvJenisBarang, SrvJenisGudang, SrvJenisJasa, SrvJenisPenjualanBarang, SrvJenisPenjualanJasa, SrvJurnalUmum, SrvKategoriAset, SrvKategoriBarang, SrvKategoriGudang, SrvKategoriHargaBarang, SrvKategoriHargaJasa, SrvKategoriJasa, SrvKategoriPerlengkapan, SrvKelompokAset, SrvKerugian, SrvKodeAkun, SrvKonversiBarang, SrvLabaRugi, SrvLainLain, SrvLembur, SrvLogin, SrvMetodePenyusutan, SrvNeraca, SrvNeracaSaldo, SrvPayroll, SrvPegawai, SrvPelunasanPembelianBarang, SrvPelunasanPenjualanBarang, SrvPelunasanPenjualanJasa, SrvPengembalianDendaPembelianBarang, SrvPengembalianDendaPenjualanBarang, SrvPengembalianDendaPenjualanJasa, SrvPenggunaanPerlengkapan, SrvPengirimanbarang, SrvPenyesuaianPersediaan, SrvPerintahStokOpname, SrvPersentasePenyusutan, SrvPerubahanModal, SrvPesananPembelianBarang, SrvPesananPenjualanBarang, SrvPesananPenjualanJasa, SrvPiutangKaryawan, SrvPPH2126, SrvReturPembelianBarang, SrvReturPenjualanBarang, SrvReturPenjualanJasa, SrvRincianKonversiBarang, SrvRincianPelunasanPembelianBarang, SrvRincianPelunasanPembelianDendaBarang, SrvRincianPelunasanPenjualanBarang, SrvRincianPelunasanPenjualanDendaBarang, SrvRincianPelunasanPenjualanDendaJasa, SrvRincianPelunasanPenjualanJasa, SrvRincianPengembalianDendaPembelianBarang, SrvRincianPengembalianDendaPenjualanBarang, SrvRincianPengembalianDendaPenjualanJasa, SrvRincianPengirimanbarang, SrvRincianPesananPembelianBarang, SrvRincianPesananPenjualanBarang, SrvRincianPesananPenjualanJasa, SrvRincianReturPembelianBarang, SrvRincianReturPenjualanBarang, SrvRincianReturPenjualanJasa, SrvRincianTransaksiBank, SrvRincianTransaksiKas, SrvRincianTransferBarang, SrvRiwayatAktivitasDokumen, SrvRiwayatPembayaranAktivitasDokumen, SrvSatuanBarang, SrvSatuanJasa, SrvStatusRiwayatAktivitasDokumen, SrvStatusRiwayatAktivitasDokumenKeterangan, SrvStatusRiwayatAktivitasDokumenPegawaiPelaksana, SrvStatusTanggungan, SrvStokAwalBarang, SrvStokAwalJasa, SrvSupplier, SrvSyaratPembayaran, SrvTipePembayaran, SrvTransaksiBank, SrvTransaksiKas, SrvTransferBarang, SrvTunjanganBarang, SrvTunjanganUang } from './_endPoint.api';
+import { SrvAktivitasDokumen, SrvCabang, SrvCustomer, SrvDaftarAset, SrvDaftarBahanBaku, SrvDaftarBarang, SrvDaftarGudang, SrvDaftarJasa, SrvDaftarPerlengkapan, SrvDivisi, SrvDokumenKlien, SrvFakturPembelianBarang, SrvFakturPenjualanBarang, SrvFakturPenjualanJasa, SrvGaji, SrvHadiah, SrvHasilStokOpname, SrvHistoryAkun, SrvHitunganPenyusutan, SrvJabatan, SrvJenisBahanBaku, SrvJenisBarang, SrvJenisGudang, SrvJenisJasa, SrvJenisPenjualanBahanBaku, SrvJenisPenjualanBarang, SrvJenisPenjualanJasa, SrvJurnalUmum, SrvKategoriAset, SrvKategoriBahanBaku, SrvKategoriBarang, SrvKategoriGudang, SrvKategoriHargaBahanBaku, SrvKategoriHargaBarang, SrvKategoriHargaJasa, SrvKategoriJasa, SrvKategoriPerlengkapan, SrvKelompokAset, SrvKerugian, SrvKodeAkun, SrvKonversiBahanBaku, SrvKonversiBarang, SrvLabaRugi, SrvLainLain, SrvLembur, SrvLogin, SrvMetodePenyusutan, SrvNeraca, SrvNeracaSaldo, SrvPayroll, SrvPegawai, SrvPelunasanPembelianBarang, SrvPelunasanPenjualanBarang, SrvPelunasanPenjualanJasa, SrvPengembalianDendaPembelianBarang, SrvPengembalianDendaPenjualanBarang, SrvPengembalianDendaPenjualanJasa, SrvPenggunaanPerlengkapan, SrvPengirimanbarang, SrvPenyesuaianPersediaan, SrvPerintahStokOpname, SrvPersentasePenyusutan, SrvPerubahanModal, SrvPesananPembelianBarang, SrvPesananPenjualanBarang, SrvPesananPenjualanJasa, SrvPiutangKaryawan, SrvPPH2126, SrvReturPembelianBarang, SrvReturPenjualanBarang, SrvReturPenjualanJasa, SrvRincianKonversiBahanBaku, SrvRincianKonversiBarang, SrvRincianPelunasanPembelianBarang, SrvRincianPelunasanPembelianDendaBarang, SrvRincianPelunasanPenjualanBarang, SrvRincianPelunasanPenjualanDendaBarang, SrvRincianPelunasanPenjualanDendaJasa, SrvRincianPelunasanPenjualanJasa, SrvRincianPengembalianDendaPembelianBarang, SrvRincianPengembalianDendaPenjualanBarang, SrvRincianPengembalianDendaPenjualanJasa, SrvRincianPengirimanbarang, SrvRincianPesananPembelianBarang, SrvRincianPesananPenjualanBarang, SrvRincianPesananPenjualanJasa, SrvRincianReturPembelianBarang, SrvRincianReturPenjualanBarang, SrvRincianReturPenjualanJasa, SrvRincianTransaksiBank, SrvRincianTransaksiKas, SrvRincianTransferBahanBaku, SrvRincianTransferBarang, SrvRiwayatAktivitasDokumen, SrvRiwayatPembayaranAktivitasDokumen, SrvSatuanBahanBaku, SrvSatuanBarang, SrvSatuanJasa, SrvStatusRiwayatAktivitasDokumen, SrvStatusRiwayatAktivitasDokumenKeterangan, SrvStatusRiwayatAktivitasDokumenPegawaiPelaksana, SrvStatusTanggungan, SrvStokAwalBahanBaku, SrvStokAwalBarang, SrvStokAwalJasa, SrvSupplier, SrvSyaratPembayaran, SrvTipePembayaran, SrvTransaksiBank, SrvTransaksiKas, SrvTransferBahanBaku, SrvTransferBarang, SrvTunjanganBarang, SrvTunjanganUang } from './_endPoint.api';
 
 export const apiLogin = { ..._shapeObjectMethodCRUD(SrvLogin) };
 
@@ -77,6 +77,24 @@ export const apiJenisBarangCRUD = { ..._shapeObjectMethodCRUD(SrvJenisBarang) }
 
 export const apiJenisPenjualanBarangCRUD = { ..._shapeObjectMethodCRUD(SrvJenisPenjualanBarang) }
 
+export const apiSatuanBahanBakuCRUD = { ..._shapeObjectMethodCRUD(SrvSatuanBahanBaku) }
+
+export const apiTransferBahanBakuCRUD = { ..._shapeObjectMethodCRUD(SrvTransferBahanBaku) }
+
+export const apiRincianTransferBahanBakuCRUD = { ..._shapeObjectMethodCRUD(SrvRincianTransferBahanBaku) }
+
+export const apiKonversiBahanBakuCRUD = { ..._shapeObjectMethodCRUD(SrvKonversiBahanBaku) }
+
+export const apiRincianKonversiBahanBakuCRUD = { ..._shapeObjectMethodCRUD(SrvRincianKonversiBahanBaku) }
+
+export const apiDaftarBahanBakuCRUD = { ..._shapeObjectMethodCRUD(SrvDaftarBahanBaku) }
+
+export const apiKategoriBahanBakuCRUD = { ..._shapeObjectMethodCRUD(SrvKategoriBahanBaku) }
+
+export const apiJenisBahanBakuCRUD = { ..._shapeObjectMethodCRUD(SrvJenisBahanBaku) }
+
+export const apiJenisPenjualanBahanBakuCRUD = { ..._shapeObjectMethodCRUD(SrvJenisPenjualanBahanBaku) }
+
 export const apiDaftarJasaCRUD = { ..._shapeObjectMethodCRUD(SrvDaftarJasa) }
 
 export const apiSatuanJasaCRUD = { ..._shapeObjectMethodCRUD(SrvSatuanJasa) }
@@ -123,7 +141,11 @@ export const apiPersentasePenyusutanCRUD = { ..._shapeObjectMethodCRUD(SrvPersen
 
 export const apiStokAwalBarangCRUD = { ..._shapeObjectMethodCRUD(SrvStokAwalBarang) }
 
+export const apiStokAwalBahanBakuCRUD = { ..._shapeObjectMethodCRUD(SrvStokAwalBahanBaku) }
+
 export const apiKategoriHargaBarangCRUD = { ..._shapeObjectMethodCRUD(SrvKategoriHargaBarang) }
+
+export const apiKategoriHargaBahanBakuCRUD = { ..._shapeObjectMethodCRUD(SrvKategoriHargaBahanBaku) }
 
 export const apiKategoriHargaJasaCRUD = { ..._shapeObjectMethodCRUD(SrvKategoriHargaJasa) }
 

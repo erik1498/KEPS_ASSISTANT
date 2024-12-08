@@ -355,6 +355,13 @@ export const kodeHargaList = [
     },
 ]
 
+export const kodeHargaBahanBakuList = [
+    {
+        label: "Harga Beli",
+        value: "beli"
+    }
+]
+
 export const jenisKelaminList = [
     {
         label: "Laki - Laki",

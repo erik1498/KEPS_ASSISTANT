@@ -100,6 +100,17 @@ import { getHitunganPenyusutanRoute } from "../app/hitungan_penyusutan/hitunganP
 import { getPenggunaanPerlengkapanRoute } from "../app/penggunaan_perlengkapan/penggunaanPerlengkapan.route.js";
 import { getPengirimanBarangRoute } from "../app/pengiriman_barang/pengirimanBarang.route.js";
 import { getRincianPengirimanBarangRoute } from "../app/rincian_pengiriman_barang/rincianPengirimanBarang.route.js";
+import { getDaftarBahanBakuRoute } from "../app/daftar_bahan_baku/daftarBahanBaku.route.js";
+import { getJenisPenjualanBahanBakuRoute } from "../app/jenis_penjualan_bahan_baku/jenisPenjualanBahanBaku.route.js";
+import { getJenisBahanBakuRoute } from "../app/jenis_bahan_baku/jenisBahanBaku.route.js";
+import { getSatuanBahanBakuRoute } from "../app/satuan_bahan_baku/satuanBahanBaku.route.js";
+import { getTransferBahanBakuRoute } from "../app/transfer_bahan_baku/transferBahanBaku.route.js";
+import { getRincianTransferBahanBakuRoute } from "../app/rincian_transfer_bahan_baku/rincianTransferBahanBaku.route.js";
+import { getKonversiBahanBakuRoute } from "../app/konversi_bahan_baku/konversiBahanBaku.route.js";
+import { getRincianKonversiBahanBakuRoute } from "../app/rincian_konversi_bahan_baku/rincianKonversiBahanBaku.route.js";
+import { getStokAwalBahanBakuRoute } from "../app/stok_awal_bahan_baku/stokAwalBahanBaku.route.js";
+import { getKategoriHargaBahanBakuRoute } from "../app/kategori_harga_bahan_baku/kategoriHargaBahanBaku.route.js";
+import { getKategoriBahanBakuRoute } from "../app/kategori_bahan_baku/kategoriBahanBaku.route.js";
 
 export const routerList = new Array()
     .concat(
@@ -128,17 +139,9 @@ export const routerList = new Array()
         getStatusRiwayatAktivitasDokumenPegawaiPelaksanaRoute(),
         getStatusRiwayatAktivitasDokumenKeteranganRoute(),
         getDokumenKlienRoute(),
-        getSatuanBarangRoute(),
-        getTransferBarangRoute(),
-        getRincianTransferBarangRoute(),
-        getKonversiBarangRoute(),
-        getRincianKonversiBarangRoute(),
         getSatuanJasaRoute(),
-        getKategoriBarangRoute(),
         getKategoriJasaRoute(),
-        getJenisBarangRoute(),
         getJenisJasaRoute(),
-        getJenisPenjualanBarangRoute(),
         getJenisPenjualanJasaRoute(),
         getPerintahStokOpnameRoute(),
         getPerintahStokOpnameJurnalRoute(),
@@ -148,6 +151,23 @@ export const routerList = new Array()
         getKategoriGudangRoute(),
         getDaftarGudangRoute(),
         getDaftarBarangRoute(),
+        getKategoriBarangRoute(),
+        getJenisPenjualanBarangRoute(),
+        getJenisBarangRoute(),
+        getSatuanBarangRoute(),
+        getTransferBarangRoute(),
+        getRincianTransferBarangRoute(),
+        getKonversiBarangRoute(),
+        getRincianKonversiBarangRoute(),
+        getKategoriBahanBakuRoute(),
+        getDaftarBahanBakuRoute(),
+        getJenisPenjualanBahanBakuRoute(),
+        getJenisBahanBakuRoute(),
+        getSatuanBahanBakuRoute(),
+        getTransferBahanBakuRoute(),
+        getRincianTransferBahanBakuRoute(),
+        getKonversiBahanBakuRoute(),
+        getRincianKonversiBahanBakuRoute(),
         getDaftarJasaRoute(),
         getDaftarAsetRoute(),
         getKategoriAsetRoute(),
@@ -159,8 +179,10 @@ export const routerList = new Array()
         getPersentasePenyusutanRoute(),
         getHitunganPenyusutanRoute(),
         getKategoriHargaBarangRoute(),
+        getKategoriHargaBahanBakuRoute(),
         getKategoriHargaJasaRoute(),
         getStokAwalBarangRoute(),
+        getStokAwalBahanBakuRoute(),
         getStokAwalJasaRoute(),
         getTransaksiKasRoute(),
         getTransaksiBankRoute(),

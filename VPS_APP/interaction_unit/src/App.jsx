@@ -21,10 +21,6 @@ import statusTanggunganPath from './path/perusahaan/statusTanggungan.path';
 import customerPath from './path/perusahaan/customer.path';
 import supplierPath from './path/perusahaan/supplier.path';
 import pegawaiPath from './path/perusahaan/pegawai.path';
-import satuanBarangPath from './path/persediaan/barang/satuanBarang.path';
-import kategoriBarangPath from './path/persediaan/barang/kategoriBarang.path';
-import jenisBarangPath from './path/persediaan/barang/jenisBarang.path';
-import jenisPenjualanBarangPath from './path/persediaan/barang/jenisPenjualanBarang.path';
 import satuanJasaPath from './path/persediaan/jasa/satuanJasa.path';
 import kategoriJasaPath from './path/persediaan/jasa/kategoriJasa.path';
 import jenisJasaPath from './path/persediaan/jasa/jenisJasa.path';
@@ -37,6 +33,19 @@ import kategoriPerlengkapanPath from './path/asetTetapDanPerlengkapan/perlengkap
 import metodePenyusutanPath from './path/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan.path';
 import persentasePenyusutanPath from './path/asetTetapDanPerlengkapan/penyusutan/persentasePenyusutan.path';
 import daftarBarangPath from './path/persediaan/barang/daftarBarang.path';
+import satuanBarangPath from './path/persediaan/barang/satuanBarang.path';
+import kategoriBarangPath from './path/persediaan/barang/kategoriBarang.path';
+import jenisBarangPath from './path/persediaan/barang/jenisBarang.path';
+import jenisPenjualanBarangPath from './path/persediaan/barang/jenisPenjualanBarang.path';
+import transferBarangPath from './path/persediaan/barang/transferBarang.path';
+import konversiBarangPath from './path/persediaan/barang/konversiBarang.path';
+import daftarBahanBakuPath from './path/persediaan/bahanBaku/daftarBahanBaku.path';
+import satuanBahanBakuPath from './path/persediaan/bahanBaku/satuanBahanBaku.path';
+import kategoriBahanBakuPath from './path/persediaan/bahanBaku/kategoriBahanBaku.path';
+import jenisBahanBakuPath from './path/persediaan/bahanBaku/jenisBahanBaku.path';
+import jenisPenjualanBahanBakuPath from './path/persediaan/bahanBaku/jenisPenjualanBahanBaku.path';
+import transferBahanBakuPath from './path/persediaan/bahanBaku/transferBahanBaku.path';
+import konversiBahanBakuPath from './path/persediaan/bahanBaku/konversiBahanBaku.path';
 import daftarGudangPath from './path/persediaan/gudang/daftarGudang.path';
 import daftarJasaPath from './path/persediaan/jasa/daftarJasa.path';
 import kasPath from './path/transaksi/kasDanBank/kas.path';
@@ -51,8 +60,6 @@ import jurnalPenyusutanPath from './path/asetTetapDanPerlengkapan/penyusutan/jur
 import penjualanBarangPath from './path/transaksi/penjualan/penjualanBarang.path';
 import penjualanJasaPath from './path/transaksi/penjualan/penjualanJasa.path';
 import pembelianBarangPath from './path/transaksi/pembelian/pembelianBarang.path';
-import transferBarangPath from './path/persediaan/barang/transferBarang.path';
-import konversiBarangPath from './path/persediaan/barang/konversiBarang.path';
 import perintahStokOpnamePath from './path/persediaan/opname/perintahStokOpname.path';
 import hasilStokOpnamePath from './path/persediaan/opname/hasilStokOpname.path';
 import penyesuaianPersediaanPath from './path/persediaan/opname/penyesuaianPersediaan.path';
@@ -85,12 +92,6 @@ const StatusTanggunganPage = React.lazy(() => import('./page/perusahaan/statusTa
 const CustomerPage = React.lazy(() => import('./page/perusahaan/customer/Customer.page'))
 const SupplierPage = React.lazy(() => import('./page/perusahaan/supplier/Supplier.page'))
 const PegawaiPage = React.lazy(() => import('./page/perusahaan/pegawai/Pegawai.page'))
-const SatuanBarangPage = React.lazy(() => import('./page/persediaan/barang/satuanBarang/SatuanBarang.page'))
-const TransferBarangPage = React.lazy(() => import('./page/persediaan/barang/transferBarang/TransferBarang.page'))
-const KonversiBarangPage = React.lazy(() => import('./page/persediaan/barang/konversiBarang/KonversiBarang.page'))
-const KategoriBarangPage = React.lazy(() => import('./page/persediaan/barang/kategoriBarang/KategoriBarang.page'))
-const JenisBarangPage = React.lazy(() => import('./page/persediaan/barang/jenisBarang/JenisBarang.page'))
-const JenisPenjualanBarangPage = React.lazy(() => import('./page/persediaan/barang/jenisPenjualanBarang/JenisPenjualanBarang.page'))
 const SatuanJasaPage = React.lazy(() => import('./page/persediaan/jasa/satuanJasa/SatuanJasa.page'))
 const KategoriJasaPage = React.lazy(() => import('./page/persediaan/jasa/kategoriJasa/KategoriJasa.page'))
 const JenisJasaPage = React.lazy(() => import('./page/persediaan/jasa/jenisJasa/JenisJasa.page'))
@@ -107,6 +108,19 @@ const JurnalPenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerleng
 const MetodePenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/penyusutan/metodePenyusutan/MetodePenyusutan.page'))
 const PersentasePenyusutanPage = React.lazy(() => import('./page/asetTetapDanPerlengkapan/penyusutan/persentasePenyusutan/PersentasePenyusutan.page'))
 const DaftarBarangPage = React.lazy(() => import('./page/persediaan/barang/daftarBarang/DaftarBarang.page'))
+const SatuanBarangPage = React.lazy(() => import('./page/persediaan/barang/satuanBarang/SatuanBarang.page'))
+const KategoriBarangPage = React.lazy(() => import('./page/persediaan/barang/kategoriBarang/KategoriBarang.page'))
+const JenisBarangPage = React.lazy(() => import('./page/persediaan/barang/jenisBarang/JenisBarang.page'))
+const JenisPenjualanBarangPage = React.lazy(() => import('./page/persediaan/barang/jenisPenjualanBarang/JenisPenjualanBarang.page'))
+const TransferBarangPage = React.lazy(() => import('./page/persediaan/barang/transferBarang/TransferBarang.page'))
+const KonversiBarangPage = React.lazy(() => import('./page/persediaan/barang/konversiBarang/KonversiBarang.page'))
+const DaftarBahanBakuPage = React.lazy(() => import('./page/persediaan/bahanBaku/daftarBahanBaku/DaftarBahanBaku.page'))
+const SatuanBahanBakuPage = React.lazy(() => import('./page/persediaan/bahanBaku/satuanBahanBaku/SatuanBahanBaku.page'))
+const KategoriBahanBakuPage = React.lazy(() => import('./page/persediaan/bahanBaku/kategoriBahanBaku/KategoriBahanBaku.page'))
+const JenisBahanBakuPage = React.lazy(() => import('./page/persediaan/bahanBaku/jenisBahanBaku/JenisBahanBaku.page'))
+const JenisPenjualanBahanBakuPage = React.lazy(() => import('./page/persediaan/bahanBaku/jenisPenjualanBahanBaku/JenisPenjualanBahanBaku.page'))
+const TransferBahanBakuPage = React.lazy(() => import('./page/persediaan/bahanBaku/transferBahanBaku/TransferBahanBaku.page'))
+const KonversiBahanBakuPage = React.lazy(() => import('./page/persediaan/bahanBaku/konversiBahanBaku/KonversiBahanBaku.page'))
 const DaftarGudangPage = React.lazy(() => import('./page/persediaan/gudang/daftarGudang/DaftarGudang.page'))
 const DaftarJasaPage = React.lazy(() => import('./page/persediaan/jasa/daftarJasa/DaftarJasa.page'))
 const KasPage = React.lazy(() => import('./page/transaksi/kasDanBank/kas/KasPage'))
@@ -180,12 +194,6 @@ function App() {
         <Routes basename={satuanBarangPath.main}>
           <Route path={satuanBarangPath.main} element={<SatuanBarangPage />} />
         </Routes>
-        <Routes basename={transferBarangPath.main}>
-          <Route path={transferBarangPath.main} element={<TransferBarangPage />} />
-        </Routes>
-        <Routes basename={konversiBarangPath.main}>
-          <Route path={konversiBarangPath.main} element={<KonversiBarangPage />} />
-        </Routes>
         <Routes basename={kategoriBarangPath.main}>
           <Route path={kategoriBarangPath.main} element={<KategoriBarangPage />} />
         </Routes>
@@ -194,6 +202,33 @@ function App() {
         </Routes>
         <Routes basename={jenisPenjualanBarangPath.main}>
           <Route path={jenisPenjualanBarangPath.main} element={<JenisPenjualanBarangPage />} />
+        </Routes>
+        <Routes basename={transferBarangPath.main}>
+          <Route path={transferBarangPath.main} element={<TransferBarangPage />} />
+        </Routes>
+        <Routes basename={konversiBarangPath.main}>
+          <Route path={konversiBarangPath.main} element={<KonversiBarangPage />} />
+        </Routes>
+        <Routes basename={daftarBahanBakuPath.main}>
+          <Route path={daftarBahanBakuPath.main} element={<DaftarBahanBakuPage />} />
+        </Routes>
+        <Routes basename={satuanBahanBakuPath.main}>
+          <Route path={satuanBahanBakuPath.main} element={<SatuanBahanBakuPage />} />
+        </Routes>
+        <Routes basename={kategoriBahanBakuPath.main}>
+          <Route path={kategoriBahanBakuPath.main} element={<KategoriBahanBakuPage />} />
+        </Routes>
+        <Routes basename={jenisBahanBakuPath.main}>
+          <Route path={jenisBahanBakuPath.main} element={<JenisBahanBakuPage />} />
+        </Routes>
+        <Routes basename={jenisPenjualanBahanBakuPath.main}>
+          <Route path={jenisPenjualanBahanBakuPath.main} element={<JenisPenjualanBahanBakuPage />} />
+        </Routes>
+        <Routes basename={transferBahanBakuPath.main}>
+          <Route path={transferBahanBakuPath.main} element={<TransferBahanBakuPage />} />
+        </Routes>
+        <Routes basename={konversiBahanBakuPath.main}>
+          <Route path={konversiBahanBakuPath.main} element={<KonversiBahanBakuPage />} />
         </Routes>
         <Routes basename={daftarJasaPath.main}>
           <Route path={daftarJasaPath.main} element={<DaftarJasaPage />} />
