@@ -12,8 +12,7 @@ import ToggleBox from "../../../../../component/general/ToggleBox"
 const PesananPembelianBarangForm = ({
     pesananPembelianBarang,
     _getDataRincianDaftarPasananPembelian,
-    kategoriHargaBarangList,
-    supplier
+    kategoriHargaBarangList
 }) => {
     const [useDiskon, setUseDiskon] = useState(false)
     const [gudangBarangList, setGudangBarangList] = useState([])

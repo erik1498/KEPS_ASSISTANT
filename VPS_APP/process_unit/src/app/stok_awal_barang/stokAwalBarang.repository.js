@@ -37,7 +37,9 @@ export const getReportStokAwalBarangsRepo = async (pageNumber, size, search, bul
                 COUNT(0) AS count 
             FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt
             JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang
-            WHERE dbt.name LIKE '%${search}%' AND sabt.enabled = 1
+            JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang 
+            WHERE CONCAT(khbt.kode_barang, dbt.name) LIKE '%${search}%' 
+            AND sabt.enabled = 1
         `,
         { type: Sequelize.QueryTypes.SELECT }
     )
@@ -157,20 +159,20 @@ export const getReportStokAwalBarangsRepo = async (pageNumber, size, search, bul
                         AND MONTH(rpbt.tanggal) = ${bulan}
                         AND YEAR(rpbt.tanggal) = ${tahun}
                     ), 0) AS retur_penjualan,
-                    kht.kode_barang AS kategori_harga_barang_kode_barang,
+                    khbt.kode_barang AS kategori_harga_barang_kode_barang,
                     dbt.name AS daftar_barang_name,
                     dgt.name AS daftar_gudang_name,
                     sbt.name AS satuan_barang_name
                 FROM ${generateDatabaseName(req_id)}.stok_awal_barang_tab sabt 
                 JOIN ${generateDatabaseName(req_id)}.daftar_barang_tab dbt ON dbt.uuid = sabt.daftar_barang
                 JOIN ${generateDatabaseName(req_id)}.daftar_gudang_tab dgt ON dgt.uuid = sabt.daftar_gudang
-                JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab kht ON kht.uuid = sabt.kategori_harga_barang
-                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = kht.satuan_barang 
+                JOIN ${generateDatabaseName(req_id)}.kategori_harga_barang_tab khbt ON khbt.uuid = sabt.kategori_harga_barang
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = khbt.satuan_barang 
                 WHERE sabt.enabled = 1
                 AND LPAD(MONTH(sabt.tanggal), 2, "0") <= ${bulan}
                 AND YEAR(sabt.tanggal) <= ${tahun} 
             ) AS res    
-            WHERE res.daftar_barang_name LIKE '%${search}%'
+            WHERE CONCAT(res.daftar_barang_name, res.kategori_harga_barang_kode_barang) LIKE '%${search}%'
             LIMIT ${pageNumber}, ${size}
         `,
         { type: Sequelize.QueryTypes.SELECT }

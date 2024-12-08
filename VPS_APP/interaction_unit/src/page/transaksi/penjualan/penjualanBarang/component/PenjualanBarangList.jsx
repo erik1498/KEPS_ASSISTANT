@@ -1,12 +1,16 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { apiDaftarBarangCRUD, apiRincianPelunasanPenjualanBarangCRUD, apiRincianPesananPenjualanBarangCRUD } from "../../../../../service/endPointList.api"
 import { showError } from "../../../../../helper/form.helper"
 import PesananPenjualanBarangForm from "./PesananPenjualanBarangForm"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
-import { FaCheck, FaTimes, FaTrash } from "react-icons/fa"
+import { FaCheck, FaPrint, FaTimes, FaTrash } from "react-icons/fa"
+import { PesananPenjualanBarangPrint } from "./PesananPenjualanBarangPrint"
+import { useReactToPrint } from "react-to-print"
 
 const PesananPenjualanBarangList = ({
     pesananPenjualanBarang,
+    tanggalPesananPenjualanBarang,
+    nomorPesananPenjualanBarang,
     customer,
     fakturStatus,
     setPPNStatus = () => { },
@@ -17,6 +21,11 @@ const PesananPenjualanBarangList = ({
     const [kategoriHargaBarangList, setKategoriHargaBarangList] = useState([])
     const [listPesanan, setListPesanan] = useState(false)
     const [totalPiutang, setTotalPiutang] = useState(0)
+
+    const pesananPenjualanBarangPrintRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => pesananPenjualanBarangPrintRef.current,
+    });
 
     const _getDataRincianDaftarPasananPenjualan = () => {
         apiRincianPesananPenjualanBarangCRUD
@@ -111,27 +120,48 @@ const PesananPenjualanBarangList = ({
                                     :
                                     <></>
                             }
-                            {
-                                fakturStatus ? <>
-                                    {
-                                        !listPesanan ? <>
-                                            <button
-                                                className="btn bg-gray-100 btn-sm mt-4 border-gray-500"
-                                                onClick={() => { setListPesanan(x => x = !x) }}
-                                            >
-                                                Lihat Daftar Pesanan
-                                            </button>
-                                        </> : <>
-                                            <button
-                                                className="btn bg-gray-100 text-red-500 btn-sm mt-4 border-red-500"
-                                                onClick={() => { setListPesanan(x => x = !x) }}
-                                            >
-                                                Tutup Daftar Pesanan
-                                            </button>
-                                        </>
-                                    }
-                                </> : <></>
-                            }
+                            <div className="mt-5 flex items-center gap-x-2">
+                                {
+                                    fakturStatus ? <>
+                                        {
+                                            !listPesanan ? <>
+                                                <button
+                                                    className="btn bg-gray-100 btn-sm border-gray-500"
+                                                    onClick={() => { setListPesanan(x => x = !x) }}
+                                                >
+                                                    Lihat Daftar Pesanan
+                                                </button>
+                                            </> : <>
+                                                <button
+                                                    className="btn bg-gray-100 text-red-500 btn-sm border-red-500"
+                                                    onClick={() => { setListPesanan(x => x = !x) }}
+                                                >
+                                                    Tutup Daftar Pesanan
+                                                </button>
+                                            </>
+                                        }
+                                    </> : <></>
+                                }
+                                <div className="hidden">
+                                    <PesananPenjualanBarangPrint
+                                        customer={customer}
+                                        ref={pesananPenjualanBarangPrintRef}
+                                        rincianPesananPenjualanBarang={rincianPesananPenjualanBarang}
+                                        pesananPenjualanBarang={pesananPenjualanBarang}
+                                        tanggalPesananPenjualanBarang={tanggalPesananPenjualanBarang}
+                                        nomorPesananPenjualanBarang={nomorPesananPenjualanBarang}
+                                        total={rincianPesananPenjualanBarang.reduce((prev, current) => {
+                                            return prev + parseFloat(current.total_harga)
+                                        }, 0)}
+                                    />
+                                </div>
+                                <button
+                                    className="btn bg-red-800 text-white btn-sm border-red"
+                                    onClick={handlePrint}
+                                >
+                                    <FaPrint /> Cetak Pesanan Penjualan Barang
+                                </button>
+                            </div>
                         </div>
                         {
                             fakturStatus && !listPesanan ? <></> : <>

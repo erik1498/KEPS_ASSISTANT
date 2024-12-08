@@ -82,7 +82,6 @@ const FakturPenjualanBarangForm = ({
                     }
                 }).then(resData => {
                     _getFakturPenjualan()
-                    // setFakturStatus(x => x = resData.data.uuid)
                 }).catch(err => showError(err))
         }
     }
@@ -287,28 +286,28 @@ const FakturPenjualanBarangForm = ({
                                 >
                                     <FaTimes /> Batalkan Faktur
                                 </button>
-                                <div className="hidden">
-                                    <FakturPenjualanBarangPrint
-                                        customer={customer}
-                                        ref={fakturPenjualanBarangPrintRef}
-                                        rincianPesananPenjualanBarang={rincianPesananPenjualanBarang}
-                                        pesananPenjualanBarang={pesananPenjualanBarang}
-                                        nomorFakturPenjualanBarang={nomorFakturPenjualanBarang}
-                                        tanggalFakturPenjualanBarang={tanggalFakturPenjualanBarang}
-                                        keteranganFakturPenjualanBarang={keteranganFakturPenjualanBarang}
-                                        tipePembayaran={tipePembayaran}
-                                        syaratPembayaran={syaratPembayaran}
-                                    />
-                                </div>
-                                <button
-                                    className="btn btn-sm bg-red-800 mt-4 text-white"
-                                    type="button"
-                                    onClick={handlePrint}
-                                >
-                                    <FaPrint /> Cetak Faktur
-                                </button>
                             </> : <></>
                         }
+                        <div className="hidden">
+                            <FakturPenjualanBarangPrint
+                                customer={customer}
+                                ref={fakturPenjualanBarangPrintRef}
+                                rincianPesananPenjualanBarang={rincianPesananPenjualanBarang}
+                                pesananPenjualanBarang={pesananPenjualanBarang}
+                                nomorFakturPenjualanBarang={nomorFakturPenjualanBarang}
+                                tanggalFakturPenjualanBarang={tanggalFakturPenjualanBarang}
+                                keteranganFakturPenjualanBarang={keteranganFakturPenjualanBarang}
+                                tipePembayaran={tipePembayaran}
+                                syaratPembayaran={syaratPembayaran}
+                            />
+                        </div>
+                        <button
+                            className="btn btn-sm bg-red-800 mt-4 text-white"
+                            type="button"
+                            onClick={handlePrint}
+                        >
+                            <FaPrint /> Cetak Faktur
+                        </button>
                     </> : <>
                         <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
                     </>

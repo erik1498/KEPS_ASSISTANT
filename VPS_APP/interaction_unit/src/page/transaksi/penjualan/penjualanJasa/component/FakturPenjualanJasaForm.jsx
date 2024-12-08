@@ -286,28 +286,28 @@ const FakturPenjualanJasaForm = ({
                                 >
                                     <FaTimes /> Batalkan Faktur
                                 </button>
-                                <div className="hidden">
-                                    <FakturPenjualanJasaPrint
-                                        customer={customer}
-                                        ref={fakturPenjualanJasaPrintRef}
-                                        rincianPesananPenjualanJasa={rincianPesananPenjualanJasa}
-                                        pesananPenjualanJasa={pesananPenjualanJasa}
-                                        nomorFakturPenjualanJasa={nomorFakturPenjualanJasa}
-                                        tanggalFakturPenjualanJasa={tanggalFakturPenjualanJasa}
-                                        keteranganFakturPenjualanJasa={keteranganFakturPenjualanJasa}
-                                        tipePembayaran={tipePembayaran}
-                                        syaratPembayaran={syaratPembayaran}
-                                    />
-                                </div>
-                                <button
-                                    className="btn btn-sm bg-red-800 mt-4 text-white"
-                                    type="button"
-                                    onClick={handlePrint}
-                                >
-                                    <FaPrint /> Cetak Faktur
-                                </button>
                             </> : <></>
                         }
+                        <div className="hidden">
+                            <FakturPenjualanJasaPrint
+                                customer={customer}
+                                ref={fakturPenjualanJasaPrintRef}
+                                rincianPesananPenjualanJasa={rincianPesananPenjualanJasa}
+                                pesananPenjualanJasa={pesananPenjualanJasa}
+                                nomorFakturPenjualanJasa={nomorFakturPenjualanJasa}
+                                tanggalFakturPenjualanJasa={tanggalFakturPenjualanJasa}
+                                keteranganFakturPenjualanJasa={keteranganFakturPenjualanJasa}
+                                tipePembayaran={tipePembayaran}
+                                syaratPembayaran={syaratPembayaran}
+                            />
+                        </div>
+                        <button
+                            className="btn btn-sm bg-red-800 mt-4 text-white"
+                            type="button"
+                            onClick={handlePrint}
+                        >
+                            <FaPrint /> Cetak Faktur
+                        </button>
                     </> : <>
                         <button className="btn btn-sm bg-green-800 mt-4 text-white"><FaSave /> Simpan</button>
                     </>

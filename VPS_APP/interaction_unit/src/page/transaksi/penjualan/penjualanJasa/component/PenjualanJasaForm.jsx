@@ -401,6 +401,8 @@ const PenjualanJasaForm = ({
                 <PesananPenjualanJasaList
                     pesananPenjualanJasa={pesananPenjualanJasa}
                     customer={customer}
+                    tanggalPesananPenjualanJasa={tanggalPesananPenjualanJasa}
+                    nomorPesananPenjualanJasa={nomorPesananPenjualanJasa}
                     fakturStatus={fakturStatus}
                     setPPNStatus={setPPNStatus}
                     tanggalTransaksiAkhir={tanggalTransaksiAkhir}
