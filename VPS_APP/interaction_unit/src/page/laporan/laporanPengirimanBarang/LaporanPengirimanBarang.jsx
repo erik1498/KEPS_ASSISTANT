@@ -111,33 +111,33 @@ const LaporanPengirimanBarangPage = () => {
                                 }}
                                 selectName={`fakturPenjualanBarang`}
                             />
+                            {
+                                rincianPesananPenjualanBarangList?.length > 0 ? <>
+                                    <button
+                                        className="btn mt-3 btn-sm bg-red-800 text-white"
+                                        onClick={() => {
+                                            setRincianPesananPenjualanBarangList(x => x = [])
+                                            setRiwayatLaporan(x => x = [])
+                                        }}
+                                    >
+                                        <FaTimes /> Reset Faktur
+                                    </button>
+                                </> : <>
+                                    <button
+                                        className="btn mt-3 btn-sm bg-green-800 text-white"
+                                        onClick={() => _getRincianPesananPenjualanBarang()}
+                                    >
+                                        <FaCheck /> Pilih Faktur
+                                    </button>
+                                </>
+                            }
                         </div>
-                        {
-                            rincianPesananPenjualanBarangList?.length > 0 ? <>
-                                <button
-                                    className="btn mt-3 btn-sm bg-red-800 text-white"
-                                    onClick={() => {
-                                        setRincianPesananPenjualanBarangList(x => x = [])
-                                        setRiwayatLaporan(x => x = [])
-                                    }}
-                                >
-                                    <FaTimes /> Reset Faktur
-                                </button>
-                            </> : <>
-                                <button
-                                    className="btn mt-3 btn-sm bg-green-800 text-white"
-                                    onClick={() => _getRincianPesananPenjualanBarang()}
-                                >
-                                    <FaCheck /> Pilih Faktur
-                                </button>
-                            </>
-                        }
                     </div>
                 </div>
                 <div className="col-span-12 h-[80vh] overflow-y-scroll no-scrollbar">
-                    <div className="bg-white rounded-b-md px-6 py-3">
+                    <div className="bg-white rounded-b-md px-7 py-3">
                         <div className="flex justify-between pb-5">
-                            <h1 className="font-bold text-md pb-3">Pilih Barang Pesanan</h1>
+                            <h1 className="font-bold text-sm">Pilih Barang Pesanan</h1>
                             <button
                                 className="btn btn-sm bg-blue-800 text-white"
                                 onClick={() => _getLaporanPengiriman()}

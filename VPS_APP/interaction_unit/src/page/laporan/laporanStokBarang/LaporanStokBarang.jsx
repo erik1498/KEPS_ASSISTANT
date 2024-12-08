@@ -8,6 +8,8 @@ import Wrap from "../../../component/layout/Wrap"
 import PageTitle from "../../../component/general/PageTitle"
 import Pagination from "../../../component/general/Pagination"
 import BulanSelectedListCard from "../../../component/card/BulanSelectedListCard"
+import ToggleBox from "../../../component/general/ToggleBox"
+import { getBulanListForFormSelect } from "../../../helper/date.helper"
 
 const LaporanStokBarangPage = () => {
 
@@ -68,77 +70,60 @@ const LaporanStokBarangPage = () => {
         isLoading={isLoading}>
         <div>
             <PageTitle title="Laporan Stok Barang" />
-            <div className="grid grid-cols-12 gap-x-4">
-                <div className="col-span-2">
-                    <BulanSelectedListCard
-                        bulan={bulan}
-                        setBulan={setBulan}
-                    />
-                </div>
-                <div className="col-span-10">
-                    <div className="bg-white py-3 px-6 mb-3 rounded-md flex justify-between shadow-2xl">
-                        <label className="input input-sm input-bordered flex items-center gap-2 bg-white">
-                            <input type="text" className="grow bg-transparent" placeholder="Cari" value={search} onChange={(e) => setSearch(e.target.value)} />
-                            {
-                                searchStatus ?
-                                    <FaSearch onClick={() => { _getData(search) }} className="cursor-pointer" />
-                                    :
-                                    <FaTimes onClick={() => _getData("")} className="cursor-pointer" />
-                            }
-                        </label>
-                    </div>
-                    <div className="overflow-x-auto bg-white shadow-xl rounded-md h-[50vh] no-scrollbar px-6 pb-4">
-                        <table className="table">
-                            {/* head */}
-                            <thead>
-                                <tr className="sticky top-0 bg-white py-4 text-black">
-                                    <th width={12}>No</th>
-                                    <th>Nama Daftar Barang</th>
-                                    <th>Kode Barang</th>
-                                    <th>Satuan Barang</th>
-                                    <th>Gudang</th>
-                                    <th>Stok Penyesuaian Persediaan Bulan Lalu</th>
-                                    <th>Konversi Keluar</th>
-                                    <th>Konversi Masuk</th>
-                                    <th>Transfer Keluar</th>
-                                    <th>Transfer Masuk</th>
-                                    <th>Pembelian</th>
-                                    <th>Retur Pembelian</th>
-                                    <th>Penjualan</th>
-                                    <th>Retur Penjualan</th>
-                                    <th>Stok Sistem</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    stokAwalBarang?.map((item, i) => {
-                                        return <>
-                                            <tr key={i}>
-                                                <td>{i + 1}.</td>
-                                                <td>{item.daftar_barang_name}</td>
-                                                <td>{item.kategori_harga_barang_kode_barang}</td>
-                                                <td>{item.satuan_barang_name}</td>
-                                                <td>{item.daftar_gudang_name}</td>
-                                                <td>{item.stok_penyesuaian_persediaan_bulan_lalu}</td>
-                                                <td>{item.konversi_keluar}</td>
-                                                <td>{item.konversi_masuk}</td>
-                                                <td>{item.transfer_keluar}</td>
-                                                <td>{item.transfer_masuk}</td>
-                                                <td>{item.pembelian}</td>
-                                                <td>{item.retur_pembelian}</td>
-                                                <td>{item.penjualan}</td>
-                                                <td>{item.retur_penjualan}</td>
-                                                <td>{item.stok_sistem}</td>
-                                            </tr>
-                                        </>
-                                    })
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <Pagination paginateUpdatePage={paginateUpdatePage} paginate={pagination} setSize={setSize} />
-                </div>
+            <div className="bg-white py-4 px-6 mb-3 flex-col rounded-md justify-between shadow-2xl">
+                <ToggleBox
+                    label="Bulan"
+                    labelTextSize="text-sm"
+                    toggleBox={bulan}
+                    textSize="text-xs"
+                    setToggleBox={setBulan}
+                    toggleBoxList={getBulanListForFormSelect()}
+                />
+                <label className="input input-sm w-max input-bordered flex items-center gap-2 bg-white">
+                    <input type="text" className="grow bg-transparent" placeholder="Cari" value={search} onChange={(e) => setSearch(e.target.value)} />
+                    {
+                        searchStatus ?
+                            <FaSearch onClick={() => { _getData(search) }} className="cursor-pointer" />
+                            :
+                            <FaTimes onClick={() => _getData("")} className="cursor-pointer" />
+                    }
+                </label>
             </div>
+            <div className="overflow-x-auto h-[50vh] no-scrollbar pb-4">
+                {
+                    stokAwalBarang.map((item) => {
+                        return <>
+                            <div className="flex  justify-between gap-x-2 px-6 py-2 items-start bg-white shadow-xl rounded-md ">
+                                <div className="w-full flex flex-col gap-y-5 py-4">
+                                    <div className="flex justify-between">
+                                        <div className="flex items-start flex-col gap-y-2">
+                                            <p className="text-md font-bold">{item.daftar_barang_name}</p>
+                                            <p className="text-sm">{item.kategori_harga_barang_kode_barang}</p>
+                                        </div>
+                                        <div className="flex items-end flex-col gap-y-2">
+                                            <p className="text-md font-bold">{item.daftar_gudang_name}</p>
+                                            <p className="text-xs bg-blue-800 font-bold text-white px-4 py-1 w-max rounded-md">{item.satuan_barang_name}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex font-medium bg-gray-100 p-2 border-t-2">
+                                        <p className="text-sm pr-6 py-1">{item.stok_sistem} Stok Tersedia</p>
+                                        <p className="text-sm px-6 py-1">{item.stok_penyesuaian_persediaan_bulan_lalu} Stok Penyesuaian Bulan Lalu</p>
+                                        <p className="text-sm px-6 py-1">{item.konversi_masuk} Konversi Masuk</p>
+                                        <p className="text-sm px-6 py-1">{item.konversi_keluar} Konversi Keluar</p>
+                                        <p className="text-sm px-6 py-1">{item.transfer_masuk} Transfer Masuk</p>
+                                        <p className="text-sm px-6 py-1">{item.transfer_keluar} Transfer Keluar</p>
+                                        <p className="text-sm px-6 py-1">{item.pembelian} Pembelian</p>
+                                        <p className="text-sm px-6 py-1">{item.retur_pembelian} Retur Pembelian</p>
+                                        <p className="text-sm px-6 py-1">{item.penjualan} Penjualan</p>
+                                        <p className="text-sm px-6 py-1">{item.retur_penjualan} Retur Penjualan</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    })
+                }
+            </div>
+            <Pagination paginateUpdatePage={paginateUpdatePage} paginate={pagination} setSize={setSize} />
         </div>
     </Wrap>
 }

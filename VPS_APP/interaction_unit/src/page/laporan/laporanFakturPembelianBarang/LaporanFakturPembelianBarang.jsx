@@ -76,54 +76,46 @@ const LaporanFakturPembelianBarangPage = () => {
                     </button> */}
                 </div>
             </div>
-            <div className="overflow-x-auto bg-white shadow-xl rounded-md h-[50vh] no-scrollbar">
-                <table className="table table-sm">
-                    <tbody>
-                        {
-                            laporanFakturPembelianBarang?.map((item, i) => {
-                                return <>
-                                    <tr key={i} className="bg-gray-200 uppercase font-bold">
-                                        <td>{item.parent}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td>FAKTUR PEMBELIAN</td>
-                                        <td>TANGGAL FAKTUR</td>
-                                        <td>PEMBELIAN</td>
-                                        <td>PELUNASAN</td>
-                                        <td>HUTANG</td>
-                                    </tr>
+            {
+                laporanFakturPembelianBarang?.map((item, i) => {
+                    return <>
+                        <div className="flex justify-between my-2 gap-x-2 px-6 py-2 items-start bg-white shadow-xl rounded-md ">
+                            <div className="w-full flex flex-col gap-y-2 py-4">
+                                <p className="text-md font-bold">{item.parent}</p>
+                                <div className="flex flex-col rounded-md overflow-hidden gap-y-2">
+                                    <div className="w-full flex font-medium bg-gray-100 p-2 border-t-2">
+                                        <p className="flex-1 text-sm">Faktur Pembelian</p>
+                                        <p className="flex-1 text-sm">Tanggal Faktur</p>
+                                        <p className="flex-1 text-sm">Pembelian</p>
+                                        <p className="flex-1 text-sm">Pelunasan</p>
+                                        <p className="flex-1 text-sm">Piutang</p>
+                                    </div>
                                     {
                                         item.data.map(x => {
-                                            return <tr key={i}>
-                                                <td></td>
-                                                <td>{x.nomor_faktur_pembelian_barang}</td>
-                                                <td>{formatDate(x.tanggal)}</td>
-                                                <td>{parseToRupiahText(x.total_beli.toFixed(2))}</td>
-                                                <td>{parseToRupiahText(x.total_pelunasan.toFixed(2))}</td>
-                                                <td>{parseToRupiahText(x.piutang.toFixed(2))}</td>
-                                            </tr>
+                                            return <>
+                                                <div className="w-full flex px-2 my-2">
+                                                    <p className="flex-1 text-xs">{x.nomor_faktur_pembelian_barang}</p>
+                                                    <p className="flex-1 text-xs">{formatDate(x.tanggal)}</p>
+                                                    <p className="flex-1 text-xs">{parseToRupiahText(x.total_beli.toFixed(2))}</p>
+                                                    <p className="flex-1 text-xs">{parseToRupiahText(x.total_pelunasan.toFixed(2))}</p>
+                                                    <p className="flex-1 text-xs">{parseToRupiahText(x.piutang.toFixed(2))}</p>
+                                                </div>
+                                            </>
                                         })
                                     }
-                                    <tr className="font-bold">
-                                        <td></td>
-                                        <td>TOTAL</td>
-                                        <td></td>
-                                        <td>{parseToRupiahText(item.total_beli.toFixed(2))}</td>
-                                        <td>{parseToRupiahText(item.total_pelunasan.toFixed(2))}</td>
-                                        <td>{parseToRupiahText(item.piutang.toFixed(2))}</td>
-                                    </tr>
-                                </>
-                            })
-                        }
-                    </tbody>
-                </table>
-            </div>
+                                    <div className="w-full flex font-medium bg-gray-100 p-2 border-t-2">
+                                        <p className="flex-1 font-bold text-xs">Total</p>
+                                        <p className="flex-1 text-xs">&nbsp;</p>
+                                        <p className="flex-1 text-xs">{parseToRupiahText(item.total_beli.toFixed(2))}</p>
+                                        <p className="flex-1 text-xs">{parseToRupiahText(item.total_pelunasan.toFixed(2))}</p>
+                                        <p className="flex-1 text-xs">{parseToRupiahText(item.piutang.toFixed(2))}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                })
+            }
         </div>
     </Wrap >
 }
