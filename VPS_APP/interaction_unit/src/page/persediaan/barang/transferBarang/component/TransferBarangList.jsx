@@ -44,8 +44,10 @@ const TransferBarangList = ({
                     }
                 })
                 .then(() => {
-                    if (index < barangList.length) {
+                    if (index < barangList.length - 1) {
                         _saveRincianTransferBarang(index + 1)
+                    } else {
+                        _getRincianTransferBarang()
                     }
                 })
                 .catch(err => showError(err))

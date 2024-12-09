@@ -13,9 +13,9 @@ const KonversiBahanBakuList = ({
     satuanBahanBakuKonversiBahanBaku,
     preview
 }) => {
-    const [BahanBakuList, setBahanBakuList] = useState([])
-    const [BahanBakuListToKonversi, setBahanBakuListToKonversi] = useState([])
-    const [BahanBakuListGetKonversi, setBahanBakuListGetKonversi] = useState([])
+    const [bahanBakuList, setBahanBakuList] = useState([])
+    const [bahanBakuListToKonversi, setBahanBakuListToKonversi] = useState([])
+    const [bahanBakuListGetKonversi, setBahanBakuListGetKonversi] = useState([])
 
     const _getRincianKonversiBahanBaku = () => {
         apiRincianKonversiBahanBakuCRUD
@@ -26,7 +26,7 @@ const KonversiBahanBakuList = ({
     }
 
     const _updateJumlahKonversi = (value, stok_awal_bahan_baku) => {
-        let BahanBakuListCopy = BahanBakuListToKonversi
+        let BahanBakuListCopy = bahanBakuListToKonversi
 
         BahanBakuListCopy = BahanBakuListCopy.map(x => {
             if (x.stok_awal_bahan_baku == stok_awal_bahan_baku) {
@@ -38,7 +38,7 @@ const KonversiBahanBakuList = ({
     }
 
     const _updateJumlahHasilKonversi = (value, stok_awal_bahan_baku) => {
-        let BahanBakuListCopy = BahanBakuListToKonversi
+        let BahanBakuListCopy = bahanBakuListToKonversi
 
         BahanBakuListCopy = BahanBakuListCopy.map(x => {
             if (x.stok_awal_bahan_baku == stok_awal_bahan_baku) {
@@ -50,7 +50,7 @@ const KonversiBahanBakuList = ({
     }
 
     const _updateKodeBahanBakuTujuan = (value, stok_awal_bahan_baku) => {
-        let BahanBakuListCopy = BahanBakuListToKonversi
+        let BahanBakuListCopy = bahanBakuListToKonversi
 
         BahanBakuListCopy = BahanBakuListCopy.map(x => {
             if (x.stok_awal_bahan_baku == stok_awal_bahan_baku) {
@@ -62,7 +62,7 @@ const KonversiBahanBakuList = ({
     }
 
     const _saveRincianKonversiBahanBaku = () => {
-        BahanBakuListToKonversi.map(async (x) => {
+        bahanBakuListToKonversi.map(async (x) => {
             await apiRincianKonversiBahanBakuCRUD
                 .custom(x.uuid ? `/${x.uuid}` : '', x.uuid ? `PUT` : 'POST', null, {
                     data: {
@@ -77,7 +77,7 @@ const KonversiBahanBakuList = ({
     }
 
     const _getKategoriHargaBahanBakuKodeBahanBaku = (stok_awal_bahan_baku_tujuan) => {
-        const BahanBakuListGetKonversiGet = BahanBakuList.filter(x => x.stok_awal_bahan_baku == stok_awal_bahan_baku_tujuan)
+        const BahanBakuListGetKonversiGet = bahanBakuList.filter(x => x.stok_awal_bahan_baku == stok_awal_bahan_baku_tujuan)
         if (BahanBakuListGetKonversiGet.length > 0) {
             return {
                 label: BahanBakuListGetKonversiGet[0].kategori_harga_bahan_baku_kode_bahan_baku,
@@ -88,7 +88,7 @@ const KonversiBahanBakuList = ({
     }
 
     const _getSatuanBahanBakuTujuan = (stok_awal_bahan_baku_tujuan) => {
-        const BahanBakuListGetKonversiGet = BahanBakuList.filter(x => x.stok_awal_bahan_baku == stok_awal_bahan_baku_tujuan)
+        const BahanBakuListGetKonversiGet = bahanBakuList.filter(x => x.stok_awal_bahan_baku == stok_awal_bahan_baku_tujuan)
         if (BahanBakuListGetKonversiGet.length > 0) {
             return BahanBakuListGetKonversiGet[0].satuan_bahan_baku_name
         }
@@ -96,11 +96,11 @@ const KonversiBahanBakuList = ({
     }
 
     useEffect(() => {
-        const BahanBakuListToKonversiGet = BahanBakuList.filter(x => x.satuan_bahan_baku_uuid == satuanBahanBakuKonversiBahanBaku.value)
-        const BahanBakuListGetKonversiGet = BahanBakuList.filter(x => x.satuan_bahan_baku_uuid != satuanBahanBakuKonversiBahanBaku.value)
+        const BahanBakuListToKonversiGet = bahanBakuList.filter(x => x.satuan_bahan_baku_uuid == satuanBahanBakuKonversiBahanBaku.value)
+        const BahanBakuListGetKonversiGet = bahanBakuList.filter(x => x.satuan_bahan_baku_uuid != satuanBahanBakuKonversiBahanBaku.value)
         setBahanBakuListToKonversi(x => x = BahanBakuListToKonversiGet)
         setBahanBakuListGetKonversi(x => x = BahanBakuListGetKonversiGet)
-    }, [BahanBakuList])
+    }, [bahanBakuList])
 
     useEffect(() => {
         _getRincianKonversiBahanBaku()
@@ -126,7 +126,7 @@ const KonversiBahanBakuList = ({
                     </thead>
                     <tbody>
                         {
-                            BahanBakuListToKonversi?.map((item, i) => {
+                            bahanBakuListToKonversi?.map((item, i) => {
                                 return <>
                                     <tr key={i}>
                                         <td>{i + 1}.</td>
@@ -159,7 +159,7 @@ const KonversiBahanBakuList = ({
                                                     _getKategoriHargaBahanBakuKodeBahanBaku(item.stok_awal_bahan_baku_tujuan)?.label
                                                 }</> : <>
                                                     <FormSelect
-                                                        optionsDataList={BahanBakuListGetKonversi.filter(x => x.daftar_bahan_baku_uuid == item.daftar_bahan_baku_uuid)}
+                                                        optionsDataList={bahanBakuListGetKonversi.filter(x => x.daftar_bahan_baku_uuid == item.daftar_bahan_baku_uuid)}
                                                         optionsLabel={"kategori_harga_bahan_baku_kode_bahan_baku"}
                                                         optionsValue={"stok_awal_bahan_baku"}
                                                         selectValue={_getKategoriHargaBahanBakuKodeBahanBaku(item.stok_awal_bahan_baku_tujuan)}

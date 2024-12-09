@@ -10,7 +10,7 @@ const TransferBahanBakuList = ({
     transferBahanBaku,
     preview
 }) => {
-    const [BahanBakuList, setBahanBakuList] = useState([])
+    const [bahanBakuList, setBahanBakuList] = useState([])
 
     const _getRincianTransferBahanBaku = () => {
         apiRincianTransferBahanBakuCRUD
@@ -21,7 +21,7 @@ const TransferBahanBakuList = ({
     }
 
     const _updateJumlah = (value, stok_awal_bahan_baku) => {
-        let bahanBakuListCopy = BahanBakuList
+        let bahanBakuListCopy = bahanBakuList
 
         bahanBakuListCopy = bahanBakuListCopy.map(x => {
             if (x.stok_awal_bahan_baku == stok_awal_bahan_baku) {
@@ -33,19 +33,21 @@ const TransferBahanBakuList = ({
     }
 
     const _saveRincianTransferBahanBaku = (index) => {
-        if (BahanBakuList[index].stok_awal_bahan_baku_tujuan) {
+        if (bahanBakuList[index].stok_awal_bahan_baku_tujuan) {
             apiRincianTransferBahanBakuCRUD
-                .custom(BahanBakuList[index].uuid ? `/${BahanBakuList[index].uuid}` : '', BahanBakuList[index].uuid ? `PUT` : 'POST', null, {
+                .custom(bahanBakuList[index].uuid ? `/${bahanBakuList[index].uuid}` : '', bahanBakuList[index].uuid ? `PUT` : 'POST', null, {
                     data: {
                         transfer_bahan_baku: transferBahanBaku.uuid,
-                        stok_awal_bahan_baku: BahanBakuList[index].stok_awal_bahan_baku,
-                        jumlah: BahanBakuList[index].jumlah,
-                        stok_awal_bahan_baku_tujuan: BahanBakuList[index].stok_awal_bahan_baku_tujuan,
+                        stok_awal_bahan_baku: bahanBakuList[index].stok_awal_bahan_baku,
+                        jumlah: bahanBakuList[index].jumlah,
+                        stok_awal_bahan_baku_tujuan: bahanBakuList[index].stok_awal_bahan_baku_tujuan,
                     }
                 })
                 .then(() => {
-                    if (index < BahanBakuList.length) {
+                    if (index < bahanBakuList.length - 1) {
                         _saveRincianTransferBahanBaku(index + 1)
+                    }else{
+                        _getRincianTransferBahanBaku()
                     }
                 })
                 .catch(err => showError(err))
@@ -74,7 +76,7 @@ const TransferBahanBakuList = ({
                     </thead>
                     <tbody>
                         {
-                            BahanBakuList?.map((item, i) => {
+                            bahanBakuList?.map((item, i) => {
                                 return item.stok_awal_bahan_baku_tujuan && <>
                                     <tr key={i}>
                                         <td>{i + 1}.</td>
