@@ -121,7 +121,6 @@ GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].transaksi_kas_tab 
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].transfer_bahan_baku_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].transfer_barang_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].tunjangan_uang_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
-GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].user_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT SELECT ON db_keps_assistant_[client_id].user_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';             
 
 FLUSH PRIVILEGES;
