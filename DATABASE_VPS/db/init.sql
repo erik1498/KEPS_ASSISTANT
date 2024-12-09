@@ -40,7 +40,6 @@ GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].jenis_penjualan_ba
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].jenis_penjualan_barang_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].jenis_penjualan_jasa_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].jurnal_umum_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
-GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].jurnal_umum_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';_old
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].kategori_aset_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].kategori_bahan_baku_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
 GRANT INSERT, SELECT, UPDATE ON db_keps_assistant_[client_id].kategori_barang_tab TO 'kepsAssistantUserDB123@#%__'@'%' IDENTIFIED BY 'kepsAssistantPassDB123@#%__';
