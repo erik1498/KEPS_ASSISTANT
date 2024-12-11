@@ -29,12 +29,15 @@ export const initialDataFromEditObject = ({
     dataList,
     setState = () => { },
     labelKey,
-    valueKey
+    valueKey,
+    labelIsArray = false,
+    delimiterLabel
 }) => {
     const dataGet = dataList.filter(x => x[`${valueKey}`] == editObject)
+    console.log(dataGet)
     if (dataGet.length > 0) {
         setState({
-            label: dataGet[0][`${labelKey}`],
+            label: labelIsArray ? concatLabel(dataGet[0], labelKey, delimiterLabel) : dataGet[0][labelKey],
             value: dataGet[0][`${valueKey}`],
         })
     }

@@ -20,7 +20,14 @@ const KategoriPerlengkapanModel = db.define("kategori_perlengkapan_tab",
                 notEmpty:true,
             }
         },
-        kode_akun_perkiraan: {
+        kode_akun_perkiraan_debet: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate:{
+                notEmpty:true,
+            }
+        },
+        kode_akun_perkiraan_kredit: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{

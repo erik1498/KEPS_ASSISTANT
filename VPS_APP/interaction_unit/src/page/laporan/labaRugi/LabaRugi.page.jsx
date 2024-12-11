@@ -100,17 +100,17 @@ const LabaRugiPage = () => {
                                             }}
                                         />
                                         <RowCard
-                                            dataList={labaRugi.beban_operasional}
-                                            title={"Beban Operasional"}
-                                            totalTitle={"Total Beban Operasional"}
+                                            dataList={labaRugi.beban_operasional_dan_administrasi}
+                                            title={"Beban Operasional Dan Administrasi"}
+                                            totalTitle={"Total Beban Operasional Dan Administrasi"}
                                         />
                                         <RowCard
-                                            dataList={labaRugi.beban_lainnya}
-                                            title={"Beban Lainnya"}
-                                            totalTitle={"Total Beban Lainnya"}
+                                            dataList={labaRugi.beban_lain_lain}
+                                            title={"Beban Lain - Lain"}
+                                            totalTitle={"Total Beban Lain - Lain"}
                                         />
                                         <RowCard
-                                            dataList={labaRugi.pendapatanLainLain}
+                                            dataList={labaRugi.pendapatan_lain_lain}
                                             title={"Pendapatan Lain - Lain"}
                                             totalTitle={"Total Pendapatan Lain - Lain"}
                                         />

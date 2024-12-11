@@ -104,7 +104,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 WHERE psojt.enabled = 1
                 UNION ALL
                 SELECT 
-                    kpt.kode_akun_perkiraan AS kode_akun_perkiraan,
+                    kpt.kode_akun_perkiraan_kredit AS kode_akun_perkiraan,
                     LPAD(MONTH(dpt.tanggal_beli), 2, '0') AS bulan,
                     YEAR(dpt.tanggal_beli) AS tahun,
                     dpt.kuantitas * dpt.harga_satuan AS debet,
@@ -186,7 +186,7 @@ export const getNeracaSaldoByBulanRepo = async (bulan, tahun, whereIN, req_id) =
                 AND dpt.enabled = 1 
                 UNION ALL
                 SELECT 
-                    kpt.kode_akun_perkiraan AS kode_akun_perkiraan,
+                    kpt.kode_akun_perkiraan_debet AS kode_akun_perkiraan,
                     LPAD(MONTH(ppt.tanggal), 2, '0') AS bulan,
                     YEAR(ppt.tanggal) AS tahun,
                     0 AS debet,

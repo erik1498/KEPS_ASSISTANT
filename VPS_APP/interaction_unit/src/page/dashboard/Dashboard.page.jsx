@@ -76,7 +76,7 @@ const DashboardPage = () => {
                         legendDisplay={false}
                         indexAxis={"y"}
                         data={{
-                            labels: KodeAkunType().map(i => i.name),
+                            labels: KodeAkunType.map(i => i.name),
                             datasets: [
                                 {
                                     label: "Debet",

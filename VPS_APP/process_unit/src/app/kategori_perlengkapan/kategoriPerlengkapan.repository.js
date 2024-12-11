@@ -9,7 +9,8 @@ export const getAllKategoriPerlengkapanRepo = async (pageNumber, size, search, r
             SELECT 
                 COUNT(0) AS count 
             FROM ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt 
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt_debet ON kapt_debet.uuid = kpt.kode_akun_perkiraan_debet
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt_kredit ON kapt_kredit.uuid = kpt.kode_akun_perkiraan_kredit
             WHERE kpt.enabled = 1
             AND kpt.name LIKE '%${search}%'
         `,
@@ -23,9 +24,13 @@ export const getAllKategoriPerlengkapanRepo = async (pageNumber, size, search, r
         `
             SELECT 
                 kpt.*,
-                kapt.name AS kode_akun_perkiraan_name
+                kapt_debet.name AS kode_akun_perkiraan_debet_name,
+                kapt_debet.code AS kode_akun_perkiraan_debet_code,
+                kapt_kredit.name AS kode_akun_perkiraan_kredit_name,
+                kapt_kredit.code AS kode_akun_perkiraan_kredit_code
             FROM ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt 
-            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt_debet ON kapt_debet.uuid = kpt.kode_akun_perkiraan_debet
+            JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt_kredit ON kapt_kredit.uuid = kpt.kode_akun_perkiraan_kredit
             WHERE kpt.enabled = 1
             AND kpt.name LIKE '%${search}%'
             LIMIT ${pageNumber}, ${size}
@@ -75,7 +80,8 @@ export const createKategoriPerlengkapanRepo = async (kategoriPerlengkapanData, r
         KategoriPerlengkapanModel,
         {
             name: kategoriPerlengkapanData.name,
-            kode_akun_perkiraan: kategoriPerlengkapanData.kode_akun_perkiraan,
+            kode_akun_perkiraan_debet: kategoriPerlengkapanData.kode_akun_perkiraan_debet,
+            kode_akun_perkiraan_kredit: kategoriPerlengkapanData.kode_akun_perkiraan_kredit,
             enabled: kategoriPerlengkapanData.enabled
         }
     )
@@ -102,7 +108,8 @@ export const updateKategoriPerlengkapanByUuidRepo = async (uuid, kategoriPerleng
         KategoriPerlengkapanModel,
         {
             name: kategoriPerlengkapanData.name,
-            kode_akun_perkiraan: kategoriPerlengkapanData.kode_akun_perkiraan,
+            kode_akun_perkiraan_debet: kategoriPerlengkapanData.kode_akun_perkiraan_debet,
+            kode_akun_perkiraan_kredit: kategoriPerlengkapanData.kode_akun_perkiraan_kredit,
         },
         {
             uuid

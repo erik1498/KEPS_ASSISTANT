@@ -1,5 +1,5 @@
 import { parseToRupiahText } from "./numberParsingUtil.js"
-import { ASSET_MINUS_KODE_AKUN, DEBET_POSITIF_TYPE, KREDIT_POSITIF_TYPE, MODAL_MINUS_KODE_AKUN, UTANG_MINUS_KODE_AKUN, generateCountValue, generateCountValueByPositifType, generateReportValue, generateReportValueByMinusValue, generateReportValueByPositifType } from "./validateKreditDebetTypeUtil.js"
+import { ASSET_MINUS_KODE_AKUN, DEBET_POSITIF_TYPE, KREDIT_POSITIF_TYPE, EKUITAS_MINUS_KODE_AKUN, UTANG_MINUS_KODE_AKUN, generateCountValue, generateCountValueByPositifType, generateReportValue, generateReportValueByMinusValue, generateReportValueByPositifType } from "./validateKreditDebetTypeUtil.js"
 
 
 export const MODAL_TYPE = "Modal"
@@ -14,9 +14,9 @@ export const getPerubahanModalReport = (data, laba_rugi_data_berjalan) => {
                 let kredit = data[i].kredit > 0 ? `( ${parseToRupiahText(Math.abs(data[i].kredit))} )` : data[i].kredit
                 resultModal.push({
                     ...data[i],
-                    value: generateReportValue(data[i], MODAL_MINUS_KODE_AKUN)
+                    value: generateReportValue(data[i], EKUITAS_MINUS_KODE_AKUN)
                 })
-                resultModalCount += generateCountValue(data[i], MODAL_MINUS_KODE_AKUN)
+                resultModalCount += generateCountValue(data[i], EKUITAS_MINUS_KODE_AKUN)
             }
         }
         let labaTahunBerjalan = null
@@ -29,9 +29,9 @@ export const getPerubahanModalReport = (data, laba_rugi_data_berjalan) => {
                 kredit: 0,
                 value: 0
             }
-            labaTahunBerjalan.value = generateReportValue(labaTahunBerjalan, MODAL_MINUS_KODE_AKUN)
+            labaTahunBerjalan.value = generateReportValue(labaTahunBerjalan, EKUITAS_MINUS_KODE_AKUN)
             resultModal.push(labaTahunBerjalan)
-            resultModalCount += generateCountValue(labaTahunBerjalan, MODAL_MINUS_KODE_AKUN)
+            resultModalCount += generateCountValue(labaTahunBerjalan, EKUITAS_MINUS_KODE_AKUN)
         }
         if (laba_rugi_data_berjalan.laba_rugi.loss) {
             labaTahunBerjalan = {
@@ -42,9 +42,9 @@ export const getPerubahanModalReport = (data, laba_rugi_data_berjalan) => {
                 kredit: Math.abs(laba_rugi_data_berjalan.laba_rugi.loss),
                 value: 0
             }
-            labaTahunBerjalan.value = generateReportValue(labaTahunBerjalan, MODAL_MINUS_KODE_AKUN)
+            labaTahunBerjalan.value = generateReportValue(labaTahunBerjalan, EKUITAS_MINUS_KODE_AKUN)
             resultModal.push(labaTahunBerjalan)
-            resultModalCount += generateCountValue(labaTahunBerjalan, MODAL_MINUS_KODE_AKUN)
+            resultModalCount += generateCountValue(labaTahunBerjalan, EKUITAS_MINUS_KODE_AKUN)
         }
         res({
             modal: {

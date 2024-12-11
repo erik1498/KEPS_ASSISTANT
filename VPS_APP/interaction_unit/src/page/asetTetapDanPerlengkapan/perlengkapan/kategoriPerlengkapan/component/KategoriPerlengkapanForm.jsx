@@ -12,8 +12,9 @@ const KategoriPerlengkapanForm = ({
     getData = () => { }
 }) => {
     const [namaKategoriPerlengkapan, setNamaKategoriPerlengkapan] = useState(kategoriPerlengkapanEdit?.name ? kategoriPerlengkapanEdit.name : ``)
-    const [kodeAkunPerkiraanKategoriPerlengkapan, setKodeAkunPerkiraanKategoriPerlengkapan] = useState(kategoriPerlengkapanEdit?.kode_akun_perkiraan ? kategoriPerlengkapanEdit.kode_akun_perkiraan : ``)
-    
+    const [kodeAkunPerkiraanKategoriPerlengkapanDebet, setKodeAkunPerkiraanKategoriPerlengkapanDebet] = useState(kategoriPerlengkapanEdit?.kode_akun_perkiraan_debet_name ? kategoriPerlengkapanEdit.kode_akun_perkiraan_debet_name : ``)
+    const [kodeAkunPerkiraanKategoriPerlengkapanKredit, setKodeAkunPerkiraanKategoriPerlengkapanKredit] = useState(kategoriPerlengkapanEdit?.kode_akun_perkiraan_kredit_code ? kategoriPerlengkapanEdit.kode_akun_perkiraan_kredit_code : ``)
+
     const [kodeAkunPerkiraanKategoriPerlengkapanList, setKodeAkunPerkiraanKategoriPerlengkapanList] = useState([])
 
     const _getDataKodeAkunPerkiraan = () => {
@@ -24,15 +25,26 @@ const KategoriPerlengkapanForm = ({
                 if (resData.data.entry.length > 0) {
                     if (kategoriPerlengkapanEdit) {
                         initialDataFromEditObject({
-                            editObject: kategoriPerlengkapanEdit.kode_akun_perkiraan,
+                            editObject: kategoriPerlengkapanEdit.kode_akun_perkiraan_debet,
                             dataList: resData.data.entry,
-                            setState: setKodeAkunPerkiraanKategoriPerlengkapan,
-                            labelKey: "name",
+                            setState: setKodeAkunPerkiraanKategoriPerlengkapanDebet,
+                            labelKey: ["code", "name"],
                             valueKey: "uuid",
+                            labelIsArray: true,
+                            delimiterLabel: " - "
+                        })
+                        initialDataFromEditObject({
+                            editObject: kategoriPerlengkapanEdit.kode_akun_perkiraan_kredit,
+                            dataList: resData.data.entry,
+                            setState: setKodeAkunPerkiraanKategoriPerlengkapanKredit,
+                            labelKey: ["code", "name"],
+                            valueKey: "uuid",
+                            labelIsArray: true,
+                            delimiterLabel: " - "
                         })
                         return
                     }
-                    setKodeAkunPerkiraanKategoriPerlengkapan({
+                    setKodeAkunPerkiraanKategoriPerlengkapanDebet({
                         label: resData.data.entry[0].name,
                         value: resData.data.entry[0].uuid,
                     })
@@ -48,7 +60,8 @@ const KategoriPerlengkapanForm = ({
                 .custom(`${kategoriPerlengkapanEdit?.uuid ? `/${kategoriPerlengkapanEdit.uuid}` : ``}`, kategoriPerlengkapanEdit ? "PUT" : "POST", null, {
                     data: {
                         name: namaKategoriPerlengkapan,
-                        kode_akun_perkiraan: kodeAkunPerkiraanKategoriPerlengkapan.value,
+                        kode_akun_perkiraan_debet: kodeAkunPerkiraanKategoriPerlengkapanDebet.value,
+                        kode_akun_perkiraan_kredit: kodeAkunPerkiraanKategoriPerlengkapanKredit.value,
                     }
                 }).then(() => {
                     if (kategoriPerlengkapanEdit) {
@@ -93,15 +106,28 @@ const KategoriPerlengkapanForm = ({
                     }
                 />
                 <FormSelectWithLabel
-                    label={"Kode Akun "}
+                    label={"Kode Akun Debet"}
                     optionsDataList={kodeAkunPerkiraanKategoriPerlengkapanList}
                     optionsLabel={["code", "name"]}
                     optionsDelimiter={"-"}
                     optionsLabelIsArray={true}
                     optionsValue={"uuid"}
-                    selectValue={kodeAkunPerkiraanKategoriPerlengkapan}
+                    selectValue={kodeAkunPerkiraanKategoriPerlengkapanDebet}
                     onchange={(e) => {
-                        setKodeAkunPerkiraanKategoriPerlengkapan(e)
+                        setKodeAkunPerkiraanKategoriPerlengkapanDebet(e)
+                    }}
+                    selectName={`kodeAkunPerkiraanDaftarPerlengkapan`}
+                />
+                <FormSelectWithLabel
+                    label={"Kode Akun Perkiraan Kredit"}
+                    optionsDataList={kodeAkunPerkiraanKategoriPerlengkapanList}
+                    optionsLabel={["code", "name"]}
+                    optionsDelimiter={"-"}
+                    optionsLabelIsArray={true}
+                    optionsValue={"uuid"}
+                    selectValue={kodeAkunPerkiraanKategoriPerlengkapanKredit}
+                    onchange={(e) => {
+                        setKodeAkunPerkiraanKategoriPerlengkapanKredit(e)
                     }}
                     selectName={`kodeAkunPerkiraanDaftarPerlengkapan`}
                 />

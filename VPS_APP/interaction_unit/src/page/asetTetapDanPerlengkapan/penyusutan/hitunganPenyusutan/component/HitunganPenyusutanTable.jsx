@@ -1,8 +1,9 @@
+import { GARIS_LURUS } from "../../../../../config/objectList.config"
 import { parseToRupiahText } from "../../../../../helper/number.helper"
 
 const HitunganPenyusutanTable = ({
     hitunganList = [],
-    metodePenyusutanName = "Garis Lurus"
+    metodePenyusutanName = GARIS_LURUS
 }) => {
 
     return <>
@@ -15,7 +16,7 @@ const HitunganPenyusutanTable = ({
                 <thead>
                     <tr className="sticky top-0 bg-white py-4 text-black">
                         {
-                            metodePenyusutanName == "Garis Lurus" ?
+                            metodePenyusutanName == GARIS_LURUS ?
                                 <>
                                     <th>No.</th>
                                     <th>Tahun Perolehan</th>
@@ -41,7 +42,7 @@ const HitunganPenyusutanTable = ({
                 </thead>
                 <tbody>
                     {
-                        metodePenyusutanName == "Garis Lurus" ?
+                        metodePenyusutanName == GARIS_LURUS ?
                             <>
                                 {
                                     hitunganList.map((item, i) => {

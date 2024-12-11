@@ -14,14 +14,14 @@ const KodeAkunForm = ({
     getData = () => { }
 }) => {
     const [namaAkun, setNamaAkun] = useState(kodeAkunEdit?.name ? kodeAkunEdit.name : ``)
-    const [kodeAkun, setKodeAkun] = useState(kodeAkunEdit?.code ? kodeAkunEdit.code : ``)
-    const [kodeAkunTypeList, setKodeAkunTypeList] = useState(KodeAkunType())
+    const [kodeAkun, setKodeAkun] = useState(kodeAkunEdit?.code ? kodeAkunEdit.code.split(".")[1] : ``)
+    const [kodeAkunTypeList, setKodeAkunTypeList] = useState(KodeAkunType)
     const [tipeTransaksiKasBank, setTipeTransaksiKasBank] = useState(kodeAkunEdit?.type_transaksi_kas_bank ? kodeAkunEdit?.type_transaksi_kas_bank : 0)
     const [tipeTransaksiPayroll, setTipeTransaksiPayroll] = useState(kodeAkunEdit?.type_transaksi_payroll ? kodeAkunEdit?.type_transaksi_payroll : 0)
     const [typeTransaksiPembelianAsetDanPerlengkapan, setTypeTransaksiPembelianAsetDanPerlengkapan] = useState(kodeAkunEdit?.type_transaksi_pembelian_aset_dan_perlengkapan ? kodeAkunEdit?.type_transaksi_pembelian_aset_dan_perlengkapan : 0)
     const [typeKodeAkun, setTypeKodeAkun] = useState({
-        label: kodeAkunEdit?.type ? kodeAkunEdit.type : `Harta`,
-        value: kodeAkunEdit?.type ? kodeAkunEdit.type : `Harta`
+        label: kodeAkunEdit?.type ? kodeAkunEdit.type : KodeAkunType.at(0).name,
+        value: kodeAkunEdit?.type ? kodeAkunEdit.type : KodeAkunType.at(0).name
     })
 
 
@@ -33,7 +33,7 @@ const KodeAkunForm = ({
                     data: {
                         type: typeKodeAkun.value,
                         name: namaAkun,
-                        code: kodeAkun,
+                        code: `${kodeAkunTypeList.filter(x => x.name == typeKodeAkun.value)?.at(0)?.id}.${kodeAkun}`,
                         type_transaksi_kas_bank: tipeTransaksiKasBank,
                         type_transaksi_payroll: tipeTransaksiPayroll,
                         type_transaksi_pembelian_aset_dan_perlengkapan: typeTransaksiPembelianAsetDanPerlengkapan
@@ -63,7 +63,7 @@ const KodeAkunForm = ({
                 ><FaTimes /> Batalkan Kode Akun
                 </button>
             </div>
-            <div className="flex gap-x-2">
+            <div className="flex gap-x-4">
                 <FormInputWithLabel
                     label={"Nama Akun"}
                     type={"text"}
@@ -77,20 +77,8 @@ const KodeAkunForm = ({
                         }
                     }
                 />
-                <FormInputWithLabel
-                    label={"Kode Akun"}
-                    type={"text"}
-                    onchange={(e) => {
-                        inputOnlyNumber(e)
-                        setKodeAkun(e.target.value)
-                    }}
-                    others={
-                        {
-                            value: kodeAkun,
-                            name: "kodeAkun"
-                        }
-                    }
-                />
+            </div>
+            <div className="mt-5 flex gap-x-4">
                 <FormSelectWithLabel
                     label={"Tipe Akun"}
                     onchange={(e) => {
@@ -102,6 +90,22 @@ const KodeAkunForm = ({
                     selectName={"kodeAkunType"}
                     selectValue={typeKodeAkun}
                 />
+                <div className="flex gap-x-2 items-end">
+                    <p>{kodeAkunTypeList.filter(x => x.name == typeKodeAkun.value)?.at(0)?.id}.</p>
+                    <FormInputWithLabel
+                        label={"Kode Akun"}
+                        type={"text"}
+                        onchange={(e) => {
+                            setKodeAkun(e.target.value)
+                        }}
+                        others={
+                            {
+                                value: kodeAkun,
+                                name: "kodeAkun"
+                            }
+                        }
+                    />
+                </div>
             </div>
             <div className="mt-5 flex gap-x-2">
                 <ToggleBox

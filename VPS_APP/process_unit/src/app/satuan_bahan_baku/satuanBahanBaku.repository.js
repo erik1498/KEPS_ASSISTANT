@@ -97,7 +97,7 @@ export const checkSatuanBahanBakuAllowToEditRepo = async (uuid, req_id) => {
                 ) AS kode_bahan_baku, 
                 (
                     SELECT 
-                        dat.nomor_invoice
+                        dat.bukti_transaksi
                     FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat
                     WHERE dat.satuan_bahan_baku = sbt.uuid
                     AND dat.enabled = 1

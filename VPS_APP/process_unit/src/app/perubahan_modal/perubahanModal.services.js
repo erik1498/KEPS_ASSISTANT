@@ -1,4 +1,4 @@
-import { MODAL_MINUS_KODE_AKUN } from "../../constant/akuntansiConstant.js"
+import { EKUITAS_MINUS_KODE_AKUN } from "../../constant/akuntansiConstant.js"
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
 import { getBulanText, getSumMinusOfStringValue, getSumOfStringValue } from "../../utils/mathUtil.js"
 import { parseToRupiahText } from "../../utils/numberParsingUtil.js"
@@ -10,8 +10,8 @@ export const getAllPerubahanModalService = async (tahun, req_identity) => {
     let returnData = []
     perubahanModal.map((item, idx) => {
         const modalData = JSON.parse(item.json).modal.data
-        const modalDataPlus = modalData.filter((i) => MODAL_MINUS_KODE_AKUN.indexOf(i.kode_akun_perkiraan_code) < 0)
-        const modalDataMinus = modalData.filter((i) => MODAL_MINUS_KODE_AKUN.indexOf(i.kode_akun_perkiraan_code) >= 0)
+        const modalDataPlus = modalData.filter((i) => EKUITAS_MINUS_KODE_AKUN.indexOf(i.kode_akun_perkiraan_code) < 0)
+        const modalDataMinus = modalData.filter((i) => EKUITAS_MINUS_KODE_AKUN.indexOf(i.kode_akun_perkiraan_code) >= 0)
         returnData[parseInt(item.bulan) - 1] = {
             data: {
                 plus: modalDataPlus,

@@ -1,8 +1,8 @@
 import { getTanggalTerakhirPadaBulan } from "./jurnalUmumUtil.js"
 import { getBulanText } from "./mathUtil.js"
 
-export const GARIS_LURUS = "Garis Lurus"
-export const SALDO_MENURUN = "Saldo Menurun"
+export const GARIS_LURUS = "GARIS LURUS"
+export const SALDO_MENURUN = "SALDO MENURUN"
 
 
 export const getDataFromTanggal = (tanggal, delimiter, index) => {

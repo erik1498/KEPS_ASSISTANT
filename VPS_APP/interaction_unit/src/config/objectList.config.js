@@ -415,34 +415,67 @@ export const agamaList = [
     },
 ]
 
-export const KodeAkunType = () => {
-    return [
-        {
-            name: "Harta"
-        },
-        {
-            name: "Utang"
-        },
-        {
-            name: "Modal"
-        },
-        {
-            name: "Pendapatan"
-        },
-        {
-            name: "Beban Operasional"
-        },
-        {
-            name: "Pendapatan Lain - Lain"
-        },
-        {
-            name: "Harga Pokok Penjualan"
-        },
-        {
-            name: "Beban Lainnya"
-        }
-    ]
-}
+export const KodeAkunType = [
+    {
+        name: "ASET LANCAR",
+        id: "001",
+    },
+    {
+        name: "ASET TETAP",
+        id: "001",
+    },
+    {
+        name: "ASET LAIN - LAIN",
+        id: "001",
+    },
+    {
+        name: "KEWAJIBAN LANCAR",
+        id: "002",
+    },
+    {
+        name: "KEWAJIBAN JANGKA PANJANG",
+        id: "002",
+    },
+    {
+        name: "KEWAJIBAN LAIN - LAIN",
+        id: "002",
+    },
+    {
+        name: "EKUITAS",
+        id: "003",
+    },
+    {
+        name: "PENDAPATAN",
+        id: "004",
+    },
+    {
+        name: "BEBAN OPERASIONAL DAN ADMINISTRASI",
+        id: "005",
+    },
+    {
+        name: "PENDAPATAN LAIN - LAIN",
+        id: "006",
+    },
+    {
+        name: "HARGA POKOK PENJUALAN",
+        id: "007",
+    },
+    {
+        name: "BEBAN LAIN - LAIN",
+        id: "008",
+    },
+    {
+        name: "BEBAN BUNGA DAN PAJAK",
+        id: "009",
+    },
+    {
+        name: "HARGA POKOK PRODUKSI",
+        id: "010",
+    }
+]
+
+export const GARIS_LURUS = "GARIS LURUS"
+export const SALDO_MENURUN = "SALDO MENURUN"
 
 export const JenisKelamin = () => {
     return [

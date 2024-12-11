@@ -9,7 +9,7 @@ const RowCard = ({
     return <>
         <div className={`flex flex-col w-full bg-white text-sm ${!forPrint ? 'px-3 shadow-md' : ''}`}>
             {
-                dataList.data.length > 0 ? <div className="grid grid-cols-12 sticky top-0 bg-white py-2 border-b-2">
+                dataList?.data?.length > 0 ? <div className="grid grid-cols-12 sticky top-0 bg-white py-2 border-b-2">
                     <div className="p-2 col-span-9 text-black flex items-end">
                         <div className="text-md font-bold">
                             <p className={`text-xl -ml-1 text-white px-2 rounded-md bg-blue-900`}>{title}</p>
@@ -19,13 +19,13 @@ const RowCard = ({
             }
 
             {
-                dataList.data.map((item1, i) => {
+                dataList?.data?.map((item1, i) => {
                     return <>
                         {
                             i > 0 ? <hr /> : <></>
                         }
                         {
-                            i <= dataList.data.length ?
+                            i <= dataList?.data?.length ?
                                 <>
                                     {
                                         item1.value != 0 ? <>
@@ -42,7 +42,7 @@ const RowCard = ({
                                 </> : <></>
                         }
                         {
-                            i == dataList.data.length - 1 ?
+                            i == dataList?.data?.length - 1 ?
                                 <>
                                     <hr />
                                     <div className="grid grid-cols-12 items-start py-3 font-bold">
@@ -50,7 +50,7 @@ const RowCard = ({
                                             <p>{totalTitle}</p>
                                         </div>
                                         <div className="col-span-6 text-gray-900 text-right px-2">
-                                            <p>{dataList.count}</p>
+                                            <p>{dataList?.count}</p>
                                         </div>
                                     </div>
                                 </> : <></>

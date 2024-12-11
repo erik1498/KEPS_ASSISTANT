@@ -32,13 +32,15 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'ppn', dpt.ppn,
                         'kategori_perlengkapan', kpt.name,
                         'daftar_perlengkapan_name', dpt.name,
-                        'daftar_perlengkapan_invoice', dpt.nomor_invoice
+                        'daftar_perlengkapan_invoice', dpt.nomor_invoice,
+                        'satuan_barang_name', sbt.name
                     ) AS detail_data,
                     "PENGGUNAAN PERLENGKAPAN" AS sumber
                 FROM ${generateDatabaseName(req_id)}.penggunaan_perlengkapan_tab ppt 
                 JOIN ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt ON dpt.uuid = ppt.daftar_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dpt.satuan_barang 
                 JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
-                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = "6e376191-0454-4172-a78b-2bc5f9c8fd6e" 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan_kredit
                 WHERE ppt.enabled = 1
                 AND dpt.enabled = 1 
                 AND MONTH(ppt.tanggal) = ${bulan}
@@ -67,13 +69,15 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'ppn', dpt.ppn,
                         'kategori_perlengkapan', kpt.name,
                         'daftar_perlengkapan_name', dpt.name,
-                        'daftar_perlengkapan_invoice', dpt.nomor_invoice
+                        'daftar_perlengkapan_invoice', dpt.nomor_invoice,
+                        'satuan_barang_name', sbt.name
                     ) AS detail_data,
                     "PENGGUNAAN PERLENGKAPAN" AS sumber
                 FROM ${generateDatabaseName(req_id)}.penggunaan_perlengkapan_tab ppt 
                 JOIN ${generateDatabaseName(req_id)}.daftar_perlengkapan_tab dpt ON dpt.uuid = ppt.daftar_perlengkapan 
+                JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dpt.satuan_barang 
                 JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
-                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan_debet
                 WHERE ppt.enabled = 1
                 AND dpt.enabled = 1 
                 AND MONTH(ppt.tanggal) = ${bulan}
@@ -111,7 +115,7 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                 JOIN ${generateDatabaseName(req_id)}.supplier_tab st ON st.uuid = dpt.supplier 
                 JOIN ${generateDatabaseName(req_id)}.satuan_barang_tab sbt ON sbt.uuid = dpt.satuan_barang 
                 JOIN ${generateDatabaseName(req_id)}.kategori_perlengkapan_tab kpt ON kpt.uuid = dpt.kategori_perlengkapan 
-                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan 
+                JOIN ${generateDatabaseName(req_id)}.kode_akun_perkiraan_tab kapt ON kapt.uuid = kpt.kode_akun_perkiraan_debet
                 WHERE MONTH(dpt.tanggal_beli) = ${bulan}
                 AND YEAR(dpt.tanggal_beli) = ${tahun}
                 AND dpt.enabled = 1
@@ -180,7 +184,7 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'supplier_name', st.name,
                         'supplier_code', st.code,
                         'daftar_aset_name', dat.name,
-                        'daftar_aset_invoice', dat.nomor_invoice
+                        'daftar_aset_invoice', dat.bukti_transaksi
                     ) AS detail_data,
                     "PEMBELIAN ASET" AS sumber
                 FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
@@ -221,7 +225,7 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'supplier_name', st.name,
                         'supplier_code', st.code,
                         'daftar_aset_name', dat.name,
-                        'daftar_aset_invoice', dat.nomor_invoice
+                        'daftar_aset_invoice', dat.bukti_transaksi
                     ) AS detail_data,
                     "PEMBELIAN ASET" AS sumber
                 FROM ${generateDatabaseName(req_id)}.daftar_aset_tab dat 
@@ -237,7 +241,7 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                 UNION ALL
                 SELECT 
                     "NOT_AVAILABLE" AS uuid,
-                    CONCAT("HP", dat.nomor_invoice) AS bukti_transaksi,
+                    CONCAT("HP", dat.bukti_transaksi) AS bukti_transaksi,
                     hpt.tanggal AS tanggal,
                     hpt.bulan AS bulan,
                     hpt.tahun AS tahun,
@@ -266,7 +270,7 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'supplier_name', st.name,
                         'supplier_code', st.code,
                         'daftar_aset_name', dat.name,
-                        'daftar_aset_invoice', dat.nomor_invoice
+                        'daftar_aset_invoice', dat.bukti_transaksi
                     ) AS detail_data,
                     "HITUNGAN PENYUSUTAN ASET" AS sumber
                 FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 
@@ -284,7 +288,7 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                 UNION ALL
                 SELECT 
                     "NOT_AVAILABLE" AS uuid,
-                    CONCAT("HP", dat.nomor_invoice) AS bukti_transaksi,
+                    CONCAT("HP", dat.bukti_transaksi) AS bukti_transaksi,
                     hpt.tanggal AS tanggal,
                     hpt.bulan AS bulan,
                     hpt.tahun AS tahun,
@@ -313,7 +317,7 @@ export const getJurnalHitunganPenyusutanRepo = async (bulan, tahun, req_id) => {
                         'supplier_name', st.name,
                         'supplier_code', st.code,
                         'daftar_aset_name', dat.name,
-                        'daftar_aset_invoice', dat.nomor_invoice
+                        'daftar_aset_invoice', dat.bukti_transaksi
                     ) AS detail_data,
                     "HITUNGAN PENYUSUTAN ASET" AS sumber
                 FROM ${generateDatabaseName(req_id)}.hitungan_penyusutan_tab hpt 

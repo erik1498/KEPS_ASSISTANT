@@ -28,7 +28,7 @@ const Overview = () => {
         setBulanSelectedSet(bulanSelectedSetCopy)
     }
 
-    const [kodeAkunTypeSet, setKodeAkunTypeSet] = useState(KodeAkunType().map(i => i.name))
+    const [kodeAkunTypeSet, setKodeAkunTypeSet] = useState(KodeAkunType.map(i => i.name))
 
     const addAndRemoveToKodeAkunTypeSet = (name) => {
         let kodeAkunTypeSetCopy = [...kodeAkunTypeSet]
@@ -250,12 +250,12 @@ const Overview = () => {
                         </div>
                     </div>
                     <div className="px-2 pt-5 pb-3">
-                        <div className="flex">
+                        <div className="flex flex-wrap">
                             {
-                                KodeAkunType().map((i, idx) => {
+                                KodeAkunType.map((i, idx) => {
                                     return <button
                                         onClick={e => addAndRemoveToKodeAkunTypeSet(i.name)}
-                                        className={`border text-xs border-blue-900 ${kodeAkunTypeSet.indexOf(i.name) > -1 ? `bg-blue-900 text-white` : `bg-white text-blue-900`} font-bold px-3 py-1 ${idx > 0 ? `border-l-0` : `rounded-md rounded-r-none`} ${idx == KodeAkunType().length - 1 ? `rounded-md rounded-l-none` : ``}`}>
+                                        className={`border text-xs border-blue-900 ${kodeAkunTypeSet.indexOf(i.name) > -1 ? `bg-blue-900 text-white` : `bg-white text-blue-900`} font-bold px-3 py-1`}>
                                         {i.name}
                                     </button>
                                 })

@@ -1,4 +1,4 @@
-import { HARGA_POKOK_PENJUALAN_TYPE, HARTA_TYPE, MODAL_TYPE, UTANG_TYPE } from "../constant/labaRugiConstant.js"
+import { HARGA_POKOK_PENJUALAN_TYPE, ASET_TETAP_TYPE, EKUITAS_TYPE, KEWAJIBAN_LANCAR_TYPE, ASET_LANCAR_TYPE, ASET_LAIN_LAIN_TYPE } from "../constant/labaRugiConstant.js"
 import { getBulanText, getSumMinusOfStringValue, getSumOfStringValue } from "./mathUtil.js"
 import { generateReportValue, generateReportValueByMinusValue, convertByPlusMinusValue, minusTypeCode } from "./validateKreditDebetTypeUtil.js"
 
@@ -11,7 +11,7 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
             labaTahunBerjalan = {
                 kode_akun_perkiraan_code: "399",
                 kode_akun_perkiraan_name: "Laba/Rugi Periode Berjalan",
-                kode_akun_perkiraan_type: MODAL_TYPE,
+                kode_akun_perkiraan_type: EKUITAS_TYPE,
                 debet: 0,
                 kredit: laba_rugi_data_berjalan.laba_rugi.gain
             }
@@ -22,7 +22,7 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
             labaTahunBerjalan = {
                 kode_akun_perkiraan_code: "399",
                 kode_akun_perkiraan_name: "Laba/Rugi Periode Berjalan",
-                kode_akun_perkiraan_type: MODAL_TYPE,
+                kode_akun_perkiraan_type: EKUITAS_TYPE,
                 debet: Math.abs(laba_rugi_data_berjalan.laba_rugi.loss),
                 kredit: 0
             }
@@ -59,37 +59,57 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
         }
 
 
-        let resultAset = []
-        let resultAsetCount = 0.0
+        let resultAsetTetap = []
+        let resultAsetTetapCount = 0.0
 
-        let resultUtang = []
-        let resultUtangCount = 0.0
+        let resultAsetLancar = []
+        let resultAsetLancarCount = 0.0
 
-        let resultModal = []
-        let resultModalCount = 0.0
+        let resultAsetLainLain = []
+        let resultAsetLainLainCount = 0.0
+
+        let resultKewajibanLancar = []
+        let resultKewajibanLancarCount = 0.0
+
+        let resultEkuitas = []
+        let resultEkuitasCount = 0.0
 
         let resultHargaPokokPenjualan = []
         let resultHargaPokokPenjualanCount = 0.0
 
         for (let i = 0; i < data.length; i++) {
             data[i] = minusTypeCode(data[i])
-            if (data[i].kode_akun_perkiraan_type == HARTA_TYPE) {
+            if (data[i].kode_akun_perkiraan_type == ASET_TETAP_TYPE) {
                 data[i] = convertByPlusMinusValue(data[i])
-                resultAset.push({
+                resultAsetTetap.push({
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
             }
-            if (data[i].kode_akun_perkiraan_type == UTANG_TYPE) {
+            if (data[i].kode_akun_perkiraan_type == ASET_LANCAR_TYPE) {
                 data[i] = convertByPlusMinusValue(data[i])
-                resultUtang.push({
+                resultAsetLancar.push({
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
             }
-            if (data[i].kode_akun_perkiraan_type == MODAL_TYPE) {
+            if (data[i].kode_akun_perkiraan_type == ASET_LAIN_LAIN_TYPE) {
                 data[i] = convertByPlusMinusValue(data[i])
-                resultModal.push({
+                resultAsetLainLain.push({
+                    ...data[i],
+                    value: generateReportValue(data[i])
+                })
+            }
+            if (data[i].kode_akun_perkiraan_type == KEWAJIBAN_LANCAR_TYPE) {
+                data[i] = convertByPlusMinusValue(data[i])
+                resultKewajibanLancar.push({
+                    ...data[i],
+                    value: generateReportValue(data[i])
+                })
+            }
+            if (data[i].kode_akun_perkiraan_type == EKUITAS_TYPE) {
+                data[i] = convertByPlusMinusValue(data[i])
+                resultEkuitas.push({
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
@@ -103,34 +123,36 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
             }
         }
 
-        resultAsetCount = getSumMinusOfStringValue([getSumOfStringValue(resultAset.map(i => i.debet)), getSumOfStringValue(resultAset.map(i => i.kredit))])
-        resultUtangCount = getSumMinusOfStringValue([getSumOfStringValue(resultUtang.map(i => i.debet)), getSumOfStringValue(resultUtang.map(i => i.kredit))])
-        resultModalCount = getSumMinusOfStringValue([getSumOfStringValue(resultModal.map(i => i.debet)), getSumOfStringValue(resultModal.map(i => i.kredit))])
+        resultAsetTetapCount = getSumMinusOfStringValue([getSumOfStringValue(resultAsetTetap.map(i => i.debet)), getSumOfStringValue(resultAsetTetap.map(i => i.kredit))])
+        resultAsetLancarCount = getSumMinusOfStringValue([getSumOfStringValue(resultAsetLancar.map(i => i.debet)), getSumOfStringValue(resultAsetLancar.map(i => i.kredit))])
+        resultAsetLainLainCount = getSumMinusOfStringValue([getSumOfStringValue(resultAsetLainLain.map(i => i.debet)), getSumOfStringValue(resultAsetLainLain.map(i => i.kredit))])
+        resultKewajibanLancarCount = getSumMinusOfStringValue([getSumOfStringValue(resultKewajibanLancar.map(i => i.debet)), getSumOfStringValue(resultKewajibanLancar.map(i => i.kredit))])
+        resultEkuitasCount = getSumMinusOfStringValue([getSumOfStringValue(resultEkuitas.map(i => i.debet)), getSumOfStringValue(resultEkuitas.map(i => i.kredit))])
         resultHargaPokokPenjualanCount = getSumMinusOfStringValue([getSumOfStringValue(resultHargaPokokPenjualan.map(i => i.debet)), getSumOfStringValue(resultHargaPokokPenjualan.map(i => i.kredit))])
 
 
 
         res({
             harta: {
-                data: resultAset,
-                count: generateReportValueByMinusValue(resultAsetCount)
+                data: resultAsetTetap,
+                count: generateReportValueByMinusValue(resultAsetTetapCount)
             },
             utang: {
-                data: resultUtang,
-                count: generateReportValueByMinusValue(resultUtangCount)
+                data: resultKewajibanLancar,
+                count: generateReportValueByMinusValue(resultKewajibanLancarCount)
             },
             modal: {
-                data: resultModal,
-                count: generateReportValueByMinusValue(resultModalCount)
+                data: resultEkuitas,
+                count: generateReportValueByMinusValue(resultEkuitasCount)
             },
             harga_pokok_penjualan: {
                 data: resultHargaPokokPenjualan,
                 count: generateReportValueByMinusValue(resultHargaPokokPenjualanCount)
             },
             neraca: {
-                aktiva: resultAsetCount,
-                pasiva: getSumOfStringValue([resultUtangCount, resultModalCount]),
-                difference: Math.abs(resultAsetCount) - Math.abs(getSumOfStringValue([resultUtangCount, resultModalCount]))
+                aktiva: resultAsetTetapCount,
+                pasiva: getSumOfStringValue([resultKewajibanLancarCount, resultEkuitasCount]),
+                difference: Math.abs(resultAsetTetapCount) - Math.abs(getSumOfStringValue([resultKewajibanLancarCount, resultEkuitasCount]))
             }
         })
     })
