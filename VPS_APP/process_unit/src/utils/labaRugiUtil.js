@@ -1,4 +1,4 @@
-import { BEBAN_LAIN_LAIN_TYPE, BEBAN_OPERASIONAL_DAN_ADMINISTRASI_TYPE, HARGA_POKOK_PENJUALAN_TYPE, PENDAPATAN_LAIN_LAIN_TYPE, PENDAPATAN_TYPE } from "../constant/labaRugiConstant.js"
+import { BEBAN_BUNGA_DAN_PAJAK_TYPE, BEBAN_LAIN_LAIN_TYPE, BEBAN_OPERASIONAL_DAN_ADMINISTRASI_TYPE, HARGA_POKOK_PENJUALAN_TYPE, PENDAPATAN_LAIN_LAIN_TYPE, PENDAPATAN_TYPE } from "../constant/labaRugiConstant.js"
 import { getSumMinusOfStringValue, getSumOfStringValue } from "./mathUtil.js"
 import { parseToRupiahText } from "./numberParsingUtil.js"
 import { convertByPlusMinusValue, generateReportValue, generateReportValueByMinusValue, minusTypeCode } from "./validateKreditDebetTypeUtil.js"
@@ -19,6 +19,9 @@ export const getLabaRugiReport = (data) => {
 
         let resultBebanLainLain = []
         let resultBebanLainLainCount = 0.0
+
+        let resultBebanBungaDanPajak = []
+        let resultBebanBungaDanPajakCount = 0.0
 
         for (let i = 0; i < data.length; i++) {
             data[i] = minusTypeCode(data[i])
@@ -57,6 +60,13 @@ export const getLabaRugiReport = (data) => {
                     value: generateReportValue(data[i])
                 })
             }
+            if (data[i].kode_akun_perkiraan_type == BEBAN_BUNGA_DAN_PAJAK_TYPE) {
+                data[i] = convertByPlusMinusValue(data[i])
+                resultBebanBungaDanPajak.push({
+                    ...data[i],
+                    value: generateReportValue(data[i])
+                })
+            }
         }
 
         resultPendapatanCount = getSumMinusOfStringValue([getSumOfStringValue(resultPendapatan.map(i => i.debet)), getSumOfStringValue(resultPendapatan.map(i => i.kredit))])
@@ -65,6 +75,7 @@ export const getLabaRugiReport = (data) => {
 
         resultBebanOperasionalDanAdministrasiCount = getSumMinusOfStringValue([getSumOfStringValue(resultBebanOperasionalDanAdministrasi.map(i => i.debet)), getSumOfStringValue(resultBebanOperasionalDanAdministrasi.map(i => i.kredit))])
         resultBebanLainLainCount = getSumMinusOfStringValue([getSumOfStringValue(resultBebanLainLain.map(i => i.debet)), getSumOfStringValue(resultBebanLainLain.map(i => i.kredit))])
+        resultBebanBungaDanPajakCount = getSumMinusOfStringValue([getSumOfStringValue(resultBebanBungaDanPajak.map(i => i.debet)), getSumOfStringValue(resultBebanBungaDanPajak.map(i => i.kredit))])
 
         let lossResult = getSumOfStringValue([
             getSumMinusOfStringValue([
@@ -92,6 +103,10 @@ export const getLabaRugiReport = (data) => {
                 count: generateReportValueByMinusValue(resultBebanOperasionalDanAdministrasiCount)
             },
             beban_lain_lain: {
+                data: resultBebanLainLain,
+                count: generateReportValueByMinusValue(resultBebanLainLainCount)
+            },
+            beban_bunga_dan_pajak: {
                 data: resultBebanLainLain,
                 count: generateReportValueByMinusValue(resultBebanLainLainCount)
             },

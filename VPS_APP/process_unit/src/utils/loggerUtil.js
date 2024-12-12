@@ -77,11 +77,14 @@ export const pinoLogFileConfig = pino(
 export const pinoLogTerminalConfig = pino(
     {
         level: "debug",
-        timestamp: () => `, "time":"${moment().format()}"`,
+        timestamp: true,
         transport: {
             targets: [
                 {
-                    target: "pino-pretty"
+                    target: "pino-pretty",
+                    options: {
+                        translateTime: "dd/mm/yyyy HH:mm:ss", // Format waktu untuk log
+                    },
                 }
             ]
         },

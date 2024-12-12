@@ -1,3 +1,4 @@
+import { EKUITAS_TYPE } from "../constant/labaRugiConstant.js";
 import { parseToRupiahText } from "./numberParsingUtil.js"
 import { convertByPlusMinusValue } from "./validateKreditDebetTypeUtil.js"
 
@@ -94,22 +95,24 @@ export const convertNeracaToJurnalUmum = (data, bulan, tahun) => {
                 uraian: data[i].uraian,
                 sumber: "NERACA BULAN SEBELUMNYA"
             }
-            if (dataPush.type_akun == "Modal") {
-                if (dataPush.kode_akun == "399") {
-                    dataPush.kode_akun = "398"
+            if (dataPush.type_akun == EKUITAS_TYPE) {
+                if (dataPush.kode_akun == "003.099") {
+                    dataPush.kode_akun = "003.098"
                     dataPush.nama_akun = "Laba/Rugi Periode Sebelumnya"
                 }
                 jurnalUmum.push(dataPush)
+                break;
             }
-            if (dataPush.type_akun == "Harta") {
-                jurnalUmum.push(dataPush)
-            }
-            if (dataPush.type_akun == "Utang") {
-                jurnalUmum.push(dataPush)
-            }
-            if (dataPush.type_akun == "Harga Pokok Penjualan") {
-                jurnalUmum.push(dataPush)
-            }
+            // if (dataPush.type_akun == "Harta") {
+            //     jurnalUmum.push(dataPush)
+            // }
+            // if (dataPush.type_akun == "Utang") {
+            //     jurnalUmum.push(dataPush)
+            // }
+            // if (dataPush.type_akun == "Harga Pokok Penjualan") {
+            //     jurnalUmum.push(dataPush)
+            // }
+            jurnalUmum.push(dataPush)
         }
         jurnalUmum.sort((a, b) => parseInt(a.kode_akun) - parseInt(b.kode_akun))
         res(jurnalUmum)

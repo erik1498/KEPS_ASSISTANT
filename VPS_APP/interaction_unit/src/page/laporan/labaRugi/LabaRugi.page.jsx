@@ -105,14 +105,19 @@ const LabaRugiPage = () => {
                                             totalTitle={"Total Beban Operasional Dan Administrasi"}
                                         />
                                         <RowCard
+                                            dataList={labaRugi.pendapatan_lain_lain}
+                                            title={"Pendapatan Lain - Lain"}
+                                            totalTitle={"Total Pendapatan Lain - Lain"}
+                                        />
+                                        <RowCard
                                             dataList={labaRugi.beban_lain_lain}
                                             title={"Beban Lain - Lain"}
                                             totalTitle={"Total Beban Lain - Lain"}
                                         />
                                         <RowCard
-                                            dataList={labaRugi.pendapatan_lain_lain}
-                                            title={"Pendapatan Lain - Lain"}
-                                            totalTitle={"Total Pendapatan Lain - Lain"}
+                                            dataList={labaRugi.beban_bunga_dan_pajak}
+                                            title={"Beban Bunga Dan Pajak"}
+                                            totalTitle={"Total Beban Bunga Dan Pajak"}
                                         />
                                     </>
                                     :

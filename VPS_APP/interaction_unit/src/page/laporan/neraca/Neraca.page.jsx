@@ -136,17 +136,37 @@ const NeracaPage = () => {
                                 Object.keys(neraca).length > 0 ?
                                     <>
                                         <RowCard
-                                            dataList={neraca.harta}
-                                            title={"Aset"}
-                                            totalTitle={"Total Asset"}
+                                            dataList={neraca.aset_lancar}
+                                            title={"Aset Lancar"}
+                                            totalTitle={"Total Aset Lancar"}
                                         />
                                         <RowCard
-                                            dataList={neraca.utang}
-                                            title={"Kewajiban"}
-                                            totalTitle={"Total Kewajiban"}
+                                            dataList={neraca.aset_tetap}
+                                            title={"Aset Tetap"}
+                                            totalTitle={"Total Aset Tetap"}
                                         />
                                         <RowCard
-                                            dataList={neraca.modal}
+                                            dataList={neraca.aset_lain_lain}
+                                            title={"Aset Lain - Lain"}
+                                            totalTitle={"Total Aset Lain - Lain"}
+                                        />
+                                        <RowCard
+                                            dataList={neraca.kewajiban_lancar}
+                                            title={"Kewajiban Lancar"}
+                                            totalTitle={"Total Kewajiban Lancar"}
+                                        />
+                                        <RowCard
+                                            dataList={neraca.kewajiban_jangka_panjang}
+                                            title={"Kewajiban Lancar"}
+                                            totalTitle={"Total Kewajiban Lancar"}
+                                        />
+                                        <RowCard
+                                            dataList={neraca.kewajiban_lain_lain}
+                                            title={"Kewajiban Lain - Lain"}
+                                            totalTitle={"Total Kewajiban Lain - Lain"}
+                                        />
+                                        <RowCard
+                                            dataList={neraca.ekuitas}
                                             title={"Ekuitas"}
                                             totalTitle={"Total Ekuitas"}
                                         />
