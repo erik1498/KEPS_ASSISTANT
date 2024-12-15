@@ -91,13 +91,30 @@ const LabaRugiPage = () => {
                                             totalTitle={"Total Pendapatan"}
                                         />
                                         <RowCard
+                                            dataList={labaRugi.beban_pokok_penjualan}
+                                            title={"Beban Pokok Penjualan"}
+                                            totalTitle={"Total Beban Pokok Penjualan"}
+                                            addingContent={[
+                                                {
+                                                    title: "Laba Kotor Jasa",
+                                                    value: parseToRupiahText(parseRupiahToFloat(labaRugi.laba_rugi.laba_kotor_jasa))
+                                                }
+                                            ]}
+                                        />
+                                        <RowCard
                                             dataList={labaRugi.harga_pokok_penjualan}
                                             title={"Harga Pokok Penjualan"}
                                             totalTitle={"Total Harga Pokok Penjualan"}
-                                            addingContent={{
-                                                title: getNormalizedLabaKotorRugiKotor(labaRugi.laba_rugi.laba_kotor),
-                                                value: parseToRupiahText(parseRupiahToFloat(labaRugi.laba_rugi.laba_kotor))
-                                            }}
+                                            addingContent={[
+                                                {
+                                                    title: "Laba Kotor Barang",
+                                                    value: parseToRupiahText(parseRupiahToFloat(labaRugi.laba_rugi.laba_kotor_barang))
+                                                },
+                                                {
+                                                    title: getNormalizedLabaKotorRugiKotor(labaRugi.laba_rugi.laba_kotor),
+                                                    value: parseToRupiahText(parseRupiahToFloat(labaRugi.laba_rugi.laba_kotor))
+                                                }
+                                            ]}
                                         />
                                         <RowCard
                                             dataList={labaRugi.beban_operasional_dan_administrasi}

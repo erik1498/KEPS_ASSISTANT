@@ -1,4 +1,4 @@
-import { BEBAN_BUNGA_DAN_PAJAK_TYPE, BEBAN_LAIN_LAIN_TYPE, BEBAN_OPERASIONAL_DAN_ADMINISTRASI_TYPE, HARGA_POKOK_PENJUALAN_TYPE, PENDAPATAN_LAIN_LAIN_TYPE, PENDAPATAN_TYPE } from "../constant/labaRugiConstant.js"
+import { BEBAN_BUNGA_DAN_PAJAK_TYPE, BEBAN_LAIN_LAIN_TYPE, BEBAN_OPERASIONAL_DAN_ADMINISTRASI_TYPE, BEBAN_POKOK_PENJUALAN_TYPE, HARGA_POKOK_PENJUALAN_TYPE, PENDAPATAN_LAIN_LAIN_TYPE, PENDAPATAN_TYPE } from "../constant/labaRugiConstant.js"
 import { getSumMinusOfStringValue, getSumOfStringValue } from "./mathUtil.js"
 import { parseToRupiahText } from "./numberParsingUtil.js"
 import { convertByPlusMinusValue, generateReportValue, generateReportValueByMinusValue, minusTypeCode } from "./validateKreditDebetTypeUtil.js"
@@ -10,6 +10,9 @@ export const getLabaRugiReport = (data) => {
 
         let resultHargaPokokPenjualan = []
         let resultHargaPokokPenjualanCount = 0.0
+
+        let resultBebanPokokPenjualan = []
+        let resultBebanPokokPenjualanCount = 0.0
 
         let resultBebanOperasionalDanAdministrasi = []
         let resultBebanOperasionalDanAdministrasiCount = 0.0
@@ -28,6 +31,13 @@ export const getLabaRugiReport = (data) => {
             if (data[i].kode_akun_perkiraan_type == PENDAPATAN_TYPE) {
                 data[i] = convertByPlusMinusValue(data[i])
                 resultPendapatan.push({
+                    ...data[i],
+                    value: generateReportValue(data[i])
+                })
+            }
+            if (data[i].kode_akun_perkiraan_type == BEBAN_POKOK_PENJUALAN_TYPE) {
+                data[i] = convertByPlusMinusValue(data[i])
+                resultBebanPokokPenjualan.push({
                     ...data[i],
                     value: generateReportValue(data[i])
                 })
@@ -71,19 +81,36 @@ export const getLabaRugiReport = (data) => {
 
         resultPendapatanCount = getSumMinusOfStringValue([getSumOfStringValue(resultPendapatan.map(i => i.debet)), getSumOfStringValue(resultPendapatan.map(i => i.kredit))])
         resultHargaPokokPenjualanCount = getSumMinusOfStringValue([getSumOfStringValue(resultHargaPokokPenjualan.map(i => i.debet)), getSumOfStringValue(resultHargaPokokPenjualan.map(i => i.kredit))])
+        resultBebanPokokPenjualanCount = getSumMinusOfStringValue([getSumOfStringValue(resultBebanPokokPenjualan.map(i => i.debet)), getSumOfStringValue(resultBebanPokokPenjualan.map(i => i.kredit))])
         resultPendapatanLainLainCount = getSumMinusOfStringValue([getSumOfStringValue(resultPendapatanLainLain.map(i => i.debet)), getSumOfStringValue(resultPendapatanLainLain.map(i => i.kredit))])
 
         resultBebanOperasionalDanAdministrasiCount = getSumMinusOfStringValue([getSumOfStringValue(resultBebanOperasionalDanAdministrasi.map(i => i.debet)), getSumOfStringValue(resultBebanOperasionalDanAdministrasi.map(i => i.kredit))])
         resultBebanLainLainCount = getSumMinusOfStringValue([getSumOfStringValue(resultBebanLainLain.map(i => i.debet)), getSumOfStringValue(resultBebanLainLain.map(i => i.kredit))])
         resultBebanBungaDanPajakCount = getSumMinusOfStringValue([getSumOfStringValue(resultBebanBungaDanPajak.map(i => i.debet)), getSumOfStringValue(resultBebanBungaDanPajak.map(i => i.kredit))])
 
-        let lossResult = getSumOfStringValue([
-            getSumMinusOfStringValue([
-                getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]),
-                getSumOfStringValue([resultBebanOperasionalDanAdministrasiCount, resultBebanLainLainCount])
-            ]),
-            resultPendapatanLainLainCount
-        ])
+        // let lossResult = getSumOfStringValue([
+        //     getSumMinusOfStringValue([
+        //         getSumMinusOfStringValue([
+        //             resultPendapatanCount,
+        //             resultHargaPokokPenjualanCount,
+        //             resultPendapatanLainLainCount
+        //         ]),
+        //         getSumOfStringValue([
+        //             resultBebanPokokPenjualanCount,
+        //             resultBebanOperasionalDanAdministrasiCount,
+        //             resultBebanLainLainCount,
+        //             resultBebanBungaDanPajakCount
+        //         ])
+        //     ]),
+        // ])
+
+        const lossResult = (resultPendapatanCount - resultBebanPokokPenjualanCount - resultHargaPokokPenjualanCount).toFixed(2)
+
+        const laba_kotor_jasa = (resultPendapatanCount - resultBebanPokokPenjualanCount).toFixed(2)
+        const laba_kotor_barang = (laba_kotor_jasa - resultHargaPokokPenjualanCount).toFixed(2)
+        const laba_kotor = (resultPendapatanCount - resultBebanPokokPenjualanCount - resultHargaPokokPenjualanCount).toFixed(2)
+        const laba_sebelum_bunga_dan_pajak = (laba_kotor - resultBebanOperasionalDanAdministrasiCount + resultPendapatanLainLainCount - resultBebanLainLainCount)
+        const laba_bersih = (laba_sebelum_bunga_dan_pajak - resultBebanLainLainCount).toFixed(2)
 
         res({
             pendapatan_lain_lain: {
@@ -98,6 +125,10 @@ export const getLabaRugiReport = (data) => {
                 data: resultHargaPokokPenjualan,
                 count: generateReportValueByMinusValue(resultHargaPokokPenjualanCount)
             },
+            beban_pokok_penjualan: {
+                data: resultBebanPokokPenjualan,
+                count: generateReportValueByMinusValue(resultBebanPokokPenjualanCount)
+            },
             beban_operasional_dan_administrasi: {
                 data: resultBebanOperasionalDanAdministrasi,
                 count: generateReportValueByMinusValue(resultBebanOperasionalDanAdministrasiCount)
@@ -111,8 +142,13 @@ export const getLabaRugiReport = (data) => {
                 count: generateReportValueByMinusValue(resultBebanLainLainCount)
             },
             laba_rugi: {
-                laba_kotor: getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]) < 0 ? "( " + parseToRupiahText(Math.abs(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]))) + " )" : parseToRupiahText(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount])),
-                beban: getSumMinusOfStringValue([resultBebanOperasionalDanAdministrasiCount, resultBebanLainLainCount]),
+                laba_kotor_jasa,
+                laba_kotor_barang,
+                laba_kotor,
+                laba_sebelum_bunga_dan_pajak,
+                laba_bersih,
+                // laba_kotor: getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]) < 0 ? "( " + parseToRupiahText(Math.abs(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount]))) + " )" : parseToRupiahText(getSumMinusOfStringValue([resultPendapatanCount, resultHargaPokokPenjualanCount])),
+                // beban: getSumMinusOfStringValue([resultBebanOperasionalDanAdministrasiCount, resultBebanLainLainCount]),
                 loss: lossResult > 0 ? null : lossResult,
                 gain: lossResult > 0 ? lossResult : null
             }

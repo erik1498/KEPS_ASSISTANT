@@ -32,10 +32,10 @@ export const LabaRugiPrint = React.forwardRef((props, ref) => {
                             dataList={props.data.harga_pokok_penjualan}
                             title={"Harga Pokok Penjualan"}
                             totalTitle={"Total Harga Pokok Penjualan"}
-                            addingContent={{
+                            addingContent={[{
                                 title: getNormalizedLabaKotorRugiKotor(props.data.laba_rugi.laba_kotor),
                                 value: parseToRupiahText(parseRupiahToFloat(props.data.laba_rugi.laba_kotor))
-                            }}
+                            }]}
                             forPrint={true}
                         />
                         <RowCard

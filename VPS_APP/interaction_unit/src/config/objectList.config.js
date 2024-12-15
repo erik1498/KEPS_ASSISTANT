@@ -457,6 +457,10 @@ export const KodeAkunType = [
         id: "006",
     },
     {
+        name: "BEBAN POKOK PENJUALAN",
+        id: "007",
+    },
+    {
         name: "HARGA POKOK PENJUALAN",
         id: "007",
     },

@@ -2,7 +2,7 @@ const RowCard = ({
     dataList,
     title,
     totalTitle,
-    addingContent,
+    addingContent = [],
     forPrint
 }) => {
 
@@ -62,18 +62,20 @@ const RowCard = ({
         </div >
 
         {
-            addingContent != null && addingContent.value != "0" && addingContent.value != "( 0 )" ? <>
-                <div className="flex flex-col w-full bg-gray-800 text-white font-bold text-sm px-3 shadow-md rounded-md rounded-t-none">
-                    <div className="grid grid-cols-12 items-start py-2">
-                        <div className="col-span-6 px-2">
-                            <p>{addingContent.title}</p>
-                        </div>
-                        <div className="col-span-6 text-right px-2">
-                            <p>{addingContent.value}</p>
+            addingContent.map((x, i) => {
+                return x != null && x.value != "0" && x.value != "( 0 )" ? <>
+                    <div className={`flex flex-col w-full bg-gray-800 text-white font-bold text-sm px-3 shadow-md`}>
+                        <div className="grid grid-cols-12 items-start py-2">
+                            <div className="col-span-6 px-2">
+                                <p>{x.title}</p>
+                            </div>
+                            <div className="col-span-6 text-right px-2">
+                                <p>{x.value}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </> : <></>
+                </> : <></>
+            })
         }
     </>
 };

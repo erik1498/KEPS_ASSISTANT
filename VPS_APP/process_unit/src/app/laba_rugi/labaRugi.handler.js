@@ -1,4 +1,4 @@
-import { BEBAN_LAIN_LAIN_TYPE, BEBAN_OPERASIONAL_DAN_ADMINISTRASI_TYPE, HARGA_POKOK_PENJUALAN_TYPE, PENDAPATAN_LAIN_LAIN_TYPE, PENDAPATAN_TYPE } from "../../constant/labaRugiConstant.js"
+import { BEBAN_LAIN_LAIN_TYPE, BEBAN_OPERASIONAL_DAN_ADMINISTRASI_TYPE, BEBAN_POKOK_PENJUALAN_TYPE, HARGA_POKOK_PENJUALAN_TYPE, PENDAPATAN_LAIN_LAIN_TYPE, PENDAPATAN_TYPE } from "../../constant/labaRugiConstant.js"
 import { getLabaRugiReport } from "../../utils/labaRugiUtil.js"
 import { LOGGER, logType } from "../../utils/loggerUtil.js"
 import { getBulanText } from "../../utils/mathUtil.js"
@@ -13,6 +13,7 @@ export const getAllLabaRugiByBulanController = async (req, res) => {
         const data = await getAllNeracaSaldoByBulanService(bulan, tahun, [
             PENDAPATAN_TYPE,
             HARGA_POKOK_PENJUALAN_TYPE,
+            BEBAN_POKOK_PENJUALAN_TYPE,
             BEBAN_OPERASIONAL_DAN_ADMINISTRASI_TYPE,
             PENDAPATAN_LAIN_LAIN_TYPE,
             BEBAN_LAIN_LAIN_TYPE,

@@ -147,7 +147,8 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
         resultEkuitasCount = getSumMinusOfStringValue([getSumOfStringValue(resultEkuitas.map(i => i.debet)), getSumOfStringValue(resultEkuitas.map(i => i.kredit))])
         resultHargaPokokPenjualanCount = getSumMinusOfStringValue([getSumOfStringValue(resultHargaPokokPenjualan.map(i => i.debet)), getSumOfStringValue(resultHargaPokokPenjualan.map(i => i.kredit))])
 
-
+        const aktiva = (resultAsetTetapCount + resultAsetLancarCount + resultAsetLainLainCount).toFixed(2)
+        const pasiva = (resultKewajibanLancarCount + resultKewajibanJangkaPanjangCount + resultKewajibanLainLainCount + resultEkuitasCount + resultHargaPokokPenjualanCount).toFixed(2)
 
         res({
             aset_tetap: {
@@ -183,9 +184,9 @@ export const getNeracaReport = (data, laba_rugi_data_berjalan, bulan, tahun, val
                 count: generateReportValueByMinusValue(resultHargaPokokPenjualanCount)
             },
             neraca: {
-                aktiva: resultAsetTetapCount,
-                pasiva: getSumOfStringValue([resultKewajibanLancarCount, resultEkuitasCount]),
-                difference: Math.abs(resultAsetTetapCount) - Math.abs(getSumOfStringValue([resultKewajibanLancarCount, resultEkuitasCount]))
+                aktiva,
+                pasiva,
+                difference: Math.abs(aktiva) - Math.abs(pasiva)
             }
         })
     })
