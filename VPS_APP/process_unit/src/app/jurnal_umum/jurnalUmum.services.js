@@ -23,13 +23,7 @@ export const getJurnalUmumByBulanSebelumService = async (bulan, tahun, req_id) =
         return []
     } else {
         const laporanNeracaSebelummnya = JSON.parse(neracaSebelumnya[0].json)
-        const jurnalUmumBulanSebelum = await convertNeracaToJurnalUmum(
-            laporanNeracaSebelummnya?.harta?.data
-                .concat(laporanNeracaSebelummnya?.utang?.data)
-                .concat(laporanNeracaSebelummnya?.modal?.data)
-                .concat(laporanNeracaSebelummnya?.harga_pokok_penjualan?.data)
-            , bulan, tahun)
-
+        const jurnalUmumBulanSebelum = await convertNeracaToJurnalUmum(laporanNeracaSebelummnya, bulan, tahun)
         return jurnalUmumBulanSebelum
     }
 }

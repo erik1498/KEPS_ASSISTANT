@@ -1,4 +1,4 @@
-import { EKUITAS_TYPE } from "../constant/labaRugiConstant.js";
+import { ASET_LAIN_LAIN_TYPE, ASET_LANCAR_TYPE, ASET_TETAP_TYPE, EKUITAS_TYPE, HARGA_POKOK_PENJUALAN_TYPE, KEWAJIBAN_JANGKA_PANJANG_TYPE, KEWAJIBAN_LAIN_LAIN_TYPE, KEWAJIBAN_LANCAR_TYPE } from "../constant/labaRugiConstant.js";
 import { parseToRupiahText } from "./numberParsingUtil.js"
 import { convertByPlusMinusValue } from "./validateKreditDebetTypeUtil.js"
 
@@ -76,9 +76,17 @@ export const renderDataJurnalUmum = (data) => {
 
 export const convertNeracaToJurnalUmum = (data, bulan, tahun) => {
     return new Promise((res, rej) => {
+        const keys = Object.keys(data)
+
+        let arrData = []
+        for (let index = 0; index < keys.length; index++) {
+            if (data[keys[index]]?.data?.length > 0) {
+                arrData.push(...data[keys[index]].data)
+            }
+        }
         let jurnalUmum = []
-        for (let i = 0; i < data.length; i++) {
-            data[i] = convertByPlusMinusValue(data[i])
+        for (let i = 0; i < arrData.length; i++) {
+            arrData[i] = convertByPlusMinusValue(arrData[i])
             let dataPush = {
                 uuid: "NERACA",
                 bukti_transaksi: "NRC" + (parseFloat(bulan) - 1) + "" + tahun,
@@ -87,12 +95,12 @@ export const convertNeracaToJurnalUmum = (data, bulan, tahun) => {
                 bulan: bulan,
                 tahun: tahun,
                 waktu: "00:00:00",
-                debet: data[i].debet,
-                kredit: data[i].kredit,
-                kode_akun: data[i].kode_akun_perkiraan_code,
-                nama_akun: data[i].kode_akun_perkiraan_name,
-                type_akun: data[i].kode_akun_perkiraan_type,
-                uraian: data[i].uraian,
+                debet: arrData[i].debet,
+                kredit: arrData[i].kredit,
+                kode_akun: arrData[i].kode_akun_perkiraan_code,
+                nama_akun: arrData[i].kode_akun_perkiraan_name,
+                type_akun: arrData[i].kode_akun_perkiraan_type,
+                uraian: arrData[i].uraian,
                 sumber: "NERACA BULAN SEBELUMNYA"
             }
             if (dataPush.type_akun == EKUITAS_TYPE) {
@@ -101,20 +109,24 @@ export const convertNeracaToJurnalUmum = (data, bulan, tahun) => {
                     dataPush.nama_akun = "Laba/Rugi Periode Sebelumnya"
                 }
                 jurnalUmum.push(dataPush)
-                break;
+                continue;
             }
-            // if (dataPush.type_akun == "Harta") {
-            //     jurnalUmum.push(dataPush)
-            // }
-            // if (dataPush.type_akun == "Utang") {
-            //     jurnalUmum.push(dataPush)
-            // }
-            // if (dataPush.type_akun == "Harga Pokok Penjualan") {
-            //     jurnalUmum.push(dataPush)
-            // }
-            jurnalUmum.push(dataPush)
+            if (
+                ASET_TETAP_TYPE
+                .concat(ASET_LANCAR_TYPE)
+                .concat(ASET_LAIN_LAIN_TYPE)
+                .concat(KEWAJIBAN_LANCAR_TYPE)
+                .concat(KEWAJIBAN_JANGKA_PANJANG_TYPE)
+                .concat(KEWAJIBAN_LAIN_LAIN_TYPE)
+                .concat(HARGA_POKOK_PENJUALAN_TYPE)
+                .includes(dataPush.type_akun)
+            ) {
+                jurnalUmum.push(dataPush)
+            }
         }
         jurnalUmum.sort((a, b) => parseInt(a.kode_akun) - parseInt(b.kode_akun))
+
+        console.log("JURNAL UMUM", jurnalUmum)
         res(jurnalUmum)
     })
 }
