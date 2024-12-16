@@ -13,7 +13,7 @@ services:
         - USE_INTERACTION=true
         - DB_USER=kepsAssistantUserDB123@#%__
         - DB_PASSWORD=kepsAssistantPassDB123@#%__
-        - CLIENT_HOST=[{"host":"http://192.168.107.46:5173","user_db":"keps"}]
+        - CLIENT_HOST=["localhost:5173"]
         - USER_PERMISSION_SECURITY_ENABLED=false
         - USER_PARAMETER_SECURITY_ENABLED=false
     container_name: keps_assistant_process
