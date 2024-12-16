@@ -76,7 +76,7 @@ const createWindow = async () => {
         })
 
         win.webContents.on('did-finish-load', () => {
-            // intervalId = setInterval(callAPI, 5000);
+            intervalId = setInterval(callAPI, 5000);
             try {
                 win.webContents.debugger.attach('1.3');
                 console.log('Debugger attached');
